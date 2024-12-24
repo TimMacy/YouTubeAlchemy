@@ -14,8 +14,8 @@
 // @noframes
 // @homepageURL  https://github.com/TimMacy/YouTubeTranscriptExporter
 // @supportURL   https://github.com/TimMacy/YouTubeTranscriptExporter/issues
-// @updateURL    URL
-// @downloadURL  URL
+// @updateURL    https://raw.githubusercontent.com/TimMacy/YouTubeTranscriptExporter/refs/heads/main/YouTubeTranscriptExporter.js
+// @downloadURL  https://raw.githubusercontent.com/TimMacy/YouTubeTranscriptExporter/refs/heads/main/YouTubeTranscriptExporter.js
 // ==/UserScript==
 
 (async function() {
