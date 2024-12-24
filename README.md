@@ -23,22 +23,22 @@ This script adds four buttons to the YouTube header to facilitate exporting a vi
       - **Red**: Button Three - Download
       - **White**: Button Four - General Settings<br><br>
 
-![YouTube Transcript Exporter by Tim Macy](https://github.com/user-attachments/assets/c1ba9aa6-c440-4304-8ca3-d9386c4098f9 "YouTube Transcript Exporter by Tim Macy")
+![YouTube Transcript Exporter by Tim Macy](https://github.com/user-attachments/assets/188fba1e-1f37-400f-9c03-1236885d75a4 "YouTube Transcript Exporter by Tim Macy")
 <br><br>
-![Settings Panel](https://github.com/user-attachments/assets/b442d703-aa9a-4ee8-9a1f-ae65d128a486 "Settings Panel")  
+![Settings Panel](https://github.com/user-attachments/assets/f916d714-fda6-4b18-beb5-a4f5c4dbce30 "Settings Panel")  
 
 #### Additional messages are displayed at the button's location in the YouTube header to indicate the status of the script.
 <table align="center">
     <tr>
-        <td align="center"><img src="https://github.com/user-attachments/assets/f472ced6-f25a-42d8-ad52-5801156b2c64" alt="Transcript Is Loading"></td>
+        <td align="center"><img src="https://github.com/user-attachments/assets/c3d37e84-3d0d-48ae-a7a5-cd8aaee4d571" alt="Transcript Is Loading"></td>
         <td align="left">The transcript has to be loaded into the HTML before it can be used. This can take between a few milliseconds up to a couple of seconds—depending on the length of the video.</td>
     </tr>
     <tr>
-        <td align="center"><img src="https://github.com/user-attachments/assets/c5469ece-4317-48f2-a5ef-ddf45a297602" alt="Transcript Not Available"></td>
+        <td align="center"><img src="https://github.com/user-attachments/assets/c0096353-dade-4e33-b728-136ea6c5e774" alt="Transcript Not Available"></td>
         <td align="left">YouTube's API needs a few minutes to process a new video and generate its transcript.<br>Live videos don't have transcripts. Ensure the "Show transcript" button is available in the description.</td>
     </tr>
     <tr>
-      <td align="center"><img src="https://github.com/user-attachments/assets/352056f4-f9e7-480f-bdc8-08397051a8a3" alt="Transcript Failed to Load"></td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/31e963fa-414c-476a-bf1c-94adf7cf9f9e" alt="Transcript Failed to Load"></td>
       <td align="left">If the transcript fails to load, the script will terminate. Reload the page to try again.</td>
     </tr>
 </table>
