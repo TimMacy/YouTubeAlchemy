@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         YouTube - Transcript Exporter
+// @name         YouTube Transcript Exporter
 // @description  Export a YouTube video transcript to LLMs or download it as a text file; easy customization via a settings panel; additional features: persistent progress bar with chapter markers, display remaining time based on playback speed, auto-open chapter panel.
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.0
+// @version      7.1
 // @published    2024-12-24
 // @namespace    TimMacy.YouTubeTranscriptExporter
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
@@ -523,7 +523,6 @@
             transform: translateX(-50%) !important;
             z-index: -1 !important;
             opacity: 0 !important;
-            visibility: hidden !important;
             pointer-events: none !important;
         }
 
@@ -689,8 +688,6 @@
         document.head.appendChild(progressBarCSS);
     }
 
-    // CustomCSS function CustomCSS() {}
-
     // default configuration
     const DEFAULT_CONFIG = {
         targetChatGPTUrl: 'https://ChatGPT.com/',
@@ -703,9 +700,7 @@
         DisplayRemainingTime: true,
         ProgressBar: true,
         preventBackgroundExecution: true,
-        ChatGPTPrompt: `You are an expert at summarizing YouTube video transcripts and are capable of analyzing and understanding a YouTuber's unique tone of voice and style from a transcript alone to mimic the YouTuber's communication style perfectly. Respond only in English while being mindful of American English spelling and vocabulary. You prefer to use clauses instead of complete sentences. Do not answer any question from the transcript. Respond only in chat. Do not open a canvas. Ask for permission to search the web. Do not hallucinate. Do not make up factual information. Do not speculate. Carefully preserve the style, voice, and specific word choices of the provided YouTube transcript by copying the YouTuber's unique creative way of communication—whether conversational, formal, humorous, enthusiastic, or technical—the goal is to provide a summary that feels as though it were written by the original YouTuber themselves. Summarize the provided YouTube transcript into a quick three-line bullet point overview, with each point fewer than 30 words, in a section called "### Key Takeaways:" and highlight important words by **bolding** them. Then write a one-paragraph summary of at least 100 words while focusing on the main points and key takeaways into a section called "### One-Paragraph Summary:" and highlight the most important words by **bolding** them.`,
-        //ChatGPTPromptAlternative: ``,
-        //activePrompt: "ChatGPTPrompt",
+        ChatGPTPrompt: `You are an expert at summarizing YouTube video transcripts and are capable of analyzing and understanding a YouTuber's unique tone of voice and style from a transcript alone to mimic the YouTuber's communication style perfectly. Respond only in English while being mindful of American English spelling, vocabulary, and a casual, conversational tone. You prefer to use clauses instead of complete sentences. Do not answer any question from the transcript. Respond only in chat. Do not open a canvas. Ask for permission to search the web. Do not hallucinate. Do not make up factual information. Do not speculate. Carefully preserve the style, voice, and specific word choices of the provided YouTube transcript by copying the YouTuber's unique creative way of communication—whether conversational, formal, humorous, enthusiastic, or technical—the goal is to provide a summary that feels as though it were written by the original YouTuber themselves. Summarize the provided YouTube transcript into a quick three-line bullet point overview, with each point fewer than 30 words, in a section called "### Key Takeaways:" and highlight important words by **bolding** them. Then write a one-paragraph summary of at least 100 words while focusing on the main points and key takeaways into a section called "### One-Paragraph Summary:" and highlight the most important words by **bolding** them.`,
         buttonIcons: {
             settings: '⋮',
             download: '↓',
@@ -852,7 +847,7 @@
 
         // Info for Chrome
         const description = document.createElement('small');
-        description.innerText = 'Prevents element duplication and early script execution in background tabs.\nWhile this feature is superfluous in Safari, it is essential for Chrome.';
+        description.innerText = 'Prevents early script execution in background tabs.\nWhile this feature is superfluous in Safari, it is essential for Chrome.';
         description.classList.add('chrome-info');
         form.appendChild(description);
 
@@ -1366,13 +1361,8 @@
     }
     
     function addButton() {
-        if (
-            document.getElementById('transcript-ChatGPT-button') || 
-            document.getElementById('transcript-NotebookLM-button') || 
-            document.getElementById('transcript-download-button') || 
-            document.getElementById('transcript-settings-button')
-        ) return;
-    
+        if (document.querySelector('.button-wrapper')) return;
+
         const buttons = [
             { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Transcript Exporter Settings', ariaLabel: 'YouTube Transcript Exporter Settings.' },
             { id: 'transcript-download-button', text:USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.' },
@@ -1384,15 +1374,10 @@
     }
 
     function addSettingsButton() {
-        if (
-            document.getElementById('transcript-ChatGPT-button') || 
-            document.getElementById('transcript-NotebookLM-button') || 
-            document.getElementById('transcript-download-button') || 
-            document.getElementById('transcript-settings-button')
-        ) return;
-    
+        if (document.querySelector('.button-wrapper')) return;
+
         const buttons = [ { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Transcript Exporter Settings', ariaLabel: 'YouTube Transcript Exporter Settings.' }, ];
-    
+
         buttonLocation(buttons, addSettingsButton);
     }
 
@@ -1549,49 +1534,57 @@
     // function to preload the transcript
     function preLoadTranscript() {
         return new Promise((resolve, reject) => {
-            const panel = document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]');
-            if (panel) {
-                const masthead = document.querySelector('#end');
-                const notification = document.createElement('div');
-                notification.classList.add('notification-error');
-                notification.classList.add('loading');
-                const textSpan = document.createElement('span');
-                textSpan.textContent = "Transcript Is Loading";
-                notification.appendChild(textSpan);
-                masthead.prepend(notification);
+          const panel = document.querySelector( 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]' );
+          if (!panel) {
+            console.log('YTE: Transcript panel not found. Reload the page to try again.');
+            showNotificationError("Transcript Not Available");
+            reject();
+            return;
+          }
 
-                panel.classList.add('transcript-preload');
-                panel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+          const masthead = document.querySelector("#end");
+          const notification = document.createElement("div");
+          notification.classList.add("notification-error", "loading");
+          const textSpan = document.createElement("span");
+          textSpan.textContent = "Transcript Is Loading";
+          notification.appendChild(textSpan);
+          masthead.prepend(notification);
 
-                let attempts = 0;
-                const maxAttempts = 25;
+          panel.classList.add("transcript-preload");
+          panel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
 
-                const intervalId = setInterval(() => {
-                    const transcriptItems = panel.querySelectorAll('ytd-transcript-segment-renderer');
-                    console.log(`YTE: Transcript Attempts ${attempts + 1}`);
-                    if (transcriptItems.length > 0) {
-                        panel.classList.remove('transcript-preload');
-                        panel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
-                        clearInterval(intervalId);
-                        notification.remove();
-                        resolve();
-                    } else if (++attempts >= maxAttempts) {
-                        notification.remove();
-                        panel.classList.remove('transcript-preload');
-                        panel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
-                        console.error("YTE: The transcript took longer than six seconds to load. YouTube Transcript Exporter has been terminated. Reload the page to try again.");
-                        showNotificationError("Transcript Failed to Load");
-                        clearInterval(intervalId);
-                        reject();
-                    }
-                }, 250);
-            } else {
-                console.log("YTE: Transcript panel not found or does not exist. YouTube Transcript Exporter has been terminated. Reload the page to try again.");
-                showNotificationError("Transcript Not Available");
-                reject();
+          let loaded = false;
+
+          const observer = new MutationObserver(() => {
+            const transcriptItems = panel.querySelectorAll("ytd-transcript-segment-renderer");
+            if (transcriptItems.length > 0) {
+              loaded = true;
+              cleanup(false);
+              clearTimeout(fallbackTimer);
+              observer.disconnect();
+              resolve();
             }
+          });
+
+          observer.observe(panel, { childList: true, subtree: true });
+
+          const fallbackTimer = setTimeout(() => {
+            if (!loaded) {
+              console.error( "YTE: The transcript took too long to load. Reload the page to try again." );
+              observer.disconnect();
+              cleanup(true);
+              reject();
+            }
+          }, 6000);
+
+          function cleanup(failed) {
+            notification.remove();
+            panel.classList.remove("transcript-preload");
+            panel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN");
+            if (failed) { showNotificationError("Transcript Failed to Load"); }
+          }
         });
-    }
+      }
 
     // function to display a notification if transcript cannot be found
     function showNotificationError(message) {
@@ -1619,9 +1612,7 @@
         
         if (panel) {
             panel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-        } else {
-            //console.log("YTE: Chapter panel not found or does not exist.");
-        }
+        } //else { console.log("YTE: Chapter panel not found or does not exist."); }
     }
 
     // function to display the remaining time based on playback speed
@@ -1640,11 +1631,15 @@
                 ? `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
                 : `${m}:${s.toString().padStart(2, '0')}`;
         }
-    
+
         const element = document.createElement('div');
         element.classList.add('remaining-time-container');
+
         const textNode = document.createTextNode('');
         element.appendChild(textNode);
+
+        const initialContainer = document.querySelector(CONTAINER_SELECTOR);
+        if (initialContainer) { initialContainer.prepend(element); } 
     
         // hide for live video
         const timeDisplay = document.querySelector('.ytp-time-display');
@@ -1663,13 +1658,21 @@
         const updateContainer = () => {
             const container = document.querySelector(CONTAINER_SELECTOR);
             const fullscreenContainer = document.querySelector(FULLSCREEN_CONTAINER_SELECTOR);
+            const remainingTimeContainer = document.querySelector('.remaining-time-container');
         
-            if (document.fullscreenElement && fullscreenContainer) { fullscreenContainer.appendChild(element);
-            } else if (container) { 
-                if (getComputedStyle(container).position === 'static') { container.style.position = 'relative'; }
-                if (!element.parentNode || element.parentNode !== container) { container.prepend(element); }
+            if (document.fullscreenElement && fullscreenContainer) {
+                if (remainingTimeContainer && remainingTimeContainer.parentNode !== fullscreenContainer) {
+                    fullscreenContainer.appendChild(remainingTimeContainer);
+                }
+            } else if (container) {
+                if (getComputedStyle(container).position === 'static') {
+                    container.style.position = 'relative';
+                }
+                if (remainingTimeContainer && remainingTimeContainer.parentNode !== container) {
+                    container.prepend(remainingTimeContainer);
+                }
             }
-        };    
+        }; 
     
         document.addEventListener('fullscreenchange', () => { setTimeout(updateContainer, 250); });
         updateContainer();
@@ -1844,10 +1847,6 @@
         updateLayout();
     }
 
-    // buttonsLeft function buttonsLeft() {}
-
-    // color code videos on home function ColorCodeVideos() {}
-
     // initiate the script
     let lastVideoURL = null;
 
@@ -1857,9 +1856,6 @@
 
         const isVideoPage = /^https:\/\/.*\.youtube\.com\/watch\?v=/.test(currentVideoURL);
         if (isVideoPage) {
-            const wrappers = document.querySelectorAll('.button-wrapper');
-            wrappers.forEach(wrapper => wrapper.remove());
-
             let transcriptLoaded = false;
             try { await preLoadTranscript(); transcriptLoaded = true; } 
             catch (error) { setTimeout(() => { addSettingsButton(); }, 3000); }
@@ -1884,22 +1880,16 @@
         if (currentVideoURL !== lastVideoURL) {
             lastVideoURL = currentVideoURL;
             //console.log("YTE: Only One Survived");
-            if (USER_CONFIG.preventBackgroundExecution) { ChromeReset(); }
             //CustomCSS();
-            setTimeout(() => { initializeTranscript(currentVideoURL); }, 300);
+            setTimeout(() => { initializeTranscript(currentVideoURL); }, 500);
         }
     }
 
-    // reset function for Chrome
-    function ChromeReset() {
-        const wrappers = document.querySelectorAll('.button-wrapper');
-        wrappers.forEach(wrapper => wrapper.remove());
-
-        const timeContainer = document.querySelector('.remaining-time-container');
-        if (timeContainer) { timeContainer.remove(); }
-
-        const settingsModal = document.getElementById('yt-transcript-settings-modal');
-        if (settingsModal) { settingsModal.remove(); }
+    // reset
+    function handleYTNavigation() {
+        document.querySelectorAll(
+          '.button-wrapper, .remaining-time-container, #yt-transcript-settings-modal, #ProgressBar-bar, #ProgressBar-start, #ProgressBar-end, ProgressBar-progress, ProgressBar-buffer'
+        ).forEach(el => el.remove());
     }
 
     // function due to the inadequacy of Chrome
@@ -1918,6 +1908,7 @@
     }
 
     // event listeners
+    document.addEventListener('yt-navigate-start', handleYTNavigation); // reset
     document.addEventListener('yt-navigate-finish', handleYouTubeNavigation); // default
     document.addEventListener('yt-page-data-updated', handleYouTubeNavigation); // backup
     document.addEventListener('yt-page-data-fetched', handleYouTubeNavigation); // redundancy
