@@ -1,16 +1,15 @@
 // ==UserScript==
 // @name         YouTube Transcript Exporter
-// @description  Export a YouTube video transcript to LLMs or download it as a text file; easy customization via a settings panel; additional features: persistent progress bar with chapter markers, display remaining time based on playback speed, auto-open chapter panel.
+// @description  Export a YouTube video transcript to LLMs or download it as a text file; easy customization via a settings panel; additional features: persistent progress bar with chapter markers, display remaining time based on playback speed, auto-open chapter panel, links in header, customize css, color code videos on home.
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.1
-// @published    2024-12-24
+// @version      7.3
 // @namespace    TimMacy.YouTubeTranscriptExporter
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
 // @grant        GM.setValue
 // @grant        GM.getValue
-// @run-at       document-end
+// @run-at       document-start
 // @noframes
 // @homepageURL  https://github.com/TimMacy/YouTubeTranscriptExporter
 // @supportURL   https://github.com/TimMacy/YouTubeTranscriptExporter/issues
@@ -119,7 +118,7 @@
         .buttonIconNotebookLM-input-field:focus { border: 1px solid hsl(134, 61%, 40%); }
         .buttonIconChatGPT-input-field:focus { border: 1px solid hsl(217, 91%, 59%); }
         .buttonIconDownload-input-field:focus { border: 1px solid hsl(359, 88%, 57%); }
-        .buttonIconSettings-input-field:focus { border: 1px solid hsl(0, 0%, 100%); }
+        .buttonIconSettings-input-field:focus, .links-header-container input:focus, .sidebar-container input:focus { border: 1px solid hsl(0, 0%, 100%); }
 
         .input-field-targetNotebookLMUrl:hover,
         .input-field-targetChatGPTUrl:hover,
@@ -133,7 +132,6 @@
         { background-color: hsl(0, 0%, 10.37%); }
 
         .btn-style-settings {
-            margin-left: 10px; 
             padding: 5px 10px;
             cursor: pointer; 
             color: whitesmoke;
@@ -146,7 +144,7 @@
             border-radius: 3px;
             transition: all 0.2s ease-out;
         }
-        /* .btn-style-settings:first-child { margin: 0 12px 0 0; } */
+
         .btn-style-settings:hover { color: white; background-color: rgba(255,255,255,0.2); border-color: transparent; }
         .button-icons { display: block; font-family: "Roboto","Arial",sans-serif; font-size: 1.4em; line-height: 1.5em; font-weight: 500; }
         .icons-container { display: flex; justify-content: space-between; margin-bottom: 20px; }
@@ -319,7 +317,8 @@
             border-color: hsl(359, 88%, 57%);
         }
 
-        .checkbox-label { 
+        .checkbox-label,
+        .number-input-label span { 
             display: flex; 
             align-items: center; 
             font-family: "Roboto","Arial",sans-serif; 
@@ -345,9 +344,16 @@
             line-height: 1.5em; 
             font-weight: 400; 
             display: block; 
-            margin:-5px 0px 20px 24px; 
+            margin:-5px 0px 5px 24px; 
             pointer-events: none; 
             cursor: default; 
+        }
+
+        .extra-button-container {
+            display: flex;
+            justify-content: center;
+            gap: 5%;
+            margin: 10px 0;
         }
 
         .chatgpt-prompt-textarea { 
@@ -380,8 +386,8 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-top: 30px;
-            padding-top: 15px;
+            margin-top: 20px;
+            padding-top: 10px;
             border: none;
             border-top: solid 1px transparent;
             border-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
@@ -395,12 +401,14 @@
         .button-container-backup {
             display: flex;
             justify-content: end;
-            gap: 13.5px;
+            gap: 23.5px;
         }
 
         .button-container-settings { 
             display: flex; 
-            align-items: center; 
+            align-items: center;
+            justify-content: end;
+            gap: 10px;
             
         }
 
@@ -583,17 +591,235 @@
             color: ghostwhite;
             text-decoration: none;
             cursor: pointer;
-            margin: 0 10px;
+            margin: 0 8px;
             outline: none;
             background: transparent;
             border: none;
+            text-align: center;
             text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
 
         .buttons-left:hover { color: #ff0000; }
-        .buttons-left:active { color: #282828; }
+        .buttons-left:active { color:rgb(200, 25, 25); }
+
+        .sub-panel-overlay {
+            position: fixed;
+            z-index: 2100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(1px);
+        }
+
+        .sub-panel {
+            z-index: 2177;
+            background-color: rgba(17, 17, 17, 0.8);
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 8px;
+            width: 50vw;
+            max-width: 70vw;
+            max-height: 80vh;
+            position: relative;
+            display: flex;
+            flex-direction: column; 
+            overflow-y: auto;
+            color: whitesmoke;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+
+        .sub-panel button {
+            position: sticky;
+            top: 0;
+            align-self: flex-end;
+            box-shadow: 0 0 20px 10px black;
+            z-index: 2078;
+        }
+
+        .sub-panel-header {
+            margin: -24px 60px 20px 0px;
+            padding: 0px 0px 0px 0px;
+            border: 0;
+            text-align: left;
+            text-decoration: none;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 2em;
+            line-height: 1em;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: normal;
+            text-shadow: 0 0 30px 20px black;
+            cursor: auto;
+            color: white;
+            align-self: left;
+            position: relative;
+            z-index: 2180;
+        }
+
+        #links-in-header-form .chrome-info {
+            margin: -10px 80px 20px 0px;
+        }
+
+        .links-header-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .links-header-container label { 
+            color: whitesmoke; 
+        }
+
+        .links-header-container .url-container:first-child {
+            flex: 1;
+        }
+
+        .links-header-container .url-container:last-child {
+            flex: 2;
+        }
+
+        .sidebar-container {
+            display: flex;
+            align-items: center;
+            margin: 10px 0 0 0;
+            color: whitesmoke;
+            justify-content: flex-start;
+            gap: 20px;
+        }
+
+        .sidebar-container .checkbox-container {
+            margin-bottom: 0 !important;
+            flex: 1;
+        }
+
+        .sidebar-container .url-container {
+        flex: 2;
+        }
+
+        #color-code-videos-form .checkbox-container { margin: 20px 0 0 0; }
+        #color-code-videos-form .label-style-settings { margin: 20px 0 10px 0; }
+        #color-code-videos-form > div.videos-old-container > span { margin: 0; }
+        #custom-css-form .checkbox-container { margin: 20px 0; }
+
+        #custom-css-form .file-naming-container {
+            margin: 20px 0;
+            display: flex;
+            gap: 25px;
+            align-content: center;
+        }
+
+        #custom-css-form .label-style-settings {
+            margin-bottom: 0;
+            white-space: nowrap;
+            align-content: center;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none; /* Remove default styling */
+            appearance: none;
+            width: 100%; /* Full width */
+            height: 6px; /* Height of the track */
+            background: #ccc; /* Track color */
+            border-radius: 5px; /* Rounded corners for the track */
+            outline: none; /* Remove outline */
+        }
+
+        input[type="range"]::-moz-range-thumb,
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Remove default styling */
+            appearance: none;
+            width: 16px; /* Width of the thumb */
+            height: 16px; /* Height of the thumb */
+            background: #007bff; /* Thumb color */
+            border-radius: 50%; /* Make the thumb round */
+            cursor: pointer; /* Add a pointer cursor */
+            border: 2px solid #ffffff; /* Add a white border for visibility */
+        }
+
+        input[type="range"]::-moz-range-track,
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: #007bff; /* Track color */
+            height: 6px; /* Height of the track */
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        .videos-old-container {
+            display: flex;
+            align-items: center;
+            gap: 25px; 
+            margin: 20px 0; 
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px; 
+            flex: 1;
+        }
+
+        .slider-container input[type="range"] { 
+            flex: 1; 
+        }
+
+        .videos-age-container {
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+            gap: 25px; 
+        }
+
+        .videos-age-row {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .videos-age-row span {
+            text-align: right;
+            flex: 1;
+            max-width: 50%;
+        }
+
+        .videos-age-row input {
+            flex: 1; 
+            margin: 0 0 0 10px;
+            max-width: 70px;
+            height: 35px;
+            cursor: pointer;
+        }
+
+        .number-input-container {
+            margin: 20px 0;
+        }
+
+        .number-input-field {
+            margin: 0 10px 0 0;
+            align-items: center; 
+            font-size: 1.4em; 
+            line-height: 1.5em; 
+            font-weight: 700; 
+            cursor: auto; 
+            text-decoration: none;
+            text-align: center; 
+            display: inline-block;
+
+        }
+
+        .number-input-label span {
+            display: initial;
+            cursor: auto;
+        }
     `;
 
     document.head.appendChild(styleSheet);
@@ -688,6 +914,347 @@
         document.head.appendChild(progressBarCSS);
     }
 
+    // customCSS
+    function customCSS() {
+        const customCSS = document.createElement('style');
+        customCSS.textContent = `
+            .yte-style-hide-default-sidebar {
+                ytd-mini-guide-renderer.ytd-app { display: none !important; }
+                ytd-app[mini-guide-visible] ytd-page-manager.ytd-app { margin-left: 0 !important; }
+                #guide-button.ytd-masthead { display: none !important; }
+                #contents.ytd-rich-grid-renderer { justify-content: center !important; }
+            }
+
+            html {
+                font-size: var(--fontSize) !important;
+                font-family: "Roboto", Arial, sans-serif;
+            }
+
+            #video-title.ytd-rich-grid-media {
+                text-transform: var(--textTransform);
+            }
+
+            ytd-compact-video-renderer ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer),
+            ytd-rich-item-renderer ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
+                opacity: var(--watchedOpacity);
+            }
+
+            .yte-style-hide-watched-videos-global {
+                ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer) {
+                    display: none;
+                }
+            }
+
+            .ytd-page-manager[page-subtype="home"],
+            .ytd-page-manager[page-subtype="channels"],
+            .ytd-page-manager[page-subtype="subscriptions"] {
+                .style-scope.ytd-two-column-browse-results-renderer {
+                    --ytd-rich-grid-items-per-row: var(--itemsPerRow) !important;
+                    --ytd-rich-grid-posts-per-row: var(--itemsPerRow) !important;
+                    --ytd-rich-grid-slim-items-per-row: var(--itemsPerRowCalc);
+                    --ytd-rich-grid-game-cards-per-row: var(--itemsPerRowCalc);
+                    --ytd-rich-grid-mini-game-cards-per-row: var(--itemsPerRowCalc);
+                }
+            }
+
+            .yte-style-hide-voice-search {
+                #voice-search-button.ytd-masthead { display: none; }
+            }
+
+            .yte-style-hide-create-button {
+                #buttons.ytd-masthead > .ytd-masthead:first-child { display: none; }
+            }
+
+            .yte-style-hide-miniplayer {
+                .miniplayer.ytd-miniplayer { display: none; }
+                ytd-miniplayer { display: none; }
+            }
+
+            .yte-style-sqaure-search-bar {
+                #center.ytd-masthead { flex: 0 1 500px; }
+                .YtSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; }
+                .YtSearchboxComponentSuggestionsContainer { border-radius: 0 0 10px 10px; }
+                .YtSearchboxComponentSearchButtonDark { display: none; }
+                .YtSearchboxComponentHost { margin: 0; }
+
+                .ytSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; }
+                .ytSearchboxComponentSuggestionsContainer { border-radius: 0 0 10px 10px; }
+                .ytSearchboxComponentSearchButtonDark { display: none; }
+                .ytSearchboxComponentHost { margin: 0; }
+            }
+
+            .yte-style-sqaure-design {
+                .ytd-page-manager[page-subtype="home"] {
+                    yt-chip-cloud-chip-renderer { 
+                        border-radius: 3px; 
+                    }
+                }
+
+                .ytd-page-manager[page-subtype="channels"] {
+                    .yt-image-banner-view-model-wiz--inset,
+                    yt-chip-cloud-chip-renderer { 
+                        border-radius: 0 !important; 
+                    }
+
+                    .yt-spec-button-shape-next--size-m {
+                        border-radius: 3px;
+                    }
+                }
+
+                .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-start { border-radius: 3px 0 0 3px; }
+                .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-end { border-radius: 0 3px 3px 0; }
+
+                ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]),
+                .yt-spec-button-shape-next--size-s,
+                .yt-spec-button-shape-next--size-m,
+                #description.ytd-watch-metadata,
+                ytd-multi-page-menu-renderer,
+                yt-chip-cloud-chip-renderer,
+                .ytChipShapeChip {
+                    border-radius: 3px;
+                }
+
+                ytd-menu-popup-renderer {
+                    border-radius: 0 0 5px 5px;
+                }
+
+                ytd-macro-markers-list-item-renderer[rounded] #thumbnail.ytd-macro-markers-list-item-renderer,
+                ytd-thumbnail[size="medium"] a.ytd-thumbnail, ytd-thumbnail[size="medium"]::before,
+                ytd-thumbnail[size="large"] a.ytd-thumbnail, ytd-thumbnail[size="large"]::before,
+                ytd-watch-flexy[rounded-player-large][default-layout] #ytd-player.ytd-watch-flexy,
+                ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]) {
+                    border-radius: 0 !important;
+                }
+            }
+
+            .yte-style-compact-layout {
+                .ytd-page-manager[page-subtype="home"],
+                .ytd-page-manager[page-subtype="channels"],
+                .ytd-page-manager[page-subtype="subscriptions"] {
+                    ytd-rich-section-renderer { display: none; }
+                
+                    #contents.ytd-rich-grid-renderer {
+                        width: 100%;
+                        max-width: 100%;
+                        padding-top: 0;
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: flex-start;
+                    }
+                
+                    .style-scope.ytd-two-column-browse-results-renderer {
+                        --ytd-rich-grid-item-max-width: 100vw;
+                        --ytd-rich-grid-item-min-width: 310px;
+                        --ytd-rich-grid-item-margin: 1px !important;
+                        --ytd-rich-grid-content-offset-top: 56px;
+                    }
+                
+                    ytd-rich-item-renderer[rendered-from-rich-grid][is-in-first-column] {
+                        margin-left: 5px !important;
+                    }
+                
+                    ytd-rich-item-renderer[rendered-from-rich-grid] {
+                        margin: 5px 0 20px 5px !important;
+                    }
+                
+                    #meta.ytd-rich-grid-media { 
+                        overflow-x: hidden; 
+                        padding-right: 6px; 
+                    }
+                
+                    #avatar-container.ytd-rich-grid-media { 
+                        margin:7px 6px 0px 6px; 
+                    }
+                
+                    h3.ytd-rich-grid-media { 
+                        margin: 7px 0 4px 0; 
+                    }
+                }
+                
+                .ytd-page-manager[page-subtype="home"] {
+                    ytd-menu-renderer.ytd-rich-grid-media { 
+                        position: absolute; 
+                        top: 50px; 
+                        right: auto; 
+                        left: 3px; 
+                        transform: rotate(90deg); 
+                        background-color: rgba(255,255,255,.1); 
+                        border-radius: 50%; 
+                    }
+                
+                    .title-badge.ytd-rich-grid-media, .video-badge.ytd-rich-grid-media {
+                        position: absolute;
+                        margin: 0px 10% 0 0;
+                        right: 0;
+                        top: 6em;
+                    }
+                
+                    ytd-rich-item-renderer[rendered-from-rich-grid] {
+                        margin: 5px 5px 20px 5px !important;
+                    }
+
+                    .style-scope.ytd-two-column-browse-results-renderer {
+                        --ytd-rich-grid-item-margin: .5% !important;
+                    }
+                }
+                
+                .ytd-page-manager[page-subtype="channels"] {
+                    ytd-tabbed-page-header.grid-5-columns #page-header.ytd-tabbed-page-header, ytd-tabbed-page-header.grid-5-columns[has-inset-banner] #page-header-banner.ytd-tabbed-page-header { 
+                        padding: 0 !important; 
+                    }
+                
+                    ytd-two-column-browse-results-renderer.grid-5-columns, .grid-5-columns.ytd-two-column-browse-results-renderer { 
+                        width: 100% !important; 
+                    }
+                    
+                    ytd-rich-grid-renderer:not([is-default-grid]) #header.ytd-rich-grid-renderer {
+                        transform: translateX(800px) translateY(-40px);
+                        z-index: 2000;
+                    }
+                    
+                    ytd-feed-filter-chip-bar-renderer[component-style="FEED_FILTER_CHIP_BAR_STYLE_TYPE_CHANNEL_PAGE_GRID"] {
+                        margin-bottom: -32px;
+                        margin-top: 0;
+                    }
+                    
+                    .page-header-view-model-wiz__page-header-headline-image { 
+                        margin-left: 110px; 
+                    }
+                
+                    ytd-rich-section-renderer { 
+                        display: none; 
+                    }
+                
+                    ytd-menu-renderer.ytd-rich-grid-media { 
+                        position: absolute; 
+                        top: 4em; 
+                        right: 5%; 
+                        left:-auto; 
+                        transform: rotate(90deg); 
+                        background-color: rgba(255,255,255,.1); 
+                        border-radius: 50%; 
+                    }
+                
+                    .yt-tab-group-shape-wiz__slider,.yt-tab-shape-wiz__tab-bar { 
+                        display:none;
+                    }
+                
+                    .yt-tab-shape-wiz__tab--tab-selected,.yt-tab-shape-wiz__tab:hover { 
+                        color:white; 
+                    }
+                
+                    #tabsContent > yt-tab-group-shape > div.yt-tab-group-shape-wiz__tabs > yt-tab-shape:nth-child(3) {
+                        display:none!important;
+                    }
+                
+                    .style-scope.ytd-two-column-browse-results-renderer {
+                        --ytd-rich-grid-item-margin: .5% !important;
+                    }
+                }
+                
+                ytd-browse[page-subtype="channels"] #contentContainer {
+                    padding-top: 0 !important;
+                }
+                
+                ytd-browse[page-subtype="channels"] tp-yt-app-header {
+                    position: static !important;
+                    transform: none !important;
+                    transition: none !important;
+                }
+                
+                ytd-browse[page-subtype="channels"] tp-yt-app-header[fixed] {
+                    position: static !important;
+                    transform: none !important;
+                    transition: none !important;
+                }
+                
+                ytd-browse[page-subtype="channels"] tp-yt-app-header #page-header {
+                position: static !important;
+                    transform: none !important;
+                }
+                
+                .ytd-page-manager[page-subtype="subscriptions"] {
+                    ytd-menu-renderer.ytd-rich-grid-media { 
+                        position: absolute; 
+                        top: 50px; 
+                        right: auto; 
+                        left: 3px; 
+                        transform: rotate(90deg); 
+                        background-color: rgba(255,255,255,.1); 
+                        border-radius: 50%; 
+                    }
+                
+                    .title-badge.ytd-rich-grid-media, .video-badge.ytd-rich-grid-media {
+                        position: absolute;
+                        margin: 0px 10% 0 0;
+                        right: 0;
+                        top: 6em;
+                    }
+                }
+                
+                .item.ytd-watch-metadata { 
+                    margin-top: 7px; 
+                }
+                
+                #subheader.ytd-engagement-panel-title-header-renderer:not(:empty) {
+                    padding: 0 !important;
+                    transform: translateX(110px) translateY(-44px);
+                    background-color: transparent;
+                    border-top: none;
+                }
+                
+                #header.ytd-engagement-panel-title-header-renderer {
+                    padding: 4px 7px 4px 7px;
+                }
+                
+                #visibility-button.ytd-engagement-panel-title-header-renderer, #information-button.ytd-engagement-panel-title-header-renderer {
+                    z-index: 1;
+                }
+                
+                .ytChipShapeChip:hover  {
+                    background: rgba(255,255,255,0.2);
+                    border-color: transparent;
+                }
+                
+                .ytChipShapeActive:hover {
+                    background-color: #f1f1f1;
+                    color: #0f0f0f;
+                }
+                
+                ytd-engagement-panel-title-header-renderer {
+                    height: 54px;
+                }
+                
+                .yt-spec-button-shape-next--icon-only-default {
+                    width: 35px;
+                    height: 35px;
+                }
+            }
+
+            .ytd-page-manager[page-subtype="home"] {
+                .yte-style-live-video, .yte-style-upcoming-video, .yte-style-newly-video, .yte-style-recent-video, .yte-style-lately-video, .yte-style-old-video { outline: 2px solid; }
+
+                .yte-style-live-video { outline-color: var(--liveVideo);}
+                .yte-style-streamed-text { color: var(--streamedText);}
+                .yte-style-upcoming-video { outline-color: var(--upComingVideo);}
+                .yte-style-newly-video { outline-color: var(--newlyVideo);}
+                .yte-style-recent-video { outline-color: var(--recentVideo);}
+                .yte-style-lately-video { outline-color: var(--latelyVideo);}
+                .yte-style-old-video { opacity: var(--oldVideo);}
+            }
+
+            .yte-style-hide-watched-videos {
+                .ytd-page-manager[page-subtype="home"] {
+                    ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer) {
+                        display: none;
+                    }
+                }
+            }
+        `;
+
+        document.head.appendChild(customCSS);
+    }
+
     // default configuration
     const DEFAULT_CONFIG = {
         targetChatGPTUrl: 'https://ChatGPT.com/',
@@ -706,7 +1273,43 @@
             download: '↓',
             ChatGPT: '💬',
             NotebookLM: '🎧'
-        }
+        },
+        buttonLeft1Text: 'ABC News',
+        buttonLeft1Url: 'https://www.youtube.com/@ABCNews/videos',
+        buttonLeft2Text: 'CNN',
+        buttonLeft2Url: 'https://www.youtube.com/@CNN/videos',
+        buttonLeft3Text: '',
+        buttonLeft3Url: 'https://www.youtube.com/@BBCNews/videos',
+        buttonLeft4Text: '',
+        buttonLeft4Url: 'https://www.youtube.com/@FoxNews/videos',
+        buttonLeft5Text: '',
+        buttonLeft5Url: 'https://www.youtube.com/@NBCNews/videos',
+        buttonLeft6Text: '',
+        buttonLeft6Url: 'https://www.youtube.com/@Formula1/videos',
+        buttonLeft7Text: '',
+        buttonLeft7Url: 'https://www.youtube.com/@SkySportsF1/videos',
+        mButtonText: '☰',
+        mButtonDisplay: false,
+        colorCodeVideosEnabled: true,
+        videosHideWatched: false,
+        videosOldOpacity: 0.5,
+        videosAgeColorPickerNewly: '#FFFF00', 
+        videosAgeColorPickerRecent: '#FFA500', 
+        videosAgeColorPickerLately: '#0000FF', 
+        videosAgeColorPickerLive: '#FF0000',
+        videosAgeColorPickerStreamed: '#FF0000',
+        videosAgeColorPickerUpcoming: '#32CD32',
+        textTransform: 'normal-case',
+        defaultFontSize: 10,
+        videosWatchedOpacity: 0.5,
+        videosPerRow: 3,
+        videosHideWatchedGlobal: false,
+        hideVoiceSearch: false,
+        hideCreateButton: false,
+        hideMiniPlayer: false,
+        squareSearchBar: true,
+        squareDesign: false,
+        compactLayout: false,
     };
 
     // load user configuration or use defaults
@@ -727,9 +1330,40 @@
         }
     };
 
+    // ensure CSS settings load immediately
+    function loadCSSsettings() {
+        const body = document.querySelector('body');
+
+        // buttonsLeft - sidebar visibility
+        if (USER_CONFIG.mButtonDisplay) { body.classList.add('yte-style-hide-default-sidebar'); } else { body.classList.remove('yte-style-hide-default-sidebar'); }
+
+        // custom css
+        document.documentElement.style.setProperty('--textTransform', USER_CONFIG.textTransform);
+        document.documentElement.style.setProperty('--fontSize', `${USER_CONFIG.defaultFontSize}px`);
+        document.documentElement.style.setProperty('--watchedOpacity', USER_CONFIG.videosWatchedOpacity);
+        document.documentElement.style.setProperty('--itemsPerRow', USER_CONFIG.videosPerRow);
+        document.documentElement.style.setProperty('--itemsPerRowCalc', USER_CONFIG.videosPerRow + 2);
+        if (USER_CONFIG.videosHideWatchedGlobal) { body.classList.add('yte-style-hide-watched-videos-global'); } else { body.classList.remove('yte-style-hide-watched-videos-global'); }
+        if (USER_CONFIG.hideVoiceSearch) { body.classList.add('yte-style-hide-voice-search'); } else { body.classList.remove('yte-style-hide-voice-search'); }
+        if (USER_CONFIG.hideCreateButton) { body.classList.add('yte-style-hide-create-button'); } else { body.classList.remove('yte-style-hide-create-button'); }
+        if (USER_CONFIG.hideMiniPlayer) { body.classList.add('yte-style-hide-miniplayer'); } else { body.classList.remove('yte-style-hide-miniplayer'); }
+        if (USER_CONFIG.squareSearchBar) { body.classList.add('yte-style-sqaure-search-bar'); } else { body.classList.remove('yte-style-sqaure-search-bar'); }
+        if (USER_CONFIG.squareDesign) { body.classList.add('yte-style-sqaure-design'); } else { body.classList.remove('yte-style-sqaure-design'); }
+        if (USER_CONFIG.compactLayout) { body.classList.add('yte-style-compact-layout'); } else { body.classList.remove('yte-style-compact-layout'); }
+
+        // color code videos
+        if (USER_CONFIG.videosHideWatched) { body.classList.add('yte-style-hide-watched-videos'); } else { body.classList.remove('yte-style-hide-watched-videos'); }
+        document.documentElement.style.setProperty('--liveVideo', USER_CONFIG.videosAgeColorPickerLive);
+        document.documentElement.style.setProperty('--streamedText', USER_CONFIG.videosAgeColorPickerStreamed);
+        document.documentElement.style.setProperty('--upComingVideo', USER_CONFIG.videosAgeColorPickerUpcoming);
+        document.documentElement.style.setProperty('--newlyVideo', USER_CONFIG.videosAgeColorPickerNewly);
+        document.documentElement.style.setProperty('--recentVideo', USER_CONFIG.videosAgeColorPickerRecent);
+        document.documentElement.style.setProperty('--latelyVideo', USER_CONFIG.videosAgeColorPickerLately);
+        document.documentElement.style.setProperty('--oldVideo', USER_CONFIG.videosOldOpacity); 
+    }
+
     // create and show the settings modal
     function showSettingsModal() {
-        // check if the modal already exists
         const existingModal = document.getElementById('yt-transcript-settings-modal');
         if (existingModal) {
             existingModal.style.display = 'flex';
@@ -744,14 +1378,6 @@
 
         const modalContent = document.createElement('div');
         modalContent.classList.add('modal-content');
-
-        // close modal on overlay click
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-                document.body.style.overflow = '';
-            }
-        });
 
         // modal header
         const header = document.createElement('a');
@@ -824,13 +1450,13 @@
             'date-channel-title': 'uploadDate - Channel - Title.txt',
         }));
 
-        // Include Timestamps
+        // include Timestamps
         form.appendChild(createCheckboxField('Include Timestamps in the Transcript (default: yes)', 'includeTimestamps', USER_CONFIG.includeTimestamps));
 
-        // Include Chapter Headers
+        // include Chapter Headers
         form.appendChild(createCheckboxField('Include Chapter Headers in the Transcript (default: yes)', 'includeChapterHeaders', USER_CONFIG.includeChapterHeaders));
 
-        // Open in Same Tab
+        // open in Same Tab
         form.appendChild(createCheckboxField('Open Links in the Same Tab (default: yes)', 'openSameTab', USER_CONFIG.openSameTab));
 
         // Auto Open Chapter Panel
@@ -839,17 +1465,45 @@
         // Display Remaining Time
         form.appendChild(createCheckboxField('Display Remaining Time Under the Video (default: yes)', 'DisplayRemainingTime', USER_CONFIG.DisplayRemainingTime));
 
-        // Keep Progress Bar Visible
+        // keep Progress Bar Visible
         form.appendChild(createCheckboxField('Keep the Progress Bar Visible (default: yes)', 'ProgressBar', USER_CONFIG.ProgressBar));
 
-        // Prevent Execution in Background Tabs
+        // prevent Execution in Background Tabs
         form.appendChild(createCheckboxField('Important for Chrome! (default: yes)', 'preventBackgroundExecution', USER_CONFIG.preventBackgroundExecution));
 
-        // Info for Chrome
+        // info for Chrome
         const description = document.createElement('small');
         description.innerText = 'Prevents early script execution in background tabs.\nWhile this feature is superfluous in Safari, it is essential for Chrome.';
         description.classList.add('chrome-info');
         form.appendChild(description);
+
+        // extra settings buttons 
+        const extraSettings = document.createElement('div');
+        extraSettings.classList.add('extra-button-container'); 
+
+        const buttonsLeft = document.createElement('button');
+        buttonsLeft.type = 'button';
+        buttonsLeft.innerText = 'Links in Header';
+        buttonsLeft.classList.add('btn-style-settings');
+        buttonsLeft.onclick = () => showSubPanel(createLinksInHeaderContent(), 'linksInHeader');
+
+        const customCSSButton = document.createElement('button');
+        customCSSButton.type = 'button';
+        customCSSButton.innerText = 'Customize CSS';
+        customCSSButton.classList.add('btn-style-settings');
+        customCSSButton.onclick = () => showSubPanel(createCustomCSSContent(), 'createcustomCSS');
+
+        const ColorCodeVideos = document.createElement('button');
+        ColorCodeVideos.type = 'button';
+        ColorCodeVideos.innerText = 'Color Code Videos';
+        ColorCodeVideos.classList.add('btn-style-settings');
+        ColorCodeVideos.onclick = () => showSubPanel(createColorCodeVideosContent(), 'colorCodeVideos');
+
+        extraSettings.appendChild(buttonsLeft);
+        extraSettings.appendChild(customCSSButton);
+        extraSettings.appendChild(ColorCodeVideos);
+
+        form.appendChild(extraSettings);
 
         // ChatGPT Prompt
         form.appendChild(createTextareaField('ChatGPT Prompt:', 'ChatGPTPrompt', USER_CONFIG.ChatGPTPrompt, 'label-ChatGPT'));  
@@ -861,12 +1515,6 @@
         // export and import button container
         const exportImportContainer = document.createElement('div');
         exportImportContainer.classList.add('button-container-backup');
-
-        // const customCSSButton = document.createElement('button');
-        // customCSSButton.type = 'button';
-        // customCSSButton.innerText = 'Customize CSS';
-        // customCSSButton.classList.add('btn-style-settings');
-        // customCSSButton.onclick = CustomizeCSS;
 
         const exportButton = document.createElement('button');
         exportButton.type = 'button';
@@ -927,7 +1575,6 @@
         cancelButton.classList.add('btn-style-settings');
         cancelButton.onclick = () => { modal.style.display = 'none'; document.body.style.overflow = ''; };
 
-        //exportImportContainer.appendChild(customCSSButton);
         exportImportContainer.appendChild(exportButton);
         exportImportContainer.appendChild(importButton);
 
@@ -1001,6 +1648,14 @@
             requestAnimationFrame(animateScroll);
         });
 
+        // close modal on overlay click
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        });
+
         // close modal with ESC key
         window.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
@@ -1008,6 +1663,200 @@
             document.body.style.overflow = '';
             }
         });
+
+        // sub-panels
+        function showSubPanel(panelContent, panelId) {
+            let subPanelOverlay = document.querySelector(`.sub-panel-overlay[data-panel-id="${panelId}"]`);
+
+            if (subPanelOverlay) { subPanelOverlay.style.display = 'flex'; } 
+            else {
+                subPanelOverlay = document.createElement('div');
+                subPanelOverlay.classList.add('sub-panel-overlay');
+                subPanelOverlay.setAttribute('data-panel-id', panelId);
+
+                const subPanel = document.createElement('div');
+                subPanel.classList.add('sub-panel');
+
+                const closeButton = document.createElement('button');
+                closeButton.type = 'button';
+                closeButton.innerText = 'Close';
+                closeButton.classList.add('btn-style-settings');
+                closeButton.onclick = () => { subPanelOverlay.style.display = 'none'; };
+                subPanel.appendChild(closeButton);
+
+                if (panelContent) { subPanel.appendChild(panelContent); }
+            
+                subPanelOverlay.appendChild(subPanel);
+                document.body.appendChild(subPanelOverlay);
+            }
+        }
+
+        // links in header
+        function createLinksInHeaderContent() {
+            const form = document.createElement('form');
+            form.id = 'links-in-header-form';
+
+            const subPanelHeader = document.createElement('div');
+            subPanelHeader.classList.add('sub-panel-header');
+            subPanelHeader.textContent = 'Configure the links on the left side of the YouTube header';
+            form.appendChild(subPanelHeader);
+
+            const infoLinksHeader = document.createElement('small');
+            infoLinksHeader.innerText = "Up to seven links can be added next to the logo. An empty 'Link Text' field won't insert the link into the header.\nIf the left navigation bar is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.";
+            infoLinksHeader.classList.add('chrome-info');
+            form.appendChild(infoLinksHeader);
+
+            const sidebarContainer = document.createElement('div');
+            sidebarContainer.classList.add('sidebar-container'); 
+
+            // hide left navigation bar and replacement icon
+            const checkboxField = createCheckboxField('Hide Left Navigation Bar', 'mButtonDisplay', USER_CONFIG.mButtonDisplay);
+            sidebarContainer.appendChild(checkboxField);
+
+            const inputField = createInputField('Left Navigation Bar Replacement Icon', 'mButtonText', USER_CONFIG.mButtonText, 'label-mButtonText');
+            sidebarContainer.appendChild(inputField);
+
+            form.appendChild(sidebarContainer);
+
+            // function to create a link input group
+            function createButtonInputGroup(linkNumber) {
+                const container = document.createElement('div');
+                container.classList.add('links-header-container');
+
+                // link text
+                const textField = createInputField(`Link ${linkNumber} Text`, `buttonLeft${linkNumber}Text`, USER_CONFIG[`buttonLeft${linkNumber}Text`], `label-buttonLeft${linkNumber}Text`);
+                container.appendChild(textField);
+
+                // link URL
+                const urlField = createInputField(`Link ${linkNumber} URL`, `buttonLeft${linkNumber}Url`, USER_CONFIG[`buttonLeft${linkNumber}Url`], `label-buttonLeft${linkNumber}Url`);
+                container.appendChild(urlField);
+
+                return container;
+            }
+
+            // create input groups for links 1 through 6
+            for (let i = 1; i <= 7; i++) {
+                form.appendChild(createButtonInputGroup(i));
+            }
+
+            return form;
+        }
+
+        // custom css
+        function createCustomCSSContent() {
+            const form = document.createElement('form');
+            form.id = 'custom-css-form';
+
+            const subPanelHeader = document.createElement('div');
+            subPanelHeader.classList.add('sub-panel-header');
+            subPanelHeader.textContent = 'Customize YouTube Appearance';
+            form.appendChild(subPanelHeader);
+
+            // dim watched videos
+            const videosWatchedContainer = createSliderInputField( 'Change Opacity of Watched Videos (default 0.5):', 'videosWatchedOpacity', USER_CONFIG.videosWatchedOpacity, '0', '1', '0.1' );
+            form.appendChild(videosWatchedContainer);
+
+            // text transform
+            form.appendChild(createSelectField('Text Transform:', 'label-Text-Transform', 'textTransform', USER_CONFIG.textTransform, {
+                'uppercase': 'uppercase - THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.',
+                'lowercase': 'lowercase - the quick brown fox jumps over the lazy dog.',
+                'capitalize': 'capitalize - The Quick Brown Fox Jumps Over The Lazy Dog.',
+                'normal-case': 'normal-case (default) - The quick brown fox jumps over the lazy dog.',
+            }));
+
+            // font size
+            const defaultFontSizeField = createNumberInputField('Font Size (default: 10px)', 'defaultFontSize', USER_CONFIG.defaultFontSize);
+            form.appendChild(defaultFontSizeField);
+
+            // videos per row
+            const videosPerRow = createNumberInputField('Number of Videos per Row (default: 3)', 'videosPerRow', USER_CONFIG.videosPerRow);
+            form.appendChild(videosPerRow);
+
+            // hide voice search button
+            const hideVoiceSearch = createCheckboxField('Hide Voice Search Button in the Header (default: no)', 'hideVoiceSearch', USER_CONFIG.hideVoiceSearch);
+            form.appendChild(hideVoiceSearch);
+
+            // hide create button
+            const hideCreateButton = createCheckboxField('Hide Create Button in the Header (default: no)', 'hideCreateButton', USER_CONFIG.hideCreateButton);
+            form.appendChild(hideCreateButton);
+
+            // hide watched videos globally
+            const videosHideWatchedGlobal = createCheckboxField('Hide Watched Videos Globally (default: no)', 'videosHideWatchedGlobal', USER_CONFIG.videosHideWatchedGlobal);
+            form.appendChild(videosHideWatchedGlobal);
+
+            // hide miniplayer
+            const hideMiniplayer = createCheckboxField('Hide Miniplayer (default: no)', 'hideMiniplayer', USER_CONFIG.hideMiniplayer);
+            form.appendChild(hideMiniplayer);
+
+            // square and compact search bar
+            const squareSearchBar = createCheckboxField('Square and Compact Search Bar (default: yes)', 'squareSearchBar', USER_CONFIG.squareSearchBar);
+            form.appendChild(squareSearchBar);
+
+            // square design
+            const squareDesign = createCheckboxField('Square Design (default: no)', 'squareDesign', USER_CONFIG.squareDesign);
+            form.appendChild(squareDesign);
+
+            // compact layout
+            const compactLayout = createCheckboxField('Compact Layout (default: no)', 'compactLayout', USER_CONFIG.compactLayout);
+            form.appendChild(compactLayout);
+
+            return form;
+        }
+
+        // color code videos
+        function createColorCodeVideosContent() {
+            const form = document.createElement('form');
+            form.id = 'color-code-videos-form';
+
+            const subPanelHeader = document.createElement('div');
+            subPanelHeader.classList.add('sub-panel-header');
+            subPanelHeader.textContent = 'Configure Color Codes for Videos on Home';
+            form.appendChild(subPanelHeader);
+
+            // activate color code videos
+            const checkboxField = createCheckboxField('Activate Color Code Videos (default: yes)', 'colorCodeVideosEnabled', USER_CONFIG.colorCodeVideosEnabled );
+            form.appendChild(checkboxField); 
+
+            const checkboxFieldWatched = createCheckboxField('Hide Watched Videos (Only on Home) (default: no)', 'videosHideWatched', USER_CONFIG.videosHideWatched );
+            form.appendChild(checkboxFieldWatched); 
+
+            // opacity picker for old videos
+            const videosOldContainer = createSliderInputField( 'Change opacity of videos uploaded more than 6 months ago:', 'videosOldOpacity', USER_CONFIG.videosOldOpacity, '0', '1', '0.1' );
+            form.appendChild(videosOldContainer);
+
+            // color pickers for different video ages
+            const videosAgeContainer = document.createElement('div');
+            videosAgeContainer.classList.add('videos-age-container');
+
+            function createLabelColorPair(labelText, configKey) {
+                const row = document.createElement('div');
+                row.classList.add('videos-age-row');
+
+                const label = document.createElement('span');
+                label.classList.add('label-style-settings');
+                label.innerText = labelText;
+                row.appendChild(label);
+
+                const colorPicker = document.createElement('input');
+                colorPicker.type = 'color';
+                colorPicker.value = USER_CONFIG[configKey];
+                colorPicker.name = configKey;
+                row.appendChild(colorPicker);
+
+                videosAgeContainer.appendChild(row);
+            }
+
+            createLabelColorPair('Videos uploaded within the last 24 hours:', 'videosAgeColorPickerNewly');
+            createLabelColorPair('Videos uploaded within the past week:', 'videosAgeColorPickerRecent');
+            createLabelColorPair('Videos uploaded within the past month:', 'videosAgeColorPickerLately');
+            createLabelColorPair('Videos currently live:', 'videosAgeColorPickerLive');
+            createLabelColorPair('The word "streamed" from Videos that were live:', 'videosAgeColorPickerStreamed');
+            createLabelColorPair('Scheduled videos and upcoming live streams:', 'videosAgeColorPickerUpcoming');
+
+            form.appendChild(videosAgeContainer);
+
+            return form;
+        }
     }
 
     // helper function to create input fields
@@ -1128,7 +1977,77 @@
         return container;
     }
 
-    // helper function to create a textarea field
+    // helper function to create a number input fields
+    function createNumberInputField(labelText, settingKey, settingValue) {
+        const container = document.createElement('div');
+        container.classList.add('number-input-container');
+
+        const label = document.createElement('label');
+        label.classList.add('number-input-label');
+
+        const numberInput = document.createElement('input');
+        numberInput.type = 'number';
+        numberInput.name = settingKey;
+        numberInput.value = settingValue;
+        numberInput.min = 1; 
+        numberInput.max = 20; 
+        numberInput.step = 1; 
+        numberInput.classList.add('number-input-field'); 
+        label.appendChild(numberInput);
+
+        const span = document.createElement('span');
+        span.innerText = labelText;
+        label.appendChild(span);
+
+        container.appendChild(label);
+        return container;
+    }
+
+    // helper function to create a slider fields
+    function createSliderInputField(labelText, settingKey, settingValue, min, max, step) {
+        const container = document.createElement('div');
+        container.classList.add('videos-old-container');
+
+        const label = document.createElement('span');
+        label.classList.add('label-style-settings');
+        label.innerText = labelText;
+        container.appendChild(label);
+
+        const sliderContainer = document.createElement('div');
+        sliderContainer.classList.add('slider-container');
+
+        const leftLabel = document.createElement('span');
+        leftLabel.innerText = min;
+        sliderContainer.appendChild(leftLabel);
+
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.min = min;
+        slider.max = max;
+        slider.step = step;
+        slider.value = settingValue;
+        slider.name = settingKey;
+        sliderContainer.appendChild(slider);
+
+        const rightLabel = document.createElement('span');
+        rightLabel.innerText = max;
+        sliderContainer.appendChild(rightLabel);
+
+        const currentValue = document.createElement('span');
+        currentValue.innerText = `(${parseFloat(slider.value).toFixed(1)})`;
+        sliderContainer.appendChild(currentValue);
+
+        container.appendChild(sliderContainer);
+
+        slider.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value).toFixed(1);
+            currentValue.innerText = `(${value})`;
+        });
+
+        return container;
+    }
+
+    // helper function to create a textarea fields
     function createTextareaField(labelText, settingKey, settingValue, labelClass) {
         const container = document.createElement('chatgpt-prompt');
     
@@ -1145,12 +2064,15 @@
         container.appendChild(textarea);
     
         return container;
-    } 
+    }
 
     // function to save settings
     async function saveSettings() {
         const form = document.getElementById('yt-transcript-settings-form');
-    
+        const subPanelLinks = document.getElementById('links-in-header-form');
+        const subPanelCustomCSS = document.getElementById('custom-css-form');
+        const subPanelColor = document.getElementById('color-code-videos-form');
+
         // function to ensure secure URLs
         function normalizeUrl(url) {
             url = url.trim();
@@ -1196,7 +2118,55 @@
         if (buttonIconChatGPT !== '') { USER_CONFIG.buttonIcons.ChatGPT = buttonIconChatGPT; } else { delete USER_CONFIG.buttonIcons.ChatGPT; }
         if (buttonIconNotebookLM !== '') { USER_CONFIG.buttonIcons.NotebookLM = buttonIconNotebookLM; } else { delete USER_CONFIG.buttonIcons.NotebookLM; }
         if (buttonIconSettings !== '') { USER_CONFIG.buttonIcons.settings = buttonIconSettings; } else { delete USER_CONFIG.buttonIcons.settings; }
-    
+
+        // save sub panels - links in header
+        if (subPanelLinks) {
+            USER_CONFIG.buttonLeft1Text = subPanelLinks.elements.buttonLeft1Text.value;
+            USER_CONFIG.buttonLeft1Url = subPanelLinks.elements.buttonLeft1Url.value;
+            USER_CONFIG.buttonLeft2Text = subPanelLinks.elements.buttonLeft2Text.value;
+            USER_CONFIG.buttonLeft2Url = subPanelLinks.elements.buttonLeft2Url.value;
+            USER_CONFIG.buttonLeft3Text = subPanelLinks.elements.buttonLeft3Text.value;
+            USER_CONFIG.buttonLeft3Url = subPanelLinks.elements.buttonLeft3Url.value;
+            USER_CONFIG.buttonLeft4Text = subPanelLinks.elements.buttonLeft4Text.value;
+            USER_CONFIG.buttonLeft4Url = subPanelLinks.elements.buttonLeft4Url.value;
+            USER_CONFIG.buttonLeft5Text = subPanelLinks.elements.buttonLeft5Text.value;
+            USER_CONFIG.buttonLeft5Url = subPanelLinks.elements.buttonLeft5Url.value;
+            USER_CONFIG.buttonLeft6Text = subPanelLinks.elements.buttonLeft6Text.value;
+            USER_CONFIG.buttonLeft6Url = subPanelLinks.elements.buttonLeft6Url.value;
+            USER_CONFIG.buttonLeft7Text = subPanelLinks.elements.buttonLeft7Text.value;
+            USER_CONFIG.buttonLeft7Url = subPanelLinks.elements.buttonLeft7Url.value;
+            USER_CONFIG.mButtonText = subPanelLinks.elements.mButtonText.value;
+            USER_CONFIG.mButtonDisplay = subPanelLinks.elements.mButtonDisplay.checked;
+        }
+
+        // save sub panels - custom css
+        if (subPanelCustomCSS) {
+            USER_CONFIG.textTransform = subPanelCustomCSS.elements.textTransform.value;
+            USER_CONFIG.defaultFontSize = parseFloat(subPanelCustomCSS.elements.defaultFontSize.value);
+            USER_CONFIG.videosWatchedOpacity = parseFloat(subPanelCustomCSS.elements.videosWatchedOpacity.value);
+            USER_CONFIG.videosHideWatchedGlobal = subPanelCustomCSS.elements.videosHideWatchedGlobal.checked;
+            USER_CONFIG.videosPerRow = parseInt(subPanelCustomCSS.elements.videosPerRow.value);
+            USER_CONFIG.hideVoiceSearch = subPanelCustomCSS.elements.hideVoiceSearch.checked;
+            USER_CONFIG.hideCreateButton = subPanelCustomCSS.elements.hideCreateButton.checked;
+            USER_CONFIG.hideMiniplayer = subPanelCustomCSS.elements.hideMiniplayer.checked;
+            USER_CONFIG.squareSearchBar = subPanelCustomCSS.elements.squareSearchBar.checked;
+            USER_CONFIG.squareDesign = subPanelCustomCSS.elements.squareDesign.checked;
+            USER_CONFIG.compactLayout = subPanelCustomCSS.elements.compactLayout.checked;
+        }
+
+        // save sub panels - color code videos
+        if (subPanelColor) {
+            USER_CONFIG.colorCodeVideosEnabled = subPanelColor.elements.colorCodeVideosEnabled.checked;
+            USER_CONFIG.videosHideWatched = subPanelColor.elements.videosHideWatched.checked;
+            USER_CONFIG.videosOldOpacity = parseFloat(subPanelColor.elements.videosOldOpacity.value);
+            USER_CONFIG.videosAgeColorPickerNewly = subPanelColor.elements.videosAgeColorPickerNewly.value;
+            USER_CONFIG.videosAgeColorPickerRecent = subPanelColor.elements.videosAgeColorPickerRecent.value;
+            USER_CONFIG.videosAgeColorPickerLately = subPanelColor.elements.videosAgeColorPickerLately.value;
+            USER_CONFIG.videosAgeColorPickerLive = subPanelColor.elements.videosAgeColorPickerLive.value;
+            USER_CONFIG.videosAgeColorPickerStreamed = subPanelColor.elements.videosAgeColorPickerStreamed.value;
+            USER_CONFIG.videosAgeColorPickerUpcoming = subPanelColor.elements.videosAgeColorPickerUpcoming.value;
+        }
+
         // save updated config
         try {
             await GM.setValue('USER_CONFIG', USER_CONFIG);
@@ -1374,6 +2344,7 @@
     }
 
     function addSettingsButton() {
+
         if (document.querySelector('.button-wrapper')) return;
 
         const buttons = [ { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Transcript Exporter Settings', ariaLabel: 'YouTube Transcript Exporter Settings.' }, ];
@@ -1847,29 +2818,163 @@
         updateLayout();
     }
 
+    // sidebar and left header links
+    function buttonsLeft() {
+        function openSidebar() {
+            const guideButton = document.querySelector('#guide-button button');
+            if (guideButton) {
+                guideButton.click(); 
+            } 
+        }
+
+        // create sidebar button
+        function createButton(text, onClick) {
+            const btn = document.createElement('button');
+            btn.textContent = text;
+            btn.classList.add('buttons-left');
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                onClick();
+            });
+            return btn;
+        }
+
+        // create links
+        function createLink(text, url) {
+            const link = document.createElement('a');
+            link.textContent = text;
+            link.classList.add('buttons-left');
+            link.href = url;
+            return link;
+        }
+
+        const masthead = document.querySelector('ytd-masthead'); if (!masthead) return;
+        const container = masthead.querySelector('#container #start'); if (!container) return;
+
+        const isHideSidebarChecked = USER_CONFIG.mButtonDisplay;
+
+        if (container.querySelector('.buttons-left')) { return; }
+    
+        // adding the buttons
+        const buttonsConfig = [
+            { type: 'button', text: USER_CONFIG.mButtonText, onClick: openSidebar },
+            { type: 'link', text: USER_CONFIG.buttonLeft1Text, url: USER_CONFIG.buttonLeft1Url },
+            { type: 'link', text: USER_CONFIG.buttonLeft2Text, url: USER_CONFIG.buttonLeft2Url },
+            { type: 'link', text: USER_CONFIG.buttonLeft3Text, url: USER_CONFIG.buttonLeft3Url },
+            { type: 'link', text: USER_CONFIG.buttonLeft4Text, url: USER_CONFIG.buttonLeft4Url },
+            { type: 'link', text: USER_CONFIG.buttonLeft5Text, url: USER_CONFIG.buttonLeft5Url },
+            { type: 'link', text: USER_CONFIG.buttonLeft6Text, url: USER_CONFIG.buttonLeft6Url },
+            { type: 'link', text: USER_CONFIG.buttonLeft7Text, url: USER_CONFIG.buttonLeft7Url },
+        ];
+    
+        buttonsConfig.forEach(config => {
+            if (config.text && config.text.trim() !== '') {
+                let element;
+                if (config.type === 'button') {
+                    if (isHideSidebarChecked) {
+                        element = createButton(config.text, config.onClick);
+                        if (config.text === DEFAULT_CONFIG.mButtonText) {
+                            element.style.display = 'inline-block';
+                            element.style.fontSize = '25px';
+                            element.style.margin = '0';
+                            element.style.padding = '0 0 5px 0';
+                            element.style.transform = 'scaleX(1.25)';
+                        }
+                    }
+                } else if (config.type === 'link') {
+                    element = createLink(config.text, config.url);
+                }
+                if (element) {
+                    container.appendChild(element);
+                }
+            }
+        });
+    }
+
+    // color code videos on home
+    function ColorCodeVideos() { 
+console.log("ColorCodeVideos: Initializing and attaching event listener.");
+        // define age categories
+        const categories = {
+            live: ['watching'],
+            streamed: ['Streamed'],
+            upcoming: ['waiting', 'scheduled for'],
+            newly: ['1 day ago', 'hours ago', 'hour ago', 'minutes ago', 'minute ago', 'seconds ago', 'second ago'],
+            recent: ['1 week ago', '7 days ago', '6 days ago', '5 days ago', '4 days ago', '3 days ago', '2 days ago'],
+            lately: ['1 month ago', 'weeks ago', '14 days ago', '13 days ago', '12 days ago', '11 days ago', '10 days ago', '9 days ago', '8 days ago'],
+            old: ['years ago', '1 year ago', '12 months ago', '11 months ago', '10 months ago', '9 months ago', '8 months ago', '7 months ago']
+        };
+        
+        function processVideos() {
+console.log("ColorCodeVideos processVideos: Called.");
+            document.querySelectorAll('[class*="ytd-video-meta-block"]').forEach(el => {
+                const textContent = el.textContent.trim().toLowerCase();
+                for (const [className, ages] of Object.entries(categories)) {
+                    if (ages.some(age => textContent.includes(age.toLowerCase()))) {
+                        const videoContainer = el.closest('ytd-rich-item-renderer');
+                        if (videoContainer && !videoContainer.classList.contains(`yte-style-${className}-video`)) {
+                            videoContainer.classList.add(`yte-style-${className}-video`);
+                        }
+                    }
+                }
+            });
+        
+            document.querySelectorAll('span.ytd-video-meta-block').forEach(el => {
+                const text = el.textContent;
+                const videoContainer = el.closest('ytd-rich-item-renderer');
+                if (!videoContainer) return;
+        
+                if (/Scheduled for/i.test(text) && !videoContainer.classList.contains('yte-style-upcoming-video')) {
+                    videoContainer.classList.add('yte-style-upcoming-video');
+                }
+        
+                if (/Streamed/i.test(text) && !el.querySelector('.yte-style-streamed-text')) {
+                    el.childNodes.forEach(node => {
+                        if (node.nodeType === Node.TEXT_NODE && /Streamed/i.test(node.nodeValue)) {
+                            const span = document.createElement('span');
+                            span.className = 'yte-style-streamed-text';
+                            span.textContent = node.nodeValue.match(/Streamed/i)[0];
+                            const rest = document.createTextNode(node.nodeValue.replace(/Streamed/i, ''));
+                            el.replaceChild(rest, node);
+                            el.insertBefore(span, rest);
+                        }
+                    });
+                }
+            });
+        }
+        
+        processVideos();
+
+        document.addEventListener('yt-service-request-sent', () => {
+            setTimeout(() => { 
+                processVideos(); 
+            }, 2000); 
+        });
+    }
+
     // initiate the script
     let lastVideoURL = null;
 
     async function initializeTranscript(currentVideoURL) {
         if (USER_CONFIG.preventBackgroundExecution) { await ChromeUserWait(); }
-        //buttonsLeft();
+        buttonsLeft();
 
         const isVideoPage = /^https:\/\/.*\.youtube\.com\/watch\?v=/.test(currentVideoURL);
         if (isVideoPage) {
-            let transcriptLoaded = false;
-            try { await preLoadTranscript(); transcriptLoaded = true; } 
-            catch (error) { setTimeout(() => { addSettingsButton(); }, 3000); }
-
             if (USER_CONFIG.autoOpenChapters) { openChapters(); }
             if (USER_CONFIG.DisplayRemainingTime) { RemainingTime(); }
             if (USER_CONFIG.ProgressBar) { ProgressBarCSS(); keepProgressBarVisible(); }
+
+            let transcriptLoaded = false;
+            try { await preLoadTranscript(); transcriptLoaded = true; } 
+            catch (error) { setTimeout(() => { addSettingsButton(); }, 3000); }
             if (transcriptLoaded) { addButton(); }
             //console.log("YTE: YouTube Transcript Exporter Initialized: On Video Page.");
         } else { 
             addSettingsButton();
             //console.log("YTE: YouTube Transcript Exporter Initialized: On Normal Page."); 
-            //if (window.location.href !== "https://www.youtube.com/") { return; }
-            //ColorCodeVideos();
+            if (window.location.href !== "https://www.youtube.com/") { return; }
+            if (USER_CONFIG.colorCodeVideosEnabled) { ColorCodeVideos(); }
         }
     }
 
@@ -1880,7 +2985,8 @@
         if (currentVideoURL !== lastVideoURL) {
             lastVideoURL = currentVideoURL;
             //console.log("YTE: Only One Survived");
-            //CustomCSS();
+            loadCSSsettings();
+            customCSS();
             setTimeout(() => { initializeTranscript(currentVideoURL); }, 500);
         }
     }
@@ -1888,7 +2994,7 @@
     // reset
     function handleYTNavigation() {
         document.querySelectorAll(
-          '.button-wrapper, .remaining-time-container, #yt-transcript-settings-modal, #ProgressBar-bar, #ProgressBar-start, #ProgressBar-end, ProgressBar-progress, ProgressBar-buffer'
+          '.button-wrapper, .remaining-time-container, #yt-transcript-settings-modal, .sub-panel-overlay, #ProgressBar-bar, #ProgressBar-start, #ProgressBar-end, ProgressBar-progress, ProgressBar-buffer'
         ).forEach(el => el.remove());
     }
 
