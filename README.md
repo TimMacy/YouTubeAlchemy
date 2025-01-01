@@ -14,6 +14,9 @@ This script adds four buttons to the YouTube header to facilitate exporting a vi
   - **Display Remaining Time**: Shows the remaining playback time below the video, adjusted for playback speed.
   - **Persistent Progress Bar**: Keeps the progress bar with chapter markers visible below the video—even in fullscreen.
   - **Auto Open Chapters**: Automatically opens the chapter panel if available.
+  - **Links in Header**: Up to seven links can be added next to the logo and the Left Navigation Bar can be hidden.
+  - **Customize CSS**: Square Design, Compact Layout, Videos per Row, Dim or Hide Watched Videos are just some options.
+  - **Color Code Videos**: Adds a configurable border around videos on the YouTube home page, with colors indicating video age and status.
 - **Customizable**
   - The settings panel allows for easy modification of the script and its functionality.
     - Includes buttons to export and import preferences for backup.
@@ -23,9 +26,17 @@ This script adds four buttons to the YouTube header to facilitate exporting a vi
       - **Red**: Button Three - Download
       - **White**: Button Four - General Settings<br><br>
 
-![YouTube Transcript Exporter by Tim Macy](https://github.com/user-attachments/assets/188fba1e-1f37-400f-9c03-1236885d75a4 "YouTube Transcript Exporter by Tim Macy")
-<br><br>
-![Settings Panel](https://github.com/user-attachments/assets/f916d714-fda6-4b18-beb5-a4f5c4dbce30 "Settings Panel")  
+![YouTube Transcript Exporter by Tim Macy](https://github.com/user-attachments/assets/bc71b6ca-225d-4056-afe4-6ef543a352d7 "YouTube Transcript Exporter by Tim Macy")
+<br>
+![Settings Panel 1](https://github.com/user-attachments/assets/9975006d-0e32-42ca-af84-4bc2b09c31da "Settings Panel")
+![Links in Header](https://github.com/user-attachments/assets/6c931d9c-41ee-47b0-8fa3-cde4cfaf8ab6 "Links in Header")
+![Customize CSS](https://github.com/user-attachments/assets/5049caee-58c7-4398-9a74-b11f73676c5e "Customize CSS")
+![Color Code Videos](https://github.com/user-attachments/assets/e281652f-2fab-4eba-b7f1-711da98a7df8 "Color Code Videos")
+<br>
+<p align="center">
+  <img width="49%" alt="Youtube Default" title="Youtube Default" src="https://github.com/user-attachments/assets/496b97cb-3c26-40f1-88eb-8342a6bc0cf0" />
+  <img width="49%" alt="YouTube Transcript Exporter by Tim Macy" title="YouTube Transcript Exporter by Tim Macy" src="https://github.com/user-attachments/assets/f836a819-5126-4ebe-bb28-dcfed167d88b" />
+</p>
 
 #### Additional messages are displayed at the button's location in the YouTube header to indicate the status of the script.
 <table align="center">
