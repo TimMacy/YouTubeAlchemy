@@ -34,7 +34,7 @@ This script adds four buttons to the YouTube header to facilitate exporting a vi
 ![Color Code Videos](https://github.com/user-attachments/assets/e281652f-2fab-4eba-b7f1-711da98a7df8 "Color Code Videos")
 <br>
 <p align="center">
-  <img width="49%" alt="Youtube Default" title="Youtube Default" src="https://github.com/user-attachments/assets/496b97cb-3c26-40f1-88eb-8342a6bc0cf0" />
+  <img width="49%" alt="Youtube Default" title="Youtube Default" src="https://github.com/user-attachments/assets/be9cf037-0bee-4d8a-85a9-43a67dc37aa0" />
   <img width="49%" alt="YouTube Transcript Exporter by Tim Macy" title="YouTube Transcript Exporter by Tim Macy" src="https://github.com/user-attachments/assets/f836a819-5126-4ebe-bb28-dcfed167d88b" />
 </p>
 
