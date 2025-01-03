@@ -1,4 +1,4 @@
-# YouTube Transcript Exporter <img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="Status: Maintained">
+# YouTube Transcript Exporter <a href="https://github.com/TimMacy/YouTubeTranscriptExporter"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Transcript Exporter Status: Maintained"></a>
 This script adds four buttons to the YouTube header to facilitate exporting a video's transcript to LLMs or downloading it as a text file. The first button copies the transcript to the clipboard before opening NotebookLM, ideal for quickly generating podcasts. Button two includes a prompt to summarize the video and opens ChatGPT. The third button downloads the transcript as a text file, while the last button opens the settings panel.  
 
 
