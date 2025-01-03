@@ -1,5 +1,6 @@
-# YouTube Transcript Exporter
-This script adds four buttons to the YouTube header to facilitate exporting a video's transcript to LLMs or downloading it as a text file. The first button copies the transcript to the clipboard before opening NotebookLM, ideal for quickly generating podcasts. Button two includes a prompt to summarize the video and opens ChatGPT. The third button downloads the transcript as a text file, while the last button opens the settings panel.
+# YouTube Transcript Exporter <img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="Status: Maintained">
+This script adds four buttons to the YouTube header to facilitate exporting a video's transcript to LLMs or downloading it as a text file. The first button copies the transcript to the clipboard before opening NotebookLM, ideal for quickly generating podcasts. Button two includes a prompt to summarize the video and opens ChatGPT. The third button downloads the transcript as a text file, while the last button opens the settings panel.  
+
 
 **Note**: Due to the Same-Origin Policy (SOP) in web development, JavaScript cannot directly interact across different websites: i.e. while the script can copy the transcript to the clipboard from YouTube and open a link (e.g. ChatGPT or NotebookLM), the copied transcript must be pasted manually into the text field via CTRL+V (Windows/Linux) or CMD+V (macOS).
 
