@@ -3,7 +3,7 @@
 // @description  Export a YouTube video transcript to LLMs or download it as a text file; easy customization via a settings panel; additional features: persistent progress bar with chapter markers, display remaining time based on playback speed, auto-open chapter panel, links in header, customize css, color code videos on home.
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.3
+// @version      7.3.1
 // @namespace    TimMacy.YouTubeTranscriptExporter
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -885,6 +885,11 @@
                 border: none !important;
                 box-shadow: none !important;
                 will-change: opacity, transform !important;
+            }
+
+            .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar-container:not(.active) .ytp-scrubber-container {
+                opacity: 0;
+                pointer-events: none;
             }
 
             #ProgressBar-start, #ProgressBar-end {
