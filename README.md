@@ -16,7 +16,7 @@ This script adds four buttons to the YouTube header to facilitate exporting a vi
   - **Persistent Progress Bar**: Keeps the progress bar with chapter markers visible below the video—even in fullscreen.
   - **Auto Open Chapters**: Automatically opens the chapter panel if available.
   - **Links in Header**: Up to seven links can be added next to the logo and the Left Navigation Bar can be hidden.
-  - **Customize CSS**: Square Design, Compact Layout, Videos per Row, Dim or Hide Watched Videos are just some options.
+  - **Customize CSS**: Square Design, Compact Layout, Number of Videos per Row, Dim or Hide Watched Videos, and Auto Theater Mode are just some options.
   - **Color Code Videos**: Adds a configurable border around videos on the YouTube home page, with colors indicating video age and status.
 - **Customizable**
   - The settings panel allows for easy modification of the script and its functionality.
@@ -61,6 +61,7 @@ This script adds four buttons to the YouTube header to facilitate exporting a vi
 2. **Install** [YouTubeTranscriptExporter.js](https://raw.githubusercontent.com/TimMacy/YouTubeTranscriptExporter/refs/heads/main/YouTubeTranscriptExporter.js)
 
 ## Changelog
+- **7.3.5**: General bug fixes and improvements. Reorganized the settings panel for upcoming features. New Features: Hide YouTube brand text in the header; Hide video scrubber (red dot in progress bar); Display full titles; and Auto Theater mode.
 - **7.3.1**: fixed YouTube scrubber in progress bar
 - **7.3**: New Features: Links in Header, Customize CSS, and Color Code Videos. Also optimized transcript loading and reset function.
 - **7.1**: general bug fixes and improvements
