@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         YouTube Transcript Exporter
-// @description  Export YouTube transcripts to LLMs or download them as text files. Easy customizable via settings panels. Additional features: persistent progress bar with chapter markers; display remaining time based on playback speed; auto-open chapter panels; links in the header; custom CSS; hide nav bar; color-coded borders on the home page based on video age.
+// @description  Export YouTube transcripts to LLMs or download them as text files. Settings panels for easy customization. Additional features: persistent progress bar with chapter markers; display remaining time based on playback speed; auto-open chapter and transcript panels; links in the header; auto-theater mode; disable play on hover; custom CSS (square and compact search bar, square design, and compact layout); small "subscribed" button (icon only); hide nav bar, voice, create, and share buttons; hide video end cards and end screens; display full titles; choose progress bar color; color-coded borders on the home page based on video age.
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.3.5
+// @version      7.4
 // @namespace    TimMacy.YouTubeTranscriptExporter
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -22,8 +22,8 @@
     // CSS
     const styleSheet = document.createElement('style');
     styleSheet.textContent = `
-    /* default CSS */
-        .overlay { 
+        /* main CSS */
+        .overlay {
             position: fixed;
             z-index: 2053;
             left: 0;
@@ -54,22 +54,26 @@
             -moz-osx-font-smoothing: grayscale !important;
         }
 
-        #yt-transcript-settings-form { 
-            max-height: calc(90vh - 40px); 
-            overflow-y: auto; 
-            padding-right: 20px; 
+        #yt-transcript-settings-form {
+            max-height: calc(90vh - 40px);
+            overflow-y: auto;
+            padding-right: 20px;
         }
 
-        .notification { 
+        .notification {
             background:hsl(0,0%,7%);
             padding: 20px 30px;
             border-radius: 8px;
             border: 1px solid hsl(0,0%,18.82%);
             max-width: 80%;
             text-align: center;
-            font-family: "Roboto","Arial",sans-serif;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
             font-size: 16px;
             color: white;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .header {
@@ -101,13 +105,13 @@
 
         .header:hover { color: white; }
 
-        .label-style-settings { 
-            display: block; 
-            margin-bottom: 5px; 
-            font-family: "Roboto","Arial",sans-serif; 
-            font-size: 1.4em; 
-            line-height: 1.5em; 
-            font-weight: 500; 
+        .label-style-settings {
+            display: block;
+            margin-bottom: 5px;
+            font-family: "Roboto","Arial",sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 500;
         }
 
         .label-NotebookLM { color: hsl(134, 61%, 40%); }
@@ -119,13 +123,13 @@
         .buttonIconNotebookLM-input-field:focus { border: 1px solid hsl(134, 61%, 40%); }
         .buttonIconChatGPT-input-field:focus { border: 1px solid hsl(217, 91%, 59%); }
         .buttonIconDownload-input-field:focus { border: 1px solid hsl(359, 88%, 57%); }
-        
-        .buttonIconSettings-input-field:focus, 
-        .links-header-container input:focus, 
-        .sidebar-container input:focus, 
+
+        .buttonIconSettings-input-field:focus,
+        .links-header-container input:focus,
+        .sidebar-container input:focus,
         #custom-css-form .select-file-naming:focus,
-        #custom-css-form .dropdown-list { 
-            border: 1px solid hsl(0, 0%, 100%); 
+        #custom-css-form .dropdown-list {
+            border: 1px solid hsl(0, 0%, 100%);
         }
 
         .input-field-targetNotebookLMUrl:hover,
@@ -141,13 +145,13 @@
 
         .btn-style-settings {
             padding: 5px 10px;
-            cursor: pointer; 
+            cursor: pointer;
             color: whitesmoke;
             font-family: -apple-system, "Roboto", "Arial", sans-serif;
-            font-size: 1.4em; 
-            line-height: 1.5em; 
-            font-weight: 400; 
-            background-color: hsl(0, 0%, 7%); 
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 400;
+            background-color: hsl(0, 0%, 7%);
             border: 1px solid hsl(0, 0%, 18.82%);
             border-radius: 3px;
             transition: all 0.2s ease-out;
@@ -158,15 +162,15 @@
         .icons-container { display: flex; justify-content: space-between; margin-bottom: 20px; }
         .container-button { display: flex; flex-direction: column; align-items: center; margin: 5px 0 0 0; }
 
-        .container-button-input { 
+        .container-button-input {
             width: 80px;
             padding: 8px;
             text-align: center;
             color: ghostwhite;
             font-family: -apple-system, "Roboto", "Arial", sans-serif;
-            font-size: 2em; 
-            line-height: 1.5em; 
-            font-weight: 400; 
+            font-size: 2em;
+            line-height: 1.5em;
+            font-weight: 400;
             transition: all .5s ease-in-out;
             outline: none;
             background-color: hsl(0,0%,7%);
@@ -175,13 +179,13 @@
             box-sizing: border-box;
         }
 
-        .container-button-label { 
-            margin-top: 5px; 
-            text-align: center; 
-            font-family: "Roboto","Arial",sans-serif; 
-            font-size: 1.4em; 
-            line-height: 1.5em; 
-            font-weight: 500; 
+        .container-button-label {
+            margin-top: 5px;
+            text-align: center;
+            font-family: "Roboto","Arial",sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 500;
         }
 
         .container-button-input:focus { color: white; background-color: hsl(0, 0%, 10.37%); border-radius: 3px; }
@@ -190,53 +194,53 @@
         .spacer-15 { height: 15px; }
         .spacer-20 { height: 20px; }
 
-        .copyright { 
+        .copyright {
             font-family: -apple-system, "Roboto", "Arial", sans-serif;
-            font-size: 1.4em; 
-            line-height: 1.5em; 
-            font-weight: 500; 
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 500;
             color: white;
-            text-decoration: none; 
-            transition: color 0.2s ease-in-out; 
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
         }
 
         .copyright:hover { color: #369eff; }
         .url-container { margin-bottom: 10px; }
 
-        .input-field-url { 
+        .input-field-url {
             width: 100%;
-            padding: 8px; 
-            color: ghostwhite; 
-            font-family: -apple-system, "Roboto", "Arial", sans-serif; 
-            font-size: 1.4em; 
-            line-height: 1.5em; 
-            font-weight: 400; 
+            padding: 8px;
+            color: ghostwhite;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 400;
             transition: all .5s ease-in-out;
             outline: none;
-            background-color:hsl(0,0%,7%); 
-            border: 1px solid hsl(0,0%,18.82%); 
+            background-color:hsl(0,0%,7%);
+            border: 1px solid hsl(0,0%,18.82%);
             border-radius: 1px;
             box-sizing: border-box;
         }
-                
+
         .input-field-url:focus { color: white; background-color: hsl(0, 0%, 10.37%); border-radius: 3px; }
         .file-naming-container { position: relative; margin-bottom: 20px; }
 
-        .select-file-naming { 
-            width: 100%; 
-            padding: 8px; 
-            cursor:pointer; 
-            color: ghostwhite; 
-            font-family: -apple-system, "Roboto", "Arial", sans-serif; 
-            font-size: 1.4em; 
-            line-height: 1.5em; 
-            font-weight: 400; 
+        .select-file-naming {
+            width: 100%;
+            padding: 8px;
+            cursor:pointer;
+            color: ghostwhite;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 400;
             transition: all .5s ease-in-out;
             outline: none;
             appearance: none;
             -webkit-appearance: none;
-            background-color:hsl(0,0%,7%); 
-            border: 1px solid hsl(0,0%,18.82%); 
+            background-color:hsl(0,0%,7%);
+            border: 1px solid hsl(0,0%,18.82%);
             border-radius: 1px;
             box-sizing: border-box;
 
@@ -272,7 +276,7 @@
             width: 100%;
             max-height: 200px;
             overflow-y: auto;
-            background-color:hsl(0,0%,7%); 
+            background-color:hsl(0,0%,7%);
             border: 1px solid hsl(359,88%,57%);
             border-radius: 1px 1px 8px 8px;
             box-sizing: border-box;
@@ -300,7 +304,7 @@
         }
 
         .dropdown-item:hover {
-            color: ghostwhite; 
+            color: ghostwhite;
             background-color: rgba(255, 255, 255, .05);
         }
 
@@ -329,14 +333,14 @@
         }
 
         .checkbox-label,
-        .number-input-label span { 
-            display: flex; 
-            align-items: center; 
-            font-family: "Roboto","Arial",sans-serif; 
-            font-size: 1.4em; 
-            line-height: 1.5em; 
-            font-weight: 500; 
-            cursor: pointer; 
+        .number-input-label span {
+            display: flex;
+            align-items: center;
+            font-family: "Roboto","Arial",sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 500;
+            cursor: pointer;
             text-decoration: none;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -348,16 +352,16 @@
         .checkbox-label:hover { text-decoration: underline; }
         .checkbox-field { margin-right: 10px; }
 
-        .chrome-info { 
-            color: rgba(175, 175, 175, .9); 
-            font-family: "Roboto","Arial",sans-serif; 
-            font-size: 1.2em; 
-            line-height: 1.5em; 
-            font-weight: 400; 
-            display: block; 
-            margin:-5px 0px 5px 24px; 
-            pointer-events: none; 
-            cursor: default; 
+        .chrome-info {
+            color: rgba(175, 175, 175, .9);
+            font-family: "Roboto","Arial",sans-serif;
+            font-size: 1.2em;
+            line-height: 1.5em;
+            font-weight: 400;
+            display: block;
+            margin:-5px 0px 5px 24px;
+            pointer-events: none;
+            cursor: default;
         }
 
         .extra-button-container {
@@ -367,20 +371,20 @@
             margin: 20px 0;
         }
 
-        .chatgpt-prompt-textarea { 
+        .chatgpt-prompt-textarea {
             width: 100%;
             padding: 8px;
             height: 65px;
             transition: all .5s ease-in-out;
             outline: none;
-            resize: none; 
+            resize: none;
             font-family: -apple-system, "Roboto", "Arial", sans-serif;
-            font-size: 1.4em; 
-            line-height: 1.5em; 
-            font-weight: 400; 
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 400;
             color: ghostwhite;
-            background-color:hsl(0,0%,7%); 
-            border: 1px solid hsl(0,0%,18.82%); 
+            background-color:hsl(0,0%,7%);
+            border: 1px solid hsl(0,0%,18.82%);
             border-radius: 1px;
             box-sizing: border-box;
         }
@@ -392,7 +396,7 @@
             border: 1px solid hsl(217, 91%, 59%);
             border-radius: 3px;
         }
-        
+
         .button-container-end {
             display: flex;
             flex-direction: column;
@@ -415,12 +419,12 @@
             gap: 23.5px;
         }
 
-        .button-container-settings { 
-            display: flex; 
+        .button-container-settings {
+            display: flex;
             align-items: center;
             justify-content: end;
             gap: 10px;
-            
+
         }
 
         .button-wrapper {
@@ -511,7 +515,7 @@
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
-    
+
         .remaining-time-container.live,
         #movie_player .remaining-time-container.live {
             display: none;
@@ -567,29 +571,59 @@
             -moz-osx-font-smoothing: grayscale !important;
         }
 
+        #yte-playback-speed-popup {
+            position: fixed;
+            top: var(--ytd-masthead-height,var(--ytd-toolbar-height));
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            background:hsl(0,0%,7%);
+            border-radius: 3px;
+            border: 1px solid hsl(0,0%,18.82%);
+            color: whitesmoke;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 2.3rem;
+            font-weight: 600;
+            text-align: center;
+            z-index: 2077;
+            transition: opacity .3s ease;
+            opacity: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+
+        #yte-playback-speed-popup.active {
+            opacity: 1;
+        }
+
         .loading span::before {
             content: "Transcript Is Loading";
             position: absolute;
             inset: initial;
             color: rgba(255, 250, 250, .86);
             opacity: 0;
-            -webkit-animation: pulse 1.5s infinite; 
+            -webkit-animation: pulse 1.5s infinite;
             animation: pulse 1.5s infinite;
             text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
 
-        @-webkit-keyframes pulse { 
-            0% { opacity: 0; } 
-            50% { opacity: .71; } 
-            100% { opacity: 0; } 
+        @-webkit-keyframes pulse {
+            0% { opacity: 0; }
+            50% { opacity: .71; }
+            100% { opacity: 0; }
         }
 
-        @keyframes pulse { 
-            0% { opacity: 0; } 
-            50% { opacity: .71; } 
-            100% { opacity: 0; } 
+        @keyframes pulse {
+            0% { opacity: 0; }
+            50% { opacity: .71; }
+            100% { opacity: 0; }
         }
 
         .buttons-left {
@@ -612,8 +646,8 @@
             -moz-osx-font-smoothing: grayscale !important;
         }
 
-        .buttons-left:hover { color: #ff0000; }
-        .buttons-left:active { color:rgb(200, 25, 25); }
+        .buttons-left:hover { color: #ff0000 !important; }
+        .buttons-left:active { color:rgb(200, 25, 25) !important; }
 
         .sub-panel-overlay {
             position: fixed;
@@ -644,7 +678,7 @@
             max-height: 90vh;
             position: relative;
             display: flex;
-            flex-direction: column; 
+            flex-direction: column;
             overflow-y: auto;
             color: whitesmoke;
             text-rendering: optimizeLegibility !important;
@@ -689,8 +723,8 @@
             gap: 20px;
         }
 
-        .links-header-container label { 
-            color: whitesmoke; 
+        .links-header-container label {
+            color: whitesmoke;
         }
 
         .links-header-container .url-container:first-child {
@@ -719,14 +753,43 @@
         flex: 2;
         }
 
+        .playback-speed-container {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        #custom-css-form .playback-speed-container .checkbox-container {
+            max-width: calc(53% - 5px);
+            margin: 0;
+            align-content: center;
+            flex: 0 0 auto;
+        }
+
+        #custom-css-form .playback-speed-container .number-input-container {
+            max-width: calc(47% - 5px);
+            margin: 0;
+            align-self: center;
+            flex: 1 0 auto;
+        }
+
+        #custom-css-form .playback-speed-container .number-input-container .number-input-field {
+            width: 30px;
+        }
+
+        #custom-css-form .playback-speed-container .number-input-label {
+            display: flex;
+        }
+
         #color-code-videos-form .checkbox-container { margin: 20px 0 0 0; }
-        #color-code-videos-form .label-style-settings { margin: 20px 0 10px 0; }
+        #color-code-videos-form .label-style-settings {margin: 0; }
         #color-code-videos-form > div.videos-old-container > span { margin: 0; }
         #color-code-videos-form .chrome-info { margin: -10px 80px 20px 0px; }
-        #custom-css-form .checkbox-container { margin: 15px 0; }
+        #custom-css-form .checkbox-container { margin: 10px 0; }
 
         #custom-css-form .file-naming-container {
-            margin: 15px 0;
+            max-width: 90%;
+            margin: 20px 0;
             display: flex;
             gap: 25px;
             align-content: center;
@@ -739,8 +802,8 @@
         }
 
         #custom-css-form .dropdown-item-selected,
-        #custom-css-form .dropdown-item-selected::before { 
-            color: hsl(0, 0%, 100%); 
+        #custom-css-form .dropdown-item-selected::before {
+            color: hsl(0, 0%, 100%);
         }
 
         input[type="range"] {
@@ -748,8 +811,8 @@
             appearance: none;
             width: 100%;
             height: 6px;
-            background: #ccc; 
-            border-radius: 5px; 
+            background: #ccc;
+            border-radius: 5px;
             outline: none;
         }
 
@@ -757,11 +820,11 @@
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 16px; 
+            width: 16px;
             height: 16px;
             background: #007bff;
             border-radius: 50%;
-            cursor: pointer; 
+            cursor: pointer;
             border: 2px solid #ffffff;
         }
 
@@ -774,27 +837,28 @@
 
         .videos-old-container {
             display: flex;
+            max-width: 90%;
             align-items: center;
-            gap: 25px; 
-            margin: 15px 0; 
+            gap: 25px;
+            margin: 20px 0;
         }
 
         .slider-container {
             display: flex;
             align-items: center;
-            gap: 10px; 
+            gap: 10px;
             flex: 1;
         }
 
-        .slider-container input[type="range"] { 
-            flex: 1; 
+        .slider-container input[type="range"] {
+            flex: 1;
         }
 
         .videos-age-container {
             display: flex;
-            flex-direction: column; 
+            flex-direction: column;
             align-items: center;
-            gap: 25px; 
+            gap: 50px;
         }
 
         .videos-age-row {
@@ -802,7 +866,8 @@
             justify-content: flex-start;
             align-items: center;
             width: 100%;
-            gap: 10px;
+            gap: 20px;
+            margin: 0;
         }
 
         .videos-age-row span {
@@ -812,26 +877,57 @@
         }
 
         .videos-age-row input {
-            flex: 1; 
-            margin: 0 0 0 10px;
-            max-width: 70px;
-            height: 35px;
+            flex: 1;
+            margin: 0;
+            padding: 0;
+            max-width: 62px;
+            height: 26px;
             cursor: pointer;
+            background: none;
+            border: none;
+            box-shadow: none;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            border: none;
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+        }
+
+
+        #custom-css-form .videos-age-row span {
+            text-align: left;
+            flex: initial;
+        }
+
+        #custom-css-form .videos-age-row input {
+            margin: 0 0 0 -3px;
+        }
+
+        #custom-css-form .videos-age-row {
+            gap: 10px;
         }
 
         .number-input-container {
-            margin: 15px 0;
+            margin: 10px 0;
         }
 
         .number-input-field {
+            width: 20px;
             margin: 0 10px 0 0;
-            align-items: center; 
-            font-size: 1.4em; 
-            line-height: 1.5em; 
-            font-weight: 700; 
-            cursor: auto; 
+            align-items: center;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 700;
+            cursor: auto;
             text-decoration: none;
-            text-align: center; 
+            text-align: center;
             display: inline-block;
 
         }
@@ -841,7 +937,98 @@
             cursor: auto;
         }
 
-    /* customCSS CSS */
+        /* progress bar css */
+        .yte-progress-bar {
+            #progress-bar-bar {
+                width: 100%;
+                height: 3px;
+                background: rgba(255, 255, 255, 0.2);
+                position: absolute;
+                bottom: 0;
+                opacity: 0;
+                z-index: 50;
+            }
+
+            #progress-bar-progress, #progress-bar-buffer {
+                width: 100%;
+                height: 3px;
+                transform-origin: 0 0;
+                position: absolute;
+            }
+
+            #progress-bar-progress {
+                background: var(--progressBarColor);
+                filter: none;
+                z-index: 1;
+            }
+
+            .ytp-autohide .ytp-chrome-bottom .ytp-load-progress, .ytp-autohide .ytp-chrome-bottom .ytp-play-progress { display: none !important; }
+            .ytp-autohide .ytp-chrome-bottom { opacity: 1 !important; display: block !important; }
+            .ytp-autohide .ytp-chrome-bottom .ytp-chrome-controls { opacity: 0 !important; }
+            .ad-interrupting #progress-bar-progress { background: transparent; }
+            .ytp-ad-persistent-progress-bar-container { display: none; }
+            #progress-bar-buffer { background: rgba(255, 255, 255, 0.4); }
+
+            .ytp-autohide #progress-bar-start.active,
+            .ytp-autohide #progress-bar-bar.active,
+            .ytp-autohide #progress-bar-end.active
+            { opacity: 1; }
+
+            .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar-container {
+                bottom: 0px !important;
+                opacity: 1 !important;
+                height: 4px !important;
+                transform: translateX(0px) !important;
+                z-index: 100;
+            }
+
+            .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar,
+            .ytp-autohide .ytp-chrome-bottom .ytp-progress-list {
+                background: transparent !important;
+                box-shadow: none !important;
+            }
+
+            .ytp-autohide .ytp-chrome-bottom .previewbar {
+                height: calc(100% + 1px) !important;
+                bottom: -1px !important;
+                margin-bottom: 0px !important;
+                opacity: 1 !important;
+                border: none !important;
+                box-shadow: none !important;
+                will-change: opacity, transform !important;
+            }
+
+            .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar-container:not(.active) .ytp-scrubber-container {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            #progress-bar-start, #progress-bar-end {
+                position: absolute;
+                height: 3px;
+                width: 12px;
+                bottom: 0;
+                z-index: 2077;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            :fullscreen #progress-bar-start, :fullscreen #progress-bar-end { width: 24px; }
+            :-webkit-full-screen #progress-bar-start, :-webkit-full-screen #progress-bar-end { width: 24px; }
+            .html5-video-player.ytp-fullscreen #progress-bar-start, .html5-video-player.ytp-fullscreen #progress-bar-end { width: 24px !important; }
+
+            #progress-bar-start {
+                left: 0;
+                background: var(--progressBarColor);
+            }
+
+            #progress-bar-end {
+                right: 0;
+                background: rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        /* customCSS CSS */
         html {
             font-size: var(--fontSize) !important;
             font-family: "Roboto", Arial, sans-serif;
@@ -852,6 +1039,9 @@
             ytd-app[mini-guide-visible] ytd-page-manager.ytd-app { margin-left: 0 !important; }
             #guide-button.ytd-masthead { display: none !important; }
             #contents.ytd-rich-grid-renderer { justify-content: center !important; }
+            ytd-browse[mini-guide-visible] ytd-playlist-header-renderer.ytd-browse, ytd-browse[mini-guide-visible] ytd-playlist-sidebar-renderer.ytd-browse, ytd-browse[mini-guide-visible] .page-header-sidebar.ytd-browse {
+                left: 0;
+            }
         }
 
         h1.ytd-watch-metadata,
@@ -878,9 +1068,48 @@
             opacity: .85;
         }
 
+        .ytd-page-manager[page-subtype="history"] {
+            ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
+                opacity: 1;
+            }
+        }
+
         .yte-style-hide-watched-videos-global {
             ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer),
             ytd-grid-video-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer) {
+                display: none !important;
+            }
+        }
+
+        .ytp-cairo-refresh-signature-moments .ytp-play-progress, .ytp-swatch-background-color {
+            background: var(--progressBarColor) !important;
+        }
+
+        .yte-style-disable-play-on-hover {
+            ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-toggle-button-renderer.ytd-thumbnail,
+            ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail,
+            ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-endorsement-renderer.ytd-thumbnail,
+            ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-hover-text-renderer.ytd-thumbnail,
+            ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-button-renderer.ytd-thumbnail,
+            ytd-thumbnail[now-playing] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail,
+            ytd-thumbnail-overlay-loading-preview-renderer,
+            ytd-video-preview,
+            #mouseover-overlay,
+            #preview,
+            #video-preview {
+                display: none !important;
+            }
+        }
+
+        .yte-style-hide-end-cards {
+            .ytp-ce-element,
+            .ytp-gradient-bottom {
+                display: none !important;
+            }
+        }
+
+        .yte-style-hide-endscreen {
+            .html5-video-player .html5-endscreen.videowall-endscreen {
                 display: none !important;
             }
         }
@@ -891,21 +1120,21 @@
             .style-scope.ytd-two-column-browse-results-renderer {
                 --ytd-rich-grid-items-per-row: var(--itemsPerRow) !important;
                 --ytd-rich-grid-posts-per-row: var(--itemsPerRow) !important;
-                --ytd-rich-grid-slim-items-per-row: var(--itemsPerRowCalc);
-                --ytd-rich-grid-game-cards-per-row: var(--itemsPerRowCalc);
-                --ytd-rich-grid-mini-game-cards-per-row: var(--itemsPerRowCalc);
+                --ytd-rich-grid-slim-items-per-row: var(--itemsPerRowCalc) !important;
+                --ytd-rich-grid-game-cards-per-row: var(--itemsPerRowCalc) !important;
+                --ytd-rich-grid-mini-game-cards-per-row: var(--itemsPerRowCalc) !important;
             }
         }
 
         .yte-style-hide-voice-search {
-            #voice-search-button.ytd-masthead { 
-                display: none; 
+            #voice-search-button.ytd-masthead {
+                display: none;
             }
         }
 
         .yte-style-hide-create-button {
-            #buttons.ytd-masthead > .ytd-masthead:first-child { 
-                display: none; 
+            ytd-button-renderer.ytd-masthead[button-renderer][button-next]:has(button[aria-label="Create"]) {
+                display: none !important;
             }
         }
 
@@ -951,16 +1180,16 @@
         }
 
         .yte-style-square-design {
-            #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:hover, 
-            #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:focus, 
+            #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:hover,
+            #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:focus,
             #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:active,
             #chip-container.yt-chip-cloud-chip-renderer {
                 border-radius: 3px;
             }
 
             tp-yt-paper-dialog[modern],
-            yt-dropdown-menu { 
-                border-radius: 3px; 
+            yt-dropdown-menu {
+                border-radius: 3px;
             }
 
             .yte-player-sidebar,
@@ -982,8 +1211,8 @@
             }
 
             .ytd-page-manager[page-subtype="home"] {
-                yt-chip-cloud-chip-renderer { 
-                    border-radius: 3px; 
+                yt-chip-cloud-chip-renderer {
+                    border-radius: 3px;
                 }
 
                 .yte-style-live-video, .yte-style-upcoming-video, .yte-style-newly-video, .yte-style-recent-video, .yte-style-lately-video, .yte-style-old-video { border-radius: 0; }
@@ -998,20 +1227,21 @@
                 .yt-image-banner-view-model-wiz--inset,
                 .collections-stack-wiz__collection-stack2,
                 #chip-container.yt-chip-cloud-chip-renderer,
-                .collections-stack-wiz__collection-stack1--medium { 
-                    border-radius: 0 !important; 
+                .collections-stack-wiz__collection-stack1--medium {
+                    border-radius: 0 !important;
                 }
             }
 
-            .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-start { 
-                border-radius: 3px 0 0 3px; 
+            .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-start {
+                border-radius: 3px 0 0 3px;
             }
 
-            .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-end { 
-                border-radius: 0 3px 3px 0; 
+            .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-end {
+                border-radius: 0 3px 3px 0;
             }
 
             ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]),
+            .immersive-header-container.ytd-playlist-header-renderer,
             .ytVideoMetadataCarouselViewModelHost,
             .yt-spec-button-shape-next--size-s,
             .yt-spec-button-shape-next--size-m,
@@ -1050,10 +1280,10 @@
             .ytd-page-manager[page-subtype="home"],
             .ytd-page-manager[page-subtype="channels"],
             .ytd-page-manager[page-subtype="subscriptions"] {
-                ytd-rich-section-renderer { 
-                    display: none; 
+                ytd-rich-section-renderer {
+                    display: none;
                 }
-            
+
                 #contents.ytd-rich-grid-renderer {
                     width: 100%;
                     max-width: 100%;
@@ -1062,38 +1292,38 @@
                     flex-wrap: wrap;
                     justify-content: flex-start;
                 }
-            
+
                 .style-scope.ytd-two-column-browse-results-renderer {
                     --ytd-rich-grid-item-max-width: 100vw;
                     --ytd-rich-grid-item-min-width: 310px;
                     --ytd-rich-grid-item-margin: 1px !important;
                     --ytd-rich-grid-content-offset-top: 56px;
                 }
-            
+
                 ytd-rich-item-renderer[rendered-from-rich-grid][is-in-first-column] {
                     margin-left: 5px !important;
                 }
-            
+
                 ytd-rich-item-renderer[rendered-from-rich-grid] {
                     margin: 5px 0 20px 5px !important;
                 }
-            
-                #meta.ytd-rich-grid-media { 
-                    overflow-x: hidden; 
-                    padding-right: 6px; 
+
+                #meta.ytd-rich-grid-media {
+                    overflow-x: hidden;
+                    padding-right: 6px;
                 }
-            
-                #avatar-container.ytd-rich-grid-media { 
-                    margin:7px 6px 0px 6px; 
+
+                #avatar-container.ytd-rich-grid-media {
+                    margin:7px 6px 0px 6px;
                 }
-            
-                h3.ytd-rich-grid-media { 
-                    margin: 7px 0 4px 0; 
+
+                h3.ytd-rich-grid-media {
+                    margin: 7px 0 4px 0;
                 }
             }
-            
+
             .ytd-page-manager[page-subtype="home"] {
-                ytd-menu-renderer.ytd-rich-grid-media { 
+                ytd-menu-renderer.ytd-rich-grid-media {
                     position: absolute;
                     height: 36px;
                     width: 36px;
@@ -1105,14 +1335,14 @@
                     background-color: rgba(255,255,255,.1);
                     border-radius: 50%;
                 }
-            
+
                 .title-badge.ytd-rich-grid-media, .video-badge.ytd-rich-grid-media {
                     position: absolute;
                     right: 0;
                     bottom: 0;
                     margin: 10px 10%;
                 }
-            
+
                 ytd-rich-item-renderer[rendered-from-rich-grid] {
                     margin: 5px 5px 20px 5px !important;
                 }
@@ -1123,97 +1353,97 @@
             }
 
             .ytd-page-manager[page-subtype="channels"] {
-                ytd-tabbed-page-header.grid-5-columns #page-header.ytd-tabbed-page-header, ytd-tabbed-page-header.grid-5-columns[has-inset-banner] #page-header-banner.ytd-tabbed-page-header { 
-                    padding: 0 !important; 
+                ytd-tabbed-page-header.grid-5-columns #page-header.ytd-tabbed-page-header, ytd-tabbed-page-header.grid-5-columns[has-inset-banner] #page-header-banner.ytd-tabbed-page-header {
+                    padding: 0 !important;
                 }
-            
-                ytd-two-column-browse-results-renderer.grid-5-columns, .grid-5-columns.ytd-two-column-browse-results-renderer { 
-                    width: 100% !important; 
+
+                ytd-two-column-browse-results-renderer.grid-5-columns, .grid-5-columns.ytd-two-column-browse-results-renderer {
+                    width: 100% !important;
                 }
 
                 ytd-rich-grid-renderer:not([is-default-grid]) #header.ytd-rich-grid-renderer {
                     transform: translateX(800px) translateY(-40px);
                     z-index: 2000;
                 }
-                
+
                 ytd-feed-filter-chip-bar-renderer[component-style="FEED_FILTER_CHIP_BAR_STYLE_TYPE_CHANNEL_PAGE_GRID"] {
                     margin-bottom: -32px;
                     margin-top: 0;
                 }
-                
-                .page-header-view-model-wiz__page-header-headline-image { 
-                    margin-left: 110px; 
+
+                .page-header-view-model-wiz__page-header-headline-image {
+                    margin-left: 110px;
                 }
-            
-                ytd-rich-section-renderer { 
-                    display: none; 
+
+                ytd-rich-section-renderer {
+                    display: none;
                 }
-            
-                ytd-menu-renderer.ytd-rich-grid-media { 
-                    position: absolute; 
+
+                ytd-menu-renderer.ytd-rich-grid-media {
+                    position: absolute;
                     height: 36px;
                     width: 36px;
-                    top: 2.5em; 
-                    right: 0; 
-                    left: auto; 
+                    top: 2.5em;
+                    right: 0;
+                    left: auto;
                     align-items: center;
-                    transform: rotate(90deg); 
-                    background-color: rgba(255,255,255,.1); 
-                    border-radius: 50%; 
+                    transform: rotate(90deg);
+                    background-color: rgba(255,255,255,.1);
+                    border-radius: 50%;
                 }
-            
-                .yt-tab-group-shape-wiz__slider,.yt-tab-shape-wiz__tab-bar { 
+
+                .yt-tab-group-shape-wiz__slider,.yt-tab-shape-wiz__tab-bar {
                     display:none;
                 }
-            
-                .yt-tab-shape-wiz__tab--tab-selected,.yt-tab-shape-wiz__tab:hover { 
-                    color:white; 
+
+                .yt-tab-shape-wiz__tab--tab-selected,.yt-tab-shape-wiz__tab:hover {
+                    color:white;
                 }
-            
+
                 #tabsContent > yt-tab-group-shape > div.yt-tab-group-shape-wiz__tabs > yt-tab-shape:nth-child(3) {
                     display:none!important;
                 }
-            
+
                 .style-scope.ytd-two-column-browse-results-renderer {
                     --ytd-rich-grid-item-margin: .5% !important;
                 }
             }
-            
+
             .ytd-page-manager[page-subtype="channels"] #contentContainer {
                 padding-top: 0 !important;
             }
-            
+
             .ytd-page-manager[page-subtype="channels"] tp-yt-app-header {
                 position: static !important;
                 transform: none !important;
                 transition: none !important;
             }
-            
+
             .ytd-page-manager[page-subtype="channels"] tp-yt-app-header[fixed] {
                 position: static !important;
                 transform: none !important;
                 transition: none !important;
             }
-            
+
             .ytd-page-manager[page-subtype="channels"] tp-yt-app-header #page-header {
             position: static !important;
                 transform: none !important;
             }
-            
+
             .ytd-page-manager[page-subtype="subscriptions"] {
-                ytd-menu-renderer.ytd-rich-grid-media { 
-                    position: absolute; 
+                ytd-menu-renderer.ytd-rich-grid-media {
+                    position: absolute;
                     height: 36px;
                     width: 36px;
-                    top: 50px; 
-                    right: auto; 
-                    left: 3px; 
+                    top: 50px;
+                    right: auto;
+                    left: 3px;
                     align-items: center;
-                    transform: rotate(90deg); 
-                    background-color: rgba(255,255,255,.1); 
-                    border-radius: 50%; 
+                    transform: rotate(90deg);
+                    background-color: rgba(255,255,255,.1);
+                    border-radius: 50%;
                 }
-            
+
                 .title-badge.ytd-rich-grid-media, .video-badge.ytd-rich-grid-media {
                     position: absolute;
                     margin: 0px 10% 0 0;
@@ -1221,40 +1451,40 @@
                     top: 6em;
                 }
             }
-            
-            .item.ytd-watch-metadata { 
-                margin-top: 7px; 
+
+            .item.ytd-watch-metadata {
+                margin-top: 7px;
             }
-            
+
             #subheader.ytd-engagement-panel-title-header-renderer:not(:empty) {
                 padding: 0 !important;
                 transform: translateX(110px) translateY(-44px);
                 background-color: transparent;
                 border-top: none;
             }
-            
+
             #header.ytd-engagement-panel-title-header-renderer {
                 padding: 4px 7px 4px 7px;
             }
-            
+
             #visibility-button.ytd-engagement-panel-title-header-renderer, #information-button.ytd-engagement-panel-title-header-renderer {
                 z-index: 1;
             }
-            
+
             .ytChipShapeChip:hover  {
                 background: rgba(255,255,255,0.2);
                 border-color: transparent;
             }
-            
+
             .ytChipShapeActive:hover {
                 background-color: #f1f1f1;
                 color: #0f0f0f;
             }
-            
+
             ytd-engagement-panel-title-header-renderer {
                 height: 54px;
             }
-            
+
             .yt-spec-button-shape-next--icon-only-default {
                 width: 35px;
                 height: 35px;
@@ -1262,7 +1492,8 @@
         }
 
         .ytd-page-manager[page-subtype="home"] {
-            .yte-style-live-video, .yte-style-upcoming-video, .yte-style-newly-video, .yte-style-recent-video, .yte-style-lately-video, .yte-style-old-video { outline: 2px solid; border-radius: 12px; }
+            .yte-style-live-video, .yte-style-upcoming-video, .yte-style-newly-video, .yte-style-recent-video, .yte-style-lately-video { outline: 2px solid; border-radius: 12px; }
+            .yte-style-old-video { outline: none;}
 
             .yte-style-live-video { outline-color: var(--liveVideo);}
             .yte-style-streamed-text { color: var(--streamedText);}
@@ -1281,122 +1512,134 @@
             }
         }
 
-        .yte-close-live-chat {
-            #chat-container {
+        .yte-style-hide-join-button {
+            #sponsor-button.ytd-video-owner-renderer:not(:empty),
+            ytd-browse[page-subtype="channels"] ytd-recognition-shelf-renderer,
+            ytd-browse[page-subtype="channels"] yt-page-header-view-model yt-flexible-actions-view-model button-view-model {
+                display: none !important;
+            }
+        }
+
+        .yte-style-small-subscribe-button {
+            .ytd-page-manager:not([page-subtype="channels"]) .yt-spec-button-shape-next.yt-spec-button-shape-next--tonal.yt-spec-button-shape-next--mono.yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-leading-trailing {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                overflow: hidden;
+                width: 36px;
+                padding: 0 12px;
+            }
+        }
+
+        .yte-style-hide-share-button {
+            yt-button-view-model.ytd-menu-renderer:has(button.yt-spec-button-shape-next[aria-label="Share"]) {
+                display: none;
+            }
+        }
+
+        .yte-style-hide-add-comment {
+            ytd-comments ytd-comments-header-renderer #simple-box {
                 display: none;
             }
 
-            ytd-watch-flexy[fixed-panels] #panels-full-bleed-container.ytd-watch-flexy {
-                width: var(--ytd-watch-flexy-sidebar-width);
-                display: none;
+            #title.ytd-comments-header-renderer {
+                margin-bottom: 0;
             }
+        }
 
-            .video-stream.html5-main-video {
-                width: 100%;
-            }
+        /* hide main scrollbar in safari */
+        html {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
 
-            ytd-watch-flexy[fixed-panels] #columns.ytd-watch-flexy {
-                padding-right: 0;
-            }
+        html::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollable-div {
+            scrollbar-width: auto;
+            -ms-overflow-style: auto;
+        }
+
+        .scrollable-div::-webkit-scrollbar {
+            display: block;
+        }
+
+        /* adjustments for light mode */
+        ytd-masthead:not([dark]):not([page-dark-theme]) .buttons-left {
+            color: black;
+        }
+
+        ytd-masthead:not([dark]):not([page-dark-theme]) .button-style-settings {
+            color: slategray !important;
+        }
+
+        ytd-masthead:not([dark]):not([page-dark-theme]) .button-style-settings:hover {
+            color: black !important;
+        }
+
+        ytd-masthead:not([dark]):not([page-dark-theme]) .button-style {
+            color: black;
+        }
+
+        ytd-masthead:not([dark]):not([page-dark-theme]) .button-wrapper:not(:has(.button-style-settings)):hover {
+            background-color: rgba(0, 0, 0, 0.1); border-radius: 24px;
+        }
+
+        ytd-masthead:not([dark]):not([page-dark-theme]) .button-wrapper:not(:has(.button-style-settings)):active {
+            background-color: rgba(0, 0, 0, 0.2); border-radius: 24px;
+        }
+
+        html:not([dark]) .yte-playback-speed-button:active {
+            background: rgb(205,205,205) !important;
+        }
+
+        html:not([dark]) .yte-player-sidebar-tab,
+        html:not([dark]) .yte-playback-speed-display {
+            background-color: rgba(0,0,0,0.05);
+            color: #0f0f0f;
+        }
+
+        html:not([dark]) .yte-player-sidebar-tab:hover {
+            background: rgba(0,0,0,0.1);
+            border-color: transparent;
+        }
+
+        html:not([dark]) .yte-player-sidebar-tab.active {
+            background-color: #0f0f0f;
+            color: white;
+        }
+
+        html:not([dark]) .yte-player-sidebar {
+            border: 1px solid var(--yt-spec-10-percent-layer);
+        }
+
+        html:not([dark]) ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"] {
+            background-color: var(--yt-spec-badge-chip-background);
+        }
+
+        html:not([dark]) #yte-playback-speed-control > div > svg > path {
+            fill: black;
+        }
+
+        html:not([dark]) ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
+        html:not([dark]) #related.style-scope.ytd-watch-flexy {
+            border: 1px solid var(--yt-spec-10-percent-layer);
+            border-top: none;
+        }
+
+        html:not([dark]) #tab-2 {
+            border-top: 1px solid var(--yt-spec-10-percent-layer);
+        }
+
+        html:not([dark]) .yt-tab-shape-wiz__tab--tab-selected,
+        html:not([dark]) .yt-tab-shape-wiz__tab:hover {
+            color:black !important;
         }
     `;
 
     document.head.appendChild(styleSheet);
-
-    // CSS Progress Bar
-    function ProgressBarCSS() {
-        const progressBarCSS = document.createElement('style');
-        progressBarCSS.textContent = `
-            #ProgressBar-bar {
-                width: 100%;
-                height: 3px;
-                background: rgba(255, 255, 255, 0.2);
-                position: absolute;
-                bottom: 0;
-                opacity: 0;
-                z-index: 50;
-            }
-
-            #ProgressBar-progress, #ProgressBar-buffer {
-                width: 100%;
-                height: 3px;
-                transform-origin: 0 0;
-                position: absolute;
-            }
-
-            #ProgressBar-progress {
-                background: #f00;
-                filter: none;
-                z-index: 1;
-            }
-
-            .ytp-autohide .ytp-chrome-bottom .ytp-load-progress, .ytp-autohide .ytp-chrome-bottom .ytp-play-progress { display: none !important; }
-            .ytp-autohide .ytp-chrome-bottom { opacity: 1 !important; display: block !important; }
-            .ytp-autohide .ytp-chrome-bottom .ytp-chrome-controls { opacity: 0 !important; }
-            .ad-interrupting #ProgressBar-progress { background: transparent; }
-            .ytp-ad-persistent-progress-bar-container { display: none; }
-            #ProgressBar-buffer { background: rgba(255, 255, 255, 0.4); }
-
-            .ytp-autohide #ProgressBar-start.active, 
-            .ytp-autohide #ProgressBar-bar.active, 
-            .ytp-autohide #ProgressBar-end.active 
-            { opacity: 1; }
-
-            .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar-container {
-                bottom: 0px !important;
-                opacity: 1 !important;
-                height: 4px !important;
-                transform: translateX(0px) !important;
-                z-index: 100;
-            }
-
-            .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar,
-            .ytp-autohide .ytp-chrome-bottom .ytp-progress-list {
-                background: transparent !important;
-                box-shadow: none !important;
-            }
-
-            .ytp-autohide .ytp-chrome-bottom .previewbar {
-                height: calc(100% + 1px) !important;
-                bottom: -1px !important;
-                margin-bottom: 0px !important;
-                opacity: 1 !important;
-                border: none !important;
-                box-shadow: none !important;
-                will-change: opacity, transform !important;
-            }
-
-            .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar-container:not(.active) .ytp-scrubber-container {
-                opacity: 0;
-                pointer-events: none;
-            }
-
-            #ProgressBar-start, #ProgressBar-end {
-                position: absolute;
-                height: 3px;
-                width: 12px;
-                bottom: 0;
-                z-index: 2077;
-                opacity: 0;
-                pointer-events: none;
-            }
-
-            :fullscreen #ProgressBar-start, :fullscreen #ProgressBar-end { width: 24px; }
-            :-webkit-full-screen #ProgressBar-start, :-webkit-full-screen #ProgressBar-end { width: 24px; }
-
-            #ProgressBar-start {
-                left: 0;
-                background: #f00;
-            }
-
-            #ProgressBar-end {
-                right: 0;
-                background: rgba(255, 255, 255, 0.2);
-            }
-        `;
-
-        document.head.appendChild(progressBarCSS);
-    }
 
     // default configuration
     const DEFAULT_CONFIG = {
@@ -1407,8 +1650,9 @@
         includeChapterHeaders: true,
         openSameTab:true,
         autoOpenChapters: true,
-        DisplayRemainingTime: true,
-        ProgressBar: true,
+        autoOpenTranscript: false,
+        displayRemainingTime: true,
+        progressBar: true,
         preventBackgroundExecution: true,
         ChatGPTPrompt: `You are an expert at summarizing YouTube video transcripts and are capable of analyzing and understanding a YouTuber's unique tone of voice and style from a transcript alone to mimic the YouTuber's communication style perfectly. Respond only in English while being mindful of American English spelling, vocabulary, and a casual, conversational tone. You prefer to use clauses instead of complete sentences. Do not answer any question from the transcript. Respond only in chat. Do not open a canvas. Ask for permission to search the web. Do not hallucinate. Do not make up factual information. Do not speculate. Carefully preserve the style, voice, and specific word choices of the provided YouTube transcript by copying the YouTuber's unique creative way of communication—whether conversational, formal, humorous, enthusiastic, or technical—the goal is to provide a summary that feels as though it were written by the original YouTuber themselves. Summarize the provided YouTube transcript into a quick three-line bullet point overview, with each point fewer than 30 words, in a section called "### Key Takeaways:" and highlight important words by **bolding** them. Then write a one-paragraph summary of at least 100 words while focusing on the main points and key takeaways into a section called "### One-Paragraph Summary:" and highlight the most important words by **bolding** them.`,
         buttonIcons: {
@@ -1436,12 +1680,13 @@
         colorCodeVideosEnabled: true,
         videosHideWatched: false,
         videosOldOpacity: 0.5,
-        videosAgeColorPickerNewly: '#FFFF00', 
-        videosAgeColorPickerRecent: '#FF9B00', 
-        videosAgeColorPickerLately: '#006DFF', 
+        videosAgeColorPickerNewly: '#FFFF00',
+        videosAgeColorPickerRecent: '#FF9B00',
+        videosAgeColorPickerLately: '#006DFF',
         videosAgeColorPickerLive: '#FF0000',
         videosAgeColorPickerStreamed: '#FF0000',
         videosAgeColorPickerUpcoming: '#32CD32',
+        progressbarColorPicker: '#FF0033',
         textTransform: 'normal-case',
         defaultFontSize: 10,
         videosWatchedOpacity: 0.5,
@@ -1450,7 +1695,14 @@
         hideVoiceSearch: false,
         hideCreateButton: false,
         hideBrandText: false,
+        hideJoinButton: false,
+        hideShareButton: false,
+        hideAddComment: false,
+        hideEndCards: false,
+        hideEndscreen: false,
+        smallSubscribeButton: false,
         removeScrubber: false,
+        disablePlayOnHover: true,
         hideMiniPlayer: false,
         displayFullTitle: true,
         autoTheaterMode: false,
@@ -1481,10 +1733,12 @@
     function loadCSSsettings() {
         const body = document.querySelector('body');
 
-        // buttonsLeft - sidebar visibility
+        // features css
+        if (USER_CONFIG.progressBar) { body.classList.add('yte-progress-bar'); } else { body.classList.remove('yte-progress-bar'); }
         if (USER_CONFIG.mButtonDisplay) { body.classList.add('yte-style-hide-default-sidebar'); } else { body.classList.remove('yte-style-hide-default-sidebar'); }
 
         // custom css
+        document.documentElement.style.setProperty('--progressBarColor', USER_CONFIG.progressbarColorPicker);
         document.documentElement.style.setProperty('--textTransform', USER_CONFIG.textTransform);
         document.documentElement.style.setProperty('--fontSize', `${USER_CONFIG.defaultFontSize}px`);
         document.documentElement.style.setProperty('--watchedOpacity', USER_CONFIG.videosWatchedOpacity);
@@ -1495,7 +1749,14 @@
         if (USER_CONFIG.hideCreateButton) { body.classList.add('yte-style-hide-create-button'); } else { body.classList.remove('yte-style-hide-create-button'); }
         if (USER_CONFIG.hideBrandText) { body.classList.add('yte-style-hide-brand-text'); } else { body.classList.remove('yte-style-hide-brand-text'); }
         if (USER_CONFIG.hideMiniPlayer) { body.classList.add('yte-style-hide-miniplayer'); } else { body.classList.remove('yte-style-hide-miniplayer'); }
+        if (USER_CONFIG.disablePlayOnHover) { body.classList.add('yte-style-disable-play-on-hover'); } else { body.classList.remove('yte-style-disable-play-on-hover'); }
+        if (USER_CONFIG.smallSubscribeButton) { body.classList.add('yte-style-small-subscribe-button'); } else { body.classList.remove('yte-style-small-subscribe-button'); }
+        if (USER_CONFIG.hideShareButton) { body.classList.add('yte-style-hide-share-button'); } else { body.classList.remove('yte-style-hide-share-button'); }
+        if (USER_CONFIG.hideAddComment) { body.classList.add('yte-style-hide-add-comment'); } else { body.classList.remove('yte-style-hide-add-comment'); }
+        if (USER_CONFIG.hideEndCards) { body.classList.add('yte-style-hide-end-cards'); } else { body.classList.remove('yte-style-hide-end-cards'); }
+        if (USER_CONFIG.hideEndscreen) { body.classList.add('yte-style-hide-endscreen'); } else { body.classList.remove('yte-style-hide-endscreen'); }
         if (USER_CONFIG.displayFullTitle) { body.classList.add('yte-style-full-title'); } else { body.classList.remove('yte-style-full-title'); }
+        if (USER_CONFIG.hideJoinButton) { body.classList.add('yte-style-hide-join-button'); } else { body.classList.remove('yte-style-hide-join-button'); }
         if (USER_CONFIG.squareSearchBar) { body.classList.add('yte-style-square-search-bar'); } else { body.classList.remove('yte-style-square-search-bar'); }
         if (USER_CONFIG.squareDesign) { body.classList.add('yte-style-square-design'); } else { body.classList.remove('yte-style-square-design'); }
         if (USER_CONFIG.removeScrubber) { body.classList.add('yte-style-remove-scrubber'); } else { body.classList.remove('yte-style-remove-scrubber'); }
@@ -1509,7 +1770,7 @@
         document.documentElement.style.setProperty('--newlyVideo', USER_CONFIG.videosAgeColorPickerNewly);
         document.documentElement.style.setProperty('--recentVideo', USER_CONFIG.videosAgeColorPickerRecent);
         document.documentElement.style.setProperty('--latelyVideo', USER_CONFIG.videosAgeColorPickerLately);
-        document.documentElement.style.setProperty('--oldVideo', USER_CONFIG.videosOldOpacity); 
+        document.documentElement.style.setProperty('--oldVideo', USER_CONFIG.videosOldOpacity);
     }
 
     // create and show the settings modal
@@ -1618,9 +1879,9 @@
         description.classList.add('chrome-info');
         form.appendChild(description);
 
-        // extra settings buttons 
+        // extra settings buttons
         const extraSettings = document.createElement('div');
-        extraSettings.classList.add('extra-button-container'); 
+        extraSettings.classList.add('extra-button-container');
 
         const buttonsLeft = document.createElement('button');
         buttonsLeft.type = 'button';
@@ -1647,8 +1908,8 @@
         form.appendChild(extraSettings);
 
         // ChatGPT Prompt
-        form.appendChild(createTextareaField('ChatGPT Prompt:', 'ChatGPTPrompt', USER_CONFIG.ChatGPTPrompt, 'label-ChatGPT'));  
-        
+        form.appendChild(createTextareaField('ChatGPT Prompt:', 'ChatGPTPrompt', USER_CONFIG.ChatGPTPrompt, 'label-ChatGPT'));
+
         // action buttons container
         const buttonContainer = document.createElement('div');
         buttonContainer.classList.add('button-container-end');
@@ -1671,7 +1932,7 @@
 
         // Copyright
         const copyright = document.createElement('a');
-        copyright.href = 'https://github.com/TimMacy'; 
+        copyright.href = 'https://github.com/TimMacy';
         copyright.target = '_blank';
         copyright.innerText = '© 2024 Tim Macy';
         copyright.title = 'Copyright by Tim Macy';
@@ -1697,7 +1958,7 @@
         resetButton.onclick = async () => {
             const userConfirmed = window.confirm("All settings will be reset to their default values.");
             if (!userConfirmed) { return; }
-        
+
             try {
                 USER_CONFIG = { ...DEFAULT_CONFIG };
                 await GM.setValue('USER_CONFIG', USER_CONFIG);
@@ -1793,7 +2054,7 @@
         document.addEventListener('click', (event) => {
             const mainModal = document.getElementById('yt-transcript-settings-modal');
             const openSubPanel = document.querySelector('.sub-panel-overlay.active');
-          
+
             if (openSubPanel && event.target === openSubPanel) {
               openSubPanel.classList.remove('active');
               return;
@@ -1810,7 +2071,7 @@
         const escKeyListener = function(event) {
             if (event.key === 'Escape' && event.type === 'keydown') {
                 const openSubPanel = document.querySelector('.sub-panel-overlay.active');
-        
+
                 if (openSubPanel) {
                     openSubPanel.classList.remove('active');
                 } else {
@@ -1849,7 +2110,7 @@
                 subPanel.appendChild(closeButton);
 
                 if (panelContent) { subPanel.appendChild(panelContent); }
-            
+
                 subPanelOverlay.appendChild(subPanel);
                 document.body.appendChild(subPanelOverlay);
             }
@@ -1872,7 +2133,7 @@
             form.appendChild(infoLinksHeader);
 
             const sidebarContainer = document.createElement('div');
-            sidebarContainer.classList.add('sidebar-container'); 
+            sidebarContainer.classList.add('sidebar-container');
 
             // hide left navigation bar and replacement icon
             const checkboxField = createCheckboxField('Hide Left Navigation Bar', 'mButtonDisplay', USER_CONFIG.mButtonDisplay);
@@ -1938,23 +2199,34 @@
             form.appendChild(videosPerRow);
 
             // Spacer-5
-            const spacerTop5 = document.createElement('div');
-            spacerTop5.classList.add('spacer-5');
-            form.appendChild(spacerTop5);
+            const spacer_1_5 = document.createElement('div');
+            spacer_1_5.classList.add('spacer-5');
+            form.appendChild(spacer_1_5);
 
-            // Auto Open Chapter Panel
-            form.appendChild(createCheckboxField('Automatically Open Chapter Panel (default: no)', 'autoOpenChapters', USER_CONFIG.autoOpenChapters));
+            // auto open chapter panel
+            const autoOpenChapters = createCheckboxField('Automatically Open Chapter Panels (default: yes)', 'autoOpenChapters', USER_CONFIG.autoOpenChapters);
+            form.appendChild(autoOpenChapters);
 
-            // Display Remaining Time
-            form.appendChild(createCheckboxField('Display Remaining Time Under a Video (default: yes)', 'DisplayRemainingTime', USER_CONFIG.DisplayRemainingTime));
+            // auto open transcript panel
+            const autoOpenTranscript = createCheckboxField('Automatically Open Transcript Panels (default: no)', 'autoOpenTranscript', USER_CONFIG.autoOpenTranscript);
+            form.appendChild(autoOpenTranscript);
 
-            // keep Progress Bar Visible
-            form.appendChild(createCheckboxField('Keep Progress Bar Visible (default: yes)', 'ProgressBar', USER_CONFIG.ProgressBar));
+            // display remaining time
+            const displayRemainingTime = createCheckboxField('Display Remaining Time Under a Video (default: yes)', 'displayRemainingTime', USER_CONFIG.displayRemainingTime);
+            form.appendChild(displayRemainingTime);
+
+            // keep progress bar visible
+            const progressBar = createCheckboxField('Keep Progress Bar Visible (default: yes)', 'progressBar', USER_CONFIG.progressBar);
+            form.appendChild(progressBar);
+
+            // auto theater mode
+            const autoTheaterMode = createCheckboxField('Auto Theater Mode (default: no)', 'autoTheaterMode', USER_CONFIG.autoTheaterMode);
+            form.appendChild(autoTheaterMode);
 
             // Spacer-5
-            const spacerBottom5 = document.createElement('div');
-            spacerBottom5.classList.add('spacer-5');
-            form.appendChild(spacerBottom5);
+            const spacer_2_5 = document.createElement('div');
+            spacer_2_5.classList.add('spacer-5');
+            form.appendChild(spacer_2_5);
 
             // hide voice search button
             const hideVoiceSearch = createCheckboxField('Hide Voice Search Button in the Header (default: no)', 'hideVoiceSearch', USER_CONFIG.hideVoiceSearch);
@@ -1968,25 +2240,80 @@
             const hideBrandText = createCheckboxField('Hide YouTube Brand Text in the Header (default: no)', 'hideBrandText', USER_CONFIG.hideBrandText);
             form.appendChild(hideBrandText);
 
-            // hide watched videos globally
-            const videosHideWatchedGlobal = createCheckboxField('Hide Watched Videos Globally (default: no)', 'videosHideWatchedGlobal', USER_CONFIG.videosHideWatchedGlobal);
-            form.appendChild(videosHideWatchedGlobal);
-
-            // hide video scrubber
-            const removeScrubber = createCheckboxField('Hide Video Scrubber (red dot in progress bar) (default: no)', 'removeScrubber', USER_CONFIG.removeScrubber);
-            form.appendChild(removeScrubber);
-
             // hide mini player
             const hideMiniPlayer = createCheckboxField('Hide Mini Player (default: no)', 'hideMiniPlayer', USER_CONFIG.hideMiniPlayer);
             form.appendChild(hideMiniPlayer);
 
+            // hide watched videos globally
+            const videosHideWatchedGlobal = createCheckboxField('Hide Watched Videos Globally (default: no)', 'videosHideWatchedGlobal', USER_CONFIG.videosHideWatchedGlobal);
+            form.appendChild(videosHideWatchedGlobal);
+
+            // color picker progress bar
+            const progressbarColorContainer = document.createElement('div');
+            progressbarColorContainer.classList.add('videos-age-container');
+
+            function createLabelColorPair(labelText, configKey) {
+                const row = document.createElement('div');
+                row.classList.add('videos-age-row');
+
+                const colorPicker = document.createElement('input');
+                colorPicker.type = 'color';
+                colorPicker.value = USER_CONFIG[configKey];
+                colorPicker.name = configKey;
+                row.appendChild(colorPicker);
+
+                const label = document.createElement('span');
+                label.classList.add('label-style-settings');
+                label.innerText = labelText;
+                row.appendChild(label);
+
+                progressbarColorContainer.appendChild(row);
+            }
+
+            createLabelColorPair('Progress Bar Color', 'progressbarColorPicker');
+
+            form.appendChild(progressbarColorContainer);
+
+            // hide video scrubber
+            const removeScrubber = createCheckboxField('Hide Video Scrubber (default: no)', 'removeScrubber', USER_CONFIG.removeScrubber);
+            form.appendChild(removeScrubber);
+
+            // hide video end cards
+            const hideEndCards = createCheckboxField('Hide Video End Cards (default: no)', 'hideEndCards', USER_CONFIG.hideEndCards);
+            form.appendChild(hideEndCards);
+
+            // hide end screen
+            const hideEndscreen = createCheckboxField('Hide End Screens (suggestions at video end) (default: no)', 'hideEndscreen', USER_CONFIG.hideEndscreen);
+            form.appendChild(hideEndscreen);
+
             // display full title
-            const displayFullTitle = createCheckboxField('Display Full Title (default: yes)', 'displayFullTitle', USER_CONFIG.displayFullTitle);
+            const displayFullTitle = createCheckboxField('Display Full Titles (default: yes)', 'displayFullTitle', USER_CONFIG.displayFullTitle);
             form.appendChild(displayFullTitle);
 
-            // auto theater mode
-            const autoTheaterMode = createCheckboxField('Auto Theater Mode (default: no)', 'autoTheaterMode', USER_CONFIG.autoTheaterMode);
-            form.appendChild(autoTheaterMode);
+            // hide join button
+            const hideJoinButton = createCheckboxField('Hide Join Button under a Video and on Channel Page (default: no)', 'hideJoinButton', USER_CONFIG.hideJoinButton);
+            form.appendChild(hideJoinButton);
+
+            // small subscribed button
+            const smallSubscribeButton = createCheckboxField('Small Subscribed Button under a Video (default: no)', 'smallSubscribeButton', USER_CONFIG.smallSubscribeButton);
+            form.appendChild(smallSubscribeButton);
+
+            // hide share button
+            const hideShareButton = createCheckboxField('Hide Share Button under a Video (default: no)', 'hideShareButton', USER_CONFIG.hideShareButton);
+            form.appendChild(hideShareButton);
+
+            // hide add comment
+            const hideAddComment = createCheckboxField('Hide "Add Comment" Textfield (default: no)', 'hideAddComment', USER_CONFIG.hideAddComment);
+            form.appendChild(hideAddComment);
+
+            // disable play on hover
+            const disablePlayOnHover = createCheckboxField('Disable Play on Hover (default: yes)', 'disablePlayOnHover', USER_CONFIG.disablePlayOnHover);
+            form.appendChild(disablePlayOnHover);
+
+            // Spacer-5
+            const spacer_4_5 = document.createElement('div');
+            spacer_4_5.classList.add('spacer-5');
+            form.appendChild(spacer_4_5);
 
             // square and compact search bar
             const squareSearchBar = createCheckboxField('Square and Compact Search Bar (default: yes)', 'squareSearchBar', USER_CONFIG.squareSearchBar);
@@ -2020,10 +2347,10 @@
 
             // activate color code videos
             const checkboxField = createCheckboxField('Activate Color Code Videos (default: yes)', 'colorCodeVideosEnabled', USER_CONFIG.colorCodeVideosEnabled );
-            form.appendChild(checkboxField); 
+            form.appendChild(checkboxField);
 
             const checkboxFieldWatched = createCheckboxField('Hide Watched Videos (Only on Home) (default: no)', 'videosHideWatched', USER_CONFIG.videosHideWatched );
-            form.appendChild(checkboxFieldWatched); 
+            form.appendChild(checkboxFieldWatched);
 
             // opacity picker for old videos
             const videosOldContainer = createSliderInputField( 'Change opacity of videos uploaded more than 6 months ago:', 'videosOldOpacity', USER_CONFIG.videosOldOpacity, '0', '1', '0.1' );
@@ -2091,13 +2418,13 @@
     function createSelectField(labelText, labelClass, settingKey, settingValue, options) {
         const container = document.createElement('div');
         container.classList.add('file-naming-container');
-    
+
         const label = document.createElement('label');
         label.innerText = labelText;
         label.className = labelClass;
         label.classList.add('label-style-settings');
         container.appendChild(label);
-    
+
         const select = document.createElement('div');
         select.classList.add('select-file-naming');
         select.innerText = options[settingValue];
@@ -2117,17 +2444,17 @@
             hiddenSelect.appendChild(option);
         }
         container.appendChild(hiddenSelect);
-    
+
         const dropdownList = document.createElement('div');
         dropdownList.classList.add('dropdown-list');
         container.appendChild(dropdownList);
-    
+
         for (const [value, text] of Object.entries(options)) {
             const item = document.createElement('div');
             item.classList.add('dropdown-item');
             item.innerText = text;
             item.dataset.value = value;
-    
+
             if (value === settingValue) { item.classList.add('dropdown-item-selected'); }
 
             item.addEventListener('click', () => {
@@ -2135,13 +2462,13 @@
                 if (previouslySelected) {
                     previouslySelected.classList.remove('dropdown-item-selected');
                 }
-    
+
                 item.classList.add('dropdown-item-selected');
                 select.innerText = text;
                 hiddenSelect.value = value;
                 dropdownList.classList.remove('show');
             });
-    
+
             dropdownList.appendChild(item);
         }
 
@@ -2155,7 +2482,7 @@
         document.addEventListener('click', () => {
             dropdownList.classList.remove('show');
         });
-    
+
         return container;
     }
 
@@ -2194,10 +2521,10 @@
         numberInput.type = 'number';
         numberInput.name = settingKey;
         numberInput.value = settingValue;
-        numberInput.min = 1; 
-        numberInput.max = 20; 
-        numberInput.step = 1; 
-        numberInput.classList.add('number-input-field'); 
+        numberInput.min = 1;
+        numberInput.max = 20;
+        numberInput.step = 1;
+        numberInput.classList.add('number-input-field');
         label.appendChild(numberInput);
 
         const span = document.createElement('span');
@@ -2255,19 +2582,19 @@
     // helper function to create a textarea fields
     function createTextareaField(labelText, settingKey, settingValue, labelClass) {
         const container = document.createElement('chatgpt-prompt');
-    
+
         const label = document.createElement('label');
         label.innerText = labelText;
         label.className = labelClass;
         label.classList.add('label-style-settings');
         container.appendChild(label);
-    
+
         const textarea = document.createElement('textarea');
         textarea.name = settingKey;
         textarea.value = settingValue;
         textarea.classList.add('chatgpt-prompt-textarea');
         container.appendChild(textarea);
-    
+
         return container;
     }
 
@@ -2298,7 +2625,7 @@
         if (targetNotebookLMUrl !== '') {
             USER_CONFIG.targetNotebookLMUrl = normalizeUrl(targetNotebookLMUrl);
         } else { delete USER_CONFIG.targetNotebookLMUrl; }
-    
+
         // save other settings
         USER_CONFIG.fileNamingFormat = form.elements.fileNamingFormat.value;
         USER_CONFIG.includeTimestamps = form.elements.includeTimestamps.checked;
@@ -2306,19 +2633,19 @@
         USER_CONFIG.openSameTab = form.elements.openSameTab.checked;
         USER_CONFIG.preventBackgroundExecution = form.elements.preventBackgroundExecution.checked;
         USER_CONFIG.ChatGPTPrompt = form.elements.ChatGPTPrompt.value;
-    
+
         // initialize buttonIcons if not already
         USER_CONFIG.buttonIcons = USER_CONFIG.buttonIcons || {};
-    
+
         // save button icons, removing empty values to use defaults
         const buttonIconDownload = form.elements.buttonIconDownload.value.trim();
         const buttonIconChatGPT = form.elements.buttonIconChatGPT.value.trim();
         const buttonIconNotebookLM = form.elements.buttonIconNotebookLM.value.trim();
         const buttonIconSettings = form.elements.buttonIconSettings.value.trim();
-    
-        if (buttonIconDownload !== '') { USER_CONFIG.buttonIcons.download = buttonIconDownload; } else { delete USER_CONFIG.buttonIcons.download; }
-        if (buttonIconChatGPT !== '') { USER_CONFIG.buttonIcons.ChatGPT = buttonIconChatGPT; } else { delete USER_CONFIG.buttonIcons.ChatGPT; }
-        if (buttonIconNotebookLM !== '') { USER_CONFIG.buttonIcons.NotebookLM = buttonIconNotebookLM; } else { delete USER_CONFIG.buttonIcons.NotebookLM; }
+
+        USER_CONFIG.buttonIcons.download = buttonIconDownload;
+        USER_CONFIG.buttonIcons.ChatGPT = buttonIconChatGPT;
+        USER_CONFIG.buttonIcons.NotebookLM = buttonIconNotebookLM;
         if (buttonIconSettings !== '') { USER_CONFIG.buttonIcons.settings = buttonIconSettings; } else { delete USER_CONFIG.buttonIcons.settings; }
 
         // save sub panels - links in header
@@ -2349,11 +2676,20 @@
             USER_CONFIG.videosHideWatchedGlobal = subPanelCustomCSS.elements.videosHideWatchedGlobal.checked;
             USER_CONFIG.videosPerRow = parseInt(subPanelCustomCSS.elements.videosPerRow.value);
             USER_CONFIG.autoOpenChapters = subPanelCustomCSS.elements.autoOpenChapters.checked;
-            USER_CONFIG.DisplayRemainingTime = subPanelCustomCSS.elements.DisplayRemainingTime.checked;
-            USER_CONFIG.ProgressBar = subPanelCustomCSS.elements.ProgressBar.checked;
+            USER_CONFIG.autoOpenTranscript = subPanelCustomCSS.elements.autoOpenTranscript.checked;
+            USER_CONFIG.displayRemainingTime = subPanelCustomCSS.elements.displayRemainingTime.checked;
+            USER_CONFIG.progressBar = subPanelCustomCSS.elements.progressBar.checked;
             USER_CONFIG.hideVoiceSearch = subPanelCustomCSS.elements.hideVoiceSearch.checked;
             USER_CONFIG.hideCreateButton = subPanelCustomCSS.elements.hideCreateButton.checked;
             USER_CONFIG.hideBrandText = subPanelCustomCSS.elements.hideBrandText.checked;
+            USER_CONFIG.disablePlayOnHover = subPanelCustomCSS.elements.disablePlayOnHover.checked;
+            USER_CONFIG.hideEndCards = subPanelCustomCSS.elements.hideEndCards.checked;
+            USER_CONFIG.hideEndscreen = subPanelCustomCSS.elements.hideEndscreen.checked;
+            USER_CONFIG.hideJoinButton = subPanelCustomCSS.elements.hideJoinButton.checked;
+            USER_CONFIG.smallSubscribeButton = subPanelCustomCSS.elements.smallSubscribeButton.checked;
+            USER_CONFIG.hideShareButton = subPanelCustomCSS.elements.hideShareButton.checked;
+            USER_CONFIG.hideAddComment = subPanelCustomCSS.elements.hideAddComment.checked;
+            USER_CONFIG.progressbarColorPicker = subPanelCustomCSS.elements.progressbarColorPicker.value;
             USER_CONFIG.removeScrubber = subPanelCustomCSS.elements.removeScrubber.checked;
             USER_CONFIG.autoTheaterMode = subPanelCustomCSS.elements.autoTheaterMode.checked;
             USER_CONFIG.hideMiniPlayer = subPanelCustomCSS.elements.hideMiniPlayer.checked;
@@ -2379,7 +2715,7 @@
         // save updated config
         try {
             await GM.setValue('USER_CONFIG', USER_CONFIG);
-    
+
             // close modal
             document.getElementById('yt-transcript-settings-modal').style.display = 'none';
             showNotification('Settings have been updated!');
@@ -2388,7 +2724,7 @@
             showNotification('Error saving new user config!');
             console.error("YTE: Error saving user configuration:", error);
         }
-    }      
+    }
 
     // export and import settings
     async function exportSettings() {
@@ -2474,29 +2810,16 @@
         setTimeout(() => { overlay.remove(); }, 1000);
     }
 
-    // helper function to switch theater mode
-    function toggleTheaterMode() {
-        const event = new KeyboardEvent('keydown', {
-            key: 'T',
-            code: 'KeyT',
-            keyCode: 84, 
-            bubbles: true,
-            cancelable: true
-        });
-
-        document.dispatchEvent(event);
-    }
-
     // function to add the YouTube Transcript Exporter buttons
     function buttonLocation(buttons, callback) {
         const masthead = document.querySelector('#end');
         if (masthead) {
             buttons.forEach(({ id, text, clickHandler, tooltip }) => {
-    
+
                 // button wrapper
                 const buttonWrapper = document.createElement('div');
                 buttonWrapper.classList.add('button-wrapper');
-    
+
                 // buttons
                 const button = document.createElement('button');
                 button.id = id;
@@ -2504,34 +2827,34 @@
                 button.classList.add('button-style');
                 if (id === 'transcript-settings-button') {
                     button.classList.add('button-style-settings'); }
-                
+
                 button.addEventListener('click', clickHandler);
-    
+
                 // tooltip div
                 const tooltipDiv = document.createElement('div');
                 tooltipDiv.innerText = tooltip;
                 tooltipDiv.classList.add('button-tooltip');
-    
+
                 // tooltip arrow
                 const arrowDiv = document.createElement('div');
                 arrowDiv.classList.add('button-tooltip-arrow');
                 tooltipDiv.appendChild(arrowDiv);
-    
+
                 // show and hide tooltip on hover
                 let tooltipTimeout;
                 button.addEventListener('mouseenter', () => {
                     tooltipTimeout = setTimeout(() => {
                         tooltipDiv.style.visibility = 'visible';
                         tooltipDiv.style.opacity = '1';
-                    }, 700); 
+                    }, 700);
                 });
-    
+
                 button.addEventListener('mouseleave', () => {
-                    clearTimeout(tooltipTimeout); 
+                    clearTimeout(tooltipTimeout);
                     tooltipDiv.style.visibility = 'hidden';
                     tooltipDiv.style.opacity = '0';
                 });
-    
+
                 // append button elements
                 buttonWrapper.appendChild(button);
                 buttonWrapper.appendChild(tooltipDiv);
@@ -2542,7 +2865,7 @@
                 const masthead = document.querySelector('#end');
                 if (masthead) {
                     obs.disconnect();
-                    if (callback) callback(); 
+                    if (callback) callback();
                 }
             });
             observer.observe(document.body, {
@@ -2551,18 +2874,20 @@
             });
         }
     }
-    
+
     function addButton() {
         if (document.querySelector('.button-wrapper')) return;
 
         const buttons = [
             { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Transcript Exporter Settings', ariaLabel: 'YouTube Transcript Exporter Settings.' },
-            { id: 'transcript-download-button', text:USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.' },
-            { id: 'transcript-ChatGPT-button', text:USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: 'Copy Transcript with a Prompt and Open ChatGPT', ariaLabel: 'Copy Transcript to Clipboard with a Prompt and Open ChatGPT.' },
-            { id: 'transcript-NotebookLM-button', text:USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: 'Copy Transcript and Open NotebookLM', ariaLabel: 'Copy Transcript to Clipboard and Open NotebookLM.' }
+            { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.' },
+            { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: 'Copy Transcript with a Prompt and Open ChatGPT', ariaLabel: 'Copy Transcript to Clipboard with a Prompt and Open ChatGPT.' },
+            { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: 'Copy Transcript and Open NotebookLM', ariaLabel: 'Copy Transcript to Clipboard and Open NotebookLM.' }
         ];
-    
-        buttonLocation(buttons, addButton);
+
+        const buttonsToAdd = buttons.filter(button => button.id === 'transcript-settings-button' || (button.text && button.text.trim() !== ''));
+
+        buttonLocation(buttonsToAdd, addButton);
     }
 
     function addSettingsButton() {
@@ -2602,7 +2927,7 @@
         } else {
             alert('Transcript has not loaded successfully.\nReload this page to try again.');
             console.log("YTE: Transcript has not loaded.");
-            return; 
+            return;
         }
     }
 
@@ -2631,7 +2956,7 @@
 
         Array.from(transcriptElements).forEach(element => {
             if (element.tagName === 'YTD-TRANSCRIPT-SECTION-HEADER-RENDERER') {
-    
+
                 // chapter header segment
                 if (USER_CONFIG.includeChapterHeaders) {
                     const chapterTitleElement = element.querySelector('h2 > span');
@@ -2641,7 +2966,7 @@
                     }
                 }
             } else if (element.tagName === 'YTD-TRANSCRIPT-SEGMENT-RENDERER') {
-    
+
                 // transcript segment
                 const timeElement = element.querySelector('.segment-timestamp');
                 const textElement = element.querySelector('.segment-text');
@@ -2662,10 +2987,10 @@
     function selectAndCopyTranscript(target) {
         const transcriptText = getTranscriptText();
         const { ytTitle, channelName, uploadDate, videoURL } = getVideoInfo();
-    
+
         let finalText = '';
         let targetUrl = '';
-    
+
         if (target === 'ChatGPT') {
             finalText = `YouTube Transcript:\n${transcriptText.trimStart()}\n\n\nAdditional Information about the YouTube Video:\nTitle: ${ytTitle}\nChannel: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nTask Instructions:\n${USER_CONFIG.ChatGPTPrompt}`;
             targetUrl = USER_CONFIG.targetChatGPTUrl;
@@ -2673,8 +2998,8 @@
             finalText = `Information about the YouTube Video:\nTitle: ${ytTitle}\nChannel: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nYouTube Transcript:\n${transcriptText.trimStart()}`;
             targetUrl = USER_CONFIG.targetNotebookLMUrl;
         }
-    
-        navigator.clipboard.writeText(finalText).then(() => { 
+
+        navigator.clipboard.writeText(finalText).then(() => {
             showNotification('Transcript copied. Opening website . . .');
             if (USER_CONFIG.openSameTab) { window.open(targetUrl, '_self');
             } else { window.open(targetUrl, '_blank'); }
@@ -2690,14 +3015,14 @@
     }
 
     // function to download the transcript as a text file
-    function downloadTranscriptAsText() { 
+    function downloadTranscriptAsText() {
         const finalText = getFormattedTranscript();
         const { ytTitle, channelName, uploadDate } = getVideoInfo();
         const blob = new Blob([finalText], { type: 'text/plain' });
 
         const sanitize = str => str.replace(/[<>:"/\\|?*]+/g, '');
         const uploadDateFormatted = new Date(uploadDate).toLocaleDateString("en-CA");
-    
+
         // naming of text file based on user setting
         let fileName = '';
         switch (USER_CONFIG.fileNamingFormat) {
@@ -2707,84 +3032,89 @@
             case 'date-channel-title': fileName = `${sanitize(uploadDateFormatted)} - ${sanitize(channelName)} - ${sanitize(ytTitle)}.txt`; break;
             default: fileName = `${sanitize(ytTitle)} - ${sanitize(channelName)}.txt`;
         }
-    
+
         const url = URL.createObjectURL(blob);
-    
+
         // create a temporary anchor element to trigger the download
         const a = document.createElement('a');
         a.href = url;
         a.download = fileName;
         document.body.appendChild(a);
         a.click();
-    
+
         // clean up
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         showNotification('File has been downloaded.');
-    }    
+    }
 
 
     // function to preload the transcript
     function preLoadTranscript() {
         return new Promise((resolve, reject) => {
-          const panel = document.querySelector( 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]' );
-          if (!panel) {
-            console.log('YTE: Transcript panel not found. Reload this page to try again.');
-            showNotificationError("Transcript Not Available");
-            reject();
-            return;
-          }
-
-          const masthead = document.querySelector("#end");
-          const notification = document.createElement("div");
-          notification.classList.add("notification-error", "loading");
-          const textSpan = document.createElement("span");
-          textSpan.textContent = "Transcript Is Loading";
-          notification.appendChild(textSpan);
-          masthead.prepend(notification);
-
-          panel.classList.add("transcript-preload");
-          panel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
-
-          let loaded = false;
-
-          const observer = new MutationObserver(() => {
-            const transcriptItems = panel.querySelectorAll("ytd-transcript-segment-renderer");
-            if (transcriptItems.length > 0) {
-              loaded = true;
-              cleanup(false);
-              clearTimeout(fallbackTimer);
-              observer.disconnect();
-              resolve();
+            if (isLiveVideo) {
+                showNotificationError("Live Stream, No Transcript");
+                reject();
+                return;
             }
-          });
 
-          observer.observe(panel, { childList: true, subtree: true });
-
-          const fallbackTimer = setTimeout(() => {
-            if (!loaded) {
-              console.error( "YTE: The transcript took too long to load. Reload this page to try again." );
-              observer.disconnect();
-              cleanup(true);
-              reject();
+            if (!hasTranscriptPanel) {
+                console.log('YTE: Transcript panel not found. Reload this page to try again.');
+                showNotificationError("Transcript Not Available");
+                reject();
+                return;
             }
-          }, 6000);
 
-          function cleanup(failed) {
-            notification.remove();
-            panel.classList.remove("transcript-preload");
-            panel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN");
-            if (failed) { showNotificationError("Transcript Failed to Load"); }
-          }
-        });
-      }
+            const masthead = document.querySelector("#end");
+            const notification = document.createElement("div");
+            notification.classList.add("notification-error", "loading");
+            const textSpan = document.createElement("span");
+            textSpan.textContent = "Transcript Is Loading";
+            notification.appendChild(textSpan);
+            masthead.prepend(notification);
+
+            if (!USER_CONFIG.autoOpenTranscript) transcriptPanel.classList.add("transcript-preload");
+            if (!USER_CONFIG.autoOpenTranscript) transcriptPanel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+
+            let loaded = false;
+
+            const observer = new MutationObserver(() => {
+                const transcriptItems = transcriptPanel.querySelectorAll("ytd-transcript-segment-renderer");
+                if (transcriptItems.length > 0) {
+                loaded = true;
+                cleanup(false);
+                clearTimeout(fallbackTimer);
+                observer.disconnect();
+                resolve();
+                }
+            });
+
+            observer.observe(transcriptPanel, { childList: true, subtree: true });
+
+            const fallbackTimer = setTimeout(() => {
+                if (!loaded) {
+                console.error( "YTE: The transcript took too long to load. Reload this page to try again." );
+                observer.disconnect();
+                cleanup(true);
+                reject();
+                }
+            }, 6000);
+
+            function cleanup(failed) {
+                notification.remove();
+                if (!USER_CONFIG.autoOpenTranscript) transcriptPanel.classList.remove("transcript-preload");
+                if (!USER_CONFIG.autoOpenTranscript) transcriptPanel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN");
+                if (failed) { showNotificationError("Transcript Failed to Load"); }
+            }
+            });
+        }
 
     // function to display a notification if transcript cannot be found
     function showNotificationError(message) {
         const masthead = document.querySelector('#end');
         const notification = document.createElement('div');
         notification.textContent = message;
-        notification.classList.add('notification-error'); 
+        notification.classList.add('notification-error');
 
         masthead.prepend(notification);
 
@@ -2798,29 +3128,32 @@
         } else { setTimeout(() => notification.remove(), 3000); }
     }
 
-    // function to automatically open the chapter panel
-    function openChapters() {
-        const panel = document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]') ||
-                    document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]');
-        
-        if (panel) {
-            panel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-        } //else { console.log("YTE: Chapter panel not found or does not exist."); }
+    // helper function to switch theater mode
+    function toggleTheaterMode() {
+        const event = new KeyboardEvent('keydown', {
+            key: 'T',
+            code: 'KeyT',
+            keyCode: 84,
+            bubbles: true,
+            cancelable: true
+        });
+
+        document.dispatchEvent(event);
     }
 
     // function to display the remaining time based on playback speed
-    function RemainingTime() {
+    function remainingTime() {
         const STREAM_SELECTOR = '.video-stream.html5-main-video';
         const CONTAINER_SELECTOR = '#columns #primary #below';
         const FULLSCREEN_CONTAINER_SELECTOR = '#movie_player > div.ytp-chrome-bottom';
-    
+
         // function to format seconds
         function formatTime(seconds) {
             if (!isFinite(seconds) || seconds < 0) seconds = 0;
             const h = Math.floor(seconds / 3600);
             const m = Math.floor((seconds % 3600) / 60);
             const s = Math.floor(seconds % 60);
-            return h > 0 
+            return h > 0
                 ? `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
                 : `${m}:${s.toString().padStart(2, '0')}`;
         }
@@ -2832,16 +3165,13 @@
         element.appendChild(textNode);
 
         const initialContainer = document.querySelector(CONTAINER_SELECTOR);
-        if (initialContainer) { initialContainer.prepend(element); } 
-    
-        // hide for live video
-        const timeDisplay = document.querySelector('.ytp-time-display');
-        if (!timeDisplay) { console.error("YTE: RemainingTime: Required querySelector not found."); return; }
-    
-        if (timeDisplay.classList.contains('ytp-live')) {
+        if (initialContainer) { initialContainer.prepend(element); }
+
+        // hide for live stream
+        if (isLiveVideo) {
             element.classList.add('live');
-        } else { 
-            element.classList.remove('live'); 
+        } else {
+            element.classList.remove('live');
         }
 
         // dynamic placement based on fullscreen mode
@@ -2849,7 +3179,7 @@
             const container = document.querySelector(CONTAINER_SELECTOR);
             const fullscreenContainer = document.querySelector(FULLSCREEN_CONTAINER_SELECTOR);
             const remainingTimeContainer = document.querySelector('.remaining-time-container');
-        
+
             if (document.fullscreenElement && fullscreenContainer) {
                 if (remainingTimeContainer && remainingTimeContainer.parentNode !== fullscreenContainer) {
                     fullscreenContainer.appendChild(remainingTimeContainer);
@@ -2862,11 +3192,11 @@
                     container.prepend(remainingTimeContainer);
                 }
             }
-        }; 
-    
+        };
+
         document.addEventListener('fullscreenchange', () => { setTimeout(updateContainer, 250); });
         updateContainer();
-    
+
         // time updates
         const video = document.querySelector(STREAM_SELECTOR);
         if (video) {
@@ -2879,7 +3209,7 @@
                 const totalFormatted = formatTime(duration);
                 const elapsedFormatted = formatTime(currentTime);
                 const remainingFormatted = formatTime(remaining);
-    
+
                 textNode.data = `total: ${totalFormatted} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
             };
         }
@@ -2887,42 +3217,41 @@
 
     // function to keep the progress bar visible with chapters container
     function keepProgressBarVisible() {
-        document.documentElement.classList.add('ProgressBar');
-    
+        document.documentElement.classList.add('progressBar');
+
         const player = document.querySelector('.html5-video-player');
         const video = document.querySelector('video[src]');
-        const timeDisplay = document.querySelector('.ytp-time-display');
         const chaptersContainer = player && player.querySelector('.ytp-chapters-container');
         const progressBarContainer = player && player.querySelector('.ytp-progress-bar-container');
-    
-        if (!player || !video || !timeDisplay) { console.error("YTE: ProgressBar: A Required querySelector Not Found."); return; }
+
+        if (!player || !video ) { console.error("YTE: ProgressBar: A Required querySelector Not Found."); return; }
         if (!progressBarContainer) { console.error("YTE: ProgressBar: Progress Bar Container Not Found."); return; }
-    
+
         const bar = document.createElement('div');
-        bar.id = 'ProgressBar-bar';
-    
+        bar.id = 'progress-bar-bar';
+
         const progress = document.createElement('div');
-        progress.id = 'ProgressBar-progress';
-    
+        progress.id = 'progress-bar-progress';
+
         const buffer = document.createElement('div');
-        buffer.id = 'ProgressBar-buffer';
-    
+        buffer.id = 'progress-bar-buffer';
+
         const startDiv = document.createElement('div');
-        startDiv.id = 'ProgressBar-start';
-    
+        startDiv.id = 'progress-bar-start';
+
         const endDiv = document.createElement('div');
-        endDiv.id = 'ProgressBar-end';
-    
+        endDiv.id = 'progress-bar-end';
+
         player.appendChild(bar);
         bar.appendChild(buffer);
         bar.appendChild(progress);
         player.appendChild(startDiv);
         player.appendChild(endDiv);
-    
+
         progress.style.transform = 'scaleX(0)';
-    
-        // live video check        
-        if (timeDisplay.classList.contains('ytp-live')) {
+
+        // live stream check
+        if (isLiveVideo) {
             bar.classList.remove('active');
             startDiv.classList.remove('active');
             endDiv.classList.remove('active');
@@ -2938,7 +3267,7 @@
             requestAnimationFrame(animateProgress);
         }
 
-        requestAnimationFrame(animateProgress);     
+        requestAnimationFrame(animateProgress);
 
         function renderBuffer() {
             for (let i = video.buffered.length - 1; i >= 0; i--) {
@@ -2947,7 +3276,7 @@
                 break;
             }
         }
-    
+
         video.addEventListener('progress', renderBuffer);
         video.addEventListener('seeking', renderBuffer);
 
@@ -3016,25 +3345,28 @@
                 }
             });
         }
-    
+
         // handle layout changes
         document.addEventListener('yt-set-theater-mode-enabled', () => { updateLayout(); });
         window.addEventListener('resize', () => { updateLayout(); });
-                        
 
         // initialization
         renderBuffer();
         updateLayout();
     }
 
-    // Auto Theater Mode
-    function autoTheaterMode() {
-        const watchFlexy = document.querySelector('ytd-watch-flexy');
-        if (!watchFlexy) return;
-    
-        const isDefault = watchFlexy.hasAttribute('default-layout');
+    // function to automatically open the chapter panel
+    function openChapters() {
+        if (hasChapterPanel) {
+            chapterPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+        } else console.error("YTE: Chapter panel not found or does not exist.");
+    }
 
-        if (isDefault) { toggleTheaterMode(); }
+    // function to automatically open the transcript panel
+    function openTranscript() {
+        if (hasTranscriptPanel) {
+            transcriptPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+        } else console.error("YTE: Transcript panel not found or does not exist.");
     }
 
     // sidebar and links in header
@@ -3042,8 +3374,8 @@
         function openSidebar() {
             const guideButton = document.querySelector('#guide-button button');
             if (guideButton) {
-                guideButton.click(); 
-            } 
+                guideButton.click();
+            }
         }
 
         // create sidebar button
@@ -3073,7 +3405,7 @@
         const isHideSidebarChecked = USER_CONFIG.mButtonDisplay;
 
         if (container.querySelector('.buttons-left')) { return; }
-    
+
         // adding the buttons
         const buttonsConfig = [
             { type: 'button', text: USER_CONFIG.mButtonText, onClick: openSidebar },
@@ -3085,7 +3417,7 @@
             { type: 'link', text: USER_CONFIG.buttonLeft6Text, url: USER_CONFIG.buttonLeft6Url },
             { type: 'link', text: USER_CONFIG.buttonLeft7Text, url: USER_CONFIG.buttonLeft7Url },
         ];
-    
+
         buttonsConfig.forEach(config => {
             if (config.text && config.text.trim() !== '') {
                 let element;
@@ -3111,7 +3443,7 @@
     }
 
     // color code videos on home
-    function ColorCodeVideos() { 
+    function ColorCodeVideos() {
         // define age categories
         const categories = {
             live: ['watching'],
@@ -3122,7 +3454,7 @@
             lately: ['1 month ago', 'weeks ago', '14 days ago', '13 days ago', '12 days ago', '11 days ago', '10 days ago', '9 days ago', '8 days ago'],
             old: ['years ago', '1 year ago', '12 months ago', '11 months ago', '10 months ago', '9 months ago', '8 months ago', '7 months ago']
         };
-        
+
         function processVideos() {
             document.querySelectorAll('[class*="ytd-video-meta-block"]').forEach(el => {
                 const textContent = el.textContent.trim().toLowerCase();
@@ -3135,12 +3467,12 @@
                     }
                 }
             });
-        
+
             document.querySelectorAll('span.ytd-video-meta-block').forEach(el => {
                 const text = el.textContent;
                 const videoContainer = el.closest('ytd-rich-item-renderer');
                 if (!videoContainer) return;
-        
+
                 if (/Scheduled for/i.test(text) && !videoContainer.classList.contains('yte-style-upcoming-video')) {
                     videoContainer.classList.add('yte-style-upcoming-video');
                 }
@@ -3159,38 +3491,50 @@
                 }
             });
         }
-        
+
         processVideos();
 
         document.addEventListener('yt-service-request-sent', () => {
-            setTimeout(() => { processVideos(); }, 2000); 
+            setTimeout(() => { processVideos(); }, 2000);
         });
     }
 
     // initiate the script
     let lastVideoURL = null;
-    let initialRun = false;
+    let isLiveVideo = null;
+    let isVideoPage = null;
+    let isTheaterMode = null;
+    let hasChapterPanel = null;
+    let chapterPanel = null;
+    let hasTranscriptPanel = null;
+    let transcriptPanel = null;
+    let isFullscreen = null;
 
-    async function initializeTranscript(currentVideoURL) {
+    async function initializeTranscript() {
         if (USER_CONFIG.preventBackgroundExecution) { await ChromeUserWait(); }
         buttonsLeft();
 
-        const isVideoPage = /^https:\/\/.*\.youtube\.com\/watch\?v=/.test(currentVideoURL);
         if (isVideoPage) {
-            if (USER_CONFIG.autoTheaterMode) { autoTheaterMode(); }
-            if (USER_CONFIG.DisplayRemainingTime) { RemainingTime(); }
-            if (USER_CONFIG.ProgressBar) { keepProgressBarVisible(); }
-            if (USER_CONFIG.autoOpenChapters) { openChapters(); }
+            liveVideoCheck();
+            fullscreenCheck();
+            theaterModeCheck();
+            chapterPanelCheck();
+            transcriptPanelCheck();
+            if (USER_CONFIG.autoTheaterMode && !isTheaterMode) { toggleTheaterMode(); }
+            if (USER_CONFIG.displayRemainingTime && !isLiveVideo) { remainingTime(); }
+            if (USER_CONFIG.progressBar && !isLiveVideo) { keepProgressBarVisible(); }
+            if (USER_CONFIG.autoOpenChapters && hasChapterPanel) { openChapters(); }
+            if (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel) { openTranscript(); }
 
             let transcriptLoaded = false;
-            try { await preLoadTranscript(); transcriptLoaded = true; } 
+            try { await preLoadTranscript(); transcriptLoaded = true; }
             catch (error) { setTimeout(() => { addSettingsButton(); }, 3000); }
             if (transcriptLoaded) { addButton(); }
             //console.log("YTE: YouTube Transcript Exporter Initialized: On Video Page.");
-        } else { 
+        } else {
             addSettingsButton();
-            //console.log("YTE: YouTube Transcript Exporter Initialized: On Normal Page."); 
-            if (window.location.href !== "https://www.youtube.com/") { return; }
+            //console.log("YTE: YouTube Transcript Exporter Initialized: On Other Page.");
+            if (window.location.href !== "https://www.youtube.com/") return;
             if (USER_CONFIG.colorCodeVideosEnabled) { ColorCodeVideos(); }
         }
     }
@@ -3203,15 +3547,54 @@
             lastVideoURL = currentVideoURL;
             //console.log("YTE: Only One Survived");
             loadCSSsettings();
-            if (USER_CONFIG.ProgressBar) { ProgressBarCSS(); }
-            setTimeout(() => { initializeTranscript(currentVideoURL); }, 500);
+            isVideoPage = /^https:\/\/.*\.youtube\.com\/watch\?v=/.test(currentVideoURL);
+            setTimeout(() => { initializeTranscript(); }, 600);
         }
+    }
+
+    // theater mode check
+    function theaterModeCheck() {
+      const watchFlexy = document.querySelector('ytd-watch-flexy');
+
+      if (watchFlexy?.hasAttribute('theater')) {
+        isTheaterMode = true;
+      } else if (watchFlexy?.hasAttribute('default-layout')) {
+        isTheaterMode = false;
+      }
+    }
+
+    // live stream check
+    function liveVideoCheck() {
+        const timeDisplay = document.querySelector('.ytp-time-display');
+        isLiveVideo = !!timeDisplay?.classList.contains('ytp-live');
+      }
+
+    // chapter panel check
+    function chapterPanelCheck() {
+        chapterPanel = document.querySelector( 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]' ) || document.querySelector( 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]' );
+        hasChapterPanel = !!chapterPanel;
+      }
+
+    // transcript panel check
+    function transcriptPanelCheck() {
+        transcriptPanel = document.querySelector( 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]' );
+        hasTranscriptPanel = !!transcriptPanel;
+      }
+
+    // fullscreen check
+    function fullscreenCheck() {
+        const player = document.getElementById('movie_player');
+        if (player && player.classList.contains('ytp-fullscreen')) {
+            isFullscreen = true;
+        } else {
+            isFullscreen = false;
+        } //console.log('YTE: isFullscreen:', isFullscreen);
     }
 
     // reset
     function handleYTNavigation() {
         document.querySelectorAll(
-            '.button-wrapper, .remaining-time-container, #yt-transcript-settings-modal, .sub-panel-overlay, .yte-player-sidebar, #ProgressBar-bar, #ProgressBar-start, #ProgressBar-end'
+            '.button-wrapper, .remaining-time-container, #yte-playback-speed-control, .yte-player-sidebar, #progress-bar-bar, #progress-bar-start, #progress-bar-end, #yt-transcript-settings-modal, .sub-panel-overlay'
         ).forEach(el => el.remove());
     }
 
@@ -3235,8 +3618,7 @@
     document.addEventListener('yt-navigate-finish', handleYouTubeNavigation); // default
     document.addEventListener('yt-page-data-updated', handleYouTubeNavigation); // backup
     document.addEventListener('yt-page-data-fetched', handleYouTubeNavigation); // redundancy
-    //document.addEventListener('yt-player-updated', ytePlaybackSpeed); 
-    //document.addEventListener('yt-update-title', handleYouTubeNavigation);
-    //document.addEventListener('yt-page-type-changed', handleYouTubeNavigation);
+    document.addEventListener('fullscreenchange', fullscreenCheck); // fullscreen check
+    document.addEventListener('yt-set-theater-mode-enabled', theaterModeCheck); // theater mode check
     document.addEventListener('yt-service-request-completed', handleYouTubeNavigation); // for chrome
 })();
