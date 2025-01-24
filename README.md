@@ -14,9 +14,12 @@ This script adds four buttons to the YouTube header to facilitate exporting a vi
 - **Additional Features**
   - **Display Remaining Time**: Shows the remaining playback time below the video, adjusted for playback speed.
   - **Persistent Progress Bar**: Keeps the progress bar with chapter markers visible below the video—even in fullscreen.
-  - **Auto Open Chapters**: Automatically opens the chapter panel if available.
+  - **Auto Open Chapter Panels**: Automatically opens chapter panels if available.
+  - **Auto Open Transcript Panels**: Automatically opens transcript panels if available.
+  - **Auto-Theater Mode**: Automatically activates theater mode.
+  - **Disable Play on Hover**: Prevents auto-play when hovering over videos.
   - **Links in Header**: Up to seven links can be added next to the logo and the Left Navigation Bar can be hidden.
-  - **Customize CSS**: Square Design, Compact Layout, Number of Videos per Row, Dim or Hide Watched Videos, and Auto Theater Mode are just some options.
+  - **Customize CSS**: Square Design, Compact Layout, Number of Videos per Row, Dim or Hide Watched Videos, Display Full Titles, Hide End Cards or End Screens are just some options.
   - **Color Code Videos**: Adds a configurable border around videos on the YouTube home page, with colors indicating video age and status.
 - **Customizable**
   - The settings panel allows for easy modification of the script and its functionality.
@@ -46,8 +49,12 @@ This script adds four buttons to the YouTube header to facilitate exporting a vi
         <td align="left">The transcript has to be loaded into the HTML before it can be used. This can take between a few milliseconds up to a couple of seconds—depending on the length of the video.</td>
     </tr>
     <tr>
+        <td align="center"><img src="https://github.com/user-attachments/assets/e5911ba3-6039-4dd5-ab22-ffdaf02244e2" alt="Live Video, No Transcript"></td>
+        <td align="left">YouTube live streams don't have transcripts. Wait until the stream has finished and YouTube's API has finished processing the video.</td>
+    </tr>
+    <tr>
         <td align="center"><img src="https://github.com/user-attachments/assets/c0096353-dade-4e33-b728-136ea6c5e774" alt="Transcript Not Available"></td>
-        <td align="left">YouTube's API needs a few minutes to process a new video and generate its transcript.<br>Live videos don't have transcripts. Ensure the "Show transcript" button is available in the description.</td>
+        <td align="left">YouTube's API needs a few minutes to process a new video and generate its transcript. Ensure the "Show transcript" button is available in the description.</td>
     </tr>
     <tr>
       <td align="center"><img src="https://github.com/user-attachments/assets/31e963fa-414c-476a-bf1c-94adf7cf9f9e" alt="Transcript Failed to Load"></td>
@@ -61,6 +68,7 @@ This script adds four buttons to the YouTube header to facilitate exporting a vi
 2. **Install** [YouTubeTranscriptExporter.js](https://raw.githubusercontent.com/TimMacy/YouTubeTranscriptExporter/refs/heads/main/YouTubeTranscriptExporter.js)
 
 ## Changelog
+- **7.4**: general bug fixes and improvements. reworked initiation of the script. new features: auto-open transcript panels, hide video end cards, hide end screens, hide join and share button under videos, small "subscribed" button (icon only), hide add comment text field, disable play on hover, hide main scrollbar in Safari, choose progress bar color
 - **7.3.5**: General bug fixes and improvements. Reorganized the settings panel for upcoming features. New Features: Hide YouTube brand text in the header; Hide video scrubber (red dot in progress bar); Display full titles; and Auto Theater mode.
 - **7.3.1**: fixed YouTube scrubber in progress bar
 - **7.3**: New Features: Links in Header, Customize CSS, and Color Code Videos. Also optimized transcript loading and reset function.
