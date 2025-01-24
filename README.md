@@ -50,7 +50,7 @@ This script adds four buttons to the YouTube header to facilitate exporting a vi
     </tr>
     <tr>
         <td align="center"><img src="https://github.com/user-attachments/assets/e5911ba3-6039-4dd5-ab22-ffdaf02244e2" alt="Live Video, No Transcript"></td>
-        <td align="left">YouTube live streams don't have transcripts. Wait until the stream has finished and YouTube's API has finished processing the video.</td>
+        <td align="left">YouTube live streams don't have transcripts. Wait until the stream has finished and YouTube's API has processed the video.</td>
     </tr>
     <tr>
         <td align="center"><img src="https://github.com/user-attachments/assets/c0096353-dade-4e33-b728-136ea6c5e774" alt="Transcript Not Available"></td>
