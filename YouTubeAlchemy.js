@@ -1,20 +1,20 @@
 // ==UserScript==
-// @name         YouTube Transcript Exporter
-// @description  Export YouTube transcripts to LLMs or download them as text files. Settings panels for easy customization. Additional features: persistent progress bar with chapter markers; display remaining time based on playback speed; auto-open chapter and transcript panels; links in the header; auto-theater mode; disable play on hover; custom CSS (square and compact search bar, square design, and compact layout); small "subscribed" button (icon only); hide nav bar, voice, create, and share buttons; hide video end cards and end screens; display full titles; choose progress bar color; color-coded borders on the home page based on video age.
+// @name         YouTube Alchemy
+// @description  Toolkit for YouTube. Settings panels for easy customization. Features include: export transcripts to LLMs or download it as text files, prevent autoplay, hide shorts, disable play on hover, square design, auto theater mode, auto close chat window, adjust number of videos per row, display remaining time under a video adjusted for playback speed, persistent progress bar with chapter markers and SponsorBlock support, links in the header, and change or hide various ui elements.
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.4
-// @namespace    TimMacy.YouTubeTranscriptExporter
+// @version      7.5
+// @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
 // @grant        GM.setValue
 // @grant        GM.getValue
 // @run-at       document-start
 // @noframes
-// @homepageURL  https://github.com/TimMacy/YouTubeTranscriptExporter
-// @supportURL   https://github.com/TimMacy/YouTubeTranscriptExporter/issues
-// @updateURL    https://raw.githubusercontent.com/TimMacy/YouTubeTranscriptExporter/refs/heads/main/YouTubeTranscriptExporter.js
-// @downloadURL  https://raw.githubusercontent.com/TimMacy/YouTubeTranscriptExporter/refs/heads/main/YouTubeTranscriptExporter.js
+// @homepageURL  https://github.com/TimMacy/YouTubeAlchemy
+// @supportURL   https://github.com/TimMacy/YouTubeAlchemy/issues
+// @updateURL    https://raw.githubusercontent.com/TimMacy/YouTubeAlchemy/refs/heads/main/YouTubeAlchemy.js
+// @downloadURL  https://raw.githubusercontent.com/TimMacy/YouTubeAlchemy/refs/heads/main/YouTubeAlchemy.js
 // ==/UserScript==
 
 (async function() {
@@ -153,14 +153,22 @@
             font-weight: 400;
             background-color: hsl(0, 0%, 7%);
             border: 1px solid hsl(0, 0%, 18.82%);
-            border-radius: 3px;
+            border-radius: 2px;
             transition: all 0.2s ease-out;
         }
 
-        .btn-style-settings:hover { color: white; background-color: rgba(255,255,255,0.2); border-color: transparent; }
+        .btn-style-settings:hover { color: white; background-color: hsl(0, 0%, 25%); border-color: transparent; }
+        .btn-style-settings:active { color: white; background-color: hsl(0, 0%, 35%); border-color: hsl(0, 0%, 45%); }
         .button-icons { display: block; font-family: "Roboto","Arial",sans-serif; font-size: 1.4em; line-height: 1.5em; font-weight: 500; }
         .icons-container { display: flex; justify-content: space-between; margin-bottom: 20px; }
         .container-button { display: flex; flex-direction: column; align-items: center; margin: 5px 0 0 0; }
+
+        .button-icons.features-text {
+            margin: 10px 0 -5px 0;
+            font-size: 1.7em;
+            display: flex;
+            justify-content: center;
+        }
 
         .container-button-input {
             width: 80px;
@@ -188,7 +196,7 @@
             font-weight: 500;
         }
 
-        .container-button-input:focus { color: white; background-color: hsl(0, 0%, 10.37%); border-radius: 3px; }
+        .container-button-input:focus { color: white; background-color: hsl(0, 0%, 10.37%); border-radius: 2px; }
         .spacer-5 { height: 5px; }
         .spacer-10 { height: 10px; }
         .spacer-15 { height: 15px; }
@@ -223,7 +231,7 @@
             box-sizing: border-box;
         }
 
-        .input-field-url:focus { color: white; background-color: hsl(0, 0%, 10.37%); border-radius: 3px; }
+        .input-field-url:focus { color: white; background-color: hsl(0, 0%, 10.37%); border-radius: 2px; }
         .file-naming-container { position: relative; margin-bottom: 20px; }
 
         .select-file-naming {
@@ -328,7 +336,7 @@
         .select-file-naming:focus {
             color: white;
             background-color: hsl(0, 0%, 10.37%);
-            border-radius: 3px;
+            border-radius: 2px;
             border-color: hsl(359, 88%, 57%);
         }
 
@@ -390,11 +398,11 @@
         }
 
         .chatgpt-prompt-textarea:focus {
-            height: 432px;
+            height: 450px;
             color: white;
             background-color: hsl(0, 0%, 10.37%);
             border: 1px solid hsl(217, 91%, 59%);
-            border-radius: 3px;
+            border-radius: 2px;
         }
 
         .button-container-end {
@@ -468,7 +476,7 @@
             background-color: black;
             color: white;
             text-align: center;
-            border-radius: 3px;
+            border-radius: 2px;
             padding: 6px 8px;
             position: absolute;
             z-index: 2053;
@@ -571,14 +579,14 @@
             -moz-osx-font-smoothing: grayscale !important;
         }
 
-        #yte-playback-speed-popup {
+        #CentAnni-playback-speed-popup {
             position: fixed;
             top: var(--ytd-masthead-height,var(--ytd-toolbar-height));
             left: 50%;
             transform: translateX(-50%);
             padding: 8px 16px;
             background:hsl(0,0%,7%);
-            border-radius: 3px;
+            border-radius: 2px;
             border: 1px solid hsl(0,0%,18.82%);
             color: whitesmoke;
             font-family: -apple-system, "Roboto", "Arial", sans-serif;
@@ -597,7 +605,7 @@
             -moz-osx-font-smoothing: grayscale !important;
         }
 
-        #yte-playback-speed-popup.active {
+        #CentAnni-playback-speed-popup.active {
             opacity: 1;
         }
 
@@ -774,7 +782,7 @@
         }
 
         #custom-css-form .playback-speed-container .number-input-container .number-input-field {
-            width: 30px;
+            width: 5ch;
         }
 
         #custom-css-form .playback-speed-container .number-input-label {
@@ -919,7 +927,7 @@
         }
 
         .number-input-field {
-            width: 20px;
+            width: 5ch;
             margin: 0 10px 0 0;
             align-items: center;
             font-size: 1.4em;
@@ -938,7 +946,7 @@
         }
 
         /* progress bar css */
-        .yte-progress-bar {
+        .CentAnni-progress-bar {
             #progress-bar-bar {
                 width: 100%;
                 height: 3px;
@@ -1034,7 +1042,7 @@
             font-family: "Roboto", Arial, sans-serif;
         }
 
-        .yte-style-hide-default-sidebar {
+        .CentAnni-style-hide-default-sidebar {
             ytd-mini-guide-renderer.ytd-app { display: none !important; }
             ytd-app[mini-guide-visible] ytd-page-manager.ytd-app { margin-left: 0 !important; }
             #guide-button.ytd-masthead { display: none !important; }
@@ -1044,17 +1052,23 @@
             }
         }
 
+        html #above-the-fold h1,
         h1.ytd-watch-metadata,
-        #video-title.ytd-rich-grid-media {
-            text-transform: var(--textTransform);
+        #video-title {
+            text-transform: var(--textTransform) !important;
         }
 
-        .yte-style-full-title {
+        .CentAnni-style-full-title {
             #video-title.ytd-rich-grid-media {
                 white-space: normal;
                 text-overflow: unset;
                 overflow: unset;
                 display: inline-block;
+            }
+
+            #video-title {
+                max-height: unset !important;
+                -webkit-line-clamp: unset !important;
             }
         }
 
@@ -1065,7 +1079,7 @@
         }
 
         ytd-search ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
-            opacity: .85;
+            opacity: .8;
         }
 
         .ytd-page-manager[page-subtype="history"] {
@@ -1074,7 +1088,7 @@
             }
         }
 
-        .yte-style-hide-watched-videos-global {
+        .CentAnni-style-hide-watched-videos-global {
             ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer),
             ytd-grid-video-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer) {
                 display: none !important;
@@ -1085,30 +1099,34 @@
             background: var(--progressBarColor) !important;
         }
 
-        .yte-style-disable-play-on-hover {
+        .CentAnni-style-disable-play-on-hover {
             ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-toggle-button-renderer.ytd-thumbnail,
             ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail,
             ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-endorsement-renderer.ytd-thumbnail,
             ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-hover-text-renderer.ytd-thumbnail,
             ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-button-renderer.ytd-thumbnail,
             ytd-thumbnail[now-playing] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail,
+            ytd-thumbnail-overlay-loading-preview-renderer[is-preview-loading],
+            ytd-grid-video-renderer a#thumbnail div#mouseover-overlay,
+            ytd-rich-item-renderer a#thumbnail div#mouseover-overlay,
             ytd-thumbnail-overlay-loading-preview-renderer,
-            ytd-video-preview,
             #mouseover-overlay,
-            #preview,
-            #video-preview {
+            ytd-video-preview,
+            div#video-preview,
+            #video-preview,
+            #preview {
                 display: none !important;
             }
         }
 
-        .yte-style-hide-end-cards {
+        .CentAnni-style-hide-end-cards {
             .ytp-ce-element,
             .ytp-gradient-bottom {
                 display: none !important;
             }
         }
 
-        .yte-style-hide-endscreen {
+        .CentAnni-style-hide-endscreen {
             .html5-video-player .html5-endscreen.videowall-endscreen {
                 display: none !important;
             }
@@ -1124,21 +1142,25 @@
                 --ytd-rich-grid-game-cards-per-row: var(--itemsPerRowCalc) !important;
                 --ytd-rich-grid-mini-game-cards-per-row: var(--itemsPerRowCalc) !important;
             }
+
+            ytd-rich-grid-renderer {
+                --ytd-rich-grid-items-per-row: var(--itemsPerRow) !important;
+            }
         }
 
-        .yte-style-hide-voice-search {
+        .CentAnni-style-hide-voice-search {
             #voice-search-button.ytd-masthead {
                 display: none;
             }
         }
 
-        .yte-style-hide-create-button {
+        .CentAnni-style-hide-create-button {
             ytd-button-renderer.ytd-masthead[button-renderer][button-next]:has(button[aria-label="Create"]) {
                 display: none !important;
             }
         }
 
-        .yte-style-hide-brand-text {
+        .CentAnni-style-hide-brand-text {
             #country-code.ytd-topbar-logo-renderer,
             #logo-icon [id^="youtube-paths_yt"] {
                 display: none;
@@ -1150,7 +1172,7 @@
             }
         }
 
-        .yte-style-hide-miniplayer {
+        .CentAnni-style-hide-miniplayer {
             ytd-miniplayer {
                 display: none !important;
             }
@@ -1160,7 +1182,7 @@
             }
         }
 
-        .yte-style-square-search-bar {
+        .CentAnni-style-square-search-bar {
             #center.ytd-masthead { flex: 0 1 500px; }
             .YtSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; }
             .YtSearchboxComponentSuggestionsContainer { border-radius: 0 0 10px 10px; }
@@ -1179,22 +1201,26 @@
             }
         }
 
-        .yte-style-square-design {
+        .CentAnni-style-square-design {
             #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:hover,
             #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:focus,
             #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:active,
             #chip-container.yt-chip-cloud-chip-renderer {
-                border-radius: 3px;
+                border-radius: 2px;
             }
 
             tp-yt-paper-dialog[modern],
             yt-dropdown-menu {
-                border-radius: 3px;
+                border-radius: 2px;
             }
 
-            .yte-player-sidebar,
+            #thumbnail,
+            .CentAnni-player-tabview,
+            .yt-thumbnail-view-model--medium,
             #related.style-scope.ytd-watch-flexy,
-            .yte-player-sidebar:has(.yte-player-sidebar-tab.active[data-tab="tab-2"]),
+            .collections-stack-wiz__collection-stack2,
+            .collections-stack-wiz__collection-stack1--medium,
+            .CentAnni-player-tabview:has(.CentAnni-player-tabview-tab.active[data-tab="tab-2"]),
             ytd-live-chat-frame[theater-watch-while][rounded-container],
             ytd-live-chat-frame[rounded-container] iframe.ytd-live-chat-frame,
             ytd-watch-flexy[flexy][js-panel-height_]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
@@ -1202,25 +1228,29 @@
                 border-radius: 0 !important;
             }
 
-            .yte-player-sidebar-tab {
-                border-radius: 3px;
+            .CentAnni-player-tabView-tab {
+                border-radius: 2px;
             }
 
-            ytd-watch-flexy[theater] .yte-player-sidebar-tab {
+            ytd-watch-flexy[theater] .CentAnni-player-tabView-tab {
                 border-radius: 0;
+            }
+
+            .badge-shape-wiz--thumbnail-badge {
+                border-radius: 2px;
             }
 
             .ytd-page-manager[page-subtype="home"] {
                 yt-chip-cloud-chip-renderer {
-                    border-radius: 3px;
+                    border-radius: 2px;
                 }
 
-                .yte-style-live-video, .yte-style-upcoming-video, .yte-style-newly-video, .yte-style-recent-video, .yte-style-lately-video, .yte-style-old-video { border-radius: 0; }
+                .CentAnni-style-live-video, .CentAnni-style-upcoming-video, .CentAnni-style-newly-video, .CentAnni-style-recent-video, .CentAnni-style-lately-video, .CentAnni-style-old-video { border-radius: 0; }
             }
 
             .ytd-page-manager[page-subtype="channels"] {
                 .yt-spec-button-shape-next--size-m {
-                    border-radius: 3px;
+                    border-radius: 2px;
                 }
 
                 .yt-thumbnail-view-model--medium,
@@ -1233,7 +1263,7 @@
             }
 
             .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-start {
-                border-radius: 3px 0 0 3px;
+                border-radius: 2px 0 0 3px;
             }
 
             .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-end {
@@ -1249,7 +1279,7 @@
             ytd-multi-page-menu-renderer,
             yt-chip-cloud-chip-renderer,
             .ytChipShapeChip {
-                border-radius: 3px;
+                border-radius: 2px;
             }
 
             ytd-menu-popup-renderer {
@@ -1265,14 +1295,18 @@
             }
         }
 
-        .yte-style-remove-scrubber {
+        .CentAnni-style-remove-scrubber {
             .ytp-scrubber-container {
                 display: none;
                 pointer-events: none;
             }
         }
 
-        .yte-style-compact-layout {
+        .CentAnni-style-compact-layout {
+            ytd-rich-section-renderer:has(.grid-subheader.ytd-shelf-renderer) {
+                display: none;
+            }
+
             #page-manager.ytd-app {
                 --ytd-toolbar-offset: 0 !important;
             }
@@ -1280,10 +1314,6 @@
             .ytd-page-manager[page-subtype="home"],
             .ytd-page-manager[page-subtype="channels"],
             .ytd-page-manager[page-subtype="subscriptions"] {
-                ytd-rich-section-renderer {
-                    display: none;
-                }
-
                 #contents.ytd-rich-grid-renderer {
                     width: 100%;
                     max-width: 100%;
@@ -1375,10 +1405,6 @@
                     margin-left: 110px;
                 }
 
-                ytd-rich-section-renderer {
-                    display: none;
-                }
-
                 ytd-menu-renderer.ytd-rich-grid-media {
                     position: absolute;
                     height: 36px;
@@ -1456,6 +1482,10 @@
                 margin-top: 7px;
             }
 
+            #description {
+                margin-top: 0;
+            }
+
             #subheader.ytd-engagement-panel-title-header-renderer:not(:empty) {
                 padding: 0 !important;
                 transform: translateX(110px) translateY(-44px);
@@ -1492,19 +1522,19 @@
         }
 
         .ytd-page-manager[page-subtype="home"] {
-            .yte-style-live-video, .yte-style-upcoming-video, .yte-style-newly-video, .yte-style-recent-video, .yte-style-lately-video { outline: 2px solid; border-radius: 12px; }
-            .yte-style-old-video { outline: none;}
+            .CentAnni-style-live-video, .CentAnni-style-upcoming-video, .CentAnni-style-newly-video, .CentAnni-style-recent-video, .CentAnni-style-lately-video { outline: 2px solid; border-radius: 12px; }
+            .CentAnni-style-old-video { outline: none;}
 
-            .yte-style-live-video { outline-color: var(--liveVideo);}
-            .yte-style-streamed-text { color: var(--streamedText);}
-            .yte-style-upcoming-video { outline-color: var(--upComingVideo);}
-            .yte-style-newly-video { outline-color: var(--newlyVideo);}
-            .yte-style-recent-video { outline-color: var(--recentVideo);}
-            .yte-style-lately-video { outline-color: var(--latelyVideo);}
-            .yte-style-old-video { opacity: var(--oldVideo);}
+            .CentAnni-style-live-video { outline-color: var(--liveVideo);}
+            .CentAnni-style-streamed-text { color: var(--streamedText);}
+            .CentAnni-style-upcoming-video { outline-color: var(--upComingVideo);}
+            .CentAnni-style-newly-video { outline-color: var(--newlyVideo);}
+            .CentAnni-style-recent-video { outline-color: var(--recentVideo);}
+            .CentAnni-style-lately-video { outline-color: var(--latelyVideo);}
+            .CentAnni-style-old-video { opacity: var(--oldVideo);}
         }
 
-        .yte-style-hide-watched-videos {
+        .CentAnni-style-hide-watched-videos {
             .ytd-page-manager[page-subtype="home"] {
                 ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer) {
                     display: none;
@@ -1512,7 +1542,29 @@
             }
         }
 
-        .yte-style-hide-join-button {
+        .CentAnni-close-live-chat {
+            #chat-container {
+                z-index: -1 !important;
+                opacity: 0 !important;
+                visibility: hidden;
+                pointer-events: none !important;
+            }
+
+            ytd-watch-flexy[fixed-panels] #panels-full-bleed-container.ytd-watch-flexy {
+                width: var(--ytd-watch-flexy-sidebar-width);
+                display: none;
+            }
+
+            .video-stream.html5-main-video {
+                width: 100%;
+            }
+
+            ytd-watch-flexy[fixed-panels] #columns.ytd-watch-flexy {
+                padding-right: 0;
+            }
+        }
+
+        .CentAnni-style-hide-join-button {
             #sponsor-button.ytd-video-owner-renderer:not(:empty),
             ytd-browse[page-subtype="channels"] ytd-recognition-shelf-renderer,
             ytd-browse[page-subtype="channels"] yt-page-header-view-model yt-flexible-actions-view-model button-view-model {
@@ -1520,7 +1572,13 @@
             }
         }
 
-        .yte-style-small-subscribe-button {
+        .CentAnni-style-hide-playnext-button {
+            a.ytp-next-button {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-small-subscribe-button {
             .ytd-page-manager:not([page-subtype="channels"]) .yt-spec-button-shape-next.yt-spec-button-shape-next--tonal.yt-spec-button-shape-next--mono.yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-leading-trailing {
                 display: flex;
                 align-items: center;
@@ -1531,19 +1589,57 @@
             }
         }
 
-        .yte-style-hide-share-button {
+        .CentAnni-style-hide-share-button {
             yt-button-view-model.ytd-menu-renderer:has(button.yt-spec-button-shape-next[aria-label="Share"]) {
                 display: none;
             }
         }
 
-        .yte-style-hide-add-comment {
+        .CentAnni-style-hide-add-comment {
             ytd-comments ytd-comments-header-renderer #simple-box {
                 display: none;
             }
 
             #title.ytd-comments-header-renderer {
                 margin-bottom: 0;
+            }
+        }
+
+        .CentAnni-style-hide-news-home {
+            ytd-rich-grid-renderer ytd-rich-section-renderer:has(yt-icon:empty) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-playlists-home {
+            ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-reply-button {
+            ytd-comments ytd-comment-engagement-bar #reply-button-end {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-search-hide-right-sidebar {
+            #container.ytd-search ytd-secondary-search-container-renderer {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-shorts {
+            a[title="Shorts"],
+            #container.ytd-search ytd-reel-shelf-renderer,
+            ytd-watch-metadata #description ytd-reel-shelf-renderer,
+            ytd-browse[page-subtype="channels"] ytd-reel-shelf-renderer,
+            ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
+            yt-chip-cloud-chip-renderer[chip-shape-data*='"text":"Shorts"'],
+            ytd-reel-shelf-renderer.ytd-structured-description-content-renderer,
+            ytd-rich-section-renderer:has(div ytd-rich-shelf-renderer[is-shorts]),
+            #container.ytd-search ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]) {
+                display: none !important;
             }
         }
 
@@ -1591,27 +1687,27 @@
             background-color: rgba(0, 0, 0, 0.2); border-radius: 24px;
         }
 
-        html:not([dark]) .yte-playback-speed-button:active {
+        html:not([dark]) .CentAnni-playback-speed-button:active {
             background: rgb(205,205,205) !important;
         }
 
-        html:not([dark]) .yte-player-sidebar-tab,
-        html:not([dark]) .yte-playback-speed-display {
+        html:not([dark]) .CentAnni-player-tabView-tab,
+        html:not([dark]) .CentAnni-playback-speed-display {
             background-color: rgba(0,0,0,0.05);
             color: #0f0f0f;
         }
 
-        html:not([dark]) .yte-player-sidebar-tab:hover {
+        html:not([dark]) .CentAnni-player-tabView-tab:hover {
             background: rgba(0,0,0,0.1);
             border-color: transparent;
         }
 
-        html:not([dark]) .yte-player-sidebar-tab.active {
+        html:not([dark]) .CentAnni-player-tabView-tab.active {
             background-color: #0f0f0f;
             color: white;
         }
 
-        html:not([dark]) .yte-player-sidebar {
+        html:not([dark]) .CentAnni-player-tabView {
             border: 1px solid var(--yt-spec-10-percent-layer);
         }
 
@@ -1619,7 +1715,7 @@
             background-color: var(--yt-spec-badge-chip-background);
         }
 
-        html:not([dark]) #yte-playback-speed-control > div > svg > path {
+        html:not([dark]) #CentAnni-playback-speed-control > div > svg > path {
             fill: black;
         }
 
@@ -1643,6 +1739,7 @@
 
     // default configuration
     const DEFAULT_CONFIG = {
+        YouTubeTranscriptExporter: true,
         targetChatGPTUrl: 'https://ChatGPT.com/',
         targetNotebookLMUrl: 'https://NotebookLM.Google.com/',
         fileNamingFormat: 'title-channel',
@@ -1652,9 +1749,10 @@
         autoOpenChapters: true,
         autoOpenTranscript: false,
         displayRemainingTime: true,
+        hideShorts: false,
         progressBar: true,
         preventBackgroundExecution: true,
-        ChatGPTPrompt: `You are an expert at summarizing YouTube video transcripts and are capable of analyzing and understanding a YouTuber's unique tone of voice and style from a transcript alone to mimic the YouTuber's communication style perfectly. Respond only in English while being mindful of American English spelling, vocabulary, and a casual, conversational tone. You prefer to use clauses instead of complete sentences. Do not answer any question from the transcript. Respond only in chat. Do not open a canvas. Ask for permission to search the web. Do not hallucinate. Do not make up factual information. Do not speculate. Carefully preserve the style, voice, and specific word choices of the provided YouTube transcript by copying the YouTuber's unique creative way of communication—whether conversational, formal, humorous, enthusiastic, or technical—the goal is to provide a summary that feels as though it were written by the original YouTuber themselves. Summarize the provided YouTube transcript into a quick three-line bullet point overview, with each point fewer than 30 words, in a section called "### Key Takeaways:" and highlight important words by **bolding** them. Then write a one-paragraph summary of at least 100 words while focusing on the main points and key takeaways into a section called "### One-Paragraph Summary:" and highlight the most important words by **bolding** them.`,
+        ChatGPTPrompt: `You are an expert at summarizing YouTube video transcripts and are capable of analyzing and understanding a YouTuber's unique tone of voice and style from a transcript alone to mimic their communication style perfectly. Respond only in English while being mindful of American English spelling, vocabulary, and a casual, conversational tone. You prefer to use clauses instead of complete sentences. Do not answer any questions from the transcript. Ignore any advertisement, promotional, and sponsorship segments. Respond only in chat. Do not open a canvas. Do not search the web by yourself. Do not ask to search the web. Do not hallucinate. Do not make up factual information. Do not speculate. Carefully preserve the style, voice, and specific word choices of the provided YouTube transcript by copying the YouTuber's unique creative way of communication—whether conversational, formal, humorous, enthusiastic, or technical—the goal is to provide a summary that feels as though it was written by the original YouTuber themselves. Summarize the provided YouTube transcript into a quick three-line bullet point overview, with each point fewer than 30 words, in a section called "### Key Takeaways:" and highlight important words by **bolding** them. Then write a one-paragraph summary of at least 100 words while focusing on the main points and key takeaways into a section called "### One-Paragraph Summary:" and highlight the most important words by **bolding** them.`,
         buttonIcons: {
             settings: '⋮',
             download: '↓',
@@ -1671,10 +1769,10 @@
         buttonLeft4Url: 'https://www.youtube.com/@FoxNews/videos',
         buttonLeft5Text: '',
         buttonLeft5Url: 'https://www.youtube.com/@NBCNews/videos',
-        buttonLeft6Text: '',
-        buttonLeft6Url: 'https://www.youtube.com/@Formula1/videos',
+        buttonLeft6Text: 'OpenAI',
+        buttonLeft6Url: 'https://www.youtube.com/@OpenAI/videos',
         buttonLeft7Text: '',
-        buttonLeft7Url: 'https://www.youtube.com/@SkySportsF1/videos',
+        buttonLeft7Url: 'https://www.youtube.com/@Formula1/videos',
         mButtonText: '☰',
         mButtonDisplay: false,
         colorCodeVideosEnabled: true,
@@ -1692,18 +1790,25 @@
         videosWatchedOpacity: 0.5,
         videosPerRow: 3,
         videosHideWatchedGlobal: false,
+        preventAutoplay: false,
         hideVoiceSearch: false,
         hideCreateButton: false,
         hideBrandText: false,
         hideJoinButton: false,
+        hidePlayNextButton: false,
         hideShareButton: false,
+        hideRightSidebarSearch: false,
         hideAddComment: false,
+        hideReplyButton: false,
+        hidePlaylistsHome: false,
+        hideNewsHome: false,
         hideEndCards: false,
         hideEndscreen: false,
         smallSubscribeButton: false,
         removeScrubber: false,
-        disablePlayOnHover: true,
+        disablePlayOnHover: false,
         hideMiniPlayer: false,
+        closeChatWindow: true,
         displayFullTitle: true,
         autoTheaterMode: false,
         squareSearchBar: true,
@@ -1717,7 +1822,7 @@
         storedConfig = await GM.getValue('USER_CONFIG', {});
     } catch (error) {
         showNotification('Error loading user save!');
-        console.error("YTE: Error loading user configuration:", error);
+        console.error("YouTubeAlchemy: Error loading user configuration:", error);
     }
 
     let USER_CONFIG = {
@@ -1734,8 +1839,8 @@
         const body = document.querySelector('body');
 
         // features css
-        if (USER_CONFIG.progressBar) { body.classList.add('yte-progress-bar'); } else { body.classList.remove('yte-progress-bar'); }
-        if (USER_CONFIG.mButtonDisplay) { body.classList.add('yte-style-hide-default-sidebar'); } else { body.classList.remove('yte-style-hide-default-sidebar'); }
+        if (USER_CONFIG.progressBar) { body.classList.add('CentAnni-progress-bar'); } else { body.classList.remove('CentAnni-progress-bar'); }
+        if (USER_CONFIG.mButtonDisplay) { body.classList.add('CentAnni-style-hide-default-sidebar'); } else { body.classList.remove('CentAnni-style-hide-default-sidebar'); }
 
         // custom css
         document.documentElement.style.setProperty('--progressBarColor', USER_CONFIG.progressbarColorPicker);
@@ -1744,26 +1849,33 @@
         document.documentElement.style.setProperty('--watchedOpacity', USER_CONFIG.videosWatchedOpacity);
         document.documentElement.style.setProperty('--itemsPerRow', USER_CONFIG.videosPerRow);
         document.documentElement.style.setProperty('--itemsPerRowCalc', USER_CONFIG.videosPerRow + 2);
-        if (USER_CONFIG.videosHideWatchedGlobal) { body.classList.add('yte-style-hide-watched-videos-global'); } else { body.classList.remove('yte-style-hide-watched-videos-global'); }
-        if (USER_CONFIG.hideVoiceSearch) { body.classList.add('yte-style-hide-voice-search'); } else { body.classList.remove('yte-style-hide-voice-search'); }
-        if (USER_CONFIG.hideCreateButton) { body.classList.add('yte-style-hide-create-button'); } else { body.classList.remove('yte-style-hide-create-button'); }
-        if (USER_CONFIG.hideBrandText) { body.classList.add('yte-style-hide-brand-text'); } else { body.classList.remove('yte-style-hide-brand-text'); }
-        if (USER_CONFIG.hideMiniPlayer) { body.classList.add('yte-style-hide-miniplayer'); } else { body.classList.remove('yte-style-hide-miniplayer'); }
-        if (USER_CONFIG.disablePlayOnHover) { body.classList.add('yte-style-disable-play-on-hover'); } else { body.classList.remove('yte-style-disable-play-on-hover'); }
-        if (USER_CONFIG.smallSubscribeButton) { body.classList.add('yte-style-small-subscribe-button'); } else { body.classList.remove('yte-style-small-subscribe-button'); }
-        if (USER_CONFIG.hideShareButton) { body.classList.add('yte-style-hide-share-button'); } else { body.classList.remove('yte-style-hide-share-button'); }
-        if (USER_CONFIG.hideAddComment) { body.classList.add('yte-style-hide-add-comment'); } else { body.classList.remove('yte-style-hide-add-comment'); }
-        if (USER_CONFIG.hideEndCards) { body.classList.add('yte-style-hide-end-cards'); } else { body.classList.remove('yte-style-hide-end-cards'); }
-        if (USER_CONFIG.hideEndscreen) { body.classList.add('yte-style-hide-endscreen'); } else { body.classList.remove('yte-style-hide-endscreen'); }
-        if (USER_CONFIG.displayFullTitle) { body.classList.add('yte-style-full-title'); } else { body.classList.remove('yte-style-full-title'); }
-        if (USER_CONFIG.hideJoinButton) { body.classList.add('yte-style-hide-join-button'); } else { body.classList.remove('yte-style-hide-join-button'); }
-        if (USER_CONFIG.squareSearchBar) { body.classList.add('yte-style-square-search-bar'); } else { body.classList.remove('yte-style-square-search-bar'); }
-        if (USER_CONFIG.squareDesign) { body.classList.add('yte-style-square-design'); } else { body.classList.remove('yte-style-square-design'); }
-        if (USER_CONFIG.removeScrubber) { body.classList.add('yte-style-remove-scrubber'); } else { body.classList.remove('yte-style-remove-scrubber'); }
-        if (USER_CONFIG.compactLayout) { body.classList.add('yte-style-compact-layout'); } else { body.classList.remove('yte-style-compact-layout'); }
+        if (USER_CONFIG.videosHideWatchedGlobal) { body.classList.add('CentAnni-style-hide-watched-videos-global'); } else { body.classList.remove('CentAnni-style-hide-watched-videos-global'); }
+        if (USER_CONFIG.hideVoiceSearch) { body.classList.add('CentAnni-style-hide-voice-search'); } else { body.classList.remove('CentAnni-style-hide-voice-search'); }
+        if (USER_CONFIG.hideCreateButton) { body.classList.add('CentAnni-style-hide-create-button'); } else { body.classList.remove('CentAnni-style-hide-create-button'); }
+        if (USER_CONFIG.hideBrandText) { body.classList.add('CentAnni-style-hide-brand-text'); } else { body.classList.remove('CentAnni-style-hide-brand-text'); }
+        if (USER_CONFIG.hideMiniPlayer) { body.classList.add('CentAnni-style-hide-miniplayer'); } else { body.classList.remove('CentAnni-style-hide-miniplayer'); }
+        if (USER_CONFIG.disablePlayOnHover) { body.classList.add('CentAnni-style-disable-play-on-hover'); } else { body.classList.remove('CentAnni-style-disable-play-on-hover'); }
+        if (USER_CONFIG.smallSubscribeButton) { body.classList.add('CentAnni-style-small-subscribe-button'); } else { body.classList.remove('CentAnni-style-small-subscribe-button'); }
+        if (USER_CONFIG.hideShareButton) { body.classList.add('CentAnni-style-hide-share-button'); } else { body.classList.remove('CentAnni-style-hide-share-button'); }
+        if (USER_CONFIG.hideAddComment) { body.classList.add('CentAnni-style-hide-add-comment'); } else { body.classList.remove('CentAnni-style-hide-add-comment'); }
+        if (USER_CONFIG.hideReplyButton) { body.classList.add('CentAnni-style-hide-reply-button'); } else { body.classList.remove('CentAnni-style-hide-reply-button'); }
+        if (USER_CONFIG.hidePlaylistsHome) { body.classList.add('CentAnni-style-hide-playlists-home'); } else { body.classList.remove('CentAnni-style-hide-playlists-home'); }
+        if (USER_CONFIG.hideNewsHome) { body.classList.add('CentAnni-style-hide-news-home'); } else { body.classList.remove('CentAnni-style-hide-news-home'); }
+        if (USER_CONFIG.hideRightSidebarSearch) { body.classList.add('CentAnni-style-search-hide-right-sidebar'); } else { body.classList.remove('CentAnni-style-search-hide-right-sidebar'); }
+        if (USER_CONFIG.hideShorts) { body.classList.add('CentAnni-style-hide-shorts'); } else { body.classList.remove('CentAnni-style-hide-shorts'); }
+        if (USER_CONFIG.hideEndCards) { body.classList.add('CentAnni-style-hide-end-cards'); } else { body.classList.remove('CentAnni-style-hide-end-cards'); }
+        if (USER_CONFIG.hideEndscreen) { body.classList.add('CentAnni-style-hide-endscreen'); } else { body.classList.remove('CentAnni-style-hide-endscreen'); }
+        if (USER_CONFIG.displayFullTitle) { body.classList.add('CentAnni-style-full-title'); } else { body.classList.remove('CentAnni-style-full-title'); }
+        if (USER_CONFIG.hideJoinButton) { body.classList.add('CentAnni-style-hide-join-button'); } else { body.classList.remove('CentAnni-style-hide-join-button'); }
+        if (USER_CONFIG.hidePlayNextButton) { body.classList.add('CentAnni-style-hide-playnext-button'); } else { body.classList.remove('CentAnni-style-hide-playnext-button'); }
+        if (USER_CONFIG.squareSearchBar) { body.classList.add('CentAnni-style-square-search-bar'); } else { body.classList.remove('CentAnni-style-square-search-bar'); }
+        if (USER_CONFIG.squareDesign) { body.classList.add('CentAnni-style-square-design'); } else { body.classList.remove('CentAnni-style-square-design'); }
+        if (USER_CONFIG.removeScrubber) { body.classList.add('CentAnni-style-remove-scrubber'); } else { body.classList.remove('CentAnni-style-remove-scrubber'); }
+        if (USER_CONFIG.compactLayout) { body.classList.add('CentAnni-style-compact-layout'); } else { body.classList.remove('CentAnni-style-compact-layout'); }
+        if (USER_CONFIG.closeChatWindow) { body.classList.add('CentAnni-close-live-chat'); } else { body.classList.remove('CentAnni-close-live-chat'); }
 
         // color code videos
-        if (USER_CONFIG.videosHideWatched) { body.classList.add('yte-style-hide-watched-videos'); } else { body.classList.remove('yte-style-hide-watched-videos'); }
+        if (USER_CONFIG.videosHideWatched) { body.classList.add('CentAnni-style-hide-watched-videos'); } else { body.classList.remove('CentAnni-style-hide-watched-videos'); }
         document.documentElement.style.setProperty('--liveVideo', USER_CONFIG.videosAgeColorPickerLive);
         document.documentElement.style.setProperty('--streamedText', USER_CONFIG.videosAgeColorPickerStreamed);
         document.documentElement.style.setProperty('--upComingVideo', USER_CONFIG.videosAgeColorPickerUpcoming);
@@ -1792,10 +1904,10 @@
 
         // modal header
         const header = document.createElement('a');
-        header.href = 'https://github.com/TimMacy/YouTubeTranscriptExporter';
+        header.href = 'https://github.com/TimMacy/YouTubeAlchemy';
         header.target = '_blank';
-        header.innerText = 'YouTube Transcript Exporter';
-        header.title = 'GitHub Repository for YouTube Transcript Exporter';
+        header.innerText = 'YouTube Alchemy';
+        header.title = 'GitHub Repository for YouTube Alchemy';
         header.classList.add('header');
         modalContent.appendChild(header);
 
@@ -1861,6 +1973,9 @@
             'date-channel-title': 'uploadDate - Channel - Title.txt',
         }));
 
+        // YouTube Transcript Exporter
+        form.appendChild(createCheckboxField('Enable YouTube Transcript Exporter (default: yes)', 'YouTubeTranscriptExporter', USER_CONFIG.YouTubeTranscriptExporter));
+
         // include Timestamps
         form.appendChild(createCheckboxField('Include Timestamps in the Transcript (default: yes)', 'includeTimestamps', USER_CONFIG.includeTimestamps));
 
@@ -1895,15 +2010,15 @@
         customCSSButton.classList.add('btn-style-settings');
         customCSSButton.onclick = () => showSubPanel(createCustomCSSContent(), 'createcustomCSS');
 
-        const ColorCodeVideos = document.createElement('button');
-        ColorCodeVideos.type = 'button';
-        ColorCodeVideos.innerText = 'Color Code Videos';
-        ColorCodeVideos.classList.add('btn-style-settings');
-        ColorCodeVideos.onclick = () => showSubPanel(createColorCodeVideosContent(), 'colorCodeVideos');
+        const colorCodeVideos = document.createElement('button');
+        colorCodeVideos.type = 'button';
+        colorCodeVideos.innerText = 'Color Code Videos';
+        colorCodeVideos.classList.add('btn-style-settings');
+        colorCodeVideos.onclick = () => showSubPanel(createColorCodeVideosContent(), 'colorCodeVideos');
 
         extraSettings.appendChild(buttonsLeft);
         extraSettings.appendChild(customCSSButton);
-        extraSettings.appendChild(ColorCodeVideos);
+        extraSettings.appendChild(colorCodeVideos);
 
         form.appendChild(extraSettings);
 
@@ -1967,7 +2082,7 @@
                 setTimeout(() => { location.reload(); }, 1000);
             } catch (error) {
                 showNotification('Error resetting settings to default!');
-                console.error("YTE: Error resetting settings to default:", error);
+                console.error("YouTubeAlchemy: Error resetting settings to default:", error);
             }
         };
 
@@ -2008,7 +2123,7 @@
             const textArea = this;
             const buttons = modalContent.querySelector('.button-container-end');
             const startHeight = 65;
-            const endHeight = 432;
+            const endHeight = 450;
             const duration = 500;
 
             const modalContentRect = modalContent.getBoundingClientRect();
@@ -2124,11 +2239,11 @@
 
             const subPanelHeader = document.createElement('div');
             subPanelHeader.classList.add('sub-panel-header');
-            subPanelHeader.textContent = 'Configure links on the left side of the YouTube header';
+            subPanelHeader.textContent = 'Configure Links in Header';
             form.appendChild(subPanelHeader);
 
             const infoLinksHeader = document.createElement('small');
-            infoLinksHeader.innerText = "Up to seven links can be added next to the logo. An empty 'Link Text' field won't insert the link into the header.\nIf the left navigation bar is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.";
+            infoLinksHeader.innerText = "Up to seven links can be added next to the YouTube logo. An empty 'Link Text' field won't insert the link into the header.\nIf the navigation bar is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.";
             infoLinksHeader.classList.add('chrome-info');
             form.appendChild(infoLinksHeader);
 
@@ -2136,10 +2251,10 @@
             sidebarContainer.classList.add('sidebar-container');
 
             // hide left navigation bar and replacement icon
-            const checkboxField = createCheckboxField('Hide Left Navigation Bar', 'mButtonDisplay', USER_CONFIG.mButtonDisplay);
+            const checkboxField = createCheckboxField('Hide Navigation Bar', 'mButtonDisplay', USER_CONFIG.mButtonDisplay);
             sidebarContainer.appendChild(checkboxField);
 
-            const inputField = createInputField('Left Navigation Bar Replacement Icon', 'mButtonText', USER_CONFIG.mButtonText, 'label-mButtonText');
+            const inputField = createInputField('Navigation Bar Replacement Icon', 'mButtonText', USER_CONFIG.mButtonText, 'label-mButtonText');
             sidebarContainer.appendChild(inputField);
 
             form.appendChild(sidebarContainer);
@@ -2198,10 +2313,15 @@
             const videosPerRow = createNumberInputField('Number of Videos per Row (default: 3)', 'videosPerRow', USER_CONFIG.videosPerRow);
             form.appendChild(videosPerRow);
 
-            // Spacer-5
-            const spacer_1_5 = document.createElement('div');
-            spacer_1_5.classList.add('spacer-5');
-            form.appendChild(spacer_1_5);
+            // features text
+            const featuresText = document.createElement('label');
+            featuresText.innerText = 'Features';
+            featuresText.classList.add('button-icons', 'features-text');
+            form.appendChild(featuresText);
+
+            // prevent autoplay
+            const preventAutoplay = createCheckboxField('Prevent Autoplay (default: no)', 'preventAutoplay', USER_CONFIG.preventAutoplay);
+            form.appendChild(preventAutoplay);
 
             // auto open chapter panel
             const autoOpenChapters = createCheckboxField('Automatically Open Chapter Panels (default: yes)', 'autoOpenChapters', USER_CONFIG.autoOpenChapters);
@@ -2211,22 +2331,53 @@
             const autoOpenTranscript = createCheckboxField('Automatically Open Transcript Panels (default: no)', 'autoOpenTranscript', USER_CONFIG.autoOpenTranscript);
             form.appendChild(autoOpenTranscript);
 
-            // display remaining time
-            const displayRemainingTime = createCheckboxField('Display Remaining Time Under a Video (default: yes)', 'displayRemainingTime', USER_CONFIG.displayRemainingTime);
-            form.appendChild(displayRemainingTime);
-
-            // keep progress bar visible
-            const progressBar = createCheckboxField('Keep Progress Bar Visible (default: yes)', 'progressBar', USER_CONFIG.progressBar);
-            form.appendChild(progressBar);
+            // close chat window
+            const closeChatWindow = createCheckboxField('Auto Close Initial Chat Windows (default: yes)', 'closeChatWindow', USER_CONFIG.closeChatWindow);
+            form.appendChild(closeChatWindow);
 
             // auto theater mode
             const autoTheaterMode = createCheckboxField('Auto Theater Mode (default: no)', 'autoTheaterMode', USER_CONFIG.autoTheaterMode);
             form.appendChild(autoTheaterMode);
 
-            // Spacer-5
-            const spacer_2_5 = document.createElement('div');
-            spacer_2_5.classList.add('spacer-5');
-            form.appendChild(spacer_2_5);
+            // display remaining time
+            const displayRemainingTime = createCheckboxField('Display Remaining Time Under a Video, Adjusted for Playback Speed (default: yes)', 'displayRemainingTime', USER_CONFIG.displayRemainingTime);
+            form.appendChild(displayRemainingTime);
+
+            // persistent progress bar
+            const progressBar = createCheckboxField('Persistent Progress Bar with Chapter Markers and SponsorBlock Support (default: yes)', 'progressBar', USER_CONFIG.progressBar);
+            form.appendChild(progressBar);
+
+            // hide shorts
+            const hideShorts = createCheckboxField('Hide Shorts (default: no)', 'hideShorts', USER_CONFIG.hideShorts);
+            form.appendChild(hideShorts);
+
+            // features text
+            const featuresTextMain = document.createElement('label');
+            featuresTextMain.innerText = 'Layout Changes';
+            featuresTextMain.classList.add('button-icons', 'features-text');
+            form.appendChild(featuresTextMain);
+
+            // disable play on hover
+            const disablePlayOnHover = createCheckboxField('Disable Play on Hover (default: yes)', 'disablePlayOnHover', USER_CONFIG.disablePlayOnHover);
+            form.appendChild(disablePlayOnHover);
+
+            // square and compact search bar
+            const squareSearchBar = createCheckboxField('Square and Compact Search Bar (default: yes)', 'squareSearchBar', USER_CONFIG.squareSearchBar);
+            form.appendChild(squareSearchBar);
+
+            // square design
+            const squareDesign = createCheckboxField('Square Design (default: no)', 'squareDesign', USER_CONFIG.squareDesign);
+            form.appendChild(squareDesign);
+
+            // compact layout
+            const compactLayout = createCheckboxField('Compact Layout (default: no)', 'compactLayout', USER_CONFIG.compactLayout);
+            form.appendChild(compactLayout);
+
+            // features text
+            const featuresCSS = document.createElement('label');
+            featuresCSS.innerText = 'CSS to Change or Hide UI Elements';
+            featuresCSS.classList.add('button-icons', 'features-text');
+            form.appendChild(featuresCSS);
 
             // hide voice search button
             const hideVoiceSearch = createCheckboxField('Hide Voice Search Button in the Header (default: no)', 'hideVoiceSearch', USER_CONFIG.hideVoiceSearch);
@@ -2240,13 +2391,17 @@
             const hideBrandText = createCheckboxField('Hide YouTube Brand Text in the Header (default: no)', 'hideBrandText', USER_CONFIG.hideBrandText);
             form.appendChild(hideBrandText);
 
-            // hide mini player
-            const hideMiniPlayer = createCheckboxField('Hide Mini Player (default: no)', 'hideMiniPlayer', USER_CONFIG.hideMiniPlayer);
-            form.appendChild(hideMiniPlayer);
+            // small subscribed button
+            const smallSubscribeButton = createCheckboxField('Small Subscribed Button under a Video (default: no)', 'smallSubscribeButton', USER_CONFIG.smallSubscribeButton);
+            form.appendChild(smallSubscribeButton);
 
-            // hide watched videos globally
-            const videosHideWatchedGlobal = createCheckboxField('Hide Watched Videos Globally (default: no)', 'videosHideWatchedGlobal', USER_CONFIG.videosHideWatchedGlobal);
-            form.appendChild(videosHideWatchedGlobal);
+            // hide join button
+            const hideJoinButton = createCheckboxField('Hide Join Button under a Video and on Channel Page (default: no)', 'hideJoinButton', USER_CONFIG.hideJoinButton);
+            form.appendChild(hideJoinButton);
+
+            // display full title
+            const displayFullTitle = createCheckboxField('Display Full Titles (default: yes)', 'displayFullTitle', USER_CONFIG.displayFullTitle);
+            form.appendChild(displayFullTitle);
 
             // color picker progress bar
             const progressbarColorContainer = document.createElement('div');
@@ -2286,17 +2441,9 @@
             const hideEndscreen = createCheckboxField('Hide End Screens (suggestions at video end) (default: no)', 'hideEndscreen', USER_CONFIG.hideEndscreen);
             form.appendChild(hideEndscreen);
 
-            // display full title
-            const displayFullTitle = createCheckboxField('Display Full Titles (default: yes)', 'displayFullTitle', USER_CONFIG.displayFullTitle);
-            form.appendChild(displayFullTitle);
-
-            // hide join button
-            const hideJoinButton = createCheckboxField('Hide Join Button under a Video and on Channel Page (default: no)', 'hideJoinButton', USER_CONFIG.hideJoinButton);
-            form.appendChild(hideJoinButton);
-
-            // small subscribed button
-            const smallSubscribeButton = createCheckboxField('Small Subscribed Button under a Video (default: no)', 'smallSubscribeButton', USER_CONFIG.smallSubscribeButton);
-            form.appendChild(smallSubscribeButton);
+            // hide play next button
+            const hidePlayNextButton = createCheckboxField('Hide "Play Next" Button (default: no)', 'hidePlayNextButton', USER_CONFIG.hidePlayNextButton);
+            form.appendChild(hidePlayNextButton);
 
             // hide share button
             const hideShareButton = createCheckboxField('Hide Share Button under a Video (default: no)', 'hideShareButton', USER_CONFIG.hideShareButton);
@@ -2306,26 +2453,29 @@
             const hideAddComment = createCheckboxField('Hide "Add Comment" Textfield (default: no)', 'hideAddComment', USER_CONFIG.hideAddComment);
             form.appendChild(hideAddComment);
 
-            // disable play on hover
-            const disablePlayOnHover = createCheckboxField('Disable Play on Hover (default: yes)', 'disablePlayOnHover', USER_CONFIG.disablePlayOnHover);
-            form.appendChild(disablePlayOnHover);
+            // hide reply comment button
+            const hideReplyButton = createCheckboxField('Hide Comment "Reply" Button (default: no)', 'hideReplyButton', USER_CONFIG.hideReplyButton);
+            form.appendChild(hideReplyButton);
 
-            // Spacer-5
-            const spacer_4_5 = document.createElement('div');
-            spacer_4_5.classList.add('spacer-5');
-            form.appendChild(spacer_4_5);
+            // hide news on home
+            const hideNewsHome = createCheckboxField('Hide Breaking News on Home (default: no)', 'hideNewsHome', USER_CONFIG.hideNewsHome);
+            form.appendChild(hideNewsHome);
 
-            // square and compact search bar
-            const squareSearchBar = createCheckboxField('Square and Compact Search Bar (default: yes)', 'squareSearchBar', USER_CONFIG.squareSearchBar);
-            form.appendChild(squareSearchBar);
+            // hide playlists on home
+            const hidePlaylistsHome = createCheckboxField('Hide Playlists on Home (default: no)', 'hidePlaylistsHome', USER_CONFIG.hidePlaylistsHome);
+            form.appendChild(hidePlaylistsHome);
 
-            // square design
-            const squareDesign = createCheckboxField('Square Design (default: no)', 'squareDesign', USER_CONFIG.squareDesign);
-            form.appendChild(squareDesign);
+            // hide mini player
+            const hideMiniPlayer = createCheckboxField('Hide Mini Player (default: no)', 'hideMiniPlayer', USER_CONFIG.hideMiniPlayer);
+            form.appendChild(hideMiniPlayer);
 
-            // compact layout
-            const compactLayout = createCheckboxField('Compact Layout (default: no)', 'compactLayout', USER_CONFIG.compactLayout);
-            form.appendChild(compactLayout);
+            // hide right sidebar search
+            const hideRightSidebarSearch = createCheckboxField('Hide Right Sidebar on Search Page (default: no)', 'hideRightSidebarSearch', USER_CONFIG.hideRightSidebarSearch);
+            form.appendChild(hideRightSidebarSearch);
+
+            // hide watched videos globally
+            const videosHideWatchedGlobal = createCheckboxField('Hide Watched Videos Globally (default: no)', 'videosHideWatchedGlobal', USER_CONFIG.videosHideWatchedGlobal);
+            form.appendChild(videosHideWatchedGlobal);
 
             return form;
         }
@@ -2627,6 +2777,7 @@
         } else { delete USER_CONFIG.targetNotebookLMUrl; }
 
         // save other settings
+        USER_CONFIG.YouTubeTranscriptExporter = form.elements.YouTubeTranscriptExporter.checked;
         USER_CONFIG.fileNamingFormat = form.elements.fileNamingFormat.value;
         USER_CONFIG.includeTimestamps = form.elements.includeTimestamps.checked;
         USER_CONFIG.includeChapterHeaders = form.elements.includeChapterHeaders.checked;
@@ -2679,20 +2830,28 @@
             USER_CONFIG.autoOpenTranscript = subPanelCustomCSS.elements.autoOpenTranscript.checked;
             USER_CONFIG.displayRemainingTime = subPanelCustomCSS.elements.displayRemainingTime.checked;
             USER_CONFIG.progressBar = subPanelCustomCSS.elements.progressBar.checked;
+            USER_CONFIG.hideShorts = subPanelCustomCSS.elements.hideShorts.checked;
             USER_CONFIG.hideVoiceSearch = subPanelCustomCSS.elements.hideVoiceSearch.checked;
             USER_CONFIG.hideCreateButton = subPanelCustomCSS.elements.hideCreateButton.checked;
+            USER_CONFIG.hideRightSidebarSearch = subPanelCustomCSS.elements.hideRightSidebarSearch.checked;
             USER_CONFIG.hideBrandText = subPanelCustomCSS.elements.hideBrandText.checked;
             USER_CONFIG.disablePlayOnHover = subPanelCustomCSS.elements.disablePlayOnHover.checked;
+            USER_CONFIG.preventAutoplay = subPanelCustomCSS.elements.preventAutoplay.checked;
             USER_CONFIG.hideEndCards = subPanelCustomCSS.elements.hideEndCards.checked;
             USER_CONFIG.hideEndscreen = subPanelCustomCSS.elements.hideEndscreen.checked;
             USER_CONFIG.hideJoinButton = subPanelCustomCSS.elements.hideJoinButton.checked;
+            USER_CONFIG.hidePlayNextButton = subPanelCustomCSS.elements.hidePlayNextButton.checked;
             USER_CONFIG.smallSubscribeButton = subPanelCustomCSS.elements.smallSubscribeButton.checked;
             USER_CONFIG.hideShareButton = subPanelCustomCSS.elements.hideShareButton.checked;
             USER_CONFIG.hideAddComment = subPanelCustomCSS.elements.hideAddComment.checked;
+            USER_CONFIG.hideReplyButton = subPanelCustomCSS.elements.hideReplyButton.checked;
+            USER_CONFIG.hidePlaylistsHome = subPanelCustomCSS.elements.hidePlaylistsHome.checked;
+            USER_CONFIG.hideNewsHome = subPanelCustomCSS.elements.hideNewsHome.checked;
             USER_CONFIG.progressbarColorPicker = subPanelCustomCSS.elements.progressbarColorPicker.value;
             USER_CONFIG.removeScrubber = subPanelCustomCSS.elements.removeScrubber.checked;
             USER_CONFIG.autoTheaterMode = subPanelCustomCSS.elements.autoTheaterMode.checked;
             USER_CONFIG.hideMiniPlayer = subPanelCustomCSS.elements.hideMiniPlayer.checked;
+            USER_CONFIG.closeChatWindow = subPanelCustomCSS.elements.closeChatWindow.checked;
             USER_CONFIG.displayFullTitle = subPanelCustomCSS.elements.displayFullTitle.checked;
             USER_CONFIG.squareSearchBar = subPanelCustomCSS.elements.squareSearchBar.checked;
             USER_CONFIG.squareDesign = subPanelCustomCSS.elements.squareDesign.checked;
@@ -2722,7 +2881,7 @@
             setTimeout(() => { location.reload(); }, 1000);
         } catch (error) {
             showNotification('Error saving new user config!');
-            console.error("YTE: Error saving user configuration:", error);
+            console.error("YouTubeAlchemy: Error saving user configuration:", error);
         }
     }
 
@@ -2736,7 +2895,7 @@
 
             const a = document.createElement('a');
             a.href = url;
-            a.download = `YouTube-Transcript-Exporter_v${scriptVersion}_Backup_${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+            a.download = `YouTube-Alchemy_v${scriptVersion}_Backup_${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -2745,7 +2904,7 @@
             showNotification('Settings have been exported.');
             } catch (error) {
                 showNotification("Error exporting settings!");
-                console.error("YTE: Error exporting user settings:", error);
+                console.error("YouTubeAlchemy: Error exporting user settings:", error);
             }
     }
 
@@ -2879,7 +3038,7 @@
         if (document.querySelector('.button-wrapper')) return;
 
         const buttons = [
-            { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Transcript Exporter Settings', ariaLabel: 'YouTube Transcript Exporter Settings.' },
+            { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' },
             { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.' },
             { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: 'Copy Transcript with a Prompt and Open ChatGPT', ariaLabel: 'Copy Transcript to Clipboard with a Prompt and Open ChatGPT.' },
             { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: 'Copy Transcript and Open NotebookLM', ariaLabel: 'Copy Transcript to Clipboard and Open NotebookLM.' }
@@ -2891,10 +3050,9 @@
     }
 
     function addSettingsButton() {
-
         if (document.querySelector('.button-wrapper')) return;
 
-        const buttons = [ { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Transcript Exporter Settings', ariaLabel: 'YouTube Transcript Exporter Settings.' }, ];
+        const buttons = [ { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' }, ];
 
         buttonLocation(buttons, addSettingsButton);
     }
@@ -2915,7 +3073,7 @@
             if (transcriptSection) {
             } else {
                 alert('Transcript unavailable or cannot be found.\nEnsure the "Show transcript" button exists.\nReload this page to try again.');
-                console.log("YTE: Transcript button not found. Subtitles/closed captions unavailable or language unsupported. Reload this page to try again.");
+                console.log("YouTubeAlchemy: Transcript button not found. Subtitles/closed captions unavailable or language unsupported. Reload this page to try again.");
                 return;
             }
         }
@@ -2926,7 +3084,7 @@
             callback();
         } else {
             alert('Transcript has not loaded successfully.\nReload this page to try again.');
-            console.log("YTE: Transcript has not loaded.");
+            console.log("YouTubeAlchemy: Transcript has not loaded.");
             return;
         }
     }
@@ -2947,7 +3105,7 @@
     function getTranscriptText() {
         const transcriptContainer = document.querySelector('ytd-transcript-segment-list-renderer #segments-container');
         if (!transcriptContainer) {
-            //console.error("YTE: Transcript container not found.");
+            //console.error("YouTubeAlchemy: Transcript container not found.");
             return '';
         }
 
@@ -3059,7 +3217,6 @@
             }
 
             if (!hasTranscriptPanel) {
-                console.log('YTE: Transcript panel not found. Reload this page to try again.');
                 showNotificationError("Transcript Not Available");
                 reject();
                 return;
@@ -3093,7 +3250,7 @@
 
             const fallbackTimer = setTimeout(() => {
                 if (!loaded) {
-                console.error( "YTE: The transcript took too long to load. Reload this page to try again." );
+                console.error("YouTubeAlchemy: The transcript took too long to load. Reload this page to try again.");
                 observer.disconnect();
                 cleanup(true);
                 reject();
@@ -3224,8 +3381,8 @@
         const chaptersContainer = player && player.querySelector('.ytp-chapters-container');
         const progressBarContainer = player && player.querySelector('.ytp-progress-bar-container');
 
-        if (!player || !video ) { console.error("YTE: ProgressBar: A Required querySelector Not Found."); return; }
-        if (!progressBarContainer) { console.error("YTE: ProgressBar: Progress Bar Container Not Found."); return; }
+        if (!player || !video ) { console.error("YouTubeAlchemy: ProgressBar: A Required querySelector Not Found."); return; }
+        if (!progressBarContainer) { console.error("YouTubeAlchemy: ProgressBar: Progress Bar Container Not Found."); return; }
 
         const bar = document.createElement('div');
         bar.id = 'progress-bar-bar';
@@ -3355,22 +3512,63 @@
         updateLayout();
     }
 
+    // close live chat initially
+    function closeLiveChat() {
+        const chatFrame = document.querySelector('ytd-live-chat-frame');
+        if (!chatFrame) return;
+
+        const retryInterval = 250;
+        const maxRetries = 12;
+        let iframeAttempts = 0;
+        let buttonAttempts = 0;
+
+        function tryCloseChat() {
+            const iframe = document.querySelector('#chatframe');
+            if (!iframe?.contentWindow?.document) {
+                if (iframeAttempts < maxRetries) {
+                    iframeAttempts++;
+                    setTimeout(tryCloseChat, retryInterval);
+                } else {
+                    document.body.classList.remove('CentAnni-close-live-chat');
+                    initialRun = false;
+                }
+                return;
+            }
+
+            const button = iframe.contentWindow.document.querySelector('#close-button button');
+            if (!button) {
+                if (buttonAttempts < maxRetries) {
+                    buttonAttempts++;
+                    setTimeout(tryCloseChat, retryInterval);
+                } else {
+                    document.body.classList.remove('CentAnni-close-live-chat');
+                    initialRun = false;
+                }
+                return;
+            }
+
+            button.click();
+            setTimeout(() => { document.body.classList.remove('CentAnni-close-live-chat'); }, 250);
+            initialRun = false;
+        }
+
+        tryCloseChat();
+    }
+
     // function to automatically open the chapter panel
     function openChapters() {
-        if (hasChapterPanel) {
+        if (hasChapterPanel)
             chapterPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-        } else console.error("YTE: Chapter panel not found or does not exist.");
     }
 
     // function to automatically open the transcript panel
     function openTranscript() {
-        if (hasTranscriptPanel) {
+        if (hasTranscriptPanel)
             transcriptPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-        } else console.error("YTE: Transcript panel not found or does not exist.");
     }
 
     // sidebar and links in header
-    function buttonsLeft() {
+    function buttonsLeftHeader() {
         function openSidebar() {
             const guideButton = document.querySelector('#guide-button button');
             if (guideButton) {
@@ -3443,7 +3641,7 @@
     }
 
     // color code videos on home
-    function ColorCodeVideos() {
+    function homeColorCodeVideos() {
         // define age categories
         const categories = {
             live: ['watching'],
@@ -3461,8 +3659,8 @@
                 for (const [className, ages] of Object.entries(categories)) {
                     if (ages.some(age => textContent.includes(age.toLowerCase()))) {
                         const videoContainer = el.closest('ytd-rich-item-renderer');
-                        if (videoContainer && !videoContainer.classList.contains(`yte-style-${className}-video`)) {
-                            videoContainer.classList.add(`yte-style-${className}-video`);
+                        if (videoContainer && !videoContainer.classList.contains(`CentAnni-style-${className}-video`)) {
+                            videoContainer.classList.add(`CentAnni-style-${className}-video`);
                         }
                     }
                 }
@@ -3473,15 +3671,15 @@
                 const videoContainer = el.closest('ytd-rich-item-renderer');
                 if (!videoContainer) return;
 
-                if (/Scheduled for/i.test(text) && !videoContainer.classList.contains('yte-style-upcoming-video')) {
-                    videoContainer.classList.add('yte-style-upcoming-video');
+                if (/Scheduled for/i.test(text) && !videoContainer.classList.contains('CentAnni-style-upcoming-video')) {
+                    videoContainer.classList.add('CentAnni-style-upcoming-video');
                 }
 
-                if (/Streamed/i.test(text) && !el.querySelector('.yte-style-streamed-text')) {
+                if (/Streamed/i.test(text) && !el.querySelector('.CentAnni-style-streamed-text')) {
                     el.childNodes.forEach(node => {
                         if (node.nodeType === Node.TEXT_NODE && /Streamed/i.test(node.nodeValue)) {
                             const span = document.createElement('span');
-                            span.className = 'yte-style-streamed-text';
+                            span.className = 'CentAnni-style-streamed-text';
                             span.textContent = node.nodeValue.match(/Streamed/i)[0];
                             const rest = document.createTextNode(node.nodeValue.replace(/Streamed/i, ''));
                             el.replaceChild(rest, node);
@@ -3500,55 +3698,82 @@
     }
 
     // initiate the script
+    let ultimoURL = null;
     let lastVideoURL = null;
-    let isLiveVideo = null;
+    let lastVideoID = null;
+    let videoURL = null;
+    let videoID = null;
     let isVideoPage = null;
+    let isLiveVideo = null;
+    let isLiveStream = null;
+    let isChannelHome = null;
+    let initialRun = null;
+    let chatEnabled = null;
     let isTheaterMode = null;
     let hasChapterPanel = null;
     let chapterPanel = null;
     let hasTranscriptPanel = null;
     let transcriptPanel = null;
+    let hasChatPanel = null;
     let isFullscreen = null;
 
-    async function initializeTranscript() {
-        if (USER_CONFIG.preventBackgroundExecution) { await ChromeUserWait(); }
-        buttonsLeft();
+    async function initializeAlchemy() {
+        if (USER_CONFIG.preventBackgroundExecution) { await chromeUserWait(); }
+        if (isChannelHome) channelRedirect();
+        buttonsLeftHeader();
 
-        if (isVideoPage) {
+        if (isVideoPage || isLiveStream) {
             liveVideoCheck();
             fullscreenCheck();
             theaterModeCheck();
             chapterPanelCheck();
             transcriptPanelCheck();
-            if (USER_CONFIG.autoTheaterMode && !isTheaterMode) { toggleTheaterMode(); }
-            if (USER_CONFIG.displayRemainingTime && !isLiveVideo) { remainingTime(); }
-            if (USER_CONFIG.progressBar && !isLiveVideo) { keepProgressBarVisible(); }
-            if (USER_CONFIG.autoOpenChapters && hasChapterPanel) { openChapters(); }
-            if (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel) { openTranscript(); }
+            if (USER_CONFIG.closeChatWindow) setTimeout(() => { chatWindowCheck(); }, 500);
+            if (USER_CONFIG.autoTheaterMode && !isTheaterMode) toggleTheaterMode();
+            if (USER_CONFIG.displayRemainingTime && !isLiveVideo &&!isLiveStream) remainingTime();
+            if (USER_CONFIG.progressBar && !isLiveVideo &&!isLiveStream) keepProgressBarVisible();
+            if (USER_CONFIG.autoOpenChapters && hasChapterPanel) openChapters();
+            if (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel) openTranscript();
 
+            //YouTube Transcript Exporter
             let transcriptLoaded = false;
-            try { await preLoadTranscript(); transcriptLoaded = true; }
-            catch (error) { setTimeout(() => { addSettingsButton(); }, 3000); }
-            if (transcriptLoaded) { addButton(); }
-            //console.log("YTE: YouTube Transcript Exporter Initialized: On Video Page.");
+            if (USER_CONFIG.YouTubeTranscriptExporter) {
+                try { await preLoadTranscript(); transcriptLoaded = true; }
+                catch (error) { setTimeout(() => { addSettingsButton(); }, 3000); }
+                if (transcriptLoaded) { addButton(); }
+            } else { addSettingsButton(); }
+            //console.log("YouTubeAlchemy: YouTube Alchemy Initialized: On Video Page.");
         } else {
             addSettingsButton();
-            //console.log("YTE: YouTube Transcript Exporter Initialized: On Other Page.");
+            //console.log("YouTubeAlchemy: YouTube Alchemy Initialized: On Other Page.");
             if (window.location.href !== "https://www.youtube.com/") return;
-            if (USER_CONFIG.colorCodeVideosEnabled) { ColorCodeVideos(); }
+            if (USER_CONFIG.colorCodeVideosEnabled) { homeColorCodeVideos(); }
         }
     }
 
     // YouTube navigation handler
     function handleYouTubeNavigation() {
-        //console.log("YTE: Event Listner Arrived");
+        //console.log("YouTubeAlchemy: Event Listner Arrived");
         const currentVideoURL = window.location.href;
-        if (currentVideoURL !== lastVideoURL) {
-            lastVideoURL = currentVideoURL;
-            //console.log("YTE: Only One Survived");
+        if (currentVideoURL !== ultimoURL) {
+            ultimoURL = currentVideoURL;
+            //console.log("YouTubeAlchemy: Only One Survived");
             loadCSSsettings();
+            initialRun = true;
             isVideoPage = /^https:\/\/.*\.youtube\.com\/watch\?v=/.test(currentVideoURL);
-            setTimeout(() => { initializeTranscript(); }, 600);
+            isLiveStream = /^https:\/\/.*\.youtube\.com\/live\/[a-zA-Z0-9_-]+/.test(currentVideoURL);
+            isChannelHome = /^https:\/\/.*\.youtube\.com\/@[a-zA-Z0-9_-]+$/.test(currentVideoURL);
+
+            if (isVideoPage || isLiveStream) {
+                lastVideoURL = videoURL;
+                lastVideoID = videoID;
+
+                videoURL = window.location.href;
+                const urlParams = new URLSearchParams(window.location.search);
+                videoID = urlParams.get('v');
+            }
+
+            setTimeout(() => { initializeAlchemy(); }, 500);
         }
     }
 
@@ -3558,28 +3783,10 @@
 
       if (watchFlexy?.hasAttribute('theater')) {
         isTheaterMode = true;
-      } else if (watchFlexy?.hasAttribute('default-layout')) {
-        isTheaterMode = false;
-      }
+        } else if (watchFlexy?.hasAttribute('default-layout')) {
+            isTheaterMode = false;
+        }
     }
-
-    // live stream check
-    function liveVideoCheck() {
-        const timeDisplay = document.querySelector('.ytp-time-display');
-        isLiveVideo = !!timeDisplay?.classList.contains('ytp-live');
-      }
-
-    // chapter panel check
-    function chapterPanelCheck() {
-        chapterPanel = document.querySelector( 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]' ) || document.querySelector( 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]' );
-        hasChapterPanel = !!chapterPanel;
-      }
-
-    // transcript panel check
-    function transcriptPanelCheck() {
-        transcriptPanel = document.querySelector( 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]' );
-        hasTranscriptPanel = !!transcriptPanel;
-      }
 
     // fullscreen check
     function fullscreenCheck() {
@@ -3588,20 +3795,113 @@
             isFullscreen = true;
         } else {
             isFullscreen = false;
-        } //console.log('YTE: isFullscreen:', isFullscreen);
+        }
     }
 
-    // reset
+    // live stream check
+    function liveVideoCheck() {
+        const timeDisplay = document.querySelector('.ytp-time-display');
+        isLiveVideo = !!timeDisplay?.classList.contains('ytp-live');
+    }
+
+    // chapter panel check
+    function chapterPanelCheck() {
+        chapterPanel = document.querySelector( 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]' ) || document.querySelector( 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]' );
+        hasChapterPanel = !!chapterPanel;
+    }
+
+    // transcript panel check
+    function transcriptPanelCheck() {
+        transcriptPanel = document.querySelector( 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]' );
+        hasTranscriptPanel = !!transcriptPanel;
+    }
+
+    // check and close chat window
+    function chatWindowCheck() {
+        hasChatPanel = !!(document.querySelector('#chat') || document.querySelector('iframe#chatframe'));
+        const chatMessageElement = document.querySelector('#chat-container ytd-live-chat-frame #message');
+
+        if (chatMessageElement) {
+            const messageText = chatMessageElement.textContent.trim();
+            if (messageText === 'Chat is disabled for this live stream.') chatEnabled = false;
+        } else chatEnabled = true;
+
+        if (USER_CONFIG.closeChatWindow && initialRun && hasChatPanel && chatEnabled) closeLiveChat();
+        else document.body.classList.remove('CentAnni-close-live-chat');
+    }
+
+    // function to prevent autoplay
+    function pauseYouTubeVideo() {
+        document.removeEventListener('yt-player-updated', pauseYouTubeVideo);
+
+        if ( !/^https:\/\/.*\.youtube\.com\/watch\?v=/.test(window.location.href) || document.querySelector('.ytp-time-display')?.classList.contains('ytp-live') ) return;
+
+        const elements = {
+            player: document.getElementById('movie_player'),
+            video: document.querySelector('video'),
+            watchFlexy: document.querySelector('ytd-watch-flexy'),
+            thumbnailOverlayImage: document.querySelector('.ytp-cued-thumbnail-overlay-image'),
+            thumbnailOverlay: document.querySelector('.ytp-cued-thumbnail-overlay')
+        };
+
+        if (!elements.player || !elements.video || !elements.watchFlexy) return;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const vinteo = urlParams.get('v');
+
+        if (elements.watchFlexy.hasAttribute('default-layout')) {
+            toggleTheaterMode();
+            setTimeout(pauseVideo, 200);
+        } else if (elements.watchFlexy.hasAttribute('theater')) {
+            pauseVideo();
+        }
+
+        function pauseVideo() {
+            const { player, video, thumbnailOverlayImage, thumbnailOverlay } = elements;
+            if (player && video) {
+                video.pause();
+                player.classList.remove('playing-mode');
+                player.classList.add('unstarted-mode', 'paused-mode');
+
+                const playingHandler = () => {
+                    if (thumbnailOverlayImage) {
+                        thumbnailOverlayImage.removeAttribute('style');
+                        thumbnailOverlayImage.style.display = 'none';
+                        thumbnailOverlay.removeAttribute('style');
+                        thumbnailOverlay.style.display = 'none';
+                    }
+                    video.removeEventListener('playing', playingHandler);
+                };
+                video.addEventListener('playing', playingHandler);
+            }
+
+            if (thumbnailOverlayImage && thumbnailOverlay && lastVideoID !== vinteo) {
+                thumbnailOverlay.style.cssText = 'display: block';
+                void thumbnailOverlayImage.offsetHeight;
+                thumbnailOverlayImage.style.cssText = `
+                display: block;
+                z-index: 10;
+                background-image: url("https://i.ytimg.com/vi/${vinteo}/maxresdefault.jpg");
+            `;}
+        }
+    }
+
+    // channel page redirect to videos
+    function channelRedirect() {
+        window.location.href = window.location.href.replace(/\/$/, '') + '/videos';
+    }
+
+    // reset function
     function handleYTNavigation() {
-        document.querySelectorAll(
-            '.button-wrapper, .remaining-time-container, #yte-playback-speed-control, .yte-player-sidebar, #progress-bar-bar, #progress-bar-start, #progress-bar-end, #yt-transcript-settings-modal, .sub-panel-overlay'
-        ).forEach(el => el.remove());
+        if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo);
+
+        document.querySelectorAll('.button-wrapper, .remaining-time-container, #progress-bar-bar, #progress-bar-start, #progress-bar-end, #yt-transcript-settings-modal, .sub-panel-overlay').forEach(el => el.remove());
     }
 
-    // function due to the inadequacy of Chrome
-    async function ChromeUserWait() {
+    // pause script until tab becomes visible
+    async function chromeUserWait() {
         if (document.visibilityState !== 'visible') {
-            //console.log("YTE: Waiting for this tab to become visible...");
+            //console.log("YouTubeAlchemy: Waiting for this tab to become visible...");
             return new Promise((resolve) => {
                 document.addEventListener('visibilitychange', function onVisibilityChange() {
                     if (document.visibilityState === 'visible') {
@@ -3619,6 +3919,7 @@
     document.addEventListener('yt-page-data-updated', handleYouTubeNavigation); // backup
     document.addEventListener('yt-page-data-fetched', handleYouTubeNavigation); // redundancy
     document.addEventListener('fullscreenchange', fullscreenCheck); // fullscreen check
+    if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo); // prevent autoplay
     document.addEventListener('yt-set-theater-mode-enabled', theaterModeCheck); // theater mode check
     document.addEventListener('yt-service-request-completed', handleYouTubeNavigation); // for chrome
 })();
