@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube. Settings panels for easy customization. Features include: export transcripts to LLMs or download it as text files, prevent autoplay, hide shorts, disable play on hover, square design, auto theater mode, auto close chat window, adjust number of videos per row, display remaining time under a video adjusted for playback speed, persistent progress bar with chapter markers and SponsorBlock support, links in the header, and change or hide various ui elements.
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.5
+// @version      7.5.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -1811,6 +1811,7 @@
         closeChatWindow: true,
         displayFullTitle: true,
         autoTheaterMode: false,
+        channelReindirizzare: false,
         squareSearchBar: true,
         squareDesign: false,
         compactLayout: false
@@ -2339,6 +2340,10 @@
             const autoTheaterMode = createCheckboxField('Auto Theater Mode (default: no)', 'autoTheaterMode', USER_CONFIG.autoTheaterMode);
             form.appendChild(autoTheaterMode);
 
+            // channel default videos page
+            const channelReindirizzare = createCheckboxField('Videos Tab as Default on Channel Page (default: no)', 'channelReindirizzare', USER_CONFIG.channelReindirizzare);
+            form.appendChild(channelReindirizzare);
+
             // display remaining time
             const displayRemainingTime = createCheckboxField('Display Remaining Time Under a Video, Adjusted for Playback Speed (default: yes)', 'displayRemainingTime', USER_CONFIG.displayRemainingTime);
             form.appendChild(displayRemainingTime);
@@ -2850,6 +2855,7 @@
             USER_CONFIG.progressbarColorPicker = subPanelCustomCSS.elements.progressbarColorPicker.value;
             USER_CONFIG.removeScrubber = subPanelCustomCSS.elements.removeScrubber.checked;
             USER_CONFIG.autoTheaterMode = subPanelCustomCSS.elements.autoTheaterMode.checked;
+            USER_CONFIG.channelReindirizzare = subPanelCustomCSS.elements.channelReindirizzare.checked;
             USER_CONFIG.hideMiniPlayer = subPanelCustomCSS.elements.hideMiniPlayer.checked;
             USER_CONFIG.closeChatWindow = subPanelCustomCSS.elements.closeChatWindow.checked;
             USER_CONFIG.displayFullTitle = subPanelCustomCSS.elements.displayFullTitle.checked;
@@ -3719,7 +3725,7 @@
 
     async function initializeAlchemy() {
         if (USER_CONFIG.preventBackgroundExecution) { await chromeUserWait(); }
-        if (isChannelHome) channelRedirect();
+        if (USER_CONFIG.channelReindirizzare && isChannelHome) channelRedirect();
         buttonsLeftHeader();
 
         if (isVideoPage || isLiveStream) {
