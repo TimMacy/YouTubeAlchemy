@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#changelog"><img align="right" src="https://img.shields.io/badge/Version-7.5-white.svg" alt="Version: 7.5"></a><a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#changelog"><img align="right" src="https://img.shields.io/badge/Version-7.5.1-white.svg" alt="Version: 7.5.1"></a><a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 This toolkit enhances YouTube by customizing the layout and adding seamless, native-feeling features. Designed to be resource-efficient, it primarily relies on event listeners while using timeouts and mutation observers strategically to minimize overhead. Furthermore, a main settings panel, along with three  sub-panels, provide an intuitive interface for easy customization of YouTube Alchemy.
 ### Settings Panels
@@ -75,36 +75,37 @@ Offers various options to customize the layout and functionality of YouTube.
 
 **Features**
   - Change Opacity of Watched Videos
-  - Title Case
+  - Title Case Selection
     - normal-case
     - lowercase
     - uppercase
     - capitalize
-  - Font Size
+  - Set Font Size
   - Adjust Number of Videos per Row
     - Home Page
     - Subscriptions Page
     - Channel Page
   - Prevent Autoplay
-  - Automatically Open Chapter Panels
-  - Automatically Open Transcript Panels
+  - Disable Play on Hover
   - Auto Close Initial Chat Windows
   - Auto Theater Mode
+  - Videos Tab as Default on Channel Page
   - Display Remaining Time Under a Video, Adjusted for Playback Speed—Even in Fullscreen
   - Persistent Progress Bar with Chapter Markers and SponsorBlock Support—Even in Fullscreen
-  - Hide YouTube Shorts
+  - Automatically Open Chapter Panels
+  - Automatically Open Transcript Panels
 
 **Layout Changes**
-  - Disable Play on Hover
   - Square and Compact Search Bar
   - Square Design
   - Compact Layout
+  - Hide Shorts
 
 **Modify or Hide UI Elements**
   - Hide Voice Search Button in the Header
   - Hide Create Button in the Header
   - Hide YouTube Brand Text in the Header
-  - Small Subscribed Button under a Video
+  - Small Subscribed Button Under a Video—Displays Only the Notification Icon
   - Hide Join Button under a Video and on Channel Page
   - Display Full Titles
   - Choose Progress Bar Color
@@ -137,6 +138,7 @@ Adds a customizable border to videos on the home page to visualy indicate their 
 2. **Install** [YouTubeAlchemy.js](https://github.com/TimMacy/YouTubeAlchemy/blob/main/YouTubeAlchemy.js)
 
 ## Changelog
+- **7.5.1**: fixed missing setting for channel redirect default to videos tab
 - **7.5**: name change to YouTube Alchemy. toggle for 'YouTube Transcript Exporter' added in main settings panel. general bug fixes and improvements. new Features: prevent autoplay, auto close initial chat windows, hide shorts, hide play next button, hide comment reply button, hide breaking news on home, hide playlists on home, hide right side bar on search.
 - **7.4**: general bug fixes and improvements. reworked initiation of the script. new features: auto-open transcript panels, hide video end cards, hide end screens, hide join and share button under videos, small "subscribed" button (icon only), hide add comment text field, disable play on hover, hide main scrollbar in Safari, choose progress bar color
 - **7.3.5**: General bug fixes and improvements. Reorganized the settings panel for upcoming features. New Features: Hide YouTube brand text in the header; Hide video scrubber (red dot in progress bar); Display full titles; and Auto Theater mode.
