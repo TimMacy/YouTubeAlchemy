@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#changelog"><img align="right" src="https://img.shields.io/badge/Version-7.5.1-white.svg" alt="Version: 7.5.1"></a><a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#changelog"><img align="right" src="https://img.shields.io/badge/Version-7.5.5-white.svg" alt="Version: 7.5.5"></a><a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 This toolkit enhances YouTube by customizing the layout and adding seamless, native-feeling features. Designed to be resource-efficient, it primarily relies on event listeners while using timeouts and mutation observers strategically to minimize overhead. Furthermore, a main settings panel, along with three  sub-panels, provide an intuitive interface for easy customization of YouTube Alchemy.
 ### Settings Panels
@@ -94,12 +94,15 @@ Offers various options to customize the layout and functionality of YouTube.
   - Persistent Progress Bar with Chapter Markers and SponsorBlock Support—Even in Fullscreen
   - Automatically Open Chapter Panels
   - Automatically Open Transcript Panels
+  - Automatically Enable Timestamps in Transcript Panels
 
 **Layout Changes**
   - Square and Compact Search Bar
   - Square Design
   - Compact Layout
   - Hide Shorts
+  - Hide Ad Slots on the Home Page
+  - Hide Members Only Featured Videos on the Home Page
 
 **Modify or Hide UI Elements**
   - Hide Voice Search Button in the Header
@@ -114,13 +117,26 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide End Screens
   - Hide "Play Next" Button
   - Hide Share Button under a Video
+  - Hide Hashtags under Videos
   - Hide "Add Comment" Textfield
   - Hide Comment "Reply" Button
   - Hide Breaking News on Home
   - Hide Playlists on Home
+  - Hide Fundraiser Icons and Panels
   - Hide Mini Player
   - Hide Right Sidebar on Search Page
   - Hide Watched Videos Globally
+
+**Hide UI Elements in the Left Navigation Bar**
+  - Hide "You" Button
+  - Hide "Your Videos" Button
+  - Hide "Your Courses" Button
+  - Hide "Subscriptions" Title
+  - Hide "Show More" Button in Subscriptions
+  - Hide "Explore" Section
+  - Hide "More from YouTube" Section
+  - Hide Penultimate Section
+  - Hide Footer
 
 <br><br>
 
@@ -138,6 +154,7 @@ Adds a customizable border to videos on the home page to visualy indicate their 
 2. **Install** [YouTubeAlchemy.js](https://github.com/TimMacy/YouTubeAlchemy/blob/main/YouTubeAlchemy.js)
 
 ## Changelog
+- **7.5.5**: general bug fixes and improvements. updated ChatGPT prompt to better maintain the YouTuber's POV and voice. new features: automatically enable timestamps in transcript panels, hide ad slots on the home page, hide members only featured videos on the home page, hide hashtags under videos, hide fundraiser icons and panels, option to hide various UI elements in the left navigation bar
 - **7.5.1**: fixed missing setting for channel redirect default to videos tab
 - **7.5**: name change to YouTube Alchemy. toggle for 'YouTube Transcript Exporter' added in main settings panel. general bug fixes and improvements. new Features: prevent autoplay, auto close initial chat windows, hide shorts, hide play next button, hide comment reply button, hide breaking news on home, hide playlists on home, hide right side bar on search.
 - **7.4**: general bug fixes and improvements. reworked initiation of the script. new features: auto-open transcript panels, hide video end cards, hide end screens, hide join and share button under videos, small "subscribed" button (icon only), hide add comment text field, disable play on hover, hide main scrollbar in Safari, choose progress bar color
