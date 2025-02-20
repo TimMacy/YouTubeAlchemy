@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube. Settings panels for easy customization. Features include: export transcripts to LLMs or download it as text files, prevent autoplay, hide shorts, hide ad slots on home, disable play on hover, square design, auto theater mode, auto close chat window, adjust number of videos per row, display remaining time under a video adjusted for playback speed, persistent progress bar with chapter markers and SponsorBlock support, links in the header, and change or hide various ui elements
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.5.5
+// @version      7.5.5.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -360,7 +360,7 @@
             .checkbox-label:hover { text-decoration: underline; }
             .checkbox-field { margin-right: 10px; }
 
-            .chrome-info {
+            .CentAnni-info-text {
                 color: rgba(175, 175, 175, .9);
                 font-family: "Roboto","Arial",sans-serif;
                 font-size: 1.2em;
@@ -721,7 +721,7 @@
                 z-index: 2180;
             }
 
-            #links-in-header-form .chrome-info {
+            #links-in-header-form .CentAnni-info-text {
                 margin: -10px 80px 20px 0px;
             }
 
@@ -792,7 +792,7 @@
             #color-code-videos-form .checkbox-container { margin: 20px 0 0 0; }
             #color-code-videos-form .label-style-settings {margin: 0; }
             #color-code-videos-form > div.videos-old-container > span { margin: 0; }
-            #color-code-videos-form .chrome-info { margin: -10px 80px 20px 0px; }
+            #color-code-videos-form .CentAnni-info-text { margin: -10px 80px 20px 0px; }
             #custom-css-form .checkbox-container { margin: 10px 0; }
 
             #custom-css-form .file-naming-container {
@@ -954,7 +954,7 @@
                     position: absolute;
                     bottom: 0;
                     opacity: 0;
-                    z-index: 50;
+                    z-index: 58;
                 }
 
                 #progress-bar-progress, #progress-bar-buffer {
@@ -1219,6 +1219,10 @@
                 tp-yt-paper-dialog[modern],
                 yt-dropdown-menu {
                     border-radius: 2px;
+                }
+
+                .yt-video-attribute-view-model--image-large .yt-video-attribute-view-model__hero-section {
+                    border-radius: 1px;
                 }
 
                 #thumbnail,
@@ -1551,6 +1555,10 @@
                 }
             }
 
+            ytd-popup-container > .style-scope.ytd-popup-container {
+                padding-bottom: 24px;
+            }
+
             .ytd-page-manager[page-subtype="home"] {
                 .CentAnni-style-live-video, .CentAnni-style-upcoming-video, .CentAnni-style-newly-video, .CentAnni-style-recent-video, .CentAnni-style-lately-video { outline: 2px solid; border-radius: 12px; }
                 .CentAnni-style-old-video { outline: none;}
@@ -1869,6 +1877,7 @@
         autoOpenTranscript: false,
         transcriptTimestamps: false,
         displayRemainingTime: true,
+        remainingTimeMinusSegments: false,
         hideShorts: false,
         hideAdSlots: true,
         hideMembersOnly: false,
@@ -2137,7 +2146,7 @@
         // info for Chrome
         const description = document.createElement('small');
         description.innerText = 'Prevents early script execution in background tabs.\nWhile this feature is superfluous in Safari, it is essential for Chrome.';
-        description.classList.add('chrome-info');
+        description.classList.add('CentAnni-info-text');
         form.appendChild(description);
 
         // extra settings buttons
@@ -2390,7 +2399,7 @@
 
             const infoLinksHeader = document.createElement('small');
             infoLinksHeader.innerText = "Up to seven links can be added next to the YouTube logo. An empty 'Link Text' field won't insert the link into the header.\nIf the navigation bar is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.";
-            infoLinksHeader.classList.add('chrome-info');
+            infoLinksHeader.classList.add('CentAnni-info-text');
             form.appendChild(infoLinksHeader);
 
             const sidebarContainer = document.createElement('div');
@@ -2488,6 +2497,16 @@
             // display remaining time
             const displayRemainingTime = createCheckboxField('Display Remaining Time Under a Video, Adjusted for Playback Speed (default: yes)', 'displayRemainingTime', USER_CONFIG.displayRemainingTime);
             form.appendChild(displayRemainingTime);
+
+            // display remaining time minus sponsorblock segments
+            const remainingTimeMinusSegments = createCheckboxField('Display Remaining Time Minus Sponsorblock Segments (Beta) (default: no)', 'remainingTimeMinusSegments', USER_CONFIG.remainingTimeMinusSegments);
+            form.appendChild(remainingTimeMinusSegments);
+
+            // info for remaining time minus segments beta
+            const descriptionRemainingTimeBeta = document.createElement('small');
+            descriptionRemainingTimeBeta.innerText = 'This feature is in beta. Ensure "Show time with skips removed" is enabled in SponsorBlock Settings under "Interface."';
+            descriptionRemainingTimeBeta.classList.add('CentAnni-info-text');
+            form.appendChild(descriptionRemainingTimeBeta);
 
             // persistent progress bar
             const progressBar = createCheckboxField('Persistent Progress Bar with Chapter Markers and SponsorBlock Support (default: yes)', 'progressBar', USER_CONFIG.progressBar);
@@ -2612,7 +2631,7 @@
             form.appendChild(hideShareButton);
 
             // hide hashtags under video
-            const hideHashtags = createCheckboxField('Hide Hashtags under a Video (default: no)', 'hideHashtags', USER_CONFIG.hideHashtags);
+            const hideHashtags = createCheckboxField('Hide Hashtags under Videos (default: no)', 'hideHashtags', USER_CONFIG.hideHashtags);
             form.appendChild(hideHashtags);
 
             // hide add comment
@@ -2704,7 +2723,7 @@
 
             const infoColorCodeVideos = document.createElement('small');
             infoColorCodeVideos.innerText = "These settings only apply to the Home Page: YouTube.com.";
-            infoColorCodeVideos.classList.add('chrome-info');
+            infoColorCodeVideos.classList.add('CentAnni-info-text');
             form.appendChild(infoColorCodeVideos);
 
             // activate color code videos
@@ -3042,6 +3061,7 @@
             USER_CONFIG.autoOpenTranscript = subPanelCustomCSS.elements.autoOpenTranscript.checked;
             USER_CONFIG.transcriptTimestamps = subPanelCustomCSS.elements.transcriptTimestamps.checked;
             USER_CONFIG.displayRemainingTime = subPanelCustomCSS.elements.displayRemainingTime.checked;
+            USER_CONFIG.remainingTimeMinusSegments = subPanelCustomCSS.elements.remainingTimeMinusSegments.checked;
             USER_CONFIG.progressBar = subPanelCustomCSS.elements.progressBar.checked;
             USER_CONFIG.hideShorts = subPanelCustomCSS.elements.hideShorts.checked;
             USER_CONFIG.hideAdSlots = subPanelCustomCSS.elements.hideAdSlots.checked;
@@ -3585,20 +3605,121 @@
 
         // time updates
         const video = document.querySelector(STREAM_SELECTOR);
-        if (video) {
+
+        if (!USER_CONFIG.remainingTimeMinusSegments) {
+            if (video) {
+                video.ontimeupdate = () => {
+                    const duration = video.duration;
+                    const currentTime = video.currentTime;
+                    const playbackRate = video.playbackRate || 1;
+                    const remaining = (duration - currentTime) / playbackRate;
+                    const watchedPercent = duration ? Math.round((currentTime / duration) * 100) + '%' : '0%';
+                    const totalFormatted = formatTime(duration);
+                    const elapsedFormatted = formatTime(currentTime);
+                    const remainingFormatted = formatTime(remaining);
+
+                    textNode.data = `total: ${totalFormatted} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
+                };
+            }
+        } else {
+            if (video) {
+                if (!video.paused && !video.ended && video.readyState > 2) remainingTimeMinusSponsorBlockSegmentsBETA();
+                else video.addEventListener('playing', remainingTimeMinusSponsorBlockSegmentsBETA, { once: true });
+            }
+        }
+
+        // BETA remaining time minus sponsorblock segments
+        function remainingTimeMinusSponsorBlockSegmentsBETA() {
+            let baseEffective = NaN;
+
+            function ensureBaseEffectiveIsValid() {
+                if (!isNaN(baseEffective)) return;
+                if (!video.duration || isNaN(video.duration) || video.duration <= 0) return;
+
+                const sponsorBlockTimeElem = document.getElementById('sponsorBlockDurationAfterSkips');
+                if (sponsorBlockTimeElem && sponsorBlockTimeElem.textContent.trim()) {
+                    const rawText = sponsorBlockTimeElem.textContent.trim().replace(/[()]/g, '');
+                    baseEffective = parseTime(rawText);
+                } else baseEffective = video.duration;
+            }
+
+            function getSegments(rawDuration) {
+                const segments = [];
+                const previewbar = document.getElementById('previewbar');
+                if (previewbar) {
+                    const liElements = previewbar.querySelectorAll('li.previewbar');
+                    liElements.forEach(li => {
+                        const category = li.getAttribute('sponsorblock-category');
+                        const style = li.getAttribute('style');
+                        const leftMatch = style.match(/left:\s*([\d.]+)%/);
+                        const rightMatch = style.match(/right:\s*([\d.]+)%/);
+                        if (leftMatch && rightMatch) {
+                            const leftFraction = parseFloat(leftMatch[1]) / 100;
+                            const rightFraction = parseFloat(rightMatch[1]) / 100;
+                            const startTime = video.duration * leftFraction;
+                            const endTime = video.duration * (1 - rightFraction);
+                            const segDuration = endTime - startTime;
+                            if (segDuration > 0)
+                                segments.push({ category, start: startTime, duration: segDuration, end: endTime });
+                        }
+                    });
+                }
+                return segments;
+            }
+
+            function mergeSegments(segments) {
+                if (!segments.length) return segments;
+                segments.sort((a, b) => a.start - b.start);
+                const merged = [segments[0]];
+                for (let i = 1; i < segments.length; i++) {
+                    const last = merged[merged.length - 1];
+                    const current = segments[i];
+                    if (current.start <= last.end) {
+                        last.end = Math.max(last.end, current.end);
+                        last.duration = last.end - last.start;
+                    } else merged.push(current);
+                }
+                return merged;
+            }
+
+            function computeAddedTime(segments, currentTime) {
+                let sum = 0;
+                segments.forEach(seg => {
+                    if (currentTime >= seg.start) {
+                        sum += seg.duration;
+                    }
+                });
+                return sum;
+            }
+
             video.ontimeupdate = () => {
-                const duration = video.duration;
+                ensureBaseEffectiveIsValid();
+                if (isNaN(baseEffective)) return;
+
+                const rawDuration = video.duration;
                 const currentTime = video.currentTime;
                 const playbackRate = video.playbackRate || 1;
-                const remaining = (duration - currentTime) / playbackRate;
-                const watchedPercent = duration ? Math.round((currentTime / duration) * 100) + '%' : '0%';
-                const totalFormatted = formatTime(duration);
+                const rawSegments = getSegments(rawDuration);
+                const segments = mergeSegments(rawSegments);
+                const addedTime = computeAddedTime(segments, currentTime);
+                const effectiveTotal = baseEffective + addedTime;
+                const remaining = (effectiveTotal - currentTime) / playbackRate;
+                const watchedPercent = rawDuration ? Math.round((currentTime / rawDuration) * 100) + '%' : '0%';
+                const totalFormatted = formatTime(baseEffective);
                 const elapsedFormatted = formatTime(currentTime);
                 const remainingFormatted = formatTime(remaining);
 
                 textNode.data = `total: ${totalFormatted} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
             };
         }
+    }
+
+    // helper function to convert a time string into seconds
+    function parseTime(timeString) {
+        const parts = timeString.split(':').map(Number);
+        if (parts.length === 2) return parts[0] * 60 + parts[1];
+        else if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+        return 0;
     }
 
     // function to keep the progress bar visible with chapters container
@@ -4017,10 +4138,10 @@ function pauseYouTubeVideo() {
             transcriptPanelCheck();
             if (USER_CONFIG.closeChatWindow) setTimeout(() => { chatWindowCheck(); }, 500);
             if (USER_CONFIG.autoTheaterMode && !isTheaterMode) toggleTheaterMode();
-            if (USER_CONFIG.displayRemainingTime && !isLiveVideo && !isLiveStream) remainingTime();
             if (USER_CONFIG.progressBar && !isLiveVideo && !isLiveStream) keepProgressBarVisible();
-            if (USER_CONFIG.autoOpenChapters && hasChapterPanel) openChapters();
-            if (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel) openTranscript();
+            if (USER_CONFIG.autoOpenChapters && hasChapterPanel) openChapters(); 
+            if (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel) openTranscript();  
+            if ((USER_CONFIG.displayRemainingTime || USER_CONFIG.remainingTimeMinusSegments) && !isLiveVideo && !isLiveStream) remainingTime();
 
             // transcript exporter
             let transcriptLoaded = false;
@@ -4152,7 +4273,6 @@ function pauseYouTubeVideo() {
     // reset function
     function handleYTNavigation() {
         if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo);
-
         document.querySelectorAll('.button-wrapper, .remaining-time-container, #progress-bar-bar, #progress-bar-start, #progress-bar-end, #yt-transcript-settings-modal, .sub-panel-overlay').forEach(el => el.remove());
     }
 
@@ -4178,6 +4298,6 @@ function pauseYouTubeVideo() {
     document.addEventListener('yt-page-data-fetched', handleYouTubeNavigation); // redundancy
     document.addEventListener('fullscreenchange', fullscreenCheck); // fullscreen check
     if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo); // prevent autoplay
-    document.addEventListener('yt-set-theater-mode-enabled', theaterModeCheck); // theater mode check
+    document.addEventListener('yt-set-theater-mode-enabled', theaterModeCheck); // theater mode check /
     document.addEventListener('yt-service-request-completed', handleYouTubeNavigation); // for chrome
 })();
