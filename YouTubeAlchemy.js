@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         YouTube Alchemy
-// @description  Toolkit for YouTube. Settings panels for easy customization. Features include: export transcripts to LLMs or download it as text files, prevent autoplay, hide shorts, hide ad slots on home, disable play on hover, square design, auto theater mode, auto close chat window, adjust number of videos per row, display remaining time under a video adjusted for playback speed, persistent progress bar with chapter markers and SponsorBlock support, links in the header, and change or hide various ui elements
+// @description  Toolkit for YouTube. Settings panels for easy customization. Features include: playback speed control, export transcripts to LLMs or download it as text files, prevent autoplay, hide shorts, hide ad slots on home, disable play on hover, square design, auto theater mode, auto close chat window, adjust number of videos per row, display remaining time under a video adjusted for playback speed, persistent progress bar with chapter markers and SponsorBlock support, links in the header, and change or hide various ui elements
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.5.5.1
+// @version      7.6
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -1036,6 +1036,108 @@
                 }
             }
 
+            /* playback speed css */
+            .CentAnni-playback-speed {
+                #actions.ytd-watch-metadata {
+                    justify-content: end;
+                }
+
+                .yt-spec-button-view-model.style-scope.ytd-menu-renderer {
+                    display: flex;
+                    height: 36px;
+                    width: 36px;
+                    margin-right: 8px;
+                    overflow: hidden;
+                }
+
+                ytd-menu-renderer[has-items] yt-button-shape.ytd-menu-renderer {
+                    margin-left: 0 !important;
+                }
+
+                ytd-menu-renderer[has-flexible-items][safe-area] .top-level-buttons.ytd-menu-renderer {
+                    margin-bottom: 0;
+                }
+
+                #top-level-buttons-computed > yt-button-view-model > button-view-model > button {
+                    padding: 0 0 0 12px;
+                }
+
+                .CentAnni-playback-control {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex: 1;
+                    margin: 0 8px;
+                }
+
+                .CentAnni-playback-speed-icon {
+                    height: 24px;
+                    width: 24px;
+                    padding: 0 4px 0 0;
+                    opacity: .9;
+                }
+
+                .CentAnni-playback-speed-display {
+                    background: rgba(255,255,255,0.1);
+                    height: 36px;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: default;
+                    user-select: none;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                }
+
+                .CentAnni-playback-speed-button {
+                    cursor: pointer;
+                    user-select: none;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                }
+
+                .CentAnni-playback-speed-button:nth-child(2) {
+                    border-top-right-radius: 0;
+                    border-bottom-right-radius: 0;
+                }
+
+                .CentAnni-playback-speed-button:last-child {
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;
+                }
+
+                .CentAnni-playback-speed-button:active {
+                    background: rgb(72,72,72) !important;
+                }
+
+                .CentAnni-playback-speed-display::before {
+                    content: "";
+                    background: rgba(255,255,255,0.2);
+                    position: initial;
+                    right: 0;
+                    top: 6px;
+                    height: 24px;
+                    width: 1px;
+                    margin-right: 10px;
+                }
+
+                .CentAnni-playback-speed-display::after {
+                    content: "";
+                    background: rgba(255,255,255,0.2);
+                    position: initial;
+                    right: 0;
+                    top: 6px;
+                    height: 24px;
+                    width: 1px;
+                    margin-left: 10px;
+                }
+
+                ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata {
+                    width: 17%;
+                }
+            }
+
             /* customCSS CSS */
             html {
                 font-size: var(--fontSize) !important;
@@ -1921,6 +2023,8 @@
         videosWatchedOpacity: 0.5,
         videosPerRow: 3,
         videosHideWatchedGlobal: false,
+        playbackSpeed: true,
+        playbackSpeedValue: 1,
         preventAutoplay: false,
         hideVoiceSearch: false,
         hideCreateButton: false,
@@ -1983,6 +2087,7 @@
 
         // features css
         if (USER_CONFIG.progressBar) { body.classList.add('CentAnni-progress-bar'); } else { body.classList.remove('CentAnni-progress-bar'); }
+        if (USER_CONFIG.playbackSpeed) { body.classList.add('CentAnni-playback-speed'); } else { body.classList.remove('CentAnni-playback-speed'); }
         if (USER_CONFIG.mButtonDisplay) { body.classList.add('CentAnni-style-hide-default-sidebar'); } else { body.classList.remove('CentAnni-style-hide-default-sidebar'); }
 
         // custom css
@@ -2468,6 +2573,17 @@
             const videosPerRow = createNumberInputField('Number of Videos per Row (default: 3)', 'videosPerRow', USER_CONFIG.videosPerRow);
             form.appendChild(videosPerRow);
 
+            // playback speed
+            const playbackSpeedContainer = document.createElement('div');
+            playbackSpeedContainer.className = 'playback-speed-container';
+
+            const playbackSpeed = createCheckboxField('Enabled (default: yes)\nkey toggles: A: -0.25 | S: toggle 1x/set speed | D: +0.25', 'playbackSpeed', USER_CONFIG.playbackSpeed);
+            const playbackSpeedValue = createNumberInputField('Change Playback Speed for VODs\n(always 1x for live videos)', 'playbackSpeedValue', USER_CONFIG.playbackSpeedValue);
+
+            playbackSpeedContainer.appendChild(playbackSpeedValue);
+            playbackSpeedContainer.appendChild(playbackSpeed);
+            form.appendChild(playbackSpeedContainer);
+
             // features
             const features = document.createElement('label');
             features.innerText = 'Features';
@@ -2504,7 +2620,7 @@
 
             // info for remaining time minus segments beta
             const descriptionRemainingTimeBeta = document.createElement('small');
-            descriptionRemainingTimeBeta.innerText = 'This feature is in beta. Ensure "Show time with skips removed" is enabled in SponsorBlock Settings under "Interface."';
+            descriptionRemainingTimeBeta.innerText = 'This feature is in beta and if enabled, it will be used instead.\nEnsure "Show time with skips removed" is enabled in SponsorBlock Settings under "Interface."';
             descriptionRemainingTimeBeta.classList.add('CentAnni-info-text');
             form.appendChild(descriptionRemainingTimeBeta);
 
@@ -3066,6 +3182,8 @@
             USER_CONFIG.hideShorts = subPanelCustomCSS.elements.hideShorts.checked;
             USER_CONFIG.hideAdSlots = subPanelCustomCSS.elements.hideAdSlots.checked;
             USER_CONFIG.hideMembersOnly = subPanelCustomCSS.elements.hideMembersOnly.checked;
+            USER_CONFIG.playbackSpeed = subPanelCustomCSS.elements.playbackSpeed.checked;
+            USER_CONFIG.playbackSpeedValue = parseInt(subPanelCustomCSS.elements.playbackSpeedValue.value);
             USER_CONFIG.hideVoiceSearch = subPanelCustomCSS.elements.hideVoiceSearch.checked;
             USER_CONFIG.hideCreateButton = subPanelCustomCSS.elements.hideCreateButton.checked;
             USER_CONFIG.hideRightSidebarSearch = subPanelCustomCSS.elements.hideRightSidebarSearch.checked;
@@ -3548,6 +3666,206 @@
         });
 
         document.dispatchEvent(event);
+    }
+
+    // playback speed function
+    function initialSpeed() {
+        document.removeEventListener('yt-player-updated', initialSpeed);
+
+        const video = document.querySelector('video'); if (!video) return;
+        if (document.querySelector('.ytp-time-display')?.classList.contains('ytp-live') ) video.playbackRate = 1;
+        else video.playbackRate = USER_CONFIG.playbackSpeedValue;
+    }
+
+    async function videoPlaybackSpeed() {
+        const video = document.querySelector('video');
+        const menuRendererSelector = 'ytd-watch-flexy > #columns > #primary > #primary-inner > #below > ytd-watch-metadata > #above-the-fold > #top-row > #actions > #actions-inner > #menu > ytd-menu-renderer > #top-level-buttons-computed';
+        let menuRenderer = document.querySelector(menuRendererSelector);
+
+        if (!menuRenderer) {
+            await new Promise((resolve) => {
+                const observer = new MutationObserver((mutations, obs) => {
+                    if ((menuRenderer = document.querySelector(menuRendererSelector))) {
+                        clearTimeout(timeout);
+                        obs.disconnect();
+                        resolve();
+                    }
+                });
+
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+
+                const timeout = setTimeout(() => {
+                    observer.disconnect();
+                    resolve();
+                }, 5000);
+            });
+
+            if (!menuRenderer) return;
+        }
+
+        if (!video || !menuRenderer) { console.log("YouTubeAlchemy: Playback Speed: A Required querySelector Not Found"); return; }
+
+        const defaultSpeed = USER_CONFIG.playbackSpeedValue;
+        const MIN_SPEED = 0.25;
+        const MAX_SPEED = 4;
+
+        // event listner
+        if (video) {
+            if (isLiveVideo) { video.playbackRate = 1; }
+            else { video.playbackRate = defaultSpeed; }
+
+            video.addEventListener('ratechange', updateSpeedDisplay);
+            setSpeed();
+            speedNotification = true;
+        }
+
+        // set playback speed for VOD and live video
+        function setSpeed() {
+            const clamped = Math.max(MIN_SPEED, Math.min(MAX_SPEED, video.playbackRate));
+            video.playbackRate = clamped;
+            video.mozPreservesPitch = video.webkitPreservesPitch = video.preservePitch = true;
+
+            updateSpeedDisplay();
+            if (speedNotification) { showSpeedNotification(video.playbackRate); }
+        }
+
+        function updateSpeedDisplay() {
+            const speedDisplay = document.getElementById("CentAnni-speed-display");
+            if (speedDisplay && video) {
+                speedDisplay.textContent = `${video.playbackRate}x`;
+            }
+        }
+
+        // change speed with ASD keys
+        function playbackSpeedKeyListener(event) {
+            const key = event.key.toLowerCase();
+            const isValidKey = ['a', 's', 'd'].includes(key);
+            const isTextInput = [
+                'input',
+                'textarea',
+                'select',
+                'contenteditable'
+            ].includes(event.target.tagName.toLowerCase()) || event.target.isContentEditable;
+
+            if (!video || !isValidKey || isTextInput) return;
+
+            switch (key) {
+                case 's':
+                    video.playbackRate = (video.playbackRate !== 1 ? 1 : defaultSpeed);
+                    setSpeed();
+                    break;
+                case 'a':
+                    video.playbackRate = video.playbackRate - 0.25;
+                    setSpeed();
+                    break;
+                case 'd':
+                    video.playbackRate = video.playbackRate + 0.25;
+                    setSpeed();
+                    break;
+            }
+        };
+
+        window.addEventListener('keydown', playbackSpeedKeyListener);
+
+        // create outer div for buttons, display speed, and icon
+        const oldControlDiv = document.getElementById("CentAnni-playback-speed-control");
+        if (menuRenderer) {
+            const controlDiv = document.createElement("div");
+            controlDiv.id = "CentAnni-playback-speed-control";
+            controlDiv.classList.add(
+                "CentAnni-playback-control",
+                "top-level-buttons",
+                "style-scope",
+                "ytd-menu-renderer"
+            );
+
+            // create the SVG icon
+            const iconDiv = document.createElement("div");
+            iconDiv.className = "CentAnni-playback-speed-icon";
+
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("fill", "none");
+            svg.setAttribute("height", "24");
+            svg.setAttribute("viewBox", "0 0 24 24");
+            svg.setAttribute("width", "24");
+
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", "M10,8v8l6-4L10,8L10,8z M6.3,5L5.7,4.2C7.2,3,9,2.2,11,2l0.1,1C9.3,3.2,7.7,3.9,6.3,5z            M5,6.3L4.2,5.7C3,7.2,2.2,9,2,11 l1,.1C3.2,9.3,3.9,7.7,5,6.3z            M5,17.7c-1.1-1.4-1.8-3.1-2-4.8L2,13c0.2,2,1,3.8,2.2,5.4L5,17.7z            M11.1,21c-1.8-0.2-3.4-0.9-4.8-2 l-0.6,.8C7.2,21,9,21.8,11,22L11.1,21z            M22,12c0-5.2-3.9-9.4-9-10l-0.1,1c4.6,.5,8.1,4.3,8.1,9s-3.5,8.5-8.1,9l0.1,1 C18.2,21.5,22,17.2,22,12z");
+            path.setAttribute("fill", "whitesmoke");
+
+            svg.appendChild(path);
+            iconDiv.appendChild(svg);
+            controlDiv.appendChild(iconDiv);
+
+            // display the speed
+            const speedDisplay = document.createElement("span");
+            speedDisplay.id = "CentAnni-speed-display";
+            speedDisplay.classList.add(
+                "CentAnni-playback-speed-display",
+                "animated-rolling-number-wiz"
+            );
+            speedDisplay.textContent = video ? `${video.playbackRate}x` : `${defaultSpeed}x`;
+
+            // create minus and plus buttons
+            const createButton = (change) => {
+                const button = document.createElement("button");
+                button.textContent = change > 0 ? "+" : "-";
+                button.classList.add(
+                    "CentAnni-playback-speed-button",
+                    "yt-spec-button-shape-next",
+                    "yt-spec-button-shape-next--tonal",
+                    "yt-spec-button-shape-next--mono",
+                    "yt-spec-button-shape-next--size-m",
+                    "yt-spec-button-shape-next--icon-button"
+                );
+                button.addEventListener("click", () => {
+                    video.playbackRate = video.playbackRate + change;
+                    setSpeed();
+                });
+                return button;
+            };
+
+            controlDiv.appendChild(createButton(-0.25));
+            controlDiv.appendChild(speedDisplay);
+            controlDiv.appendChild(createButton(0.25));
+
+            if (oldControlDiv) oldControlDiv.replaceWith(controlDiv);
+            else menuRenderer.children[0].after(controlDiv);
+        }
+
+        document.addEventListener('yt-navigate-start', () => {
+            window.removeEventListener('keydown', playbackSpeedKeyListener);
+            speedNotification = false;
+        });
+    }
+
+    // playback speed notification
+    function showSpeedNotification(speed) {
+        if (!isVideoPage) return;
+        const fullscreenContainer = document.querySelector('#movie_player');
+        let notification = document.getElementById('CentAnni-playback-speed-popup');
+        if (!notification) {
+            notification = document.createElement('div');
+            notification.id = 'CentAnni-playback-speed-popup';
+            if (!isFullscreen) document.body.appendChild(notification);
+            else fullscreenContainer.appendChild(notification);
+        }
+
+        notification.textContent = `${speed}x`;
+        notification.classList.add('active');
+
+        if (hideNotificationTimeout) clearTimeout(hideNotificationTimeout);
+        hideNotificationTimeout = setTimeout(() => {
+            notification.classList.remove('active');
+        }, 1000);
+
+        document.addEventListener('fullscreenchange', () => {
+            if (isFullscreen) fullscreenContainer.appendChild(notification);
+            else document.body.appendChild(notification);
+        });
     }
 
     // function to display the remaining time based on playback speed
@@ -4124,6 +4442,8 @@ function pauseYouTubeVideo() {
     let transcriptPanel = null;
     let hasChatPanel = null;
     let isFullscreen = null;
+    let speedNotification = false;
+    let hideNotificationTimeout;
 
     async function initializeAlchemy() {
         if (USER_CONFIG.preventBackgroundExecution) { await chromeUserWait(); }
@@ -4137,10 +4457,11 @@ function pauseYouTubeVideo() {
             chapterPanelCheck();
             transcriptPanelCheck();
             if (USER_CONFIG.closeChatWindow) setTimeout(() => { chatWindowCheck(); }, 500);
+            if (USER_CONFIG.playbackSpeed) videoPlaybackSpeed();
             if (USER_CONFIG.autoTheaterMode && !isTheaterMode) toggleTheaterMode();
             if (USER_CONFIG.progressBar && !isLiveVideo && !isLiveStream) keepProgressBarVisible();
-            if (USER_CONFIG.autoOpenChapters && hasChapterPanel) openChapters(); 
-            if (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel) openTranscript();  
+            if (USER_CONFIG.autoOpenChapters && hasChapterPanel) openChapters();
+            if (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel) openTranscript();
             if ((USER_CONFIG.displayRemainingTime || USER_CONFIG.remainingTimeMinusSegments) && !isLiveVideo && !isLiveStream) remainingTime();
 
             // transcript exporter
@@ -4272,7 +4593,8 @@ function pauseYouTubeVideo() {
 
     // reset function
     function handleYTNavigation() {
-        if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo);
+        if (USER_CONFIG.playbackSpeed) document.addEventListener('yt-player-updated', initialSpeed); // set playback speed
+        if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo); // prevent autoplay
         document.querySelectorAll('.button-wrapper, .remaining-time-container, #progress-bar-bar, #progress-bar-start, #progress-bar-end, #yt-transcript-settings-modal, .sub-panel-overlay').forEach(el => el.remove());
     }
 
@@ -4298,6 +4620,7 @@ function pauseYouTubeVideo() {
     document.addEventListener('yt-page-data-fetched', handleYouTubeNavigation); // redundancy
     document.addEventListener('fullscreenchange', fullscreenCheck); // fullscreen check
     if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo); // prevent autoplay
-    document.addEventListener('yt-set-theater-mode-enabled', theaterModeCheck); // theater mode check /
+    if (USER_CONFIG.playbackSpeed) document.addEventListener('yt-player-updated', initialSpeed); // set playback speed
+    document.addEventListener('yt-set-theater-mode-enabled', theaterModeCheck); // theater mode check
     document.addEventListener('yt-service-request-completed', handleYouTubeNavigation); // for chrome
 })();
