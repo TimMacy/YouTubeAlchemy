@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#changelog"><img align="right" src="https://img.shields.io/badge/Version-7.7.0.1-white.svg" alt="Version: 7.7.0.1"></a><a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#changelog"><img align="right" src="https://img.shields.io/badge/Version-7.7.0.1.1-white.svg" alt="Version: 7.7.0.1.1"></a><a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it primarily relies on YouTube's own event listeners while using timeouts and mutation observers strategically to minimize overhead. Furthermore, a main settings panel, along with three sub-panels, provides an intuitive interface for easy customization.
@@ -9,7 +9,6 @@ This toolkit enhances YouTube by customizing the layout and adding more than 130
   - **Links in Header Panel**: Add custom links next to the YouTube logo and hide the navigation bar.
   - **Features & CSS Panel**: Access key features like **tab view**, **playback speed**, **video quality**, **direction buttons for playlists**, prevent autoplay, hide Shorts, default transcript language, **disable play on hover**, **square design**, **auto-theater mode**, auto-close chat windows, number of videos per row, modify or hide various UI elements, and much more.
   - **Color Code Videos Panel**: Apply customizable borders to videos on the Home page, reflecting their age and status, and highlight the last uploaded video on the Subscriptions page with optional auto-scroll.
-
 
 <p align="center"><img width="100%" alt="YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/42016ac0-b4b1-4b02-a6dc-23620b127e10" /></p>
 <p align="center">
@@ -246,6 +245,7 @@ Offers various options to customize the layout and functionality of YouTube.
 <br>
 
 ## Changelog
+- **7.7.0.1.1**: video gradient bug fix
 - **7.7.0.1**: bug fixes and improvements. fixed an issue with Violentmonkey. new features: add playlist buttons to channel pages, add direction buttons to playlist panels, sort comments to "Newest first," hide "your podcasts" button
 - **7.7**: bug fixes and improvements. new features: tab view, set video quality including premium 1080p enhanced bitrate, choose default transcript language, color code and scroll to last seen video on subscriptions page, add rss feed button to channel pages, added button to reset ChatGPT prompt back to default without changing other settings, change background color of details sections for watch later videos, hide "add to queue" button on hover, hide "Pay to watch" featured videos on the home page, hide "latest posts from . . ." on search page, hide blue info panels, hide comments section, hide notification button and badge, hide own avatar in the header, hide suggested videos, hide various elements in the left navigation bar, open playlist videos without being in a playlist when clicking the thumbnail or title, redirect shorts to the standard video page, show trash can icon on owned playlists to quickly remove videos, square avatars
 - **7.6**: new feature: set playback speed for VODs, defaults to 1x for live videos, color code details section of watch later videos
