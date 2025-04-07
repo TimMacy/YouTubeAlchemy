@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube. Settings panels for customization. Features include: tab view, playback speed control, set video quality, set transcript language, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.7.0.1
+// @version      7.7.0.1.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.7.0.1 - YouTube Alchemy                 *
+*                    Version: 7.7.0.1.1 - YouTube Alchemy               *
 *                    All Rights Reserved.                               *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
@@ -1997,8 +1997,7 @@
             }
 
             .CentAnni-style-hide-end-cards {
-                .ytp-ce-element,
-                .ytp-gradient-bottom {
+                .ytp-ce-element {
                     display: none !important;
                 }
             }
