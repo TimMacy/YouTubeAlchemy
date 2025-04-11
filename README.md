@@ -245,13 +245,13 @@ Offers various options to customize the layout and functionality of YouTube.
 ## 🚀 Installation & Minimum Browser Requirements
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/Safari_15.4+-Supported-brightgreen?logo=safari" alt="Safari Supported"></a>
-  &nbsp;&nbsp;&nbsp;
+  &nbsp;
   <a href="#"><img src="https://img.shields.io/badge/Chrome_105+-Supported-brightgreen?logo=googlechrome&logoColor=white" alt="Chrome Supported"></a>
-  &nbsp;&nbsp;&nbsp;
+  &nbsp;
   <a href="#"><img src="https://img.shields.io/badge/Firefox_121+-Partially Tested-orange?logo=firefoxbrowser" alt="Firefox Partially Tested"></a>
-  &nbsp;&nbsp;&nbsp;
+  &nbsp;
   <a href="#"><img src="https://img.shields.io/badge/Edge_105+-Untested-yellow" alt="Edge Untested"></a>
-  &nbsp;&nbsp;&nbsp;
+  &nbsp;
   <a href="#"><img src="https://img.shields.io/badge/Opera_91+-Untested-yellow?logo=opera" alt="Opera Untested"></a>
 </p>
 
