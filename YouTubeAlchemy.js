@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Features include: tab view, playback speed control, set video quality, set transcript language, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.7.2
+// @version      7.7.2.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.7.2 - YouTube Alchemy                   *
+*                    Version: 7.7.2.1 - YouTube Alchemy                 *
 *                    All Rights Reserved.                               *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
@@ -2140,15 +2140,20 @@
                 .html5-video-player .html5-endscreen.videowall-endscreen {
                     display: none !important;
                 }
-
+    
                 .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) {
                     display: block !important;
                     cursor: default !important;
                 }
-
+    
                 .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) button {
                     display: none;
                 }
+    
+                .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) .ytp-cued-thumbnail-overlay-image {
+                    display: block !important;
+                    background-image: var(--video-url);
+                } 
             }
 
             .CentAnni-style-gradient-bottom {
@@ -7709,12 +7714,6 @@
             showThumbnail(vinteo);
         }
 
-        if (USER_CONFIG.preventBackgroundExecution && USER_CONFIG.hideEndscreen) {
-            document.addEventListener('yt-autonav-pause-player-ended', () => {
-                showThumbnail(vinteo);
-            });
-        }
-
         function showThumbnail(vinteo) {
             const { thumbnailOverlayImage, thumbnailOverlay } = elements;
             if (thumbnailOverlayImage && thumbnailOverlay && lastVideoID !== vinteo) {
@@ -8054,6 +8053,11 @@
             if (isVideoPage || isLiveStream) {
                 lastVideoID = videoID;
                 videoID = urlObj.searchParams.get('v');
+
+                document.documentElement.style.setProperty(
+                    '--video-url',
+                    `url("https://i.ytimg.com/vi/${videoID}/maxresdefault.jpg")`
+                ); 
             }
 
             if (lastVideoURL === null) initializeDelay = 500;
