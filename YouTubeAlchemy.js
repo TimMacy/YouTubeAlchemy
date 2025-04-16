@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         YouTube Alchemy
-// @description  Toolkit for YouTube with 130+ options accessible via settings panels. Features include: tab view, playback speed control, set video quality, set transcript language, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
+// @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, set video quality, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto-theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.7.2.1
+// @version      7.7.3
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.7.2.1 - YouTube Alchemy                 *
+*                    Version: 7.7.3 - YouTube Alchemy                   *
 *                    All Rights Reserved.                               *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
@@ -1226,7 +1226,7 @@
                 }
 
                 ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata {
-                    width: 17%;
+                    width: 10%;
                 }
             }
 
@@ -1237,7 +1237,7 @@
                     display: flex;
                     flex-direction: column;
                     width: var(--ytd-watch-flexy-sidebar-width);
-                    min-width: var(--ytd-watch-flexy-tabView-min-width);
+                    min-width: var(--ytd-watch-flexy-sidebar-min-width);
                     font-family: "Roboto", "Arial", sans-serif;
                     margin: 0;
                     padding: 0;
@@ -1317,7 +1317,7 @@
                     overflow-x: hidden;
                     padding: 0;
                     margin: 0;
-                    max-height: 83vh;
+                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
                 }
 
                 .CentAnni-tabView-content {
@@ -1364,17 +1364,13 @@
                     display: none;
                 }
 
-                ytd-watch-flexy ytd-channel-renderer {
-                    display: none;
-                }
-
                 #tab-2 {
                     border-top: 1px solid rgba(255, 255, 255, 0.2);
                 }
 
                 #related.style-scope.ytd-watch-flexy {
                     position: absolute;
-                    max-height: 83vh;
+                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
                     width: var(--ytd-watch-flexy-sidebar-width);
                     top: 76px;
                     left: 0;
@@ -1430,7 +1426,7 @@
                 ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"],
                 ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"] {
                     position: absolute;
-                    max-height: 83vh;
+                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
                     width: var(--ytd-watch-flexy-sidebar-width);
                     top: 76px;
                     left: 0;
@@ -1448,8 +1444,13 @@
                     padding-right: 10px !important;
                 }
 
+                #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy {
+                    margin-bottom: 0;
+                }
+
+                ytd-watch-flexy[flexy] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
                 ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy {
-                    max-height: 83vh;
+                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
                     border: 1px solid rgba(255, 255, 255, 0.2);
                     border-top: none;
                     box-sizing: border-box;
@@ -1465,7 +1466,7 @@
 
                 ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-structured-description"] {
                     position: absolute;
-                    max-height: 83vh;
+                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
                     width: var(--ytd-watch-flexy-sidebar-width);
                     top: 76px;
                     left: 0;
@@ -1483,8 +1484,9 @@
                     display: none;
                 }
 
+                ytd-watch-flexy[flexy] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id=engagement-panel-structured-description],
                 ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"] {
-                    max-height: 83vh;
+                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
                     background-color: black;
                 }
 
@@ -1492,7 +1494,7 @@
                     position: absolute;
                     top: 0;
                     left: 0;
-                    max-height: 83vh;
+                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
                     width: var(--ytd-watch-flexy-sidebar-width);
                     top: 76px;
                     margin: 0;
@@ -1693,10 +1695,12 @@
                     top: 24px;
                     position: absolute;
                     width: var(--ytd-watch-flexy-sidebar-width);
-                    min-width: var(--ytd-watch-flexy-tabView-min-width);
+                    min-width: var(--ytd-watch-flexy-sidebar-min-width);
+                    height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
                 }
 
-                ytd-watch-flexy[flexy][js-panel-height_]:not([fixed-panels]):not([theater]) #chat.ytd-watch-flexy:not([collapsed]) {
+                
+                ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]) {
                     height: calc(90vh - 10px);
                     border: 1px solid rgb(51, 51, 51);
                 }
@@ -1710,6 +1714,10 @@
                 ytd-watch-flexy[theater] ytd-comments,
                 ytd-watch-flexy[theater] #related.style-scope.ytd-watch-flexy,
                 ytd-watch-flexy[theater] ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer,
+                ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
+                ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
+                ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+                ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters],
                 ytd-watch-flexy[theater][flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
                 ytd-watch-flexy[theater][flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"] {
                     height: 0;
@@ -1771,7 +1779,7 @@
 
                 #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy {
                         margin-bottom: 0;
-                        max-height: 83vh;
+                        max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
                         overflow-y: auto;
                 }
 
@@ -1805,13 +1813,14 @@
                 }
 
                 #playlist.ytd-watch-flexy {
-                    max-height: 83vh !important;
+                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
                     margin-bottom: 0;
                 }
 
+                ytd-watch-flexy[flexy] #playlist.ytd-watch-flexy,
                 ytd-playlist-panel-renderer[js-panel-height] #container.ytd-playlist-panel-renderer,
                 ytd-watch-flexy[default-layout]:not([no-top-margin]):not([reduced-top-margin]) #secondary.ytd-watch-flexy {
-                    max-height: 83vh;
+                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
                 }
 
                 #container.ytd-playlist-panel-renderer {
@@ -2092,6 +2101,14 @@
                 }
             }
 
+            html.CentAnni-style-pure-bg:not([dark]) ytd-app {
+                background: white !important;
+            }
+
+            html.CentAnni-style-pure-bg[dark] ytd-app {
+                background: black !important;
+            }
+
             .CentAnni-style-remove-scrubber {
                 .ytp-scrubber-container {
                     display: none;
@@ -2298,7 +2315,9 @@
                 ytd-compact-link-renderer.ytd-settings-sidebar-renderer,
                 .ytp-tooltip.ytp-text-detail.ytp-preview .ytp-tooltip-bg,
                 ytd-live-chat-frame[theater-watch-while][rounded-container],
+                ytd-watch-flexy[rounded-player] #ytd-player.ytd-watch-flexy,
                 ytd-shorts[enable-anchored-panel] .anchored-panel.ytd-shorts,
+                ytd-live-chat-frame[rounded-container]:not([theater-watch-while]),
                 ytd-live-chat-frame[rounded-container] iframe.ytd-live-chat-frame,
                 .html5-video-player:not(.ytp-touch-mode) ::-webkit-scrollbar-thumb,
                 .CentAnni-tabView:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]),
@@ -2969,6 +2988,7 @@
                 ytd-reel-shelf-renderer.ytd-structured-description-content-renderer,
                 ytd-rich-section-renderer:has(div ytd-rich-shelf-renderer[is-shorts]),
                 #container.ytd-search ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
+                ytd-item-section-renderer[page-subtype="subscriptions"]:has(ytd-reel-shelf-renderer),
                 ytd-browse[page-subtype="hashtag-landing-page"] tp-yt-app-toolbar.ytd-tabbed-page-header,
                 #tabsContent > yt-tab-group-shape > div.yt-tab-group-shape-wiz__tabs > yt-tab-shape[tab-title="Shorts"] {
                     display: none !important;
@@ -3478,6 +3498,7 @@
         hideEndscreen: false,
         gradientBottom: true,
         smallSubscribeButton: false,
+        pureBWBackground: true,
         removeScrubber: false,
         disablePlayOnHover: false,
         hideFundraiser: false,
@@ -3573,6 +3594,7 @@
         document.documentElement.style.setProperty('--lightSelectionColor', USER_CONFIG.lightModeSelectionColor);
         document.documentElement.style.setProperty('--darkSelectionColor', USER_CONFIG.darkModeSelectionColor);
 
+        if (USER_CONFIG.pureBWBackground) { html.classList.add('CentAnni-style-pure-bg'); } else { html.classList.remove('CentAnni-style-pure-bg'); }
         if (USER_CONFIG.hideShorts) { html.classList.add('CentAnni-style-hide-shorts'); } else { html.classList.remove('CentAnni-style-hide-shorts'); }
         if (USER_CONFIG.closeChatWindow) { html.classList.add('CentAnni-close-live-chat'); } else { html.classList.remove('CentAnni-close-live-chat'); }
         if (USER_CONFIG.videosPerRow !== 0) { html.classList.add('CentAnni-style-video-row'); } else { html.classList.remove('CentAnni-style-video-row'); }
@@ -4394,6 +4416,10 @@
 
             form.appendChild(progressbarColorPicker);
 
+            // pure b/w bg
+            const pureBWBackground = createCheckboxField('Pure Black-and-White Background (default: yes)', 'pureBWBackground', USER_CONFIG.pureBWBackground);
+            form.appendChild(pureBWBackground);
+
             // hide video scrubber
             const removeScrubber = createCheckboxField('Hide Video Scrubber (default: no)', 'removeScrubber', USER_CONFIG.removeScrubber);
             form.appendChild(removeScrubber);
@@ -5127,6 +5153,7 @@
             USER_CONFIG.progressbarColorPicker = subPanelCustomCSS.elements.progressbarColorPicker.value;
             USER_CONFIG.lightModeSelectionColor = subPanelCustomCSS.elements.lightModeSelectionColor.value;
             USER_CONFIG.darkModeSelectionColor = subPanelCustomCSS.elements.darkModeSelectionColor.value;
+            USER_CONFIG.pureBWBackground = subPanelCustomCSS.elements.pureBWBackground.checked;
             USER_CONFIG.removeScrubber = subPanelCustomCSS.elements.removeScrubber.checked;
             USER_CONFIG.autoTheaterMode = subPanelCustomCSS.elements.autoTheaterMode.checked;
             USER_CONFIG.channelReindirizzare = subPanelCustomCSS.elements.channelReindirizzare.checked;
