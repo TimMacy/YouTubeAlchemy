@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#changelog"><img align="right" src="https://img.shields.io/badge/Version-7.7.3.1-white.svg" alt="Version: 7.7.3.1"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#changelog"><img align="right" src="https://img.shields.io/badge/Version-7.7.3.2-white.svg" alt="Version: 7.7.3.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization.
@@ -235,7 +235,7 @@ Offers various options to customize the layout and functionality of YouTube.
 
 ## 🎨 Color Code Videos
   - On Home Page
-    - Adds customizable borders to videos to visually indicate their age and status, allows changing the background color of the details section of Watch Later videos, and offers the option to hide watched videos.
+    - Adds customizable borders to videos to visually indicate their age and status, and offers the option to hide watched videos.
   - On Subscriptions Page
     - Adds a customizable border to the last uploaded video to highlight it on subsequent visits, with the option to auto-scroll to it.
 
@@ -263,6 +263,7 @@ Offers various options to customize the layout and functionality of YouTube.
 <br>
 
 ## 📜 Changelog
+- **7.7.3.2**: removed 'details sections of watch later videos' because of YouTube's recent changes
 - **7.7.3.1**: adjustments for the latest YouTube changes
 - **7.7.2.1**: hide end screens thumbnail overlay image adjustment
 - **7.7.2**: bug fixes and improvements. new features: show chapters under videos (only works with tab view enabled and is updated by YouTube itself), hide "Free with ads" videos on the home page, less intrusive bottom gradient
