@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, set video quality, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto-theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.7.3.1
+// @version      7.7.3.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.7.3.1 - YouTube Alchemy                 *
+*                    Version: 7.7.3.2 - YouTube Alchemy                 *
 *                    All Rights Reserved.                               *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
@@ -2800,7 +2800,6 @@
                 .CentAnni-style-recent-video { outline-color: var(--recentVideo); }
                 .CentAnni-style-lately-video { outline-color: var(--latelyVideo); }
                 .CentAnni-style-old-video { opacity: var(--oldVideo); }
-                ytd-rich-item-renderer:has(a#video-title-link[aria-label*="From your Watch later playlist"]) { background-color: var(--WatchLater); }
             }
 
             .ytd-page-manager[page-subtype="subscriptions"] {
@@ -3438,7 +3437,6 @@
         videosAgeColorPickerLive: '#FF0000',
         videosAgeColorPickerStreamed: '#FF0000',
         videosAgeColorPickerUpcoming: '#32CD32',
-        WatchLaterColor: '#313131',
         progressbarColorPicker: '#FF0033',
         lightModeSelectionColor: '#000000',
         darkModeSelectionColor: '#007CC3',
@@ -3685,7 +3683,6 @@
         document.documentElement.style.setProperty('--recentVideo', USER_CONFIG.videosAgeColorPickerRecent);
         document.documentElement.style.setProperty('--latelyVideo', USER_CONFIG.videosAgeColorPickerLately);
         document.documentElement.style.setProperty('--oldVideo', USER_CONFIG.videosOldOpacity);
-        if (USER_CONFIG.colorCodeVideosEnabled) document.documentElement.style.setProperty('--WatchLater', USER_CONFIG.WatchLaterColor);
         document.documentElement.style.setProperty('--lastSeenVideoColor', USER_CONFIG.lastSeenVideoColor);
 
         cssSettingsApplied = true;
@@ -4738,7 +4735,6 @@
             createLabelColorPair('Videos Currently Live:', 'videosAgeColorPickerLive');
             createLabelColorPair('The Word “Streamed” from Videos That Were Live:', 'videosAgeColorPickerStreamed');
             createLabelColorPair('Scheduled Videos and Upcoming Live Streams:', 'videosAgeColorPickerUpcoming');
-            createLabelColorPair('Details Sections of Watch Later Videos:', 'WatchLaterColor');
 
             form.appendChild(videosAgeContainer);
 
@@ -5221,7 +5217,6 @@
             USER_CONFIG.videosAgeColorPickerLive = subPanelColor.elements.videosAgeColorPickerLive.value;
             USER_CONFIG.videosAgeColorPickerStreamed = subPanelColor.elements.videosAgeColorPickerStreamed.value;
             USER_CONFIG.videosAgeColorPickerUpcoming = subPanelColor.elements.videosAgeColorPickerUpcoming.value;
-            USER_CONFIG.WatchLaterColor = subPanelColor.elements.WatchLaterColor.value;
             USER_CONFIG.lastSeenVideo = subPanelColor.elements.lastSeenVideo.checked;
             USER_CONFIG.lastSeenVideoScroll = subPanelColor.elements.lastSeenVideoScroll.checked;
             USER_CONFIG.lastSeenVideoColor = subPanelColor.elements.lastSeenVideoColor.value;
