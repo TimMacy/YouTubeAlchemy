@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#changelog"><img align="right" src="https://img.shields.io/badge/Version-7.7.3.2-white.svg" alt="Version: 7.7.3.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#changelog"><img align="right" src="https://img.shields.io/badge/Version-7.7.4-white.svg" alt="Version: 7.7.4"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization.
@@ -152,8 +152,9 @@ Offers various options to customize the layout and functionality of YouTube.
   - Square Design
   - Square Avatars
   - Compact Layout
+  - Disable Ambient Mode
   - Hide Shorts
-  - Redirect Shorts to the Standard Video Page
+  - Redirect Shorts to Standard Video Pages
   - Hide Ad Slots on the Home Page
   - Hide "Pay to Watch" Featured Videos on the Home Page
   - Hide "Free with ads" Videos on the Home Page
@@ -167,6 +168,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide Notification Badge
   - Hide Own Avatar in the Header
   - Hide YouTube Brand Text in the Header
+  - Keep Country Code Visible and Choose Color
   - Small Subscribed Button Under a Video—Displays Only the Notification Icon
   - Hide Join Button under a Videos and on Channel Pages
   - Display Full Titles
@@ -263,6 +265,7 @@ Offers various options to customize the layout and functionality of YouTube.
 <br>
 
 ## 📜 Changelog
+- **7.7.4**: adjustments for the latest YouTube changes. bug fixes and improvements. new features: disable ambient mode, keep country code visible when hiding brand text and choose color
 - **7.7.3.2**: removed 'details sections of watch later videos' because of YouTube's recent changes
 - **7.7.3.1**: adjustments for the latest YouTube changes
 - **7.7.2.1**: hide end screens thumbnail overlay image adjustment
