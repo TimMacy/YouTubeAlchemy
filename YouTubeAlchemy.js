@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, set video quality, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto-theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.7.3.2
+// @version      7.7.4
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.7.3.2 - YouTube Alchemy                 *
+*                    Version: 7.7.4 - YouTube Alchemy                   *
 *                    All Rights Reserved.                               *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
@@ -33,3352 +33,3364 @@
     // CSS
     const styleSheet = document.createElement('style');
     styleSheet.textContent = `
-            /* main CSS */
-            .CentAnni-overlay {
-                position: fixed;
-                display: flex;
-                z-index: 2053;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                align-items: center;
-                justify-content: center;
-                background-color: rgba(0,0,0,0.5);
-                backdrop-filter: blur(5px);
-            }
-
-            .modal-content {
-                z-index: 2077;
-                background-color: rgba(17, 17, 17, 0.8);
-                padding: 20px 0 20px 20px;
-                border: 1px solid rgba(255, 255, 255, 0.25);
-                border-radius: 8px;
-                width: 420px;
-                max-height: 90vh;
-                font-family: "Roboto","Arial",sans-serif;
-                font-size: 9px;
-                line-height: 1.2;
-                color: white;
-                text-rendering: optimizeLegibility !important;
-                -webkit-font-smoothing: antialiased !important;
-                -moz-osx-font-smoothing: grayscale !important;
-            }
-
-            #yt-transcript-settings-form {
-                max-height: calc(90vh - 40px);
-                overflow-y: auto;
-                padding-right: 20px;
-            }
-
-            .notification {
-                background:hsl(0,0%,7%);
-                padding: 20px 30px;
-                border-radius: 8px;
-                border: 1px solid hsl(0,0%,18.82%);
-                max-width: 80%;
-                text-align: center;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 16px;
-                color: white;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }
-
-            .header-wrapper {
-                display: grid;
-                grid-template-columns: 1fr auto 1fr;
-                align-items: baseline;
-                justify-content: center;
-                margin: 0 20px 20px 0;
-                width: calc(100% - 20px);
-            }
-
-            .header {
-                margin: 0;
-                padding: 0;
-                border: 0;
-                grid-column: 2;
-                text-align:center;
-                text-decoration: none;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 2.5em;
-                line-height: 1.1em;
-                font-weight: 700;
-                text-overflow: ellipsis;
-                white-space: normal;
-                text-shadow: 0 0 20px black;
-                cursor: pointer;
-                background: transparent;
-                display: block;
-                background-image: linear-gradient(45deg, #FFFFFF, #F2F2F2, #E6E6E6, #D9D9D9, #CCCCCC);
-                -webkit-background-clip: text;
-                background-clip: text;
-                color: transparent;
-                transition: color .3s ease-in-out;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }
-
-            .header:hover { color: white; }
-
-            .version-label {
-                grid-column: 3;
-                padding: 0;
-                margin: 0 0 0 5px;
-                color: ghostwhite;
-                cursor: default;
-                opacity: .3;
-                transition: opacity .5s;
-                justify-self: start;
-                max-width: 10ch;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .header:hover + .version-label {
-                opacity: 1;
-            }
-
-            .label-style-settings {
-                display: block;
-                margin-bottom: 5px;
-                font-family: "Roboto","Arial",sans-serif;
-                font-size: 1.4em;
-                line-height: 1.5em;
-                font-weight: 500;
-            }
-
-            .reset-prompt-text {
-                display: inline-block;
-                float: right;
-                cursor: pointer;
-                margin: 4px 10px 0 0;
-                font-size: inherit;
-                font-weight: 400;
-                line-height: inherit;
-                color: ghostwhite;
-            }
-
-            .reset-prompt-text:hover { color: red; }
-            .reset-prompt-text:active { color: magenta; }
-
-            .label-NotebookLM { color: hsl(134, 61%, 40%); }
-            .label-ChatGPT { color: hsl(217, 91%, 59%); }
-            .label-download { color: hsl(359, 88%, 57%); }
-            .label-settings { color: hsl(0, 0%, 100%); }
-            .input-field-targetNotebookLMUrl:focus { border: 1px solid hsl(134, 61%, 40%); }
-            .input-field-targetChatGPTUrl:focus { border: 1px solid hsl(217, 91%, 59%); }
-            .buttonIconNotebookLM-input-field:focus { border: 1px solid hsl(134, 61%, 40%); }
-            .buttonIconChatGPT-input-field:focus { border: 1px solid hsl(217, 91%, 59%); }
-            .buttonIconDownload-input-field:focus { border: 1px solid hsl(359, 88%, 57%); }
-
-            .buttonIconSettings-input-field:focus,
-            .links-header-container input:focus,
-            .sidebar-container input:focus,
-            #custom-css-form .select-file-naming:focus,
-            #custom-css-form .dropdown-list {
-                border: 1px solid hsl(0, 0%, 100%);
-            }
-
-            .input-field-targetNotebookLMUrl:hover,
-            .input-field-targetChatGPTUrl:hover,
-            .buttonIconNotebookLM-input-field:hover,
-            .buttonIconChatGPT-input-field:hover,
-            .buttonIconDownload-input-field:hover,
-            .buttonIconSettings-input-field:hover,
-            .select-file-naming:hover,
-            .input-field-url:hover,
-            .chatgpt-prompt-textarea:hover
-            { background-color: hsl(0, 0%, 10.37%); }
-
-            .btn-style-settings {
-                padding: 5px 10px;
-                cursor: pointer;
-                color: whitesmoke;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 1.4em;
-                line-height: 1.5em;
-                font-weight: 400;
-                background-color: hsl(0, 0%, 7%);
-                border: 1px solid hsl(0, 0%, 18.82%);
-                border-radius: 2px;
-                transition: all 0.2s ease-out;
-            }
-
-            .btn-style-settings:hover { color: white; background-color: hsl(0, 0%, 25%); border-color: transparent; }
-            .btn-style-settings:active { color: white; background-color: hsl(0, 0%, 35%); border-color: hsl(0, 0%, 45%); }
-            .button-icons { display: block; font-family: "Roboto","Arial",sans-serif; font-size: 1.4em; line-height: 1.5em; font-weight: 500; }
-            .icons-container { display: flex; justify-content: space-between; margin-bottom: 20px; }
-            .container-button { display: flex; flex-direction: column; align-items: center; margin: 5px 0 0 0; }
-
-            .button-icons.features-text {
-                margin: 20px 0 -5px 0;
-                font-size: 1.7em;
-                display: flex;
-                justify-content: center;
-            }
-
-            .container-button-input {
-                width: 80px;
-                padding: 8px;
-                text-align: center;
-                color: ghostwhite;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 2em;
-                line-height: 1.5em;
-                font-weight: 400;
-                transition: all .5s ease-in-out;
-                outline: none;
-                background-color: hsl(0,0%,7%);
-                border: 1px solid hsl(0,0%,18.82%);
-                border-radius: 1px;
-                box-sizing: border-box;
-            }
-
-            .container-button-label {
-                margin-top: 5px;
-                text-align: center;
-                font-family: "Roboto","Arial",sans-serif;
-                font-size: 1.4em;
-                line-height: 1.5em;
-                font-weight: 500;
-            }
-
-            .container-button-input:focus { color: white; background-color: hsl(0, 0%, 10.37%); border-radius: 2px; }
-            .spacer-5 { height: 5px; }
-            .spacer-10 { height: 10px; }
-            .spacer-15 { height: 15px; }
-            .spacer-20 { height: 20px; }
-
-            .copyright {
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 1.4em;
-                line-height: 1.5em;
-                font-weight: 500;
-                color: white;
-                text-decoration: none;
-                transition: color 0.2s ease-in-out;
-            }
-
-            .copyright:hover { color: #369eff; }
-            .url-container { margin-bottom: 10px; }
-
-            .input-field-url {
-                width: 100%;
-                padding: 8px;
-                color: ghostwhite;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 1.4em;
-                line-height: 1.5em;
-                font-weight: 400;
-                transition: all .5s ease-in-out;
-                outline: none;
-                background-color:hsl(0,0%,7%);
-                border: 1px solid hsl(0,0%,18.82%);
-                border-radius: 1px;
-                box-sizing: border-box;
-            }
-
-            .input-field-url:focus { color: white; background-color: hsl(0, 0%, 10.37%); border-radius: 2px; }
-            .file-naming-container { position: relative; margin-bottom: 20px; }
-
-            .select-file-naming {
-                width: 100%;
-                padding: 8px;
-                cursor:pointer;
-                color: ghostwhite;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 1.4em;
-                line-height: 1.5em;
-                font-weight: 400;
-                transition: all .5s ease-in-out;
-                outline: none;
-                appearance: none;
-                -webkit-appearance: none;
-                background-color:hsl(0,0%,7%);
-                border: 1px solid hsl(0,0%,18.82%);
-                border-radius: 1px;
-                box-sizing: border-box;
-
-                background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" focusable="false" aria-hidden="true" style="pointer-events: none; display: inherit; width: 100%; height: 100%;" fill="ghostwhite"%3E%3Cpath d="m18 9.28-6.35 6.35-6.37-6.35.72-.71 5.64 5.65 5.65-5.65z"%3E%3C/path%3E%3C/svg%3E');
-                background-repeat: no-repeat;
-                background-position: right 10px center;
-                background-size: 20px;
-
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;]
-                user-select: none;
-            }
-
-            .hidden-select {
-                position: absolute;
-                visibility: hidden;
-                opacity: 0;
-                pointer-events: none;
-                width: 100%;
-                height: 100%;
-                top: 0;
-                left: 0;
-            }
-
-            .dropdown-list {
-                visibility: hidden;
-                opacity: 0;
-                position: absolute;
-                z-index: 2100;
-                top: 115%;
-                left: 0;
-                width: 100%;
-                max-height: 60vh;
-                overflow-y: auto;
-                background-color:hsl(0,0%,7%);
-                border: 1px solid hsl(359,88%,57%);
-                border-radius: 1px 1px 8px 8px;
-                box-sizing: border-box;
-                transition: opacity .5s ease-in-out, transform .5s ease-in-out;
-                transform: translateY(-10px);
-            }
-
-            .dropdown-list.show {
-                visibility: visible;
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            .dropdown-item {
-                padding: 15px;
-                cursor: pointer;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 1.47em;
-                line-height: 1em;
-                font-weight: 400;
-                color: lightgray;
-                position: relative;
-                transition: background-color .3s;
-                padding-left: 1.6em;
-            }
-
-            .dropdown-item:hover {
-                color: ghostwhite;
-                background-color: rgba(255, 255, 255, .05);
-            }
-
-            .dropdown-item:hover::before {
-                color: ghostwhite;
-                font-weight: 600;
-            }
-
-            .dropdown-item-selected {
-                color: hsl(359,88%,57%);
-                font-weight: 600;
-            }
-
-            .dropdown-item-selected::before {
-                content: '✓';
-                position: absolute;
-                left: 6px;
-                color: hsl(359,88%,57%);
-            }
-
-            .select-file-naming:focus {
-                color: white;
-                background-color: hsl(0, 0%, 10.37%);
-                border-radius: 2px;
-                border-color: hsl(359, 88%, 57%);
-            }
-
-            .checkbox-label,
-            .number-input-label span {
-                display: flex;
-                align-items: center;
-                font-family: "Roboto","Arial",sans-serif;
-                font-size: 1.4em;
-                line-height: 1.5em;
-                font-weight: 500;
-                cursor: pointer;
-                text-decoration: none;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }
-
-            .checkbox-container { margin-bottom: 5px; }
-            .checkbox-label:hover { text-decoration: underline; }
-            .checkbox-field { margin-right: 10px; }
-
-            .CentAnni-info-text {
-                color: rgba(175, 175, 175, .9);
-                font-family: "Roboto","Arial",sans-serif;
-                font-size: 1.2em;
-                line-height: 1.5em;
-                font-weight: 400;
-                display: block;
-                margin:-5px 0px 5px 24px;
-                pointer-events: none;
-                cursor: default;
-            }
-
-            .extra-button-container {
-                display: flex;
-                justify-content: center;
-                gap: 5%;
-                margin: 20px 0;
-            }
-
-            .chatgpt-prompt-textarea {
-                width: 100%;
-                padding: 8px;
-                height: 65px;
-                transition: all .7s ease-in-out;
-                outline: none;
-                resize: none;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 1.4em;
-                line-height: 1.5em;
-                font-weight: 400;
-                color: ghostwhite;
-                background-color:hsl(0,0%,7%);
-                border: 1px solid hsl(0,0%,18.82%);
-                border-radius: 1px;
-                box-sizing: border-box;
-            }
-
-            .chatgpt-prompt-textarea:focus {
-                height: 569px;
-                color: white;
-                background-color: hsl(0, 0%, 10.37%);
-                border: 1px solid hsl(217, 91%, 59%);
-                border-radius: 2px;
-            }
-
-            .button-container-end {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                margin-top: 20px;
-                padding-top: 10px;
-                border: none;
-                border-top: solid 1px transparent;
-                border-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
-                border-image-slice: 1;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }
-
-            .button-container-backup {
-                display: flex;
-                justify-content: end;
-                gap: 23.5px;
-            }
-
-            .button-container-settings {
-                display: flex;
-                align-items: center;
-                justify-content: end;
-                gap: 10px;
-
-            }
-
-            #voice-search-button.ytd-masthead {
-                margin: 0 12px;
-            }
-
-            #masthead-skeleton-icons {
-                display: none !important;
-            }
-
-            .button-wrapper {
-                position: relative;
-                margin-right: 8px;
-                display: flex;
-                background-color: transparent;
-                text-rendering: optimizeLegibility !important;
-                -webkit-font-smoothing: antialiased !important;
-                -moz-osx-font-smoothing: grayscale !important;
-            }
-
-            .button-wrapper:not(:has(.button-style-settings)):hover { background-color: rgba(255, 255, 255, 0.1); border-radius: 24px; }
-            .button-wrapper:not(:has(.button-style-settings)):active { background-color: rgba(255, 255, 255, 0.2); border-radius: 24px; }
-
-            .button-style {
-                width: 40px;
-                height: 40px;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 24px;
-                display: inline-block;
-                position: relative;
-                box-sizing: border-box;
-                vertical-align: middle;
-                color: white;
-                outline: none;
-                background: transparent;
-                margin: 0;
-                border: none;
-                padding: 0;
-                cursor: pointer;
-                -webkit-tap-highlight-color: rgba(0,0,0,0);
-                -webkit-tap-highlight-color: transparent;
-            }
-
-            .button-style-settings { width: 10px; color: rgb(170, 170, 170); }
-            .button-style-settings:hover { color: white; }
-
-            .button-tooltip {
-                visibility: hidden;
-                background-color: black;
-                color: white;
-                text-align: center;
-                border-radius: 2px;
-                padding: 6px 8px;
-                position: absolute;
-                z-index: 2053;
-                top: 120%;
-                left: 50%;
-                transform: translateX(-50%);
-                opacity: 0;
-                white-space: nowrap;
-                font-size: 12px;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                border-top: solid 1px white;
-                border-bottom: solid 1px black;
-                border-left: solid 1px transparent;
-                border-right: solid 1px transparent;
-                border-image: linear-gradient(to bottom, white, black);
-                border-image-slice: 1;
-            }
-
-            .button-tooltip-arrow {
-                position: absolute;
-                top: -5px;
-                left: 50%;
-                transform: translateX(-50%) rotate(45deg);
-                width: 10px;
-                height: 10px;
-                background: linear-gradient(135deg, white 0%, white 50%, black 50%, black 100%);
-                z-index: -1;
-            }
-
-            .CentAnni-remaining-time-container {
-                position: relative;
-                display: block;
-                height: 0;
-                top: 4px;
-                text-align: right;
-                font-family: "Roboto", "Arial", sans-serif;
-                font-size: 1.4rem;
-                font-weight: 500;
-                line-height: 1em;
-                color: var(--yt-spec-text-primary);
-                pointer-events: auto;
-                cursor: default;
-                text-rendering: optimizeLegibility !important;
-                -webkit-font-smoothing: antialiased !important;
-                -moz-osx-font-smoothing: grayscale !important;
-            }
-
-            .CentAnni-remaining-time-container.live,
-            #movie_player .CentAnni-remaining-time-container.live {
-                display: none;
-                pointer-events: none;
-                cursor: default;
-            }
-
-            #movie_player .CentAnni-remaining-time-container {
-                position: absolute;
-                display: none;
-                z-index: 2053;
-                bottom: 15px;
-                left: 50%;
-                transform: translateX(-50%);
-                font-weight: 800 !important;
-                font-size: 109%;
-                vertical-align: top;
-                white-space: nowrap;
-                line-height: 53px;
-                color: ghostwhite;
-                text-shadow: black 0 0 3px !important;
-            }
-
-            .ytp-autohide .ytp-chrome-bottom .CentAnni-remaining-time-container {
-                display: inline-block !important;
-            }
-
-            .transcript-preload {
-                position: fixed !important;
-                top: var(--ytd-toolbar-height) !important;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                z-index: -1 !important;
-                opacity: 0 !important;
-                pointer-events: none !important;
-            }
-
-            .notification-error {
-                z-index: 2053;
-                box-shadow: none;
-                text-decoration: none;
-                display: inline-block;
-                background-color: hsl(0, 0%, 7%);
-                padding: 10px 12px;
-                margin: 0 8px;
-                border: 1px solid hsl(0, 0%, 18.82%);
-                border-radius: 5px;
-                pointer-events: none;
-                cursor: default;
-                font-family: 'Roboto', Arial, sans-serif;
-                color: rgba(255, 255, 255, 0.5);
-                text-align: center;
-                font-weight: 500;
-                font-size: 14px;
-                text-rendering: optimizeLegibility !important;
-                -webkit-font-smoothing: antialiased !important;
-                -moz-osx-font-smoothing: grayscale !important;
-            }
-
-            #CentAnni-playback-speed-popup {
-                position: fixed;
-                top: var(--ytd-masthead-height,var(--ytd-toolbar-height));
-                left: 50%;
-                transform: translateX(-50%);
-                padding: 8px 16px;
-                background:hsl(0,0%,7%);
-                border-radius: 2px;
-                border: 1px solid hsl(0,0%,18.82%);
-                color: whitesmoke;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 2.3rem;
-                font-weight: 600;
-                text-align: center;
-                z-index: 2500;
-                transition: opacity .3s ease;
-                opacity: 0;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-                text-rendering: optimizeLegibility !important;
-                -webkit-font-smoothing: antialiased !important;
-                -moz-osx-font-smoothing: grayscale !important;
-            }
-
-            #CentAnni-playback-speed-popup.active {
-                opacity: 1;
-            }
-
-            .loading span::before {
-                content: "Transcript Is Loading";
-                position: absolute;
-                inset: initial;
-                color: rgba(255, 250, 250, .86);
-                opacity: 0;
-                -webkit-animation: pulse 1.5s infinite;
-                animation: pulse 1.5s infinite;
-                text-rendering: optimizeLegibility !important;
-                -webkit-font-smoothing: antialiased !important;
-                -moz-osx-font-smoothing: grayscale !important;
-            }
-
-            @-webkit-keyframes pulse {
-                0% { opacity: 0; }
-                50% { opacity: .71; }
-                100% { opacity: 0; }
-            }
-
-            @keyframes pulse {
-                0% { opacity: 0; }
-                50% { opacity: .71; }
-                100% { opacity: 0; }
-            }
-
-            .buttons-left {
-                font-family: "Roboto", "Arial", sans-serif;
-                font-size: 14px;
-                font-weight: 500;
-                line-height: 1em;
-                display: inline-block;
-                position: relative;
-                color: ghostwhite;
-                text-decoration: none;
-                cursor: pointer;
-                margin: 0 8px;
-                outline: none;
-                background: transparent;
-                border: none;
-                text-align: center;
-                text-rendering: optimizeLegibility !important;
-                -webkit-font-smoothing: antialiased !important;
-                -moz-osx-font-smoothing: grayscale !important;
-            }
-
-            .buttons-left:hover { color: #ff0000 !important; }
-            .buttons-left:active { color:rgb(200, 25, 25) !important; }
-
-            .sub-panel-overlay {
-                position: fixed;
-                z-index: 2100;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                display: none;
-                background-color: rgba(0,0,0,0.5);
-                justify-content: center;
-                align-items: center;
-                backdrop-filter: blur(1px);
-            }
-
-            .sub-panel-overlay.active {
-                display: flex;
-            }
-
-            .sub-panel {
-                z-index: 2177;
-                background-color: rgba(17, 17, 17, 0.8);
-                padding: 20px;
-                border: 1px solid rgba(255, 255, 255, 0.25);
-                border-radius: 8px;
-                width: 50vw;
-                max-width: 70vw;
-                max-height: 90vh;
-                position: relative;
-                display: flex;
-                flex-direction: column;
-                overflow-y: auto;
-                color: whitesmoke;
-                text-rendering: optimizeLegibility !important;
-                -webkit-font-smoothing: antialiased !important;
-                -moz-osx-font-smoothing: grayscale !important;
-            }
-
-            .sub-panel button {
-                position: sticky;
-                top: 0;
-                align-self: flex-end;
-                box-shadow: 0 0 20px 10px black;
-            }
-
-            .sub-panel-header {
-                margin: -24px 60px 20px 0px;
-                padding: 0px 0px 0px 0px;
-                border: 0;
-                text-align: left;
-                text-decoration: none;
-                font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                font-size: 2em;
-                line-height: 1em;
-                font-weight: 700;
-                text-overflow: ellipsis;
-                white-space: normal;
-                text-shadow: 0 0 30px 20px black;
-                cursor: auto;
-                color: white;
-                align-self: left;
-                position: relative;
-                z-index: 2180;
-            }
-
-            #links-in-header-form .CentAnni-info-text {
-                margin: -10px 80px 20px 0px;
-            }
-
-            .links-header-container {
-                display: flex;
-                align-items: center;
-                gap: 20px;
-            }
-
-            .links-header-container label {
-                color: whitesmoke;
-            }
-
-            .links-header-container .url-container:first-child {
-                flex: 1;
-            }
-
-            .links-header-container .url-container:last-child {
-                flex: 2;
-            }
-
-            .sidebar-container {
-                display: flex;
-                align-items: center;
-                margin: 10px 0 0 0;
-                color: whitesmoke;
-                justify-content: flex-start;
-                gap: 20px;
-            }
-
-            .sidebar-container .checkbox-container {
-                margin-bottom: 0 !important;
-                flex: 1;
-            }
-
-            .sidebar-container .url-container {
+        /* main CSS */
+        .CentAnni-overlay {
+            position: fixed;
+            display: flex;
+            z-index: 2053;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            z-index: 2077;
+            background-color: rgba(17, 17, 17, 0.8);
+            padding: 20px 0 20px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 8px;
+            width: 420px;
+            max-height: 90vh;
+            font-family: "Roboto","Arial",sans-serif;
+            font-size: 9px;
+            line-height: 1.2;
+            color: white;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+
+        #yt-transcript-settings-form {
+            max-height: calc(90vh - 40px);
+            overflow-y: auto;
+            padding-right: 20px;
+        }
+
+        .notification {
+            background:hsl(0,0%,7%);
+            padding: 20px 30px;
+            border-radius: 8px;
+            border: 1px solid hsl(0,0%,18.82%);
+            max-width: 80%;
+            text-align: center;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 16px;
+            color: white;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .header-wrapper {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: baseline;
+            justify-content: center;
+            margin: 0 20px 20px 0;
+            width: calc(100% - 20px);
+        }
+
+        .header {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            grid-column: 2;
+            text-align:center;
+            text-decoration: none;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 2.5em;
+            line-height: 1.1em;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: normal;
+            text-shadow: 0 0 20px black;
+            cursor: pointer;
+            background: transparent;
+            display: block;
+            background-image: linear-gradient(45deg, #FFFFFF, #F2F2F2, #E6E6E6, #D9D9D9, #CCCCCC);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: color .3s ease-in-out;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .header:hover { color: white; }
+
+        .version-label {
+            grid-column: 3;
+            padding: 0;
+            margin: 0 0 0 5px;
+            color: ghostwhite;
+            cursor: default;
+            opacity: .3;
+            transition: opacity .5s;
+            justify-self: start;
+            max-width: 10ch;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header:hover + .version-label {
+            opacity: 1;
+        }
+
+        .label-style-settings {
+            display: block;
+            margin-bottom: 5px;
+            font-family: "Roboto","Arial",sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 500;
+        }
+
+        .reset-prompt-text {
+            display: inline-block;
+            float: right;
+            cursor: pointer;
+            margin: 4px 10px 0 0;
+            font-size: inherit;
+            font-weight: 400;
+            line-height: inherit;
+            color: ghostwhite;
+        }
+
+        .reset-prompt-text:hover { color: red; }
+        .reset-prompt-text:active { color: magenta; }
+
+        .label-NotebookLM { color: hsl(134, 61%, 40%); }
+        .label-ChatGPT { color: hsl(217, 91%, 59%); }
+        .label-download { color: hsl(359, 88%, 57%); }
+        .label-settings { color: hsl(0, 0%, 100%); }
+        .input-field-targetNotebookLMUrl:focus { border: 1px solid hsl(134, 61%, 40%); }
+        .input-field-targetChatGPTUrl:focus { border: 1px solid hsl(217, 91%, 59%); }
+        .buttonIconNotebookLM-input-field:focus { border: 1px solid hsl(134, 61%, 40%); }
+        .buttonIconChatGPT-input-field:focus { border: 1px solid hsl(217, 91%, 59%); }
+        .buttonIconDownload-input-field:focus { border: 1px solid hsl(359, 88%, 57%); }
+
+        .buttonIconSettings-input-field:focus,
+        .links-header-container input:focus,
+        .sidebar-container input:focus,
+        #custom-css-form .select-file-naming:focus,
+        #custom-css-form .dropdown-list {
+            border: 1px solid hsl(0, 0%, 100%);
+        }
+
+        .input-field-targetNotebookLMUrl:hover,
+        .input-field-targetChatGPTUrl:hover,
+        .buttonIconNotebookLM-input-field:hover,
+        .buttonIconChatGPT-input-field:hover,
+        .buttonIconDownload-input-field:hover,
+        .buttonIconSettings-input-field:hover,
+        .select-file-naming:hover,
+        .input-field-url:hover,
+        .chatgpt-prompt-textarea:hover
+        { background-color: hsl(0, 0%, 10.37%); }
+
+        .btn-style-settings {
+            padding: 5px 10px;
+            cursor: pointer;
+            color: whitesmoke;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 400;
+            background-color: hsl(0, 0%, 7%);
+            border: 1px solid hsl(0, 0%, 18.82%);
+            border-radius: 2px;
+            transition: all 0.2s ease-out;
+        }
+
+        .btn-style-settings:hover { color: white; background-color: hsl(0, 0%, 25%); border-color: transparent; }
+        .btn-style-settings:active { color: white; background-color: hsl(0, 0%, 35%); border-color: hsl(0, 0%, 45%); }
+        .button-icons { display: block; font-family: "Roboto","Arial",sans-serif; font-size: 1.4em; line-height: 1.5em; font-weight: 500; }
+        .icons-container { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .container-button { display: flex; flex-direction: column; align-items: center; margin: 5px 0 0 0; }
+
+        .button-icons.features-text {
+            margin: 20px 0 -5px 0;
+            font-size: 1.7em;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container-button-input {
+            width: 80px;
+            padding: 8px;
+            text-align: center;
+            color: ghostwhite;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 2em;
+            line-height: 1.5em;
+            font-weight: 400;
+            transition: all .5s ease-in-out;
+            outline: none;
+            background-color: hsl(0,0%,7%);
+            border: 1px solid hsl(0,0%,18.82%);
+            border-radius: 1px;
+            box-sizing: border-box;
+        }
+
+        .container-button-label {
+            margin-top: 5px;
+            text-align: center;
+            font-family: "Roboto","Arial",sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 500;
+        }
+
+        .container-button-input:focus { color: white; background-color: hsl(0, 0%, 10.37%); border-radius: 2px; }
+        .spacer-5 { height: 5px; }
+        .spacer-10 { height: 10px; }
+        .spacer-15 { height: 15px; }
+        .spacer-20 { height: 20px; }
+
+        .copyright {
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 500;
+            color: white;
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .copyright:hover { color: #369eff; }
+        .url-container { margin-bottom: 10px; }
+
+        .input-field-url {
+            width: 100%;
+            padding: 8px;
+            color: ghostwhite;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 400;
+            transition: all .5s ease-in-out;
+            outline: none;
+            background-color:hsl(0,0%,7%);
+            border: 1px solid hsl(0,0%,18.82%);
+            border-radius: 1px;
+            box-sizing: border-box;
+        }
+
+        .input-field-url:focus { color: white; background-color: hsl(0, 0%, 10.37%); border-radius: 2px; }
+        .file-naming-container { position: relative; margin-bottom: 20px; }
+
+        .select-file-naming {
+            width: 100%;
+            padding: 8px;
+            cursor:pointer;
+            color: ghostwhite;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 400;
+            transition: all .5s ease-in-out;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background-color:hsl(0,0%,7%);
+            border: 1px solid hsl(0,0%,18.82%);
+            border-radius: 1px;
+            box-sizing: border-box;
+
+            background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" focusable="false" aria-hidden="true" style="pointer-events: none; display: inherit; width: 100%; height: 100%;" fill="ghostwhite"%3E%3Cpath d="m18 9.28-6.35 6.35-6.37-6.35.72-.71 5.64 5.65 5.65-5.65z"%3E%3C/path%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;]
+            user-select: none;
+        }
+
+        .hidden-select {
+            position: absolute;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .dropdown-list {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            z-index: 2100;
+            top: 115%;
+            left: 0;
+            width: 100%;
+            max-height: 60vh;
+            overflow-y: auto;
+            background-color:hsl(0,0%,7%);
+            border: 1px solid hsl(359,88%,57%);
+            border-radius: 1px 1px 8px 8px;
+            box-sizing: border-box;
+            transition: opacity .5s ease-in-out, transform .5s ease-in-out;
+            transform: translateY(-10px);
+        }
+
+        .dropdown-list.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 15px;
+            cursor: pointer;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 1.47em;
+            line-height: 1em;
+            font-weight: 400;
+            color: lightgray;
+            position: relative;
+            transition: background-color .3s;
+            padding-left: 1.6em;
+        }
+
+        .dropdown-item:hover {
+            color: ghostwhite;
+            background-color: rgba(255, 255, 255, .05);
+        }
+
+        .dropdown-item:hover::before {
+            color: ghostwhite;
+            font-weight: 600;
+        }
+
+        .dropdown-item-selected {
+            color: hsl(359,88%,57%);
+            font-weight: 600;
+        }
+
+        .dropdown-item-selected::before {
+            content: '✓';
+            position: absolute;
+            left: 6px;
+            color: hsl(359,88%,57%);
+        }
+
+        .select-file-naming:focus {
+            color: white;
+            background-color: hsl(0, 0%, 10.37%);
+            border-radius: 2px;
+            border-color: hsl(359, 88%, 57%);
+        }
+
+        .checkbox-label,
+        .number-input-label span {
+            display: flex;
+            align-items: center;
+            font-family: "Roboto","Arial",sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .checkbox-container { margin-bottom: 5px; }
+        .checkbox-label:hover { text-decoration: underline; }
+        .checkbox-field { margin-right: 10px; }
+
+        .CentAnni-info-text {
+            color: rgba(175, 175, 175, .9);
+            font-family: "Roboto","Arial",sans-serif;
+            font-size: 1.2em;
+            line-height: 1.5em;
+            font-weight: 400;
+            display: block;
+            margin:-5px 0px 5px 24px;
+            pointer-events: none;
+            cursor: default;
+        }
+
+        .extra-button-container {
+            display: flex;
+            justify-content: center;
+            gap: 5%;
+            margin: 20px 0;
+        }
+
+        .chatgpt-prompt-textarea {
+            width: 100%;
+            padding: 8px;
+            height: 65px;
+            transition: all .7s ease-in-out;
+            outline: none;
+            resize: none;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 400;
+            color: ghostwhite;
+            background-color:hsl(0,0%,7%);
+            border: 1px solid hsl(0,0%,18.82%);
+            border-radius: 1px;
+            box-sizing: border-box;
+        }
+
+        .chatgpt-prompt-textarea:focus {
+            height: 569px;
+            color: white;
+            background-color: hsl(0, 0%, 10.37%);
+            border: 1px solid hsl(217, 91%, 59%);
+            border-radius: 2px;
+        }
+
+        .button-container-end {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 10px;
+            border: none;
+            border-top: solid 1px transparent;
+            border-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
+            border-image-slice: 1;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .button-container-backup {
+            display: flex;
+            justify-content: end;
+            gap: 23.5px;
+        }
+
+        .button-container-settings {
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            gap: 10px;
+
+        }
+
+        #voice-search-button.ytd-masthead {
+            margin: 0 12px;
+        }
+
+        #masthead-skeleton-icons {
+            display: none !important;
+        }
+
+        .button-wrapper {
+            position: relative;
+            margin-right: 8px;
+            display: flex;
+            background-color: transparent;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+
+        .button-wrapper:not(:has(.button-style-settings)):hover { background-color: rgba(255, 255, 255, 0.1); border-radius: 24px; }
+        .button-wrapper:not(:has(.button-style-settings)):active { background-color: rgba(255, 255, 255, 0.2); border-radius: 24px; }
+
+        .button-style {
+            width: 40px;
+            height: 40px;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 24px;
+            display: inline-block;
+            position: relative;
+            box-sizing: border-box;
+            vertical-align: middle;
+            color: white;
+            outline: none;
+            background: transparent;
+            margin: 0;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .button-style-settings { width: 10px; color: rgb(170, 170, 170); }
+        .button-style-settings:hover { color: white; }
+
+        .button-tooltip {
+            visibility: hidden;
+            background-color: black;
+            color: white;
+            text-align: center;
+            border-radius: 2px;
+            padding: 6px 8px;
+            position: absolute;
+            z-index: 2053;
+            top: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            white-space: nowrap;
+            font-size: 12px;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            border-top: solid 1px white;
+            border-bottom: solid 1px black;
+            border-left: solid 1px transparent;
+            border-right: solid 1px transparent;
+            border-image: linear-gradient(to bottom, white, black);
+            border-image-slice: 1;
+        }
+
+        .button-tooltip-arrow {
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, white 0%, white 50%, black 50%, black 100%);
+            z-index: -1;
+        }
+
+        .CentAnni-remaining-time-container {
+            position: relative;
+            display: block;
+            height: 0;
+            top: 4px;
+            text-align: right;
+            font-family: "Roboto", "Arial", sans-serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            line-height: 1em;
+            color: var(--yt-spec-text-primary);
+            pointer-events: auto;
+            cursor: default;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+
+        .CentAnni-remaining-time-container.live,
+        #movie_player .CentAnni-remaining-time-container.live {
+            display: none;
+            pointer-events: none;
+            cursor: default;
+        }
+
+        #movie_player .CentAnni-remaining-time-container {
+            position: absolute;
+            display: none;
+            z-index: 2053;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 800 !important;
+            font-size: 109%;
+            vertical-align: top;
+            white-space: nowrap;
+            line-height: 53px;
+            color: ghostwhite;
+            text-shadow: black 0 0 3px !important;
+        }
+
+        .ytp-autohide .ytp-chrome-bottom .CentAnni-remaining-time-container {
+            display: inline-block !important;
+        }
+
+        .transcript-preload {
+            position: fixed !important;
+            top: var(--ytd-toolbar-height) !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: -1 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        .notification-error {
+            z-index: 2053;
+            box-shadow: none;
+            text-decoration: none;
+            display: inline-block;
+            background-color: hsl(0, 0%, 7%);
+            padding: 10px 12px;
+            margin: 0 8px;
+            border: 1px solid hsl(0, 0%, 18.82%);
+            border-radius: 5px;
+            pointer-events: none;
+            cursor: default;
+            font-family: 'Roboto', Arial, sans-serif;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            font-weight: 500;
+            font-size: 14px;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+
+        #CentAnni-playback-speed-popup {
+            position: fixed;
+            top: var(--ytd-masthead-height,var(--ytd-toolbar-height));
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            background:hsl(0,0%,7%);
+            border-radius: 2px;
+            border: 1px solid hsl(0,0%,18.82%);
+            color: whitesmoke;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 2.3rem;
+            font-weight: 600;
+            text-align: center;
+            z-index: 2500;
+            transition: opacity .3s ease;
+            opacity: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+
+        #CentAnni-playback-speed-popup.active {
+            opacity: 1;
+        }
+
+        .loading span::before {
+            content: "Transcript Is Loading";
+            position: absolute;
+            inset: initial;
+            color: rgba(255, 250, 250, .86);
+            opacity: 0;
+            -webkit-animation: pulse 1.5s infinite;
+            animation: pulse 1.5s infinite;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+
+        @-webkit-keyframes pulse {
+            0% { opacity: 0; }
+            50% { opacity: .71; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0; }
+            50% { opacity: .71; }
+            100% { opacity: 0; }
+        }
+
+        .buttons-left {
+            font-family: "Roboto", "Arial", sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1em;
+            display: inline-block;
+            position: relative;
+            color: ghostwhite;
+            text-decoration: none;
+            cursor: pointer;
+            margin: 0 8px;
+            outline: none;
+            background: transparent;
+            border: none;
+            text-align: center;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+
+        .buttons-left:hover { color: #ff0000 !important; }
+        .buttons-left:active { color:rgb(200, 25, 25) !important; }
+
+        .sub-panel-overlay {
+            position: fixed;
+            z-index: 2100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(1px);
+        }
+
+        .sub-panel-overlay.active {
+            display: flex;
+        }
+
+        .sub-panel {
+            z-index: 2177;
+            background-color: rgba(17, 17, 17, 0.8);
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 8px;
+            width: 50vw;
+            max-width: 70vw;
+            max-height: 90vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            color: whitesmoke;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+
+        .sub-panel button {
+            position: sticky;
+            top: 0;
+            align-self: flex-end;
+            box-shadow: 0 0 20px 10px black;
+        }
+
+        .sub-panel-header {
+            margin: -24px 60px 20px 0px;
+            padding: 0px 0px 0px 0px;
+            border: 0;
+            text-align: left;
+            text-decoration: none;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            font-size: 2em;
+            line-height: 1em;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: normal;
+            text-shadow: 0 0 30px 20px black;
+            cursor: auto;
+            color: white;
+            align-self: left;
+            position: relative;
+            z-index: 2180;
+        }
+
+        #links-in-header-form .CentAnni-info-text {
+            margin: -10px 80px 20px 0px;
+        }
+
+        .links-header-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .links-header-container label {
+            color: whitesmoke;
+        }
+
+        .links-header-container .url-container:first-child {
+            flex: 1;
+        }
+
+        .links-header-container .url-container:last-child {
             flex: 2;
-            }
+        }
 
-            .playback-speed-container {
-                display: flex;
-                gap: 10px;
-                margin: 10px 0;
-            }
+        .sidebar-container {
+            display: flex;
+            align-items: center;
+            margin: 10px 0 0 0;
+            color: whitesmoke;
+            justify-content: flex-start;
+            gap: 20px;
+        }
 
-            #custom-css-form .playback-speed-container .checkbox-container {
-                max-width: calc(55% - 5px);
-                margin: 0;
-                align-content: center;
-                flex: 0 0 auto;
-            }
+        .sidebar-container .checkbox-container {
+            margin-bottom: 0 !important;
+            flex: 1;
+        }
 
-            #custom-css-form .playback-speed-container .number-input-container {
-                max-width: calc(45% - 5px);
-                margin: 0;
-                align-self: center;
-                flex: 1 0 auto;
-            }
+        .sidebar-container .url-container {
+        flex: 2;
+        }
 
-            #custom-css-form .playback-speed-container .number-input-container .number-input-field {
-                width: 5ch;
-            }
+        .playback-speed-container {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
 
-            #custom-css-form .playback-speed-container .number-input-label {
-                display: flex;
-            }
+        #custom-css-form .playback-speed-container .checkbox-container {
+            max-width: calc(55% - 5px);
+            margin: 0;
+            align-content: center;
+            flex: 0 0 auto;
+        }
 
-            #color-code-videos-form .checkbox-container { margin: 20px 0 0 0; }
-            #color-code-videos-form .label-style-settings {margin: 0; }
-            #color-code-videos-form > div.videos-old-container > span { margin: 0; }
-            #color-code-videos-form .CentAnni-info-text { margin: 5px 80px 20px 0px; }
-            #custom-css-form .checkbox-container { margin: 10px 0; }
+        #custom-css-form .playback-speed-container .number-input-container {
+            max-width: calc(45% - 5px);
+            margin: 0;
+            align-self: center;
+            flex: 1 0 auto;
+        }
 
-            #custom-css-form .file-naming-container {
-                max-width: 90%;
-                margin: 20px 0;
-                display: flex;
-                gap: 25px;
-                align-content: center;
-            }
+        #custom-css-form .playback-speed-container .number-input-container .number-input-field {
+            width: 5ch;
+        }
 
-            #custom-css-form .label-style-settings {
-                margin-bottom: 0;
-                white-space: nowrap;
-                align-content: center;
-            }
+        #custom-css-form .playback-speed-container .number-input-label {
+            display: flex;
+        }
 
-            #custom-css-form .dropdown-item-selected,
-            #custom-css-form .dropdown-item-selected::before {
-                color: hsl(0, 0%, 100%);
-            }
+        #color-code-videos-form .checkbox-container { margin: 20px 0 0 0; }
+        #color-code-videos-form .label-style-settings {margin: 0; }
+        #color-code-videos-form > div.videos-old-container > span { margin: 0; }
+        #color-code-videos-form .CentAnni-info-text { margin: 5px 80px 20px 0px; }
+        #custom-css-form .checkbox-container { margin: 10px 0; }
 
-            input[type="range"] {
-                -webkit-appearance: none;
-                appearance: none;
+        #custom-css-form .file-naming-container {
+            max-width: 90%;
+            margin: 20px 0;
+            display: flex;
+            gap: 25px;
+            align-content: center;
+        }
+
+        #custom-css-form .label-style-settings {
+            margin-bottom: 0;
+            white-space: nowrap;
+            align-content: center;
+        }
+
+        #custom-css-form .dropdown-item-selected,
+        #custom-css-form .dropdown-item-selected::before {
+            color: hsl(0, 0%, 100%);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="range"]::-moz-range-thumb,
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #007bff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #ffffff;
+        }
+
+        input[type="range"]::-moz-range-track,
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: #007bff;
+            height: 6px;
+            border-radius: 5px;
+        }
+
+        .videos-old-container {
+            display: flex;
+            max-width: 90%;
+            align-items: center;
+            gap: 25px;
+            margin: 20px 0;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+        }
+
+        .videos-colorpicker-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .videos-colorpicker-row {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            gap: 20px;
+            margin: 0;
+        }
+
+        .videos-colorpicker-row span {
+            text-align: right;
+            flex: 1;
+            max-width: 50%;
+        }
+
+        .videos-colorpicker-row input {
+            flex: 1;
+            margin: 0;
+            padding: 0;
+            max-width: 62px;
+            height: 26px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            box-shadow: none;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            border: none;
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+        }
+
+
+        #custom-css-form .videos-colorpicker-row span {
+            text-align: left;
+            flex: initial;
+        }
+
+        #custom-css-form .videos-colorpicker-row input {
+            margin: 0 0 0 -3px;
+        }
+
+        #custom-css-form .videos-colorpicker-row {
+            gap: 10px;
+        }
+
+        .number-input-container {
+            margin: 10px 0;
+        }
+
+        .number-input-field {
+            width: 5ch;
+            margin: 0 10px 0 0;
+            align-items: center;
+            font-size: 1.4em;
+            line-height: 1.5em;
+            font-weight: 700;
+            cursor: auto;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+
+        }
+
+        .number-input-label span {
+            display: initial;
+            cursor: auto;
+        }
+
+        .selection-color-container {
+            margin: 10px 0;
+            flex-direction: row;
+        }
+
+        .selection-color-container > .checkbox-container {
+            margin: 0 !important;
+        }
+
+        .selection-color-container > .videos-colorpicker-row {
+            width: auto;
+        }
+
+        :root:not(:has(:is(
+            ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters],
+            ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters]
+        ))) :is(.CentAnni-tabView-tab[data-tab="tab-4"], .CentAnni-chapter-title, #movie_player .CentAnni-chapter-title),
+        :root:not(:has(ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript])) .CentAnni-tabView-tab[data-tab="tab-5"] {
+            display: none !important;
+        }
+
+        :root:has(ytd-watch-flexy ytd-playlist-panel-renderer[hidden]) .CentAnni-tabView-tab[data-tab="tab-6"] {
+            display: none;
+        }
+
+        /* progress bar css */
+        .CentAnni-progress-bar {
+            #progress-bar-bar {
                 width: 100%;
-                height: 6px;
-                background: #ccc;
-                border-radius: 5px;
-                outline: none;
-            }
-
-            input[type="range"]::-moz-range-thumb,
-            input[type="range"]::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 16px;
-                height: 16px;
-                background: #007bff;
-                border-radius: 50%;
-                cursor: pointer;
-                border: 2px solid #ffffff;
-            }
-
-            input[type="range"]::-moz-range-track,
-            input[type="range"]::-webkit-slider-runnable-track {
-                background: #007bff;
-                height: 6px;
-                border-radius: 5px;
-            }
-
-            .videos-old-container {
-                display: flex;
-                max-width: 90%;
-                align-items: center;
-                gap: 25px;
-                margin: 20px 0;
-            }
-
-            .slider-container {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                flex: 1;
-            }
-
-            .slider-container input[type="range"] {
-                flex: 1;
-            }
-
-            .videos-colorpicker-container {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 30px;
-            }
-
-            .videos-colorpicker-row {
-                display: flex;
-                justify-content: flex-start;
-                align-items: center;
-                width: 100%;
-                gap: 20px;
-                margin: 0;
-            }
-
-            .videos-colorpicker-row span {
-                text-align: right;
-                flex: 1;
-                max-width: 50%;
-            }
-
-            .videos-colorpicker-row input {
-                flex: 1;
-                margin: 0;
-                padding: 0;
-                max-width: 62px;
-                height: 26px;
-                cursor: pointer;
-                background: none;
-                border: none;
-                box-shadow: none;
-                appearance: none;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-            }
-
-            input[type="color"]::-webkit-color-swatch-wrapper {
-                border: none;
-                padding: 0;
-            }
-
-            input[type="color"]::-webkit-color-swatch {
-                border: none;
-            }
-
-
-            #custom-css-form .videos-colorpicker-row span {
-                text-align: left;
-                flex: initial;
-            }
-
-            #custom-css-form .videos-colorpicker-row input {
-                margin: 0 0 0 -3px;
-            }
-
-            #custom-css-form .videos-colorpicker-row {
-                gap: 10px;
-            }
-
-            .number-input-container {
-                margin: 10px 0;
-            }
-
-            .number-input-field {
-                width: 5ch;
-                margin: 0 10px 0 0;
-                align-items: center;
-                font-size: 1.4em;
-                line-height: 1.5em;
-                font-weight: 700;
-                cursor: auto;
-                text-decoration: none;
-                text-align: center;
-                display: inline-block;
-
-            }
-
-            .number-input-label span {
-                display: initial;
-                cursor: auto;
-            }
-
-            .selection-color-container {
-                margin: 10px 0;
-                flex-direction: row;
-            }
-
-            .selection-color-container > .checkbox-container {
-                margin: 0 !important;
-            }
-
-            .selection-color-container > .videos-colorpicker-row {
-                width: auto;
-            }
-
-            :root:not(:has(:is(
-                ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"],
-                ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]
-            ))) :is(.CentAnni-tabView-tab[data-tab="tab-4"], .CentAnni-chapter-title, #movie_player .CentAnni-chapter-title),
-            :root:not(:has(ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"])) .CentAnni-tabView-tab[data-tab="tab-5"] {
-                display: none !important;
-            }
-
-            :root:has(ytd-watch-flexy ytd-playlist-panel-renderer[hidden]) .CentAnni-tabView-tab[data-tab="tab-6"] {
-                display: none;
-            }
-
-            /* progress bar css */
-            .CentAnni-progress-bar {
-                #progress-bar-bar {
-                    width: 100%;
-                    height: 3px;
-                    background: rgba(255, 255, 255, 0.2);
-                    position: absolute;
-                    bottom: 0;
-                    opacity: 0;
-                    z-index: 58;
-                    pointer-events: none;
-                }
-
-                #progress-bar-progress, #progress-bar-buffer {
-                    width: 100%;
-                    height: 3px;
-                    transform-origin: 0 0;
-                    position: absolute;
-                }
-
-                #progress-bar-progress {
-                    background: var(--progressBarColor);
-                    filter: none;
-                    z-index: 1;
-                }
-
-                .ytp-autohide .ytp-chrome-bottom .ytp-load-progress, .ytp-autohide .ytp-chrome-bottom .ytp-play-progress { display: none !important; }
-                .ytp-autohide .ytp-chrome-bottom { opacity: 1 !important; display: block !important; }
-                .ytp-autohide .ytp-chrome-bottom .ytp-chrome-controls { opacity: 0 !important; }
-                .ad-interrupting #progress-bar-progress { background: transparent; }
-                .ytp-ad-persistent-progress-bar-container { display: none; }
-                #progress-bar-buffer { background: rgba(255, 255, 255, 0.4); }
-
-                .ytp-autohide #progress-bar-start.active,
-                .ytp-autohide #progress-bar-bar.active,
-                .ytp-autohide #progress-bar-end.active
-                { opacity: 1; }
-
-                .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar-container {
-                    bottom: 0px !important;
-                    opacity: 1 !important;
-                    height: 4px !important;
-                    transform: translateX(0px) !important;
-                    z-index: 100;
-                }
-
-                .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar,
-                .ytp-autohide .ytp-chrome-bottom .ytp-progress-list {
-                    background: transparent !important;
-                    box-shadow: none !important;
-                }
-
-                .ytp-autohide .ytp-chrome-bottom .previewbar {
-                    height: calc(100% + 1px) !important;
-                    bottom: -1px !important;
-                    margin-bottom: 0px !important;
-                    opacity: 1 !important;
-                    border: none !important;
-                    box-shadow: none !important;
-                    will-change: opacity, transform !important;
-                }
-
-                .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar-container:not(.active) .ytp-scrubber-container {
-                    opacity: 0;
-                    pointer-events: none;
-                }
-
-                #progress-bar-start, #progress-bar-end {
-                    position: absolute;
-                    height: 3px;
-                    width: 12px;
-                    bottom: 0;
-                    z-index: 2077;
-                    opacity: 0;
-                    pointer-events: none;
-                }
-
-                :fullscreen #progress-bar-start, :fullscreen #progress-bar-end { width: 24px; }
-                :-webkit-full-screen #progress-bar-start, :-webkit-full-screen #progress-bar-end { width: 24px; }
-                .html5-video-player.ytp-fullscreen #progress-bar-start, .html5-video-player.ytp-fullscreen #progress-bar-end { width: 24px !important; }
-
-                #progress-bar-start {
-                    left: 0;
-                    background: var(--progressBarColor);
-                }
-
-                #progress-bar-end {
-                    right: 0;
-                    background: rgba(255, 255, 255, 0.2);
-                }
-            }
-
-            /* playback speed css */
-            .CentAnni-playback-speed {
-                #actions.ytd-watch-metadata {
-                    justify-content: end;
-                }
-
-                .yt-spec-button-view-model.style-scope.ytd-menu-renderer {
-                    display: flex;
-                    height: 36px;
-                    width: 36px;
-                    margin-right: 8px;
-                    overflow: hidden;
-                }
-
-                ytd-menu-renderer[has-items] yt-button-shape.ytd-menu-renderer {
-                    margin-left: 0 !important;
-                }
-
-                ytd-menu-renderer[has-flexible-items][safe-area] .top-level-buttons.ytd-menu-renderer {
-                    margin-bottom: 0;
-                }
-
-                #top-level-buttons-computed > yt-button-view-model > button-view-model > button {
-                    padding: 0 0 0 12px;
-                }
-
-                .CentAnni-playback-control {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    flex: 1;
-                    margin: 0 8px;
-                }
-
-                .CentAnni-playback-speed-icon {
-                    height: 24px;
-                    width: 24px;
-                    padding: 0 4px 0 0;
-                    opacity: .9;
-                }
-
-                .CentAnni-playback-speed-display {
-                    background: rgba(255,255,255,0.1);
-                    height: 36px;
-                    justify-content: center;
-                    align-items: center;
-                    cursor: default;
-                    user-select: none;
-                    -webkit-user-select: none;
-                    -moz-user-select: none;
-                    -ms-user-select: none;
-                }
-
-                .CentAnni-playback-speed-button {
-                    cursor: pointer;
-                    user-select: none;
-                    -webkit-user-select: none;
-                    -moz-user-select: none;
-                    -ms-user-select: none;
-                }
-
-                .CentAnni-playback-speed-button:nth-child(2) {
-                    border-top-right-radius: 0;
-                    border-bottom-right-radius: 0;
-                }
-
-                .CentAnni-playback-speed-button:last-child {
-                    border-top-left-radius: 0;
-                    border-bottom-left-radius: 0;
-                }
-
-                .CentAnni-playback-speed-button:active {
-                    background: rgb(72,72,72) !important;
-                }
-
-                .CentAnni-playback-speed-display::before {
-                    content: "";
-                    background: rgba(255,255,255,0.2);
-                    position: initial;
-                    right: 0;
-                    top: 6px;
-                    height: 24px;
-                    width: 1px;
-                    margin-right: 10px;
-                }
-
-                .CentAnni-playback-speed-display::after {
-                    content: "";
-                    background: rgba(255,255,255,0.2);
-                    position: initial;
-                    right: 0;
-                    top: 6px;
-                    height: 24px;
-                    width: 1px;
-                    margin-left: 10px;
-                }
-
-                ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata {
-                    width: 10%;
-                }
-            }
-
-            /* video tab view css */
-            .CentAnni-video-tabView {
-                .CentAnni-tabView {
-                    position: relative;
-                    display: flex;
-                    flex-direction: column;
-                    width: var(--ytd-watch-flexy-sidebar-width);
-                    min-width: var(--ytd-watch-flexy-sidebar-min-width);
-                    font-family: "Roboto", "Arial", sans-serif;
-                    margin: 0;
-                    padding: 0;
-                    border-radius: 12px 12px 0 0;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    overflow: hidden;
-                    box-sizing: border-box;
-                    background-color: transparent;
-                    z-index: 10;
-                }
-
-                .CentAnni-tabView:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]) {
-                    border-radius: 12px;
-                }
-
-                .CentAnni-tabView:not(:has(.CentAnni-tabView-tab[data-tab="tab-2"])) ytd-comments#comments {
-                    display: none;
-                }
-
-                .CentAnni-tabView-header {
-                    display: flex;
-                    position: relative;
-                    overflow-x: auto;
-                    overflow-y: hidden;
-                    height: 50px;
-                    padding: 0;
-                    margin: 0;
-                    color: var(--yt-spec-text-primary);
-                    background-color: var(--yt-spec-brand-background-primary);
-                    z-index: 7;
-                }
-
-                .CentAnni-tabView-subheader {
-                    display: flex;
-                    flex-direction: row;
-                    height: 50px;
-                    font-size: 9px;
-                    line-height: 1;
-                    padding: 0 8px;
-                    align-items: center;
-                    gap: 8px;
-                    z-index: 8;
-                }
-
-                .CentAnni-tabView-tab {
-                    align-items: center;
-                    border: none;
-                    border-radius: 8px;
-                    display: inline-flex;
-                    height: 32px;
-                    min-width: 12px;
-                    white-space: nowrap;
-                    font-family: "Roboto","Arial",sans-serif;
-                    font-size: 1.4em;
-                    line-height: 2em;
-                    font-weight: 500;
-                    margin: 0;
-                    background-color: rgba(255,255,255,0.1);
-                    color: #f1f1f1;
-                    text-decoration: none;
-                    padding: 0 12px;
-                    z-index: 10;
-                }
-
-                .CentAnni-tabView-tab:hover {
-                    background: rgba(255,255,255,0.2);
-                    border-color: transparent;
-                }
-
-                .CentAnni-tabView-tab.active {
-                    background-color: #f1f1f1;
-                    color: #0f0f0f;
-                }
-
-                .CentAnni-tabView-content {
-                    overflow-y: auto;
-                    overflow-x: hidden;
-                    padding: 0;
-                    margin: 0;
-                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
-                }
-
-                .CentAnni-tabView-content {
-                    display: none;
-                }
-
-                .CentAnni-tabView-content.active {
-                    display: block !important;
-                }
-
-                .CentAnni-tabView-content-hidden {
-                    display: none;
-                    opacity: 0;
-                    visibility: hidden;
-                }
-
-                .CentAnni-tabView-content-active {
-                    display: block !important;
-                    opacity: 1 !important;
-                    visibility: visible !important;
-                }
-
-                ytd-watch-flexy ytd-playlist-panel-renderer[hidden] {
-                    display: none !important;
-                }
-
-
-                .CentAnni-tabView-content-nascosta {
-                    opacity: 0;
-                    visibility: hidden;
-                }
-
-                .CentAnni-tabView-content-attiva {
-                    opacity: 1 !important;
-                    visibility: visible !important;
-                }
-
-
-                .CentAnni-tabView-content-block {
-                    display: block !important;
-                }
-
-                .CentAnni-tabView-content-none {
-                    display: none;
-                }
-
-                #tab-2 {
-                    border-top: 1px solid rgba(255, 255, 255, 0.2);
-                }
-
-                #related.style-scope.ytd-watch-flexy {
-                    position: absolute;
-                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
-                    width: var(--ytd-watch-flexy-sidebar-width);
-                    top: 76px;
-                    left: 0;
-                    margin: 0;
-                    padding: 15px 10px 0 10px;
-                    overflow-y: auto;
-                    overflow-x: hidden;
-                    visibility: hidden;
-                    opacity: 0;
-                    z-index: 5;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-top: none;
-                    box-sizing: border-box;
-                    border-radius: 0 0 12px 12px;
-                }
-
-                ytd-watch-metadata.ytd-watch-flexy {
-                    margin: 12px 10px 0 10px;
-                }
-
-                ytd-watch-flexy ytd-comments {
-                    margin: 0;
-                    padding: 0 10px;
-                }
-
-                #comments > #sections > #header > ytd-comments-header-renderer > #title > #additional-section {
-                    margin-left: auto;
-                }
-
-                #comments > #sections > #header {
-                    margin: 0 12px;
-                }
-
-                ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]) {
-                    border-radius: 0 0 12px 12px;
-                }
-
-                #related.style-scope.ytd-watch-flexy[full-bleed-player] {
-                    top: 30px;
-                }
-
-                ytd-watch-flexy  #header.style-scope.ytd-engagement-panel-section-list-renderer {
-                    display: none;
-                }
-
-                ytd-engagement-panel-section-list-renderer {
-                    box-sizing: content-box;
-                    display: flexbox;
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"],
-                ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"] {
-                    position: absolute;
-                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
-                    width: var(--ytd-watch-flexy-sidebar-width);
-                    top: 76px;
-                    left: 0;
-                    margin: 0;
-                    padding: 0;
-                    overflow-y: auto;
-                    overflow-x: hidden;
-                    z-index: 5;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-top: none;
-                    box-sizing: border-box;
-                }
-
-                ytd-watch-flexy #description.ytd-expandable-video-description-body-renderer {
-                    padding-right: 10px !important;
-                }
-
-                #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy {
-                    margin-bottom: 0;
-                }
-
-                ytd-watch-flexy[flexy] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
-                ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy {
-                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-top: none;
-                    box-sizing: border-box;
-                }
-
-                ytd-watch-flexy ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
-                    display: none;
-                }
-
-                ytd-engagement-panel-section-list-renderer ytd-merch-shelf-renderer {
-                    display: none;
-                }
-
-                ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-structured-description"] {
-                    position: absolute;
-                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
-                    width: var(--ytd-watch-flexy-sidebar-width);
-                    top: 76px;
-                    left: 0;
-                    margin: 0;
-                    padding: 10px 0 0 10px;
-                    overflow-y: auto;
-                    overflow-x: hidden;
-                    z-index: 5;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-top: none;
-                    box-sizing: border-box;
-                }
-
-                ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id^="shopping_panel_for_entry_point_"] {
-                    display: none;
-                }
-
-                ytd-watch-flexy[flexy] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id=engagement-panel-structured-description],
-                ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"] {
-                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
-                    background-color: black;
-                }
-
-                ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"] {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
-                    width: var(--ytd-watch-flexy-sidebar-width);
-                    top: 76px;
-                    margin: 0;
-                    padding: 0;
-                    z-index: 5;
-                    border: none;
-                    box-sizing: border-box;
-                }
-
-                #body.ytd-transcript-renderer {
-                    display: none;
-                }
-
-                ytd-transcript-renderer {
-                    flex: 1 1 auto;
-                }
-
-                ytd-transcript-segment-list-renderer {
-                    height: 100%;
-                }
-
-                ytd-text-inline-expander[engagement-panel] {
-                    display: block;
-                    margin: 0;
-                    padding: 0;
-                    border: none;
-                    border-radius: 0;
-                    background: transparent;
-                    padding-right: 10px;
-                }
-
-                ytd-expandable-video-description-body-renderer > ytd-text-inline-expander > #snippet {
-                    max-height: 100% !important;
-                }
-
-                #media-lockups > ytd-structured-description-playlist-lockup-renderer > #lockup-container > #playlist-thumbnail {
-                    width: 100%;
-                }
-
-                #items > yt-video-attributes-section-view-model > div > div.yt-video-attributes-section-view-model__video-attributes.yt-video-attributes-section-view-model__scroll-container > div > yt-video-attribute-view-model > div:hover,
-                #media-lockups > ytd-structured-description-playlist-lockup-renderer > #lockup-container:hover {
-                    filter: brightness(1.1);
-                }
-
-                ytd-text-inline-expander,
-                #navigation-button.ytd-rich-list-header-renderer,
-                ytd-expandable-video-description-body-renderer > ytd-expander > tp-yt-paper-button#more.ytd-expander {
-                    display: none;
-                }
-
-                ytd-expandable-video-description-body-renderer[engagement-panel]:not([shorts-panel]) ytd-expander.ytd-expandable-video-description-body-renderer {
-                    border-radius: 0;
-                    padding: 0;
-                    background: transparent;
-                }
-
-                ytd-structured-description-content-renderer[engagement-panel] ytd-expandable-video-description-body-renderer.ytd-structured-description-content-renderer {
-                    padding: 0;
-                }
-
-                ytd-watch-flexy ytd-engagement-panel-section-list-renderer[enable-anchored-panel][target-id="engagement-panel-structured-description"] #content.ytd-engagement-panel-section-list-renderer .ytd-engagement-panel-section-list-renderer:first-child,
-                ytd-watch-flexy ytd-structured-description-content-renderer[engagement-panel] #items.ytd-structured-description-content-renderer {
-                    padding: 0;
-                }
-
-                ytd-video-description-transcript-section-renderer {
-                    position: fixed;
-                    bottom: 0;
-                    left: 0;
-                    z-index: -9999;
-                    pointer-events: none;
-                    opacity: 0;
-                }
-
-                ytd-video-description-infocards-section-renderer[engagement-panel] #social-links.ytd-video-description-infocards-section-renderer {
-                    margin: 0 0 16px 0;
-                    padding: 0;
-                }
-
-                ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-infocards-section-renderer.ytd-structured-description-content-renderer {
-                    padding: 16px 0 0 0;
-                }
-
-                #infocards-section > ytd-compact-infocard-renderer:last-of-type {
-                    margin-bottom: 0;
-                }
-
-                #bottom-row > #description {
-                    cursor: default;
-                    pointer-events: none;
-                }
-
-                #content > #description a:hover,
-                #snippet > #snippet-text > yt-attributed-string a:hover {
-                    text-decoration: underline;
-                }
-
-                ytd-compact-video-renderer:hover,
-                ytd-video-description-course-section-renderer > #topic-link:hover,
-                #infocards-section > ytd-compact-infocard-renderer > #content:hover,
-                #items > ytd-video-description-infocards-section-renderer > #header:hover,
-                ytd-watch-card-compact-video-renderer.ytd-vertical-watch-card-list-renderer:not([is-condensed]):hover,
-                #always-shown > ytd-rich-metadata-row-renderer > #contents > ytd-rich-metadata-renderer > #endpoint-link:hover,
-                #items > ytd-video-description-infocards-section-renderer > #infocards-section > ytd-compact-infocard-renderer > #content:hover,
-                ytd-playlist-panel-renderer h3 yt-formatted-string[has-link-only_]:not([force-default-style]) a.yt-simple-endpoint.yt-formatted-string:hover {
-                    background: var(--yt-spec-badge-chip-background);
-                }
-
-                ytd-playlist-panel-renderer #publisher-container yt-formatted-string[has-link-only_]:not([force-default-style]) a.yt-simple-endpoint.yt-formatted-string:hover {
-                    color: red;
-                }
-
-                #playlist-actions.ytd-playlist-panel-renderer {
-                    cursor: default;
-                }
-
-                ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a {
-                    cursor: pointer;
-                    pointer-events: all;
-                    color:var(--yt-endpoint-visited-color);
-                }
-
-                ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a:hover {
-                    color: var(--yt-spec-call-to-action);
-                }
-
-                #description > #description-inner > #ytd-watch-info-text > tp-yt-paper-tooltip {
-                    display: none;
-                }
-
-                #description > #description-interaction {
-                    display: none;
-                }
-
-                .yt-animated-icon.lottie-player.style-scope {
-                    pointer-events: none;
-                }
-
-                #description.ytd-watch-metadata {
-                    background: none;
-                }
-
-                ytd-transcript-search-box-renderer {
-                    margin: 12px 0;
-                }
-
-                .CentAnni-info-date {
-                    margin-left: 6px;
-                }
-
-                #ytd-watch-info-text.ytd-watch-metadata {
-                    height: 18px;
-                }
-
-                #middle-row.ytd-watch-metadata {
-                    padding: 10px 0;
-                }
-
-                .content.style-scope.ytd-info-panel-content-renderer {
-                    padding: 10px 16px;
-                }
-
-                #description-inner.ytd-watch-metadata {
-                    margin: 0px 12px 0px 52px;
-                }
-
-                #view-count.ytd-watch-info-text, #date-text.ytd-watch-info-text {
-                    align-items: center;
-                }
-
-                ytd-watch-info-text:not([detailed]) #info.ytd-watch-info-text {
-                    align-content: center;
-                }
-
-                #bottom-row.ytd-watch-metadata {
-                    flex-direction: column;
-                }
-
-                .ytVideoMetadataCarouselViewModelHost {
-                    flex-direction: row;
-                    padding: 12px;
-                    height: 100%;
-                    margin-bottom: 24px;
-                    gap: 20px;
-                    align-items: center;
-                }
-
-                .ytVideoMetadataCarouselViewModelCarouselContainer {
-                    margin-top: 0;
-                }
-
-                /* live chat adjustments */
-                ytd-live-chat-frame[modern-buttons][collapsed] {
-                    display: none;
-                }
-
-                #columns > #secondary > #secondary-inner > #chat-container {
-                    top: 24px;
-                    position: absolute;
-                    width: var(--ytd-watch-flexy-sidebar-width);
-                    min-width: var(--ytd-watch-flexy-sidebar-min-width);
-                }
-
-                
-                ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]) {
-                    height: calc(90vh - 10px);
-                    border: 1px solid rgb(51, 51, 51);
-                }
-
-                #chat.ytd-watch-flexy {
-                    margin-bottom: 0;
-                }
-
-                /* theater mode active */
-                ytd-watch-flexy[theater] #playlist,
-                ytd-watch-flexy[theater] ytd-comments,
-                ytd-watch-flexy[theater] #related.style-scope.ytd-watch-flexy,
-                ytd-watch-flexy[theater] ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer,
-                ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-                ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-                ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-                ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters],
-                ytd-watch-flexy[theater][flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
-                ytd-watch-flexy[theater][flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"] {
-                    height: 0;
-                    padding-top: 0;
-                    padding-bottom: 0;
-                    margin-top: 0;
-                    margin-bottom: 0;
-                    opacity: 0;
-                    visibility: hidden;
-                    z-index: -1;
-                    pointer-events: none;
-                }
-
-                ytd-watch-flexy[theater][flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-clip-create"] {
-                    display: none;
-                }
-
-                ytd-watch-flexy[theater] #donation-shelf {
-                    display: none !important;
-                }
-
-                ytd-watch-flexy[theater] .CentAnni-tabView-content {
-                    display: none !important;
-                }
-
-                ytd-watch-flexy[theater][cinematics-enabled] #secondary.ytd-watch-flexy {
-                    align-content: center;
-                }
-
-                ytd-watch-flexy[theater][is-two-columns_][full-bleed-player] #secondary.ytd-watch-flexy {
-                    margin-top: 34.5px !important;
-                    display: flex;
-                    justify-content: center;
-                    align-items: flex-start;
-                }
-
-                ytd-watch-flexy[theater] .CentAnni-tabView {
-                    border-radius: 25px;
-                }
-
-                ytd-watch-flexy[theater] .CentAnni-tabView-tab {
-                    border-radius: 18px;
-                }
-
-                ytd-watch-flexy[is-two-columns_][theater] #columns {
-                    max-height: calc(100vh - 56.25vw - var(--ytd-masthead-height,var(--ytd-toolbar-height)));
-                    min-height: calc(169px - var(--ytd-masthead-height, var(--ytd-toolbar-height)));
-                }
-
-                ytd-watch-flexy[theater] #primary {
-                    overflow-x: hidden;
-                }
-
-                #donation-shelf {
-                    display: none;
-                    opacity: 0;
-                    visibility: hidden;
-                }
-
-                #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy {
-                        margin-bottom: 0;
-                        max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
-                        overflow-y: auto;
-                }
-
-                ytd-donation-shelf-renderer[modern-panels] {
-                    border-radius: 0px 0px 12px 12px;
-                }
-
-                ytd-donation-shelf-renderer {
-                    border-top: none;
-                }
-
-                #collapse-controls-section {
-                    display: none;
-                }
-
-                ytd-watch-flexy #playlist {
-                    position: absolute;
-                    margin: 0;
-                    padding: 0;
-                    top: 76px;
-                    left: 0;
-                    width: var(--ytd-watch-flexy-sidebar-width);
-                    z-index: 5;
-                    display: none;
-                    opacity: 0;
-                    visibility: hidden;
-                }
-
-                ytd-playlist-panel-renderer[modern-panels]:not([within-miniplayer]) #container.ytd-playlist-panel-renderer {
-                    border-radius: 0 0 12px 12px;
-                }
-
-                #playlist.ytd-watch-flexy {
-                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
-                    margin-bottom: 0;
-                }
-
-                ytd-watch-flexy[flexy] #playlist.ytd-watch-flexy,
-                ytd-playlist-panel-renderer[js-panel-height] #container.ytd-playlist-panel-renderer,
-                ytd-watch-flexy[default-layout]:not([no-top-margin]):not([reduced-top-margin]) #secondary.ytd-watch-flexy {
-                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px);
-                }
-
-                #container.ytd-playlist-panel-renderer {
-                    border-top: none;
-                }
-
-                ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer {
-                    padding: 12px 0 0 25px;
-                    margin-right: 0;
-                }
-
-                #trailing-button.ytd-playlist-panel-renderer {
-                    display: none;
-                }
-
-                .playlist-items.ytd-playlist-panel-renderer {
-                    padding: 0;
-                }
-
-                /* single columns */
-                ytd-watch-flexy:not([is-two-columns_]) #columns.ytd-watch-flexy {
-                    flex-direction: column;
-                }
-
-                ytd-watch-flexy:not([is-two-columns_])[flexy] #primary.ytd-watch-flexy {
-                    flex-basis: auto;
-                }
-
-                ytd-watch-flexy:not([is-two-columns_])[theater][full-bleed-player] #secondary.ytd-watch-flexy,
-                ytd-watch-flexy:not([is-two-columns_]) #secondary.ytd-watch-flexy {
-                    display: flex;
-                    margin: 0;
-                    padding: 0;
-                    justify-content: center;
-                    align-items: center;
-                    width: 100%;
-                }
-
-                ytd-watch-flexy:not([is-two-columns_]) .CentAnni-tabView {
-                    margin-top: 24px;
-                    width: 90vw;
-                }
-
-                ytd-watch-flexy:not([is-two-columns_])[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"] {
-                    max-height: 50vh;
-                    width: 90vw;
-                    top: 171px;
-                    margin: 0;
-                    background-color: black;
-                }
-
-                ytd-watch-flexy:not([is-two-columns_]) ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-structured-description"] {
-                    align-self: center;
-                    left: initial;
-                }
-
-                ytd-watch-flexy:not([is-two-columns_]) .CentAnni-tabView-content {
-                    max-height: 50vh;
-                }
-
-                ytd-watch-flexy:not([is-two-columns_]) #related.style-scope.ytd-watch-flexy {
-                    max-height: 50vh;
-                    width: 90vw;
-                    top: 171px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                }
-
-                ytd-watch-flexy:not([is-two-columns_])[default-layout]:not([no-top-margin]):not([reduced-top-margin]) #secondary.ytd-watch-flexy {
-                    padding: 0;
-                }
-
-                ytd-watch-flexy:not([is-two-columns_])[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy {
-                    max-height: 50vh;
-                    width: 90vw;
-                    top: 147px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                }
-
-                ytd-watch-flexy #columns #below > ytd-watch-metadata #title > ytd-badge-supported-renderer {
-                    bottom: 0px;
-                    right: 10px;
-                    position: absolute;
-                    cursor: default;
-                }
-            }
-
-            .CentAnni-tabView-chapters {
-                .ytp-chapter-title-chevron,
-                ytd-watch-flexy .ytp-chapter-title-prefix {
-                    display: none;
-                }
-
-                ytd-watch-flexy .ytp-chapter-container {
-                    padding: 0;
-                    font-size: inherit;
-                    line-height: inherit;
-                }
-
-                ytd-watch-flexy .sponsorChapterText,
-                ytd-watch-flexy .ytp-chapter-title-content {
-                    white-space: normal;
-                    font-weight: 500;
-                }
-
-                #movie_player .sponsorChapterText,
-                #movie_player .ytp-chapter-title-content {
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    text-wrap: nowrap;
-                    line-height: 59px;
-                }
-
-                .CentAnni-chapter-title {
-                    position: absolute;
-                    display: flex;
-                    flex-direction: row;
-                    z-index: 2025;
-                    top: 0;
-                    right: 0;
-                    max-width: calc(50% - 26px);
-                    font-family: -apple-system, "Roboto", "Arial", sans-serif;
-                    font-size: 1.4rem;
-                    line-height: 2rem;
-                    color: var(--yt-spec-text-primary) !important;
-                    -webkit-user-select: none;
-                    -moz-user-select: none;
-                    -ms-user-select: none;
-                    user-select: none;
-                    cursor: default;
-                }
-
-                .CentAnni-chapter-title span {
-                    text-wrap: nowrap;
-                    margin-right: .5ch;
-                }
-
-                #movie_player .CentAnni-chapter-title {
-                    position: absolute;
-                    display: none;
-                    flex-direction: row;
-                    max-width: 50vw;
-                    overflow: hidden;
-                    z-index: 2053;
-                    bottom: 0;
-                    left: 50%;
-                    font-weight: 500 !important;
-                    font-size: 109%;
-                    vertical-align: top;
-                    white-space: nowrap;
-                    line-height: 59px;
-                    color: ghostwhite !important;
-                    text-shadow: black 0 0 3px !important;
-                }
-
-                .ytp-autohide .ytp-chrome-bottom .CentAnni-chapter-title {
-                    display: flex !important;
-                }
-
-                .CentAnni-chapter-title .ytp-chapter-container.sponsorblock-chapter-visible {
-                    display: block !important;
-                }
-
-                .CentAnni-chapter-title:has(.ytp-chapter-title-content:empty):not(:has(.sponsorChapterText:not(:empty))) {
-                    display: none;
-                }
-
-                :is(
-                    :has(ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]),
-                    :has(ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"])
-                ) {
-                    & ytd-watch-flexy #description > #description-inner {
-                        width: calc(50% - 26px);
-                    }
-
-                    & ytd-watch-flexy #description > #description-inner #info-container {
-                        height: 41px;
-                    }
-
-                    & ytd-watch-flexy #description > #description-inner #info span.CentAnni-info-date + span::after {
-                        content: "";
-                        display: block;
-                        height: 0;
-                        margin-bottom: 5px;
-                    }
-
-                    & ytd-watch-flexy #description > #description-inner #info a.yt-simple-endpoint.bold {
-                        display: inline-block;
-                    }
-
-                    & ytd-watch-flexy #bottom-row.ytd-watch-metadata {
-                        height: 50px;
-                    }
-
-                    #movie_player .CentAnni-remaining-time-container {
-                        left: 25% !important;
-                    }
-                }
-            }
-
-
-            .CentAnni-style-hide-comments-btn {
-                ytd-comments#comments,
-                .CentAnni-tabView-tab[data-tab="tab-2"] {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-videos-btn {
-                #related.style-scope.ytd-watch-flexy,
-                .CentAnni-tabView-tab[data-tab="tab-3"] {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-yt-settings .ytp-settings-menu, .CentAnni-style-hide-yt-settings .ytp-overflow-panel {
-                opacity: 0 !important;
-                pointer-events: none !important;
-            }
-
-            /* customCSS CSS */
-            html {
-                font-size: var(--fontSize) !important;
-                font-family: "Roboto", Arial, sans-serif;
-            }
-
-            .CentAnni-style-hide-default-sidebar {
-                ytd-mini-guide-renderer.ytd-app { display: none !important; }
-                ytd-app[mini-guide-visible] ytd-page-manager.ytd-app { margin-left: 0 !important; }
-                #guide-button.ytd-masthead { display: none !important; }
-                #contents.ytd-rich-grid-renderer { justify-content: center !important; }
-                ytd-browse[mini-guide-visible] ytd-playlist-header-renderer.ytd-browse, ytd-browse[mini-guide-visible] ytd-playlist-sidebar-renderer.ytd-browse, ytd-browse[mini-guide-visible] .page-header-sidebar.ytd-browse {
-                    left: 0;
-                }
-            }
-
-            html #above-the-fold h1,
-            h1.ytd-watch-metadata,
-            #video-title {
-                text-transform: var(--textTransform) !important;
-            }
-
-            .CentAnni-style-full-title {
-                #video-title.ytd-rich-grid-media {
-                    white-space: normal;
-                    text-overflow: unset;
-                    overflow: unset;
-                    display: inline-block;
-                }
-
-                #video-title {
-                    max-height: unset !important;
-                    -webkit-line-clamp: unset !important;
-                }
-            }
-
-            ytd-compact-video-renderer ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer),
-            ytd-rich-item-renderer ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer),
-            ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
-                opacity: var(--watchedOpacity);
-            }
-
-            ytd-search ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
-                opacity: .8;
-            }
-
-            .ytd-page-manager[page-subtype="history"] {
-                ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
-                    opacity: 1;
-                }
-            }
-
-            .CentAnni-style-hide-watched-videos-global {
-                ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer),
-                ytd-grid-video-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer) {
-                    display: none !important;
-                }
-            }
-
-            html.CentAnni-style-pure-bg:not([dark]) ytd-app {
-                background: white !important;
-            }
-
-            html.CentAnni-style-pure-bg[dark] ytd-app {
-                background: black !important;
-            }
-
-            .CentAnni-style-remove-scrubber {
-                .ytp-scrubber-container {
-                    display: none;
-                    pointer-events: none;
-                }
-            }
-
-            .CentAnni-style-play-progress-color {
-                .ytp-play-progress, .ytp-swatch-background-color {
-                    background: var(--progressBarColor) !important;
-                }
-            }
-
-            .CentAnni-style-disable-play-on-hover {
-                ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-toggle-button-renderer.ytd-thumbnail,
-                ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail,
-                ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-endorsement-renderer.ytd-thumbnail,
-                ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-hover-text-renderer.ytd-thumbnail,
-                ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-button-renderer.ytd-thumbnail,
-                ytd-thumbnail[now-playing] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail,
-                ytd-thumbnail-overlay-loading-preview-renderer[is-preview-loading],
-                ytd-grid-video-renderer a#thumbnail div#mouseover-overlay,
-                ytd-rich-item-renderer a#thumbnail div#mouseover-overlay,
-                ytd-thumbnail-overlay-loading-preview-renderer,
-                ytd-moving-thumbnail-renderer img#thumbnail,
-                ytd-moving-thumbnail-renderer yt-icon,
-                ytd-moving-thumbnail-renderer span,
-                ytd-moving-thumbnail-renderer img,
-                ytd-moving-thumbnail-renderer,
-                #mouseover-overlay,
-                ytd-video-preview,
-                div#video-preview,
-                #video-preview,
-                #preview {
-                    display: none !important;
-                }
-            }
-
-            .CentAnni-style-hide-end-cards {
-                .ytp-ce-element {
-                    display: none !important;
-                }
-            }
-
-            .CentAnni-style-hide-endscreen {
-                .html5-video-player .html5-endscreen.videowall-endscreen {
-                    display: none !important;
-                }
-    
-                .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) {
-                    display: block !important;
-                    cursor: default !important;
-                }
-    
-                .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) button {
-                    display: none;
-                }
-    
-                .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) .ytp-cued-thumbnail-overlay-image {
-                    display: block !important;
-                    background-image: var(--video-url);
-                } 
-            }
-
-            .CentAnni-style-gradient-bottom {
-                .ytp-gradient-bottom {
-                    padding-top: 50px !important;
-                    height: 48px !important;
-                    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==) !important;
-                }
-            }
-
-            .CentAnni-style-video-row {
-                ytd-rich-grid-renderer {
-                    --ytd-rich-grid-items-per-row: var(--itemsPerRow) !important;
-                }
-            }
-
-            .CentAnni-style-hide-voice-search {
-                #voice-search-button.ytd-masthead {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-create-btn {
-                ytd-button-renderer.ytd-masthead[button-renderer][button-next]:has(button[aria-label="Create"]) {
-                    display: none !important;
-                }
-            }
-
-            .CentAnni-style-hide-queue-btn {
-                ytd-thumbnail-overlay-toggle-button-renderer[aria-label="Add to queue"] {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-notification-btn {
-                #masthead-container #end #buttons ytd-notification-topbar-button-renderer {
-                    display: none !important;
-                }
-            }
-
-            .CentAnni-style-hide-notification-badge {
-                #masthead-container #end #buttons ytd-notification-topbar-button-renderer .yt-spec-icon-badge-shape__badge {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-own-avatar {
-                #avatar-btn {
-                    display: none !important;
-                }
-            }
-
-            .CentAnni-style-hide-brand-text {
-                ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > picture,
-                #country-code.ytd-topbar-logo-renderer,
-                #logo-icon [id^="youtube-paths_yt"] {
-                    display: none;
-                }
-
-                #logo.ytd-masthead {
-                    width: 45px;
-                    overflow: hidden;
-                }
-
-                ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > ytd-logo {
-                    display: block !important;
-                }
-            }
-
-            .CentAnni-style-hide-fundraiser {
-                #donation-shelf, ytd-badge-supported-renderer:has([aria-label="Fundraiser"]) {
-                    display: none !important;
-                }
-            }
-
-            .CentAnni-style-hide-miniplayer {
-                ytd-miniplayer {
-                    display: none !important;
-                }
-
-                #ytd-player .ytp-miniplayer-button {
-                    display: none !important;
-                }
-            }
-
-            .CentAnni-style-square-search-bar {
-                #center.ytd-masthead { flex: 0 1 500px; }
-                .YtSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; }
-                .YtSearchboxComponentSuggestionsContainer { border-radius: 0 0 10px 10px; }
-                .YtSearchboxComponentSearchButton, .YtSearchboxComponentSearchButtonDark { display: none; }
-                .YtSearchboxComponentHost { margin: 0; }
-
-                .ytSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; }
-                .ytSearchboxComponentSuggestionsContainer { border-radius: 0 0 10px 10px; }
-                .ytSearchboxComponentSearchButton, .ytSearchboxComponentSearchButtonDark { display: none; }
-                .ytSearchboxComponentHost { margin: 0; }
-
-                .ytSearchboxComponentDesktop .ytSearchboxComponentClearButton {
-                    border-radius: 0;
-                    height: 38px;
-                    width: 38px;
-                    margin-right: 6px;
-                }
-            }
-
-            .ytd-page-manager[page-subtype="home"] {
-                #avatar-container.ytd-rich-grid-media {
-                    margin: 12px 12px 0 6px;
-                }
-            }
-
-            .CentAnni-style-square-design {
-                #thumbnail,
-                .CentAnni-tabView,
-                #card.ytd-miniplayer,
-                .smartimation__border,
-                .ytp-tooltip-text-wrapper,
-                ytd-playlist-video-renderer,
-                .ytOfficialCardViewModelHost,
-                #dismissed.ytd-rich-grid-media,
-                ytd-info-panel-content-renderer,
-                ytd-expandable-metadata-renderer,
-                .yt-thumbnail-view-model--medium,
-                .badge.ytd-badge-supported-renderer,
-                .yt-spec-button-shape-next--size-xs,
-                #related.style-scope.ytd-watch-flexy,
-                .animated-action__background-container,
-                .ytp-player-minimized .html5-main-video,
-                .ytProgressBarLineProgressBarLineRounded,
-                .ytp-tooltip.ytp-text-detail.ytp-preview,
-                .collections-stack-wiz__collection-stack2,
-                ytd-donation-shelf-renderer[modern-panels],
-                .ytp-player-minimized .ytp-miniplayer-scrim,
-                yt-interaction.circular .fill.yt-interaction,
-                .yt-spec-button-shape-next--icon-only-default,
-                yt-interaction.circular .stroke.yt-interaction,
-                ytd-watch-flexy[theater] .CentAnni-tabView-tab,
-                tp-yt-paper-toast.yt-notification-action-renderer,
-                .collections-stack-wiz__collection-stack1--medium,
-                .metadata-container.ytd-reel-player-overlay-renderer,
-                ytd-shorts .player-container.ytd-reel-video-renderer,
-                ytd-compact-link-renderer.ytd-settings-sidebar-renderer,
-                .ytp-tooltip.ytp-text-detail.ytp-preview .ytp-tooltip-bg,
-                ytd-live-chat-frame[theater-watch-while][rounded-container],
-                ytd-watch-flexy[rounded-player] #ytd-player.ytd-watch-flexy,
-                ytd-shorts[enable-anchored-panel] .anchored-panel.ytd-shorts,
-                ytd-live-chat-frame[rounded-container]:not([theater-watch-while]),
-                ytd-live-chat-frame[rounded-container] iframe.ytd-live-chat-frame,
-                .html5-video-player:not(.ytp-touch-mode) ::-webkit-scrollbar-thumb,
-                .CentAnni-tabView:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]),
-                ytd-thumbnail[size="large"] a.ytd-thumbnail, ytd-thumbnail[size="large"]::before,
-                ytd-watch-flexy[rounded-player-large][default-layout] #ytd-player.ytd-watch-flexy,
-                ytd-thumbnail[size="medium"] a.ytd-thumbnail, ytd-thumbnail[size="medium"]::before,
-                ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]),
-                ytd-macro-markers-list-item-renderer[rounded] #thumbnail.ytd-macro-markers-list-item-renderer,
-                ytd-expandable-metadata-renderer:not([is-expanded]) #header.ytd-expandable-metadata-renderer:hover,
-                ytd-watch-flexy[flexy][js-panel-height_]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
-                ytd-playlist-panel-renderer[modern-panels]:not([within-miniplayer]) #container.ytd-playlist-panel-renderer {
-                    border-radius: 0 !important;
-                }
-
-                .yt-video-attribute-view-model--image-large .yt-video-attribute-view-model__hero-section {
-                    border-radius: 1px;
-                }
-
-                .ytChipShapeChip,
-                yt-dropdown-menu,
-                .CentAnni-tabView-tab,
-                #menu.yt-dropdown-menu,
-                ytd-menu-popup-renderer,
-                ytd-guide-entry-renderer,
-                tp-yt-paper-dialog[modern],
-                yt-chip-cloud-chip-renderer,
-                ytd-multi-page-menu-renderer,
-                #description.ytd-watch-metadata,
-                .badge-shape-wiz--thumbnail-badge,
-                ytd-author-comment-badge-renderer,
-                .yt-spec-button-shape-next--size-s,
-                .yt-spec-button-shape-next--size-m,
-                ytd-rich-metadata-renderer[rounded],
-                .yt-sheet-view-model-wiz--contextual,
-                .ytVideoMetadataCarouselViewModelHost,
-                yt-interaction.ytd-guide-entry-renderer,
-                .dropdown-content.tp-yt-paper-menu-button,
-                .tp-yt-paper-tooltip[style-target=tooltip],
-                #chip-container.yt-chip-cloud-chip-renderer,
-                .image-wrapper.ytd-hero-playlist-thumbnail-renderer,
-                #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer,
-                .immersive-header-container.ytd-playlist-header-renderer,
-                #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:hover,
-                #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:focus,
-                #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:active,
-                ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]) {
-                    border-radius: 2px;
-                }
-
-                ytd-rich-item-renderer yt-interaction.circular .fill.yt-interaction,
-                ytd-rich-item-renderer yt-interaction.circular .stroke.yt-interaction,
-                #masthead-container yt-interaction.circular .fill.yt-interaction,
-                #masthead-container yt-interaction.circular .stroke.yt-interaction {
-                    border-radius: 50% !important;
-                }
-
-                tp-yt-paper-item.ytd-guide-entry-renderer,
-                ytd-compact-link-renderer[compact-link-style="compact-link-style-type-settings-sidebar"] tp-yt-paper-item.ytd-compact-link-renderer {
-                    --paper-item-focused-before-border-radius: 0;
-                }
-
-                .ytd-page-manager[page-subtype="home"] {
-                    yt-chip-cloud-chip-renderer {
-                        border-radius: 2px;
-                    }
-
-                    .CentAnni-style-live-video, .CentAnni-style-upcoming-video, .CentAnni-style-newly-video, .CentAnni-style-recent-video, .CentAnni-style-lately-video, .CentAnni-style-old-video { border-radius: 0; }
-                }
-
-                .ytd-page-manager[page-subtype="subscriptions"] {
-                    .CentAnni-style-last-seen { border-radius: 0; }
-                }
-
-                .ytd-page-manager[page-subtype="channels"] {
-                    .yt-spec-button-shape-next--size-m {
-                        border-radius: 2px;
-                    }
-
-                    .yt-thumbnail-view-model--medium,
-                    .yt-image-banner-view-model-wiz--inset,
-                    .collections-stack-wiz__collection-stack2,
-                    #chip-container.yt-chip-cloud-chip-renderer,
-                    .collections-stack-wiz__collection-stack1--medium {
-                        border-radius: 0 !important;
-                    }
-                }
-
-                .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-start {
-                    border-radius: 2px 0 0 3px;
-                }
-
-                .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-end {
-                    border-radius: 0 3px 3px 0;
-                }
-
-                ytd-expandable-metadata-renderer:not([is-expanded]) {
-                    --yt-img-border-radius: 0px;
-                    border-radius: 0px;
-                }
-
-                .desktopShortsPlayerControlsWizHost {
-                    left: 0;
-                    right: 0;
-                }
-
-                ytd-search yt-official-card-view-model horizontal-shelf-view-model .ytwHorizontalShelfViewModelLeftArrow .yt-spec-button-shape-next--size-m,
-                ytd-search yt-official-card-view-model horizontal-shelf-view-model .ytwHorizontalShelfViewModelRightArrow .yt-spec-button-shape-next--size-m {
-                    border-radius: 18px;
-                }
-            }
-
-            .CentAnni-style-square-avatars {
-                .yt-spec-avatar-shape__image,
-                #avatar.ytd-video-owner-renderer,
-                yt-img-shadow.ytd-video-renderer,
-                yt-img-shadow.ytd-channel-renderer,
-                .thumbnail.ytd-notification-renderer,
-                ytd-menu-renderer.ytd-rich-grid-media,
-                yt-img-shadow.ytd-guide-entry-renderer,
-                #avatar.ytd-active-account-header-renderer,
-                #avatar.ytd-watch-card-rich-header-renderer,
-                yt-img-shadow.ytd-topbar-menu-button-renderer,
-                #author-thumbnail.ytd-comment-simplebox-renderer,
-                ytd-rich-item-renderer yt-interaction.circular .fill.yt-interaction,
-                ytd-rich-item-renderer yt-interaction.circular .stroke.yt-interaction,
-                .yt-spec-avatar-shape--cairo-refresh.yt-spec-avatar-shape--live-ring::after,
-                #author-thumbnail.ytd-comment-view-model yt-img-shadow.ytd-comment-view-model,
-                #author-thumbnail.ytd-backstage-post-renderer yt-img-shadow.ytd-backstage-post-renderer,
-                ytd-comment-replies-renderer #creator-thumbnail.ytd-comment-replies-renderer yt-img-shadow.ytd-comment-replies-renderer {
-                    border-radius: 0 !important;
-                }
-            }
-
-            #CentAnni-channel-btn {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-            }
-
-            #CentAnni-playlist-direction-container {
-                display: inline-flex;
-                align-items: center;
-                margin-left: 8px;
-            }
-
-            #CentAnni-playlist-direction-container > span {
-                margin-right: 4px;
-                color: var(--yt-spec-text-primary);
-                font-family: "YouTube Sans","Roboto",sans-serif;
-                font-size: 1.7rem;
-                line-height: 1rem;
-                font-weight: 600;
-                text-rendering: optimizeLegibility !important;
-                -webkit-font-smoothing: antialiased !important;
-                -moz-osx-font-smoothing: grayscale !important;
-                cursor: default;
-            }
-
-            #end-actions.ytd-playlist-panel-renderer {
-                margin-right: 24px;
-            }
-
-            .CentAnni-playlist-direction-btn {
-                color: var(--yt-spec-text-secondary) !important;
-            }
-
-            .CentAnni-playlist-direction-btn.active {
-                color: var(--yt-spec-text-primary) !important;
-            }
-
-            .CentAnni-style-compact-layout {
-                ytd-rich-section-renderer:has(.grid-subheader.ytd-shelf-renderer) {
-                    display: none;
-                }
-
-                #page-manager.ytd-app {
-                    --ytd-toolbar-offset: 0 !important;
-                }
-
-                ytd-browse[page-subtype="hashtag-landing-page"] {
-                    transform: translateY(0px);
-                }
-
-                .ytd-page-manager[page-subtype="home"],
-                .ytd-page-manager[page-subtype="channels"],
-                .ytd-page-manager[page-subtype="subscriptions"] {
-                    ytd-menu-renderer .ytd-menu-renderer[style-target=button] {
-                        height: 36px;
-                        width: 36px;
-                    }
-
-                    button.yt-icon-button>yt-icon {
-                        transform: rotate(90deg);
-                    }
-
-                    #contents.ytd-rich-grid-renderer {
-                        width: 100%;
-                        max-width: 100%;
-                        padding-top: 0;
-                        display: flex;
-                        flex-wrap: wrap;
-                        column-gap: 5px;
-                        row-gap: 10px;
-                    }
-
-                    .style-scope.ytd-two-column-browse-results-renderer {
-                        --ytd-rich-grid-item-max-width: 100vw;
-                        --ytd-rich-grid-item-min-width: 310px;
-                        --ytd-rich-grid-item-margin: 0px !important;
-                        --ytd-rich-grid-content-offset-top: 56px;
-                    }
-
-                    ytd-rich-item-renderer[rendered-from-rich-grid] {
-                        margin: 0 !important;
-                    }
-
-                    #meta.ytd-rich-grid-media {
-                        overflow-x: hidden;
-                        padding-right: 6px;
-                    }
-
-                    #avatar-container.ytd-rich-grid-media {
-                        margin:7px 6px 50px 6px;
-                    }
-
-                    h3.ytd-rich-grid-media {
-                        margin: 7px 0 4px 0;
-                    }
-
-                    .yt-spec-avatar-shape--cairo-refresh.yt-spec-avatar-shape--live-ring::after {
-                        inset: -2px;
-                    }
-                }
-
-                .ytd-page-manager[page-subtype="home"] {
-                    ytd-menu-renderer.ytd-rich-grid-media {
-                        position: absolute;
-                        height: 36px;
-                        width: 36px;
-                        top: 50px;
-                        right: auto;
-                        left: 6px;
-                        align-items: center;
-                        background-color: rgba(255,255,255,.1);
-                        border-radius: 50%;
-                    }
-
-                    .title-badge.ytd-rich-grid-media, .video-badge.ytd-rich-grid-media {
-                        position: absolute;
-                        bottom: 0;
-                        right: 0;
-                        margin: 8px;
-                        display: flex;
-                        flex-direction: row;
-                    }
-
-                    ytd-rich-item-renderer[rendered-from-rich-grid] {
-                        margin: 0 !important;
-                    }
-
-                    #contents.ytd-rich-grid-renderer {
-                        padding-top: 2px;
-                        column-gap: 14px;
-                        row-gap: 14px;
-                    }
-
-                    .style-scope.ytd-two-column-browse-results-renderer {
-                        --ytd-rich-grid-item-margin: .5% !important;
-                    }
-                }
-
-                .ytd-page-manager[page-subtype="channels"] {
-                    ytd-tabbed-page-header.grid-5-columns #page-header.ytd-tabbed-page-header, ytd-tabbed-page-header.grid-5-columns[has-inset-banner] #page-header-banner.ytd-tabbed-page-header {
-                        padding: 0 !important;
-                    }
-
-                    ytd-two-column-browse-results-renderer.grid-5-columns, .grid-5-columns.ytd-two-column-browse-results-renderer {
-                        width: 100% !important;
-                    }
-
-                    ytd-rich-grid-renderer:not([is-default-grid]) #header.ytd-rich-grid-renderer {
-                        transform: translateY(-40px);
-                        z-index: 2000;
-                        width: max-content;
-                        margin-left: auto;
-                    }
-
-                    ytd-two-column-browse-results-renderer.grid-6-columns ytd-rich-grid-renderer:not([is-default-grid]) #header {
-                        margin-right: 5px;
-                    }
-
-                    ytd-two-column-browse-results-renderer.grid-5-columns ytd-rich-grid-renderer:not([is-default-grid]) #header {
-                        margin-right: 110px;
-                    }
-
-                    ytd-feed-filter-chip-bar-renderer[component-style="FEED_FILTER_CHIP_BAR_STYLE_TYPE_CHANNEL_PAGE_GRID"] {
-                        margin-bottom: -32px;
-                        margin-top: 0;
-                    }
-
-                    .page-header-view-model-wiz__page-header-headline-image {
-                        margin-left: 110px;
-                    }
-
-                    ytd-menu-renderer.ytd-rich-grid-media {
-                        position: absolute;
-                        height: 36px;
-                        width: 36px;
-                        top: initial;
-                        bottom: -10px;
-                        right: 0;
-                        align-items: center;
-                        border-radius: 50%;
-                    }
-
-                    .yt-tab-group-shape-wiz__slider,.yt-tab-shape-wiz__tab-bar {
-                        display: none;
-                    }
-
-                    .yt-tab-shape-wiz__tab--tab-selected,.yt-tab-shape-wiz__tab:hover {
-                        color: white;
-                    }
-
-                    .style-scope.ytd-two-column-browse-results-renderer {
-                        --ytd-rich-grid-item-margin: .5% !important;
-                    }
-
-                    ytd-backstage-items {
-                        display: block;
-                        max-width: 100%;
-                    }
-
-                    #contents {
-                    margin-left: 10px;
-                    margin-right: 10px;
-                    }
-
-                    #header-container {
-                        width: 80vw;
-                        align-self: center;
-                    }
-
-                    #items.ytd-grid-renderer {
-                        justify-content: center;
-                    }
-                }
-
-                .ytd-page-manager[page-subtype="channels"] #contentContainer {
-                    padding-top: 0 !important;
-                }
-
-                .ytd-page-manager[page-subtype="channels"] tp-yt-app-header {
-                    position: static !important;
-                    transform: none !important;
-                    transition: none !important;
-                }
-
-                .ytd-page-manager[page-subtype="channels"] tp-yt-app-header[fixed] {
-                    position: static !important;
-                    transform: none !important;
-                    transition: none !important;
-                }
-
-                .ytd-page-manager[page-subtype="channels"] tp-yt-app-header #page-header {
-                position: static !important;
-                    transform: none !important;
-                }
-
-                .ytd-page-manager[page-subtype="subscriptions"] {
-                    ytd-menu-renderer.ytd-rich-grid-media {
-                        position: absolute;
-                        height: 36px;
-                        width: 36px;
-                        top: 50px;
-                        right: auto;
-                        left: 3px;
-                        align-items: center;
-                        background-color: rgba(255,255,255,.1);
-                        border-radius: 50%;
-                    }
-
-                    .title-badge.ytd-rich-grid-media, .video-badge.ytd-rich-grid-media {
-                        position: absolute;
-                        margin: 0px 10% 0 0;
-                        right: 0;
-                        top: 6em;
-                    }
-                }
-
-                .item.ytd-watch-metadata {
-                    margin-top: 7px;
-                }
-
-                #middle-row.ytd-watch-metadata:empty {
-                    display: none;
-                }
-
-                #subheader.ytd-engagement-panel-title-header-renderer:not(:empty) {
-                    padding: 0 !important;
-                    transform: translateX(110px) translateY(-44px);
-                    background-color: transparent;
-                    border-top: none;
-                }
-
-                #header.ytd-engagement-panel-title-header-renderer {
-                    padding: 4px 7px 4px 7px;
-                }
-
-                #visibility-button.ytd-engagement-panel-title-header-renderer, #information-button.ytd-engagement-panel-title-header-renderer {
-                    z-index: 1;
-                }
-
-                .ytChipShapeChip:hover  {
-                    background: rgba(255,255,255,0.2);
-                    border-color: transparent;
-                }
-
-                .ytChipShapeActive:hover {
-                    background-color: #f1f1f1;
-                    color: #0f0f0f;
-                }
-
-                ytd-engagement-panel-title-header-renderer {
-                    height: 54px;
-                }
-
-                .yt-spec-button-shape-next--icon-only-default {
-                    width: 35px;
-                    height: 35px;
-                }
-
-                ytd-miniplayer {
-                    --ytd-miniplayer-attachment-padding: 0;
-                }
-
-                ytd-watch-flexy #title > ytd-badge-supported-renderer div > yt-icon {
-                    padding: 0 2px 0px 0;
-                }
-            }
-
-            ytd-watch-flexy #expandable-metadata #content.ytd-expandable-metadata-renderer {
-                height: calc(var(--yt-macro-marker-list-item-height) - 34px);
-                visibility: visible;
-                pointer-events: auto;
-            }
-
-            ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] #collapsed-title.ytd-expandable-metadata-renderer {
-                display: none;
-            }
-
-            ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[has-video-summary] #expanded-title-subtitle-group.ytd-expandable-metadata-renderer {
-                display: flex !important;
-            }
-
-            ytd-watch-flexy #expandable-metadata #expanded-subtitle.ytd-expandable-metadata-renderer {
-                display: block !important;
-                pointer-events: auto;
-            }
-
-            ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] {
-                background: transparent;
+                height: 3px;
+                background: rgba(255, 255, 255, 0.2);
+                position: absolute;
+                bottom: 0;
+                opacity: 0;
+                z-index: 58;
                 pointer-events: none;
             }
 
-            ytd-watch-flexy #expandable-metadata #right-section.ytd-expandable-metadata-renderer {
-                display: none;
+            #progress-bar-progress, #progress-bar-buffer {
+                width: 100%;
+                height: 3px;
+                transform-origin: 0 0;
+                position: absolute;
             }
 
-            ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer:not([is-expanded]) #header.ytd-expandable-metadata-renderer:hover {
+            #progress-bar-progress {
+                background: var(--progressBarColor);
+                filter: none;
+                z-index: 1;
+            }
+
+            .ytp-autohide .ytp-chrome-bottom .ytp-load-progress, .ytp-autohide .ytp-chrome-bottom .ytp-play-progress { display: none !important; }
+            .ytp-autohide .ytp-chrome-bottom { opacity: 1 !important; display: block !important; }
+            .ytp-autohide .ytp-chrome-bottom .ytp-chrome-controls { opacity: 0 !important; }
+            .ad-interrupting #progress-bar-progress { background: transparent; }
+            .ytp-ad-persistent-progress-bar-container { display: none; }
+            #progress-bar-buffer { background: rgba(255, 255, 255, 0.4); }
+
+            .ytp-autohide #progress-bar-start.active,
+            .ytp-autohide #progress-bar-bar.active,
+            .ytp-autohide #progress-bar-end.active
+            { opacity: 1; }
+
+            .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar-container {
+                bottom: 0px !important;
+                opacity: 1 !important;
+                height: 4px !important;
+                transform: translateX(0px) !important;
+                z-index: 100;
+            }
+
+            .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar,
+            .ytp-autohide .ytp-chrome-bottom .ytp-progress-list {
+                background: transparent !important;
+                box-shadow: none !important;
+            }
+
+            .ytp-autohide .ytp-chrome-bottom .previewbar {
+                height: calc(100% + 1px) !important;
+                bottom: -1px !important;
+                margin-bottom: 0px !important;
+                opacity: 1 !important;
+                border: none !important;
+                box-shadow: none !important;
+                will-change: opacity, transform !important;
+            }
+
+            .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar-container:not(.active) .ytp-scrubber-container {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            #progress-bar-start, #progress-bar-end {
+                position: absolute;
+                height: 3px;
+                width: 12px;
+                bottom: 0;
+                z-index: 2077;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            :fullscreen #progress-bar-start, :fullscreen #progress-bar-end { width: 24px; }
+            :-webkit-full-screen #progress-bar-start, :-webkit-full-screen #progress-bar-end { width: 24px; }
+            .html5-video-player.ytp-fullscreen #progress-bar-start, .html5-video-player.ytp-fullscreen #progress-bar-end { width: 24px !important; }
+
+            #progress-bar-start {
+                left: 0;
+                background: var(--progressBarColor);
+            }
+
+            #progress-bar-end {
+                right: 0;
+                background: rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        /* playback speed css */
+        .CentAnni-playback-speed {
+            #actions.ytd-watch-metadata {
+                justify-content: end;
+            }
+
+            .yt-spec-button-view-model.style-scope.ytd-menu-renderer {
+                display: flex;
+                height: 36px;
+                width: 36px;
+                margin-right: 8px;
+                overflow: hidden;
+            }
+
+            ytd-menu-renderer[has-items] yt-button-shape.ytd-menu-renderer {
+                margin-left: 0 !important;
+            }
+
+            ytd-menu-renderer[has-flexible-items][safe-area] .top-level-buttons.ytd-menu-renderer {
+                margin-bottom: 0;
+            }
+
+            #top-level-buttons-computed > yt-button-view-model > button-view-model > button {
+                padding: 0 0 0 12px;
+            }
+
+            .CentAnni-playback-control {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex: 1;
+                margin: 0 8px;
+            }
+
+            .CentAnni-playback-speed-icon {
+                height: 24px;
+                width: 24px;
+                padding: 0 4px 0 0;
+                opacity: .9;
+            }
+
+            .CentAnni-playback-speed-display {
+                background: rgba(255,255,255,0.1);
+                height: 36px;
+                justify-content: center;
+                align-items: center;
+                cursor: default;
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+            }
+
+            .CentAnni-playback-speed-button {
+                cursor: pointer;
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+            }
+
+            .CentAnni-playback-speed-button:nth-child(2) {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            .CentAnni-playback-speed-button:last-child {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+
+            .CentAnni-playback-speed-button:active {
+                background: rgb(72,72,72) !important;
+            }
+
+            .CentAnni-playback-speed-display::before {
+                content: "";
+                background: rgba(255,255,255,0.2);
+                position: initial;
+                right: 0;
+                top: 6px;
+                height: 24px;
+                width: 1px;
+                margin-right: 10px;
+            }
+
+            .CentAnni-playback-speed-display::after {
+                content: "";
+                background: rgba(255,255,255,0.2);
+                position: initial;
+                right: 0;
+                top: 6px;
+                height: 24px;
+                width: 1px;
+                margin-left: 10px;
+            }
+
+            ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata {
+                width: 10%;
+            }
+        }
+
+        /* video tab view css */
+        .CentAnni-video-tabView {
+            .CentAnni-tabView {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                width: var(--ytd-watch-flexy-sidebar-width);
+                min-width: var(--ytd-watch-flexy-sidebar-min-width);
+                font-family: "Roboto", "Arial", sans-serif;
+                margin: 0;
+                padding: 0;
+                border-radius: 12px 12px 0 0;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                overflow: hidden;
+                box-sizing: border-box;
                 background-color: transparent;
+                z-index: 10;
             }
 
-            .ytd-page-manager[page-subtype="home"] {
-                .CentAnni-style-live-video, .CentAnni-style-upcoming-video, .CentAnni-style-newly-video, .CentAnni-style-recent-video, .CentAnni-style-lately-video { outline: 2px solid; border-radius: 12px; }
-                .CentAnni-style-old-video { outline: none;}
-
-                .CentAnni-style-live-video { outline-color: var(--liveVideo); }
-                .CentAnni-style-streamed-text { color: var(--streamedText); }
-                .CentAnni-style-upcoming-video { outline-color: var(--upComingVideo); }
-                .CentAnni-style-newly-video { outline-color: var(--newlyVideo); }
-                .CentAnni-style-recent-video { outline-color: var(--recentVideo); }
-                .CentAnni-style-lately-video { outline-color: var(--latelyVideo); }
-                .CentAnni-style-old-video { opacity: var(--oldVideo); }
-            }
-
-            .ytd-page-manager[page-subtype="subscriptions"] {
-                .CentAnni-style-last-seen {
-                    border: 2px solid var(--lastSeenVideoColor);
-                    border-radius: 12px;
-                }
-            }
-
-            .ytd-page-manager[page-subtype="playlist"] {
-                .CentAnni-style-playlist-remove-btn {
-                    display: flex;
-                    align-items: center;
-                    border: 1px dashed red;
-                    background: transparent;
-                    cursor: pointer;
-                    margin: 10px 20px 0px 10px;
-                    padding: 15px;
-                    transition: background 0.2s, filter 0.2s, transform 0.15s;
-                    font-size: 2rem;
-                    position: relative;
-                    z-index: 1000;
-                    border-radius: 2px;
-                }
-
-                .CentAnni-style-playlist-remove-btn:hover {
-                    background: darkred;
-                }
-
-                .CentAnni-style-playlist-remove-btn:active {
-                    background: darkred;
-                    transform: scale(0.9);
-                }
-            }
-
-            .CentAnni-style-playlist-hide-menu {
-                display: none !important;
-            }
-
-            .CentAnni-style-hide-watched-videos {
-                .ytd-page-manager[page-subtype="home"] {
-                    ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer) {
-                        display: none;
-                    }
-                }
-            }
-
-            .CentAnni-close-live-chat {
-                #chat-container {
-                    z-index: -1 !important;
-                    opacity: 0 !important;
-                    visibility: hidden;
-                    pointer-events: none !important;
-                }
-
-                ytd-watch-flexy[fixed-panels] #panels-full-bleed-container.ytd-watch-flexy {
-                    width: var(--ytd-watch-flexy-sidebar-width);
-                    display: none;
-                }
-
-                .video-stream.html5-main-video {
-                    width: 100%;
-                }
-
-                ytd-watch-flexy[fixed-panels] #columns.ytd-watch-flexy {
-                    padding-right: 0;
-                }
-            }
-
-            .CentAnni-style-hide-join-btn {
-                button[aria-label="Join this channel"],
-                #sponsor-button.ytd-video-owner-renderer:not(:empty),
-                ytd-browse[page-subtype="channels"] ytd-recognition-shelf-renderer,
-                ytd-browse[page-subtype="channels"] yt-page-header-view-model yt-flexible-actions-view-model button-view-model {
-                    display: none !important;
-                }
-            }
-
-            :root {
-                --next-button-visibility: none;
-            }
-
-            html:has(.CentAnni-tabView-tab[data-tab="tab-6"]) {
-                --next-button-visibility: inline-block;
-            }
-
-            .CentAnni-style-hide-playnext-btn {
-                a.ytp-next-button {
-                    display: var(--next-button-visibility);
-                }
-            }
-
-            .CentAnni-style-hide-airplay-btn {
-                #ytd-player .ytp-airplay-button {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-small-subscribe-btn {
-                .ytd-page-manager:not([page-subtype="channels"]) .yt-spec-button-shape-next.yt-spec-button-shape-next--tonal.yt-spec-button-shape-next--mono.yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-leading-trailing {
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-start;
-                    overflow: hidden;
-                    width: 36px;
-                    padding: 0 12px;
-                }
-            }
-
-            .CentAnni-style-hide-share-btn {
-                yt-button-view-model.ytd-menu-renderer:has(button.yt-spec-button-shape-next[aria-label="Share"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-hashtags {
-                    ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a {
-                            display: none !important;
-                    }
-
-                    ytd-watch-flexy #description > #description-inner #info-container {
-                        height: 18px !important;
-                    }
-
-                    .CentAnni-chapter-title {
-                        max-width: 60% !important;
-                    }
-
-                    & ytd-watch-flexy #bottom-row.ytd-watch-metadata {
-                        height: fit-content !important;
-                    }
-            }
-
-            .CentAnni-style-hide-info-panel {
-                #middle-row,
-                ytd-info-panel-container-renderer {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-add-comment {
-                ytd-shorts #header.ytd-item-section-renderer,
-                ytd-comments ytd-comments-header-renderer #simple-box {
-                    display: none;
-                }
-
-                #title.ytd-comments-header-renderer {
-                    margin-bottom: 0;
-                }
-            }
-
-            .CentAnni-style-hide-news-home {
-                ytd-browse[page-subtype="home"] ytd-rich-grid-renderer ytd-rich-section-renderer:has(yt-icon:empty) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-playlists-home {
-                ytd-browse[page-subtype="home"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-reply-btn {
-                ytd-comments ytd-comment-engagement-bar #reply-button-end {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-search-hide-right-sidebar {
-                #container.ytd-search ytd-secondary-search-container-renderer {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-shorts {
-                a[title="Shorts"],
-                #container.ytd-search ytd-reel-shelf-renderer,
-                ytd-rich-item-renderer:has(a[href^="/shorts/"]),
-                ytd-watch-metadata #description ytd-reel-shelf-renderer,
-                ytd-browse[page-subtype="channels"] ytd-reel-shelf-renderer,
-                ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
-                yt-chip-cloud-chip-renderer[chip-shape-data*='"text":"Shorts"'],
-                ytd-reel-shelf-renderer.ytd-structured-description-content-renderer,
-                ytd-rich-section-renderer:has(div ytd-rich-shelf-renderer[is-shorts]),
-                #container.ytd-search ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
-                ytd-item-section-renderer[page-subtype="subscriptions"]:has(ytd-reel-shelf-renderer),
-                ytd-browse[page-subtype="hashtag-landing-page"] tp-yt-app-toolbar.ytd-tabbed-page-header,
-                #tabsContent > yt-tab-group-shape > div.yt-tab-group-shape-wiz__tabs > yt-tab-shape[tab-title="Shorts"] {
-                    display: none !important;
-                }
-            }
-
-            .CentAnni-style-hide-ad-slots {
-                #player-ads,
-                .yt-consent,
-                #masthead-ad,
-                #promotion-shelf,
-                .yt-consent-banner,
-                #top_advertisement,
-                .ytp-subscribe-card,
-                .ytp-featured-product,
-                ytd-search-pyv-renderer,
-                #yt-lang-alert-container,
-                .ytd-merch-shelf-renderer,
-                .ytd-primetime-promo-renderer,
-                ytd-brand-video-singleton-renderer,
-                #related ytd-in-feed-ad-layout-renderer,
-                ytd-rich-section-renderer:has(ytd-statement-banner-renderer),
-                ytd-rich-item-renderer:has(> #content > ytd-ad-slot-renderer),
-                ytd-rich-item-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"])
-                ytd-compact-video-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"]) {
-                    display: none!important;
-                }
-            }
-
-            .CentAnni-style-hide-members-only {
-                ytd-compact-video-renderer:has(.badge-style-type-members-only),
-                ytd-rich-item-renderer:has(.badge-style-type-members-only) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-pay-to-watch {
-                ytd-compact-video-renderer:has(.badge[aria-label="Pay to watch"]),
-                ytd-rich-item-renderer:has(.badge[aria-label="Pay to watch"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-free-with-ads {
-                ytd-compact-video-renderer:has(.badge[aria-label="Free with ads"]),
-                ytd-rich-item-renderer:has(.badge[aria-label="Free with ads"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-hide-latest-posts {
-                #container.ytd-search ytd-shelf-renderer:has(ytd-post-renderer) {
-                    display: none;
-                }
-            }
-
-            /* left navigation bar */
-            .CentAnni-style-lnb-hide-home-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Home"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-subscriptions-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Subscriptions"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-history-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="History"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-playlists-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Playlists"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-videos-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Your videos"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-courses-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Your courses"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-your-podcasts-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Your podcasts"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-wl-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Watch later"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-liked-videos-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Liked videos"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-you-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="You"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-subscriptions-section {
-                #sections ytd-guide-section-renderer:has(#expander-item) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-subscriptions-title {
-                tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="/@"]) #guide-section-title {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-more-btn {
-                tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="/@"]) #expander-item {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-explore-section {
-                tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="feed/trending"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-explore-title {
-                tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="feed/trending"]) #guide-section-title {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-trending-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Trending"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-music-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Music"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-movies-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Movies & TV"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-live-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Live"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-gaming-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Gaming"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-news-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="News"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-sports-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Sports"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-learning-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Learning"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-fashion-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Fashion & Beauty"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-podcasts-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Podcasts"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-more-section {
-                tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="/premium"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-more-title {
-                tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="youtubekids"]) #guide-section-title {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-yt-premium-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="YouTube Premium"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-yt-studio-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="YouTube Studio"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-yt-music-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="YouTube Music"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-yt-kids-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="YouTube Kids"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-penultimate-section {
-                tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="/account"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-settings-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Settings"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-report-history-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Report history"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-help-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Help"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-feedback-btn {
-                #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Send feedback"]) {
-                    display: none;
-                }
-            }
-
-            .CentAnni-style-lnb-hide-footer {
-                tp-yt-app-drawer#guide[role="navigation"] #footer {
-                    display: none;
-                }
-            }
-
-            /* hide main scrollbar in safari */
-            html {
-                scrollbar-width: none;
-                -ms-overflow-style: none;
+            .CentAnni-tabView:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]) {
+                border-radius: 12px;
             }
 
-            html::-webkit-scrollbar {
+            .CentAnni-tabView:not(:has(.CentAnni-tabView-tab[data-tab="tab-2"])) ytd-comments#comments {
                 display: none;
             }
 
-            .scrollable-div {
-                scrollbar-width: auto;
-                -ms-overflow-style: auto;
+            .CentAnni-tabView-header {
+                display: flex;
+                position: relative;
+                overflow-x: auto;
+                overflow-y: hidden;
+                height: 50px;
+                padding: 0;
+                margin: 0;
+                color: var(--yt-spec-text-primary);
+                background-color: var(--yt-spec-brand-background-primary);
+                z-index: 7;
             }
 
-            .scrollable-div::-webkit-scrollbar {
-                display: block;
+            .CentAnni-tabView-subheader {
+                display: flex;
+                flex-direction: row;
+                height: 50px;
+                font-size: 9px;
+                line-height: 1;
+                padding: 0 8px;
+                align-items: center;
+                gap: 8px;
+                z-index: 8;
             }
 
-            /* adjustments for light mode */
-            ytd-masthead:not([dark]):not([page-dark-theme]) .buttons-left {
-                color: black;
+            .CentAnni-tabView-tab {
+                align-items: center;
+                border: none;
+                border-radius: 8px;
+                display: inline-flex;
+                height: 32px;
+                min-width: 12px;
+                white-space: nowrap;
+                font-family: "Roboto","Arial",sans-serif;
+                font-size: 1.4em;
+                line-height: 2em;
+                font-weight: 500;
+                margin: 0;
+                background-color: rgba(255,255,255,0.1);
+                color: #f1f1f1;
+                text-decoration: none;
+                padding: 0 12px;
+                z-index: 10;
             }
 
-            ytd-masthead:not([dark]):not([page-dark-theme]) .button-style-settings {
-                color: slategray !important;
-            }
-
-            ytd-masthead:not([dark]):not([page-dark-theme]) .button-style-settings:hover {
-                color: black !important;
-            }
-
-            ytd-masthead:not([dark]):not([page-dark-theme]) .button-style {
-                color: black;
-            }
-
-            ytd-masthead:not([dark]):not([page-dark-theme]) .button-wrapper:not(:has(.button-style-settings)):hover {
-                background-color: rgba(0, 0, 0, 0.1); border-radius: 24px;
-            }
-
-            ytd-masthead:not([dark]):not([page-dark-theme]) .button-wrapper:not(:has(.button-style-settings)):active {
-                background-color: rgba(0, 0, 0, 0.2); border-radius: 24px;
-            }
-
-
-            ytd-masthead:not([dark]):not([page-dark-theme]) .notification-error {
-                background-color: white;
-                border: 1px solid black;
-                color: #030303;
-            }
-
-            html:not([dark]) .CentAnni-playback-speed-button:active {
-                background: rgb(205,205,205) !important;
-            }
-
-            html:not([dark]) .CentAnni-tabView-tab,
-            html:not([dark]) .CentAnni-playback-speed-display {
-                background-color: rgba(0,0,0,0.05);
-                color: #0f0f0f;
-            }
-
-            html:not([dark]) .CentAnni-tabView-tab:hover {
-                background: rgba(0,0,0,0.1);
+            .CentAnni-tabView-tab:hover {
+                background: rgba(255,255,255,0.2);
                 border-color: transparent;
             }
 
-            html:not([dark]) .CentAnni-tabView-tab.active {
-                background-color: #0f0f0f;
-                color: white;
+            .CentAnni-tabView-tab.active {
+                background-color: #f1f1f1;
+                color: #0f0f0f;
             }
 
-            html:not([dark]) .CentAnni-tabView {
-                border: 1px solid var(--yt-spec-10-percent-layer);
+            .CentAnni-tabView-content {
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding: 0;
+                margin: 0;
+                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
             }
 
-            html:not([dark]) ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"] {
-                background-color: var(--yt-spec-badge-chip-background);
+            .CentAnni-tabView-content {
+                display: none;
             }
 
-            html:not([dark]) #CentAnni-playback-speed-control > div > svg > path {
-                fill: black;
+            .CentAnni-tabView-content.active {
+                display: block !important;
             }
 
-            html:not([dark]) ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
-            html:not([dark]) #related.style-scope.ytd-watch-flexy {
-                border: 1px solid var(--yt-spec-10-percent-layer);
+            .CentAnni-tabView-content-hidden {
+                display: none;
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            .CentAnni-tabView-content-active {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+
+            ytd-watch-flexy ytd-playlist-panel-renderer[hidden] {
+                display: none !important;
+            }
+
+
+            .CentAnni-tabView-content-nascosta {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            .CentAnni-tabView-content-attiva {
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+
+
+            .CentAnni-tabView-content-block {
+                display: block !important;
+            }
+
+            .CentAnni-tabView-content-none {
+                display: none;
+            }
+
+            #tab-2 {
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            #related.style-scope.ytd-watch-flexy {
+                position: absolute;
+                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                width: var(--ytd-watch-flexy-sidebar-width);
+                top: 76px;
+                left: 0;
+                margin: 0;
+                padding: 15px 10px 0 10px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                visibility: hidden;
+                opacity: 0;
+                z-index: 5;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-top: none;
+                box-sizing: border-box;
+                border-radius: 0 0 12px 12px;
+            }
+
+            ytd-watch-metadata.ytd-watch-flexy {
+                margin: 12px 10px 0 10px;
+            }
+
+            ytd-watch-flexy ytd-comments {
+                margin: 0;
+                padding: 0 10px;
+            }
+
+            #comments > #sections > #header > ytd-comments-header-renderer > #title > #additional-section {
+                margin-left: auto;
+            }
+
+            #comments > #sections > #header {
+                margin: 0 12px;
+            }
+
+            ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]) {
+                border-radius: 0 0 12px 12px;
+            }
+
+            #related.style-scope.ytd-watch-flexy[full-bleed-player] {
+                top: 30px;
+            }
+
+            ytd-watch-flexy  #header.style-scope.ytd-engagement-panel-section-list-renderer {
+                display: none;
+            }
+
+            ytd-engagement-panel-section-list-renderer {
+                box-sizing: content-box;
+                display: flexbox;
+                display: flex;
+                flex-direction: column;
+            }
+
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
+                position: absolute;
+                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                width: var(--ytd-watch-flexy-sidebar-width);
+                top: 76px;
+                left: 0;
+                margin: 0;
+                padding: 0;
+                overflow-y: auto;
+                overflow-x: hidden;
+                z-index: 5;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-top: none;
+                box-sizing: border-box;
+            }
+
+            ytd-watch-flexy #description.ytd-expandable-video-description-body-renderer {
+                padding-right: 10px !important;
+            }
+
+            #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy {
+                margin-bottom: 0;
+            }
+
+            ytd-watch-flexy ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
+                display: none;
+            }
+
+            ytd-engagement-panel-section-list-renderer ytd-merch-shelf-renderer {
+                display: none;
+            }
+
+            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description] {
+                position: absolute;
+                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                width: var(--ytd-watch-flexy-sidebar-width);
+                top: 76px;
+                left: 0;
+                margin: 0;
+                padding: 10px 0 0 10px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                z-index: 5;
+                background: black;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-top: none;
+                box-sizing: border-box;
+            }
+
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id^="shopping_panel_for_entry_point_"] {
+                display: none;
+            }
+
+            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript] {
+                position: absolute;
+                top: 0;
+                left: 0;
+                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                width: var(--ytd-watch-flexy-sidebar-width);
+                top: 76px;
+                margin: 0;
+                padding: 0;
+                z-index: 5;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-top: none;
+                box-sizing: border-box;
+            }
+
+            #body.ytd-transcript-renderer {
+                display: none;
+            }
+
+            ytd-transcript-renderer {
+                flex: 1 1 auto;
+            }
+
+            ytd-transcript-segment-list-renderer {
+                height: 100%;
+            }
+
+            ytd-text-inline-expander[engagement-panel] {
+                display: block;
+                margin: 0;
+                padding: 0;
+                border: none;
+                border-radius: 0;
+                background: transparent;
+                padding-right: 10px;
+            }
+
+            ytd-expandable-video-description-body-renderer > ytd-text-inline-expander > #snippet {
+                max-height: 100% !important;
+            }
+
+            #media-lockups > ytd-structured-description-playlist-lockup-renderer > #lockup-container > #playlist-thumbnail {
+                width: 100%;
+            }
+
+            #items > yt-video-attributes-section-view-model > div > div.yt-video-attributes-section-view-model__video-attributes.yt-video-attributes-section-view-model__scroll-container > div > yt-video-attribute-view-model > div:hover,
+            #media-lockups > ytd-structured-description-playlist-lockup-renderer > #lockup-container:hover {
+                filter: brightness(1.1);
+            }
+
+            ytd-text-inline-expander,
+            #navigation-button.ytd-rich-list-header-renderer,
+            ytd-expandable-video-description-body-renderer > ytd-expander > tp-yt-paper-button#more.ytd-expander {
+                display: none;
+            }
+
+            ytd-expandable-video-description-body-renderer[engagement-panel]:not([shorts-panel]) ytd-expander.ytd-expandable-video-description-body-renderer {
+                border-radius: 0;
+                padding: 0;
+                background: transparent;
+            }
+
+            ytd-structured-description-content-renderer[engagement-panel] ytd-expandable-video-description-body-renderer.ytd-structured-description-content-renderer {
+                padding: 0;
+            }
+
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[enable-anchored-panel][target-id="engagement-panel-structured-description"] #content.ytd-engagement-panel-section-list-renderer .ytd-engagement-panel-section-list-renderer:first-child,
+            ytd-watch-flexy ytd-structured-description-content-renderer[engagement-panel] #items.ytd-structured-description-content-renderer {
+                padding: 0;
+            }
+
+            ytd-video-description-transcript-section-renderer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                z-index: -9999;
+                pointer-events: none;
+                opacity: 0;
+            }
+
+            ytd-video-description-infocards-section-renderer[engagement-panel] #social-links.ytd-video-description-infocards-section-renderer {
+                margin: 0 0 16px 0;
+                padding: 0;
+            }
+
+            ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-infocards-section-renderer.ytd-structured-description-content-renderer {
+                padding: 16px 0 0 0;
+            }
+
+            #infocards-section > ytd-compact-infocard-renderer:last-of-type {
+                margin-bottom: 0;
+            }
+
+            #bottom-row > #description {
+                cursor: default;
+                pointer-events: none;
+            }
+
+            #content > #description a:hover,
+            #snippet > #snippet-text > yt-attributed-string a:hover {
+                text-decoration: underline;
+            }
+
+            ytd-compact-video-renderer:hover,
+            ytd-video-description-course-section-renderer > #topic-link:hover,
+            #infocards-section > ytd-compact-infocard-renderer > #content:hover,
+            #items > ytd-video-description-infocards-section-renderer > #header:hover,
+            ytd-watch-card-compact-video-renderer.ytd-vertical-watch-card-list-renderer:not([is-condensed]):hover,
+            #always-shown > ytd-rich-metadata-row-renderer > #contents > ytd-rich-metadata-renderer > #endpoint-link:hover,
+            #items > ytd-video-description-infocards-section-renderer > #infocards-section > ytd-compact-infocard-renderer > #content:hover,
+            ytd-playlist-panel-renderer h3 yt-formatted-string[has-link-only_]:not([force-default-style]) a.yt-simple-endpoint.yt-formatted-string:hover {
+                background: var(--yt-spec-badge-chip-background);
+            }
+
+            ytd-playlist-panel-renderer #publisher-container yt-formatted-string[has-link-only_]:not([force-default-style]) a.yt-simple-endpoint.yt-formatted-string:hover {
+                color: red;
+            }
+
+            #playlist-actions.ytd-playlist-panel-renderer {
+                cursor: default;
+            }
+
+            ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a {
+                cursor: pointer;
+                pointer-events: all;
+                color:var(--yt-endpoint-visited-color);
+            }
+
+            ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a:hover {
+                color: var(--yt-spec-call-to-action);
+            }
+
+            #description > #description-inner > #ytd-watch-info-text > tp-yt-paper-tooltip {
+                display: none;
+            }
+
+            #description > #description-interaction {
+                display: none;
+            }
+
+            .yt-animated-icon.lottie-player.style-scope {
+                pointer-events: none;
+            }
+
+            #description.ytd-watch-metadata {
+                background: none;
+            }
+
+            ytd-transcript-search-box-renderer {
+                margin: 12px 0;
+            }
+
+            .CentAnni-info-date {
+                margin-left: 6px;
+            }
+
+            #ytd-watch-info-text.ytd-watch-metadata {
+                height: 18px;
+            }
+
+            #middle-row.ytd-watch-metadata {
+                padding: 10px 0;
+            }
+
+            .content.style-scope.ytd-info-panel-content-renderer {
+                padding: 10px 16px;
+            }
+
+            #description-inner.ytd-watch-metadata {
+                margin: 0px 12px 0px 52px;
+            }
+
+            #view-count.ytd-watch-info-text, #date-text.ytd-watch-info-text {
+                align-items: center;
+            }
+
+            ytd-watch-info-text:not([detailed]) #info.ytd-watch-info-text {
+                align-content: center;
+            }
+
+            #bottom-row.ytd-watch-metadata {
+                flex-direction: column;
+            }
+
+            .ytVideoMetadataCarouselViewModelHost {
+                flex-direction: row;
+                padding: 12px;
+                height: 100%;
+                margin-bottom: 24px;
+                gap: 20px;
+                align-items: center;
+            }
+
+            .ytVideoMetadataCarouselViewModelCarouselContainer {
+                margin-top: 0;
+            }
+
+            /* live chat adjustments */
+            ytd-live-chat-frame[modern-buttons][collapsed] {
+                display: none;
+            }
+
+            #columns > #secondary > #secondary-inner > #chat-container {
+                top: 24px;
+                position: absolute;
+                width: var(--ytd-watch-flexy-sidebar-width);
+                min-width: var(--ytd-watch-flexy-sidebar-min-width);
+            }
+
+            
+            ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]) {
+                height: calc(90vh - 10px);
+                border: 1px solid rgb(51, 51, 51);
+            }
+
+            #chat.ytd-watch-flexy {
+                margin-bottom: 0;
+            }
+
+            /* theater mode active */
+            ytd-watch-flexy[theater] #playlist,
+            ytd-watch-flexy[theater] ytd-comments,
+            ytd-watch-flexy[theater] #related.style-scope.ytd-watch-flexy,
+            ytd-watch-flexy[theater] ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer,
+            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
+            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
+            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters],
+            ytd-watch-flexy[theater][flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
+            ytd-watch-flexy[theater][flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"] {
+                height: 0;
+                padding-top: 0;
+                padding-bottom: 0;
+                margin-top: 0;
+                margin-bottom: 0;
+                opacity: 0;
+                visibility: hidden;
+                z-index: -1;
+                pointer-events: none;
+            }
+
+            ytd-watch-flexy[theater][flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-clip-create"] {
+                display: none;
+            }
+
+            ytd-watch-flexy[theater] #donation-shelf {
+                display: none !important;
+            }
+
+            ytd-watch-flexy[theater] .CentAnni-tabView-content {
+                display: none !important;
+            }
+
+            ytd-watch-flexy[theater][cinematics-enabled] #secondary.ytd-watch-flexy {
+                align-content: center;
+            }
+
+            ytd-watch-flexy[theater][is-two-columns_][full-bleed-player] #secondary.ytd-watch-flexy {
+                margin-top: 34.5px !important;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+            }
+
+            ytd-watch-flexy[theater] .CentAnni-tabView {
+                border-radius: 25px;
+            }
+
+            ytd-watch-flexy[theater] .CentAnni-tabView-tab {
+                border-radius: 18px;
+            }
+
+            ytd-watch-flexy[is-two-columns_][theater] #columns {
+                max-height: calc(100vh - 56.25vw - var(--ytd-masthead-height,var(--ytd-toolbar-height)));
+                min-height: calc(169px - var(--ytd-masthead-height, var(--ytd-toolbar-height)));
+            }
+
+            ytd-watch-flexy[theater] #primary {
+                overflow-x: hidden;
+            }
+
+            #donation-shelf {
+                display: none;
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy {
+                    margin-bottom: 0;
+                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                    overflow-y: auto;
+            }
+
+            ytd-donation-shelf-renderer[modern-panels] {
+                border-radius: 0px 0px 12px 12px;
+            }
+
+            ytd-donation-shelf-renderer {
                 border-top: none;
             }
 
-            html:not([dark]) #tab-2 {
-                border-top: 1px solid var(--yt-spec-10-percent-layer);
+            #collapse-controls-section {
+                display: none;
             }
 
-            html:not([dark]) .yt-tab-shape-wiz__tab--tab-selected,
-            html:not([dark]) .yt-tab-shape-wiz__tab:hover {
-                color: black !important;
+            ytd-watch-flexy #playlist {
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                top: 76px;
+                left: 0;
+                width: var(--ytd-watch-flexy-sidebar-width);
+                z-index: 5;
+                display: none;
+                opacity: 0;
+                visibility: hidden;
+                margin-bottom: 0;
             }
 
-            .CentAnni-style-selection-color {
-                --selection-color: var(--darkSelectionColor);
-                --selection-text-color: white;
+            ytd-playlist-panel-renderer[modern-panels]:not([within-miniplayer]) #container.ytd-playlist-panel-renderer {
+                border-radius: 0 0 12px 12px;
             }
 
-            html:not([dark]) .CentAnni-style-selection-color {
-                --selection-color: var(--lightSelectionColor);
-                --selection-text-color: var(--light-theme-background-color);
+            ytd-watch-flexy[default-layout] #playlist,
+            ytd-watch-flexy[default-layout] #secondary,
+            ytd-watch-flexy[default-layout] #container.ytd-playlist-panel-renderer {
+                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
             }
 
-            .CentAnni-style-selection-color ::selection {
-                background: var(--selection-color);
-                color: var(--selection-text-color);
+            #container.ytd-playlist-panel-renderer {
+                border-top: none;
             }
-        `;
+
+            ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer {
+                padding: 12px 0 0 25px;
+                margin-right: 0;
+            }
+
+            #trailing-button.ytd-playlist-panel-renderer {
+                display: none;
+            }
+
+            .playlist-items.ytd-playlist-panel-renderer {
+                padding: 0;
+            }
+
+            /* single columns */
+            ytd-watch-flexy:not([is-two-columns_]) #columns.ytd-watch-flexy {
+                flex-direction: column;
+            }
+
+            ytd-watch-flexy:not([is-two-columns_])[flexy] #primary.ytd-watch-flexy {
+                flex-basis: auto;
+            }
+
+            ytd-watch-flexy:not([is-two-columns_])[theater][full-bleed-player] #secondary.ytd-watch-flexy,
+            ytd-watch-flexy:not([is-two-columns_]) #secondary.ytd-watch-flexy {
+                display: flex;
+                margin: 0;
+                padding: 0;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+            }
+
+            ytd-watch-flexy:not([is-two-columns_]) .CentAnni-tabView {
+                margin-top: 24px;
+                width: 90vw;
+            }
+
+            ytd-watch-flexy:not([is-two-columns_])[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"] {
+                max-height: 50vh;
+                width: 90vw;
+                top: 171px;
+                margin: 0;
+                background-color: black;
+            }
+
+            ytd-watch-flexy:not([is-two-columns_]) ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-structured-description"] {
+                align-self: center;
+                left: initial;
+            }
+
+            ytd-watch-flexy:not([is-two-columns_]) .CentAnni-tabView-content {
+                max-height: 50vh;
+            }
+
+            ytd-watch-flexy:not([is-two-columns_]) #related.style-scope.ytd-watch-flexy {
+                max-height: 50vh;
+                width: 90vw;
+                top: 171px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            ytd-watch-flexy:not([is-two-columns_])[default-layout]:not([no-top-margin]):not([reduced-top-margin]) #secondary.ytd-watch-flexy {
+                padding: 0;
+            }
+
+            ytd-watch-flexy:not([is-two-columns_])[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy {
+                max-height: 50vh;
+                width: 90vw;
+                top: 147px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            ytd-watch-flexy #columns #below > ytd-watch-metadata #title > ytd-badge-supported-renderer {
+                bottom: 8px;
+                left: 30%;
+                position: absolute;
+                cursor: default;
+            }
+        }
+
+        .CentAnni-tabView-chapters {
+            .ytp-chapter-title-chevron,
+            ytd-watch-flexy .ytp-chapter-title-prefix {
+                display: none;
+            }
+
+            ytd-watch-flexy .ytp-chapter-container {
+                padding: 0;
+                font-size: inherit;
+                line-height: inherit;
+            }
+
+            ytd-watch-flexy .sponsorChapterText,
+            ytd-watch-flexy .ytp-chapter-title-content {
+                white-space: normal;
+                font-weight: 500;
+            }
+
+            #movie_player .sponsorChapterText,
+            #movie_player .ytp-chapter-title-content {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                text-wrap: nowrap;
+                line-height: 59px;
+            }
+
+            .CentAnni-chapter-title {
+                position: absolute;
+                display: flex;
+                flex-direction: row;
+                z-index: 2025;
+                top: 0;
+                right: 0;
+                max-width: calc(50% - 26px);
+                font-family: -apple-system, "Roboto", "Arial", sans-serif;
+                font-size: 1.4rem;
+                line-height: 2rem;
+                color: var(--yt-spec-text-primary) !important;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                cursor: default;
+            }
+
+            .CentAnni-chapter-title span {
+                text-wrap: nowrap;
+                margin-right: .5ch;
+            }
+
+            #movie_player .CentAnni-chapter-title {
+                position: absolute;
+                display: none;
+                flex-direction: row;
+                max-width: 50vw;
+                overflow: hidden;
+                z-index: 2053;
+                bottom: 0;
+                left: 50%;
+                font-weight: 500 !important;
+                font-size: 109%;
+                vertical-align: top;
+                white-space: nowrap;
+                line-height: 59px;
+                color: ghostwhite !important;
+                text-shadow: black 0 0 3px !important;
+            }
+
+            .ytp-autohide .ytp-chrome-bottom .CentAnni-chapter-title {
+                display: flex !important;
+            }
+
+            .CentAnni-chapter-title .ytp-chapter-container.sponsorblock-chapter-visible {
+                display: block !important;
+            }
+
+            .CentAnni-chapter-title:has(.ytp-chapter-title-content:empty):not(:has(.sponsorChapterText:not(:empty))) {
+                display: none;
+            }
+
+            :is(
+                :has(ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]),
+                :has(ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"])
+            ) {
+                & ytd-watch-flexy #description > #description-inner {
+                    width: calc(50% - 26px);
+                }
+
+                & ytd-watch-flexy #description > #description-inner #info-container {
+                    height: 41px;
+                }
+
+                & ytd-watch-flexy #description > #description-inner #info span.CentAnni-info-date + span::after {
+                    content: "";
+                    display: block;
+                    height: 0;
+                    margin-bottom: 5px;
+                }
+
+                & ytd-watch-flexy #description > #description-inner #info a.yt-simple-endpoint.bold {
+                    display: inline-block;
+                }
+
+                & ytd-watch-flexy #bottom-row.ytd-watch-metadata {
+                    height: 50px;
+                }
+
+                #movie_player .CentAnni-remaining-time-container {
+                    left: 25% !important;
+                }
+            }
+        }
+
+
+        .CentAnni-style-hide-comments-btn {
+            ytd-comments#comments,
+            .CentAnni-tabView-tab[data-tab="tab-2"] {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-videos-btn {
+            #related.style-scope.ytd-watch-flexy,
+            .CentAnni-tabView-tab[data-tab="tab-3"] {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-yt-settings .ytp-settings-menu, .CentAnni-style-hide-yt-settings .ytp-overflow-panel {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* customCSS CSS */
+        html {
+            font-size: var(--fontSize) !important;
+            font-family: "Roboto", Arial, sans-serif;
+        }
+
+        .CentAnni-style-hide-default-sidebar {
+            ytd-mini-guide-renderer.ytd-app { display: none !important; }
+            ytd-app[mini-guide-visible] ytd-page-manager.ytd-app { margin-left: 0 !important; }
+            #guide-button.ytd-masthead { display: none !important; }
+            #contents.ytd-rich-grid-renderer { justify-content: center !important; }
+            ytd-browse[mini-guide-visible] ytd-playlist-header-renderer.ytd-browse, ytd-browse[mini-guide-visible] ytd-playlist-sidebar-renderer.ytd-browse, ytd-browse[mini-guide-visible] .page-header-sidebar.ytd-browse {
+                left: 0;
+            }
+        }
+
+        html #above-the-fold h1,
+        h1.ytd-watch-metadata,
+        #video-title {
+            text-transform: var(--textTransform) !important;
+        }
+
+        .CentAnni-style-full-title {
+            #video-title.ytd-rich-grid-media {
+                white-space: normal;
+                text-overflow: unset;
+                overflow: unset;
+                display: inline-block;
+            }
+
+            #video-title {
+                max-height: unset !important;
+                -webkit-line-clamp: unset !important;
+            }
+        }
+
+        ytd-compact-video-renderer ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer),
+        ytd-rich-item-renderer ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer),
+        ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
+            opacity: var(--watchedOpacity);
+        }
+
+        ytd-search ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
+            opacity: .8;
+        }
+
+        .ytd-page-manager[page-subtype="history"] {
+            ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
+                opacity: 1;
+            }
+        }
+
+        .CentAnni-style-hide-watched-videos-global {
+            ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer),
+            ytd-grid-video-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer) {
+                display: none !important;
+            }
+        }
+
+        html.CentAnni-style-pure-bg:not([dark]) ytd-app {
+            background: white !important;
+        }
+
+        html.CentAnni-style-pure-bg[dark] ytd-app {
+            background: black !important;
+        }
+
+        .CentAnni-style-remove-scrubber {
+            .ytp-scrubber-container {
+                display: none;
+                pointer-events: none;
+            }
+        }
+
+        .CentAnni-style-play-progress-color {
+            .ytp-play-progress, .ytp-swatch-background-color {
+                background: var(--progressBarColor) !important;
+            }
+        }
+
+        .CentAnni-style-disable-play-on-hover {
+            ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-toggle-button-renderer.ytd-thumbnail,
+            ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail,
+            ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-endorsement-renderer.ytd-thumbnail,
+            ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-hover-text-renderer.ytd-thumbnail,
+            ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-button-renderer.ytd-thumbnail,
+            ytd-thumbnail[now-playing] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail,
+            ytd-thumbnail-overlay-loading-preview-renderer[is-preview-loading],
+            ytd-grid-video-renderer a#thumbnail div#mouseover-overlay,
+            ytd-rich-item-renderer a#thumbnail div#mouseover-overlay,
+            ytd-thumbnail-overlay-loading-preview-renderer,
+            ytd-moving-thumbnail-renderer img#thumbnail,
+            ytd-moving-thumbnail-renderer yt-icon,
+            ytd-moving-thumbnail-renderer span,
+            ytd-moving-thumbnail-renderer img,
+            ytd-moving-thumbnail-renderer,
+            #mouseover-overlay,
+            ytd-video-preview,
+            div#video-preview,
+            #video-preview,
+            #preview {
+                display: none !important;
+            }
+        }
+
+        .CentAnni-style-hide-end-cards {
+            .ytp-ce-element {
+                display: none !important;
+            }
+        }
+
+        .CentAnni-style-hide-endscreen {
+            .html5-video-player .html5-endscreen.videowall-endscreen {
+                display: none !important;
+            }
+
+            .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) {
+                display: block !important;
+                cursor: default !important;
+            }
+
+            .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) button {
+                display: none;
+            }
+
+            .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) .ytp-cued-thumbnail-overlay-image {
+                display: block !important;
+                background-image: var(--video-url) !important;
+            } 
+        }
+
+        .CentAnni-style-gradient-bottom {
+            .ytp-gradient-bottom {
+                padding-top: 50px !important;
+                height: 48px !important;
+                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==) !important;
+            }
+        }
+
+        .CentAnni-style-video-row {
+            ytd-rich-grid-renderer {
+                --ytd-rich-grid-items-per-row: var(--itemsPerRow) !important;
+            }
+        }
+
+        .CentAnni-style-hide-voice-search {
+            #voice-search-button.ytd-masthead {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-create-btn {
+            ytd-button-renderer.ytd-masthead[button-renderer][button-next]:has(button[aria-label="Create"]) {
+                display: none !important;
+            }
+        }
+
+        .CentAnni-style-hide-queue-btn {
+            ytd-thumbnail-overlay-toggle-button-renderer[aria-label="Add to queue"] {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-notification-btn {
+            #masthead-container #end #buttons ytd-notification-topbar-button-renderer {
+                display: none !important;
+            }
+        }
+
+        .CentAnni-style-hide-notification-badge {
+            #masthead-container #end #buttons ytd-notification-topbar-button-renderer .yt-spec-icon-badge-shape__badge {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-own-avatar {
+            #avatar-btn {
+                display: none !important;
+            }
+        }
+
+        .CentAnni-style-hide-brand-text {
+            ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > picture,
+            #country-code.ytd-topbar-logo-renderer,
+            #logo-icon [id^="youtube-paths_yt"] {
+                display: none;
+            }
+
+            #logo.ytd-masthead {
+                width: 45px;
+                overflow: hidden;
+            }
+
+            ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > ytd-logo {
+                display: block !important;
+            }
+        }
+
+        .CentAnni-style-visible-country-code {
+            #country-code.ytd-topbar-logo-renderer {
+                position: absolute;
+                color: var(--countryCodeColor);
+                margin: 7px 0 0 45px;
+                display: block !important;
+            }
+        }
+
+        .CentAnni-style-hide-fundraiser {
+            #donation-shelf, ytd-badge-supported-renderer:has([aria-label="Fundraiser"]) {
+                display: none !important;
+            }
+        }
+
+        .CentAnni-style-hide-miniplayer {
+            ytd-miniplayer {
+                display: none !important;
+            }
+
+            #ytd-player .ytp-miniplayer-button {
+                display: none !important;
+            }
+        }
+
+        .CentAnni-style-square-search-bar {
+            #center.ytd-masthead { flex: 0 1 500px; }
+            .YtSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; }
+            .YtSearchboxComponentSuggestionsContainer { border-radius: 0 0 10px 10px; }
+            .YtSearchboxComponentSearchButton, .YtSearchboxComponentSearchButtonDark { display: none; }
+            .YtSearchboxComponentHost { margin: 0; }
+
+            .ytSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; }
+            .ytSearchboxComponentSuggestionsContainer { border-radius: 0 0 10px 10px; }
+            .ytSearchboxComponentSearchButton, .ytSearchboxComponentSearchButtonDark { display: none; }
+            .ytSearchboxComponentHost { margin: 0; }
+
+            .ytSearchboxComponentDesktop .ytSearchboxComponentClearButton {
+                border-radius: 0;
+                height: 38px;
+                width: 38px;
+                margin-right: 6px;
+            }
+        }
+
+        .ytd-page-manager[page-subtype="home"] {
+            #avatar-container.ytd-rich-grid-media {
+                margin: 12px 12px 0 6px;
+            }
+        }
+
+        .CentAnni-style-square-design {
+            #thumbnail,
+            .CentAnni-tabView,
+            .ytp-settings-menu,
+            #card.ytd-miniplayer,
+            .smartimation__border,
+            .ytp-tooltip-text-wrapper,
+            ytd-playlist-video-renderer,
+            .ytOfficialCardViewModelHost,
+            #dismissed.ytd-rich-grid-media,
+            ytd-info-panel-content-renderer,
+            ytd-expandable-metadata-renderer,
+            .yt-thumbnail-view-model--medium,
+            .badge.ytd-badge-supported-renderer,
+            .yt-spec-button-shape-next--size-xs,
+            #related.style-scope.ytd-watch-flexy,
+            .animated-action__background-container,
+            .ytp-player-minimized .html5-main-video,
+            .ytProgressBarLineProgressBarLineRounded,
+            .ytp-tooltip.ytp-text-detail.ytp-preview,
+            .collections-stack-wiz__collection-stack2,
+            ytd-donation-shelf-renderer[modern-panels],
+            .ytp-player-minimized .ytp-miniplayer-scrim,
+            yt-interaction.circular .fill.yt-interaction,
+            .yt-spec-button-shape-next--icon-only-default,
+            yt-interaction.circular .stroke.yt-interaction,
+            ytd-watch-flexy[theater] .CentAnni-tabView-tab,
+            tp-yt-paper-toast.yt-notification-action-renderer,
+            .collections-stack-wiz__collection-stack1--medium,
+            .metadata-container.ytd-reel-player-overlay-renderer,
+            ytd-shorts .player-container.ytd-reel-video-renderer,
+            ytd-compact-link-renderer.ytd-settings-sidebar-renderer,
+            .ytp-tooltip.ytp-text-detail.ytp-preview .ytp-tooltip-bg,
+            ytd-live-chat-frame[theater-watch-while][rounded-container],
+            ytd-watch-flexy[rounded-player] #ytd-player.ytd-watch-flexy,
+            ytd-shorts[enable-anchored-panel] .anchored-panel.ytd-shorts,
+            ytd-live-chat-frame[rounded-container]:not([theater-watch-while]),
+            ytd-live-chat-frame[rounded-container] iframe.ytd-live-chat-frame,
+            .html5-video-player:not(.ytp-touch-mode) ::-webkit-scrollbar-thumb,
+            .CentAnni-tabView:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]),
+            ytd-thumbnail[size="large"] a.ytd-thumbnail, ytd-thumbnail[size="large"]::before,
+            ytd-watch-flexy[rounded-player-large][default-layout] #ytd-player.ytd-watch-flexy,
+            ytd-thumbnail[size="medium"] a.ytd-thumbnail, ytd-thumbnail[size="medium"]::before,
+            ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]),
+            ytd-macro-markers-list-item-renderer[rounded] #thumbnail.ytd-macro-markers-list-item-renderer,
+            ytd-expandable-metadata-renderer:not([is-expanded]) #header.ytd-expandable-metadata-renderer:hover,
+            ytd-watch-flexy[flexy][js-panel-height_]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
+            ytd-playlist-panel-renderer[modern-panels]:not([within-miniplayer]) #container.ytd-playlist-panel-renderer {
+                border-radius: 0 !important;
+            }
+
+            .yt-video-attribute-view-model--image-large .yt-video-attribute-view-model__hero-section {
+                border-radius: 1px;
+            }
+
+            .ytChipShapeChip,
+            yt-dropdown-menu,
+            .CentAnni-tabView-tab,
+            #menu.yt-dropdown-menu,
+            ytd-menu-popup-renderer,
+            ytd-guide-entry-renderer,
+            tp-yt-paper-dialog[modern],
+            yt-chip-cloud-chip-renderer,
+            ytd-multi-page-menu-renderer,
+            #description.ytd-watch-metadata,
+            .badge-shape-wiz--thumbnail-badge,
+            ytd-author-comment-badge-renderer,
+            .yt-spec-button-shape-next--size-s,
+            .yt-spec-button-shape-next--size-m,
+            ytd-rich-metadata-renderer[rounded],
+            .yt-sheet-view-model-wiz--contextual,
+            .ytVideoMetadataCarouselViewModelHost,
+            yt-interaction.ytd-guide-entry-renderer,
+            .dropdown-content.tp-yt-paper-menu-button,
+            .tp-yt-paper-tooltip[style-target=tooltip],
+            #chip-container.yt-chip-cloud-chip-renderer,
+            .image-wrapper.ytd-hero-playlist-thumbnail-renderer,
+            #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer,
+            .immersive-header-container.ytd-playlist-header-renderer,
+            #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:hover,
+            #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:focus,
+            #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:active,
+            ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]) {
+                border-radius: 2px;
+            }
+
+            ytd-rich-item-renderer yt-interaction.circular .fill.yt-interaction,
+            ytd-rich-item-renderer yt-interaction.circular .stroke.yt-interaction,
+            #masthead-container yt-interaction.circular .fill.yt-interaction,
+            #masthead-container yt-interaction.circular .stroke.yt-interaction {
+                border-radius: 50% !important;
+            }
+
+            tp-yt-paper-item.ytd-guide-entry-renderer,
+            ytd-compact-link-renderer[compact-link-style="compact-link-style-type-settings-sidebar"] tp-yt-paper-item.ytd-compact-link-renderer {
+                --paper-item-focused-before-border-radius: 0;
+            }
+
+            .ytd-page-manager[page-subtype="home"] {
+                yt-chip-cloud-chip-renderer {
+                    border-radius: 2px;
+                }
+
+                .CentAnni-style-live-video, .CentAnni-style-upcoming-video, .CentAnni-style-newly-video, .CentAnni-style-recent-video, .CentAnni-style-lately-video, .CentAnni-style-old-video { border-radius: 0; }
+            }
+
+            .ytd-page-manager[page-subtype="subscriptions"] {
+                .CentAnni-style-last-seen { border-radius: 0; }
+            }
+
+            .ytd-page-manager[page-subtype="channels"] {
+                .yt-spec-button-shape-next--size-m {
+                    border-radius: 2px;
+                }
+
+                .yt-thumbnail-view-model--medium,
+                .yt-image-banner-view-model-wiz--inset,
+                .collections-stack-wiz__collection-stack2,
+                #chip-container.yt-chip-cloud-chip-renderer,
+                .collections-stack-wiz__collection-stack1--medium {
+                    border-radius: 0 !important;
+                }
+            }
+
+            .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-start {
+                border-radius: 2px 0 0 3px;
+            }
+
+            .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-end {
+                border-radius: 0 3px 3px 0;
+            }
+
+            ytd-expandable-metadata-renderer:not([is-expanded]) {
+                --yt-img-border-radius: 0px;
+                border-radius: 0px;
+            }
+
+            .desktopShortsPlayerControlsWizHost {
+                left: 0;
+                right: 0;
+            }
+
+            ytd-search yt-official-card-view-model horizontal-shelf-view-model .ytwHorizontalShelfViewModelLeftArrow .yt-spec-button-shape-next--size-m,
+            ytd-search yt-official-card-view-model horizontal-shelf-view-model .ytwHorizontalShelfViewModelRightArrow .yt-spec-button-shape-next--size-m {
+                border-radius: 18px;
+            }
+        }
+
+        .CentAnni-style-square-avatars {
+            .yt-spec-avatar-shape__image,
+            #avatar.ytd-video-owner-renderer,
+            yt-img-shadow.ytd-video-renderer,
+            yt-img-shadow.ytd-channel-renderer,
+            .thumbnail.ytd-notification-renderer,
+            ytd-menu-renderer.ytd-rich-grid-media,
+            yt-img-shadow.ytd-guide-entry-renderer,
+            #avatar.ytd-active-account-header-renderer,
+            #avatar.ytd-watch-card-rich-header-renderer,
+            yt-img-shadow.ytd-topbar-menu-button-renderer,
+            #author-thumbnail.ytd-comment-simplebox-renderer,
+            ytd-rich-item-renderer yt-interaction.circular .fill.yt-interaction,
+            ytd-rich-item-renderer yt-interaction.circular .stroke.yt-interaction,
+            .yt-spec-avatar-shape--cairo-refresh.yt-spec-avatar-shape--live-ring::after,
+            #author-thumbnail.ytd-comment-view-model yt-img-shadow.ytd-comment-view-model,
+            #author-thumbnail.ytd-backstage-post-renderer yt-img-shadow.ytd-backstage-post-renderer,
+            ytd-comment-replies-renderer #creator-thumbnail.ytd-comment-replies-renderer yt-img-shadow.ytd-comment-replies-renderer {
+                border-radius: 0 !important;
+            }
+        }
+
+        #CentAnni-channel-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #CentAnni-playlist-direction-container {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 8px;
+        }
+
+        #CentAnni-playlist-direction-container > span {
+            margin-right: 4px;
+            color: var(--yt-spec-text-primary);
+            font-family: "YouTube Sans","Roboto",sans-serif;
+            font-size: 1.7rem;
+            line-height: 1rem;
+            font-weight: 600;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            cursor: default;
+        }
+
+        #end-actions.ytd-playlist-panel-renderer {
+            margin-right: 24px;
+        }
+
+        .CentAnni-playlist-direction-btn {
+            color: var(--yt-spec-text-secondary) !important;
+        }
+
+        .CentAnni-playlist-direction-btn.active {
+            color: var(--yt-spec-text-primary) !important;
+        }
+
+        .CentAnni-style-compact-layout {
+            ytd-rich-section-renderer:has(.grid-subheader.ytd-shelf-renderer) {
+                display: none;
+            }
+
+            #page-manager.ytd-app {
+                --ytd-toolbar-offset: 0 !important;
+            }
+
+            ytd-browse[page-subtype="hashtag-landing-page"] {
+                transform: translateY(0px);
+            }
+
+            .ytd-page-manager[page-subtype="home"],
+            .ytd-page-manager[page-subtype="channels"],
+            .ytd-page-manager[page-subtype="subscriptions"] {
+                ytd-menu-renderer .ytd-menu-renderer[style-target=button] {
+                    height: 36px;
+                    width: 36px;
+                }
+
+                button.yt-icon-button>yt-icon {
+                    transform: rotate(90deg);
+                }
+
+                #contents.ytd-rich-grid-renderer {
+                    width: 100%;
+                    max-width: 100%;
+                    padding-top: 0;
+                    display: flex;
+                    flex-wrap: wrap;
+                    column-gap: 5px;
+                    row-gap: 10px;
+                }
+
+                .style-scope.ytd-two-column-browse-results-renderer {
+                    --ytd-rich-grid-item-max-width: 100vw;
+                    --ytd-rich-grid-item-min-width: 310px;
+                    --ytd-rich-grid-item-margin: 0px !important;
+                    --ytd-rich-grid-content-offset-top: 56px;
+                }
+
+                ytd-rich-item-renderer[rendered-from-rich-grid] {
+                    margin: 0 !important;
+                }
+
+                #meta.ytd-rich-grid-media {
+                    overflow-x: hidden;
+                    padding-right: 6px;
+                }
+
+                #avatar-container.ytd-rich-grid-media {
+                    margin:7px 6px 50px 6px;
+                }
+
+                h3.ytd-rich-grid-media {
+                    margin: 7px 0 4px 0;
+                }
+
+                .yt-spec-avatar-shape--cairo-refresh.yt-spec-avatar-shape--live-ring::after {
+                    inset: -2px;
+                }
+            }
+
+            .ytd-page-manager[page-subtype="home"] {
+                ytd-menu-renderer.ytd-rich-grid-media {
+                    position: absolute;
+                    height: 36px;
+                    width: 36px;
+                    top: 50px;
+                    right: auto;
+                    left: 6px;
+                    align-items: center;
+                    background-color: rgba(255,255,255,.1);
+                    border-radius: 50%;
+                }
+
+                .title-badge.ytd-rich-grid-media, .video-badge.ytd-rich-grid-media {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    margin: 8px;
+                    display: flex;
+                    flex-direction: row;
+                }
+
+                ytd-rich-item-renderer[rendered-from-rich-grid] {
+                    margin: 0 !important;
+                }
+
+                #contents.ytd-rich-grid-renderer {
+                    padding-top: 2px;
+                    column-gap: 14px;
+                    row-gap: 14px;
+                }
+
+                .style-scope.ytd-two-column-browse-results-renderer {
+                    --ytd-rich-grid-item-margin: .5% !important;
+                }
+            }
+
+            .ytd-page-manager[page-subtype="channels"] {
+                ytd-tabbed-page-header.grid-5-columns #page-header.ytd-tabbed-page-header, ytd-tabbed-page-header.grid-5-columns[has-inset-banner] #page-header-banner.ytd-tabbed-page-header {
+                    padding: 0 !important;
+                }
+
+                ytd-two-column-browse-results-renderer.grid-5-columns, .grid-5-columns.ytd-two-column-browse-results-renderer {
+                    width: 100% !important;
+                }
+
+                ytd-rich-grid-renderer:not([is-default-grid]) #header.ytd-rich-grid-renderer {
+                    transform: translateY(-40px);
+                    z-index: 2000;
+                    width: max-content;
+                    margin-left: auto;
+                }
+
+                ytd-two-column-browse-results-renderer.grid-6-columns ytd-rich-grid-renderer:not([is-default-grid]) #header {
+                    margin-right: 5px;
+                }
+
+                ytd-two-column-browse-results-renderer.grid-5-columns ytd-rich-grid-renderer:not([is-default-grid]) #header {
+                    margin-right: 110px;
+                }
+
+                ytd-feed-filter-chip-bar-renderer[component-style="FEED_FILTER_CHIP_BAR_STYLE_TYPE_CHANNEL_PAGE_GRID"] {
+                    margin-bottom: -32px;
+                    margin-top: 0;
+                }
+
+                .page-header-view-model-wiz__page-header-headline-image {
+                    margin-left: 110px;
+                }
+
+                ytd-menu-renderer.ytd-rich-grid-media {
+                    position: absolute;
+                    height: 36px;
+                    width: 36px;
+                    top: initial;
+                    bottom: -10px;
+                    right: 0;
+                    align-items: center;
+                    border-radius: 50%;
+                }
+
+                .yt-tab-group-shape-wiz__slider,.yt-tab-shape-wiz__tab-bar {
+                    display: none;
+                }
+
+                .yt-tab-shape-wiz__tab--tab-selected,.yt-tab-shape-wiz__tab:hover {
+                    color: white;
+                }
+
+                .style-scope.ytd-two-column-browse-results-renderer {
+                    --ytd-rich-grid-item-margin: .5% !important;
+                }
+
+                ytd-backstage-items {
+                    display: block;
+                    max-width: 100%;
+                }
+
+                #contents {
+                margin-left: 10px;
+                margin-right: 10px;
+                }
+
+                #header-container {
+                    width: 80vw;
+                    align-self: center;
+                }
+
+                #items.ytd-grid-renderer {
+                    justify-content: center;
+                }
+            }
+
+            .ytd-page-manager[page-subtype="channels"] #contentContainer {
+                padding-top: 0 !important;
+            }
+
+            .ytd-page-manager[page-subtype="channels"] tp-yt-app-header {
+                position: static !important;
+                transform: none !important;
+                transition: none !important;
+            }
+
+            .ytd-page-manager[page-subtype="channels"] tp-yt-app-header[fixed] {
+                position: static !important;
+                transform: none !important;
+                transition: none !important;
+            }
+
+            .ytd-page-manager[page-subtype="channels"] tp-yt-app-header #page-header {
+            position: static !important;
+                transform: none !important;
+            }
+
+            .ytd-page-manager[page-subtype="subscriptions"] {
+                ytd-menu-renderer.ytd-rich-grid-media {
+                    position: absolute;
+                    height: 36px;
+                    width: 36px;
+                    top: 50px;
+                    right: auto;
+                    left: 3px;
+                    align-items: center;
+                    background-color: rgba(255,255,255,.1);
+                    border-radius: 50%;
+                }
+
+                .title-badge.ytd-rich-grid-media, .video-badge.ytd-rich-grid-media {
+                    position: absolute;
+                    margin: 0px 10% 0 0;
+                    right: 0;
+                    top: 6em;
+                }
+            }
+
+            .item.ytd-watch-metadata {
+                margin-top: 7px;
+            }
+
+            #middle-row.ytd-watch-metadata:empty {
+                display: none;
+            }
+
+            #subheader.ytd-engagement-panel-title-header-renderer:not(:empty) {
+                padding: 0 !important;
+                transform: translateX(110px) translateY(-44px);
+                background-color: transparent;
+                border-top: none;
+            }
+
+            #header.ytd-engagement-panel-title-header-renderer {
+                padding: 4px 7px 4px 7px;
+            }
+
+            #visibility-button.ytd-engagement-panel-title-header-renderer, #information-button.ytd-engagement-panel-title-header-renderer {
+                z-index: 1;
+            }
+
+            .ytChipShapeChip:hover  {
+                background: rgba(255,255,255,0.2);
+                border-color: transparent;
+            }
+
+            .ytChipShapeActive:hover {
+                background-color: #f1f1f1;
+                color: #0f0f0f;
+            }
+
+            ytd-engagement-panel-title-header-renderer {
+                height: 54px;
+            }
+
+            .yt-spec-button-shape-next--icon-only-default {
+                width: 35px;
+                height: 35px;
+            }
+
+            ytd-miniplayer {
+                --ytd-miniplayer-attachment-padding: 0;
+            }
+
+            ytd-watch-flexy #title > ytd-badge-supported-renderer div > yt-icon {
+                padding: 0 2px 0px 0;
+            }
+                
+            #container.ytd-search ytd-video-renderer[use-bigger-thumbs] ytd-thumbnail.ytd-video-renderer,
+            #container.ytd-search ytd-video-renderer[use-bigger-thumbs][bigger-thumbs-style="BIG"] ytd-thumbnail.ytd-video-renderer {
+                max-width: calc(100vh / 1.92 - 64px);
+                min-width: 250px;
+            }
+        }
+
+        .CentAnni-style-no-ambient {
+            #cinematics-container {
+                display: none !important;
+            }
+        }
+
+        ytd-watch-flexy #expandable-metadata #content.ytd-expandable-metadata-renderer {
+            height: calc(var(--yt-macro-marker-list-item-height) - 34px);
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] #collapsed-title.ytd-expandable-metadata-renderer {
+            display: none;
+        }
+
+        ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[has-video-summary] #expanded-title-subtitle-group.ytd-expandable-metadata-renderer {
+            display: flex !important;
+        }
+
+        ytd-watch-flexy #expandable-metadata #expanded-subtitle.ytd-expandable-metadata-renderer {
+            display: block !important;
+            pointer-events: auto;
+        }
+
+        ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] {
+            background: transparent;
+            pointer-events: none;
+        }
+
+        ytd-watch-flexy #expandable-metadata #right-section.ytd-expandable-metadata-renderer {
+            display: none;
+        }
+
+        ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer:not([is-expanded]) #header.ytd-expandable-metadata-renderer:hover {
+            background-color: transparent;
+        }
+
+        .ytd-page-manager[page-subtype="home"] {
+            .CentAnni-style-live-video, .CentAnni-style-upcoming-video, .CentAnni-style-newly-video, .CentAnni-style-recent-video, .CentAnni-style-lately-video { outline: 2px solid; border-radius: 12px; }
+            .CentAnni-style-old-video { outline: none;}
+
+            .CentAnni-style-live-video { outline-color: var(--liveVideo); }
+            .CentAnni-style-streamed-text { color: var(--streamedText); }
+            .CentAnni-style-upcoming-video { outline-color: var(--upComingVideo); }
+            .CentAnni-style-newly-video { outline-color: var(--newlyVideo); }
+            .CentAnni-style-recent-video { outline-color: var(--recentVideo); }
+            .CentAnni-style-lately-video { outline-color: var(--latelyVideo); }
+            .CentAnni-style-old-video { opacity: var(--oldVideo); }
+        }
+
+        .ytd-page-manager[page-subtype="subscriptions"] {
+            .CentAnni-style-last-seen {
+                border: 2px solid var(--lastSeenVideoColor);
+                border-radius: 12px;
+            }
+        }
+
+        .ytd-page-manager[page-subtype="playlist"] {
+            .CentAnni-style-playlist-remove-btn {
+                display: flex;
+                align-items: center;
+                border: 1px dashed red;
+                background: transparent;
+                cursor: pointer;
+                margin: 10px 20px 0px 10px;
+                padding: 15px;
+                transition: background 0.2s, filter 0.2s, transform 0.15s;
+                font-size: 2rem;
+                position: relative;
+                z-index: 1000;
+                border-radius: 2px;
+            }
+
+            .CentAnni-style-playlist-remove-btn:hover {
+                background: darkred;
+            }
+
+            .CentAnni-style-playlist-remove-btn:active {
+                background: darkred;
+                transform: scale(0.9);
+            }
+        }
+
+        .CentAnni-style-playlist-hide-menu {
+            display: none !important;
+        }
+
+        .CentAnni-style-hide-watched-videos {
+            .ytd-page-manager[page-subtype="home"] {
+                ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer) {
+                    display: none;
+                }
+            }
+        }
+
+        .CentAnni-close-live-chat {
+            #chat-container {
+                z-index: -1 !important;
+                opacity: 0 !important;
+                visibility: hidden;
+                pointer-events: none !important;
+            }
+
+            ytd-watch-flexy[fixed-panels] #panels-full-bleed-container.ytd-watch-flexy {
+                width: var(--ytd-watch-flexy-sidebar-width);
+                display: none;
+            }
+
+            .video-stream.html5-main-video {
+                width: 100%;
+            }
+
+            ytd-watch-flexy[fixed-panels] #columns.ytd-watch-flexy {
+                padding-right: 0;
+            }
+        }
+
+        .CentAnni-style-hide-join-btn {
+            button[aria-label="Join this channel"],
+            #sponsor-button.ytd-video-owner-renderer:not(:empty),
+            ytd-browse[page-subtype="channels"] ytd-recognition-shelf-renderer,
+            ytd-browse[page-subtype="channels"] yt-page-header-view-model yt-flexible-actions-view-model button-view-model {
+                display: none !important;
+            }
+        }
+
+        :root {
+            --next-button-visibility: none;
+        }
+
+        html:has(.CentAnni-tabView-tab[data-tab="tab-6"]) {
+            --next-button-visibility: inline-block;
+        }
+
+        .CentAnni-style-hide-playnext-btn {
+            a.ytp-next-button {
+                display: var(--next-button-visibility);
+            }
+        }
+
+        .CentAnni-style-hide-airplay-btn {
+            #ytd-player .ytp-airplay-button {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-small-subscribe-btn {
+            .ytd-page-manager:not([page-subtype="channels"]) .yt-spec-button-shape-next.yt-spec-button-shape-next--tonal.yt-spec-button-shape-next--mono.yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-leading-trailing {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                overflow: hidden;
+                width: 36px;
+                padding: 0 12px;
+            }
+        }
+
+        .CentAnni-style-hide-share-btn {
+            yt-button-view-model.ytd-menu-renderer:has(button.yt-spec-button-shape-next[aria-label="Share"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-hashtags {
+                ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a {
+                        display: none !important;
+                }
+
+                ytd-watch-flexy #description > #description-inner #info-container {
+                    height: 18px !important;
+                }
+
+                .CentAnni-chapter-title {
+                    max-width: 60% !important;
+                }
+
+                & ytd-watch-flexy #bottom-row.ytd-watch-metadata {
+                    height: fit-content !important;
+                }
+        }
+
+        .CentAnni-style-hide-info-panel {
+            #middle-row,
+            ytd-info-panel-container-renderer {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-add-comment {
+            ytd-shorts #header.ytd-item-section-renderer,
+            ytd-comments ytd-comments-header-renderer #simple-box {
+                display: none;
+            }
+
+            #title.ytd-comments-header-renderer {
+                margin-bottom: 0;
+            }
+        }
+
+        .CentAnni-style-hide-news-home {
+            ytd-browse[page-subtype="home"] ytd-rich-grid-renderer ytd-rich-section-renderer:has(yt-icon:empty) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-playlists-home {
+            ytd-browse[page-subtype="home"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-reply-btn {
+            ytd-comments ytd-comment-engagement-bar #reply-button-end {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-search-hide-right-sidebar {
+            ytd-item-section-renderer[top-spacing-zero]:first-child #contents.ytd-item-section-renderer .ytd-item-section-renderer:first-child,
+            #container.ytd-search ytd-secondary-search-container-renderer {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-shorts {
+            a[title="Shorts"],
+            #container.ytd-search ytd-reel-shelf-renderer,
+            ytd-rich-item-renderer:has(a[href^="/shorts/"]),
+            ytd-watch-metadata #description ytd-reel-shelf-renderer,
+            ytd-browse[page-subtype="channels"] ytd-reel-shelf-renderer,
+            ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
+            yt-chip-cloud-chip-renderer[chip-shape-data*='"text":"Shorts"'],
+            ytd-reel-shelf-renderer.ytd-structured-description-content-renderer,
+            ytd-rich-section-renderer:has(div ytd-rich-shelf-renderer[is-shorts]),
+            #container.ytd-search ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
+            ytd-item-section-renderer[page-subtype="subscriptions"]:has(ytd-reel-shelf-renderer),
+            ytd-browse[page-subtype="hashtag-landing-page"] tp-yt-app-toolbar.ytd-tabbed-page-header,
+            #tabsContent > yt-tab-group-shape > div.yt-tab-group-shape-wiz__tabs > yt-tab-shape[tab-title="Shorts"] {
+                display: none !important;
+            }
+        }
+
+        .CentAnni-style-hide-ad-slots {
+            #player-ads,
+            .yt-consent,
+            #masthead-ad,
+            #promotion-shelf,
+            .yt-consent-banner,
+            #top_advertisement,
+            .ytp-subscribe-card,
+            .ytp-featured-product,
+            ytd-search-pyv-renderer,
+            #yt-lang-alert-container,
+            .ytd-merch-shelf-renderer,
+            .ytd-primetime-promo-renderer,
+            ytd-brand-video-singleton-renderer,
+            #related ytd-in-feed-ad-layout-renderer,
+            ytd-rich-section-renderer:has(ytd-statement-banner-renderer),
+            ytd-rich-item-renderer:has(> #content > ytd-ad-slot-renderer),
+            ytd-rich-item-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"])
+            ytd-compact-video-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"]) {
+                display: none!important;
+            }
+        }
+
+        .CentAnni-style-hide-members-only {
+            ytd-compact-video-renderer:has(.badge-style-type-members-only),
+            ytd-rich-item-renderer:has(.badge-style-type-members-only) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-pay-to-watch {
+            ytd-compact-video-renderer:has(.badge[aria-label="Pay to watch"]),
+            ytd-rich-item-renderer:has(.badge[aria-label="Pay to watch"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-free-with-ads {
+            ytd-compact-video-renderer:has(.badge[aria-label="Free with ads"]),
+            ytd-rich-item-renderer:has(.badge[aria-label="Free with ads"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-latest-posts {
+            #container.ytd-search ytd-shelf-renderer:has(ytd-post-renderer) {
+                display: none;
+            }
+        }
+
+        /* left navigation bar */
+        .CentAnni-style-lnb-hide-home-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Home"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-subscriptions-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Subscriptions"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-history-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="History"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-playlists-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Playlists"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-videos-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Your videos"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-courses-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Your courses"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-your-podcasts-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Your podcasts"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-wl-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Watch later"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-liked-videos-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Liked videos"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-you-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="You"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-subscriptions-section {
+            #sections ytd-guide-section-renderer:has(#expander-item) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-subscriptions-title {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="/@"]) #guide-section-title {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-more-btn {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="/@"]) #expander-item {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-explore-section {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="feed/trending"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-explore-title {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="feed/trending"]) #guide-section-title {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-trending-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Trending"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-music-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Music"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-movies-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Movies & TV"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-live-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Live"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-gaming-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Gaming"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-news-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="News"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-sports-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Sports"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-learning-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Learning"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-fashion-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Fashion & Beauty"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-podcasts-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Podcasts"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-more-section {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="/premium"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-more-title {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="youtubekids"]) #guide-section-title {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-yt-premium-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="YouTube Premium"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-yt-studio-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="YouTube Studio"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-yt-music-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="YouTube Music"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-yt-kids-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="YouTube Kids"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-penultimate-section {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="/account"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-settings-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Settings"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-report-history-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Report history"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-help-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Help"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-feedback-btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="Send feedback"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-lnb-hide-footer {
+            tp-yt-app-drawer#guide[role="navigation"] #footer {
+                display: none;
+            }
+        }
+
+        /* hide main scrollbar in safari */
+        html {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        html::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollable-div {
+            scrollbar-width: auto;
+            -ms-overflow-style: auto;
+        }
+
+        .scrollable-div::-webkit-scrollbar {
+            display: block;
+        }
+
+        /* adjustments for light mode */
+        ytd-masthead:not([dark]):not([page-dark-theme]) .buttons-left {
+            color: black;
+        }
+
+        ytd-masthead:not([dark]):not([page-dark-theme]) .button-style-settings {
+            color: slategray !important;
+        }
+
+        ytd-masthead:not([dark]):not([page-dark-theme]) .button-style-settings:hover {
+            color: black !important;
+        }
+
+        ytd-masthead:not([dark]):not([page-dark-theme]) .button-style {
+            color: black;
+        }
+
+        ytd-masthead:not([dark]):not([page-dark-theme]) .button-wrapper:not(:has(.button-style-settings)):hover {
+            background-color: rgba(0, 0, 0, 0.1); border-radius: 24px;
+        }
+
+        ytd-masthead:not([dark]):not([page-dark-theme]) .button-wrapper:not(:has(.button-style-settings)):active {
+            background-color: rgba(0, 0, 0, 0.2); border-radius: 24px;
+        }
+
+
+        ytd-masthead:not([dark]):not([page-dark-theme]) .notification-error {
+            background-color: white;
+            border: 1px solid black;
+            color: #030303;
+        }
+
+        html:not([dark]) .CentAnni-playback-speed-button:active {
+            background: rgb(205,205,205) !important;
+        }
+
+        html:not([dark]) .CentAnni-tabView-tab,
+        html:not([dark]) .CentAnni-playback-speed-display {
+            background-color: rgba(0,0,0,0.05);
+            color: #0f0f0f;
+        }
+
+        html:not([dark]) .CentAnni-tabView-tab:hover {
+            background: rgba(0,0,0,0.1);
+            border-color: transparent;
+        }
+
+        html:not([dark]) .CentAnni-tabView-tab.active {
+            background-color: #0f0f0f;
+            color: white;
+        }
+
+        html:not([dark]) .CentAnni-tabView {
+            border: 1px solid var(--yt-spec-10-percent-layer);
+        }
+
+        html:not([dark]) ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"],
+        html:not([dark]) ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description] {
+            background-color: var(--yt-spec-badge-chip-background);
+        }
+
+        html:not([dark]) #CentAnni-playback-speed-control > div > svg > path {
+            fill: black;
+        }
+
+        html:not([dark]) ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
+        html:not([dark]) ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters],
+        html:not([dark]) ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
+        html:not([dark]) ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
+        html:not([dark]) ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+        html:not([dark]) #related.style-scope.ytd-watch-flexy {
+            border: 1px solid var(--yt-spec-10-percent-layer);
+            border-top: none;
+        }
+
+        html:not([dark]) #tab-2 {
+            border-top: 1px solid var(--yt-spec-10-percent-layer);
+        }
+
+        html:not([dark]) .yt-tab-shape-wiz__tab--tab-selected,
+        html:not([dark]) .yt-tab-shape-wiz__tab:hover {
+            color: black !important;
+        }
+
+        .CentAnni-style-selection-color {
+            --selection-color: var(--darkSelectionColor);
+            --selection-text-color: white;
+        }
+
+        html:not([dark]) .CentAnni-style-selection-color {
+            --selection-color: var(--lightSelectionColor);
+            --selection-text-color: var(--light-theme-background-color);
+        }
+
+        .CentAnni-style-selection-color ::selection {
+            background: var(--selection-color);
+            color: var(--selection-text-color);
+        }
+    `;
     // (document.documentElement || document).appendChild(styleSheet);
     if (document.head) document.head.appendChild(styleSheet);
     else {
@@ -3471,6 +3483,8 @@
         hideNotificationBadge: false,
         hideOwnAvatar: false,
         hideBrandText: false,
+        visibleCountryCode: false,
+        visibleCountryCodeColor: '#aaaaaa',
         hideJoinButton: false,
         hidePlayNextButton: false,
         hideAirplayButton: false,
@@ -3506,7 +3520,7 @@
         autoTheaterMode: false,
         channelReindirizzare: false,
         channelRSSBtn: false,
-        channelPlaylistBtn: true,
+        channelPlaylistBtn: false,
         playlistDirectionBtns: true,
         lnbHideHomeBtn: false,
         lnbHideSubscriptionsBtn: false,
@@ -3548,7 +3562,8 @@
         squareSearchBar: false,
         squareDesign: false,
         squareAvatars: false,
-        compactLayout: false
+        compactLayout: false,
+        noAmbientMode: false
     };
 
     // load user configuration or use defaults
@@ -3583,16 +3598,18 @@
         if (USER_CONFIG.videoTabView && USER_CONFIG.tabViewChapters) { html.classList.add('CentAnni-tabView-chapters'); } else { html.classList.remove('CentAnni-tabView-chapters'); }
 
         // custom css
-        document.documentElement.style.setProperty('--itemsPerRow', USER_CONFIG.videosPerRow);
-        document.documentElement.style.setProperty('--textTransform', USER_CONFIG.textTransform);
-        document.documentElement.style.setProperty('--fontSize', `${USER_CONFIG.defaultFontSize}px`);
-        document.documentElement.style.setProperty('--watchedOpacity', USER_CONFIG.videosWatchedOpacity);
-        document.documentElement.style.setProperty('--progressBarColor', USER_CONFIG.progressbarColorPicker);
-        document.documentElement.style.setProperty('--lightSelectionColor', USER_CONFIG.lightModeSelectionColor);
-        document.documentElement.style.setProperty('--darkSelectionColor', USER_CONFIG.darkModeSelectionColor);
+        html.style.setProperty('--itemsPerRow', USER_CONFIG.videosPerRow);
+        html.style.setProperty('--textTransform', USER_CONFIG.textTransform);
+        html.style.setProperty('--fontSize', `${USER_CONFIG.defaultFontSize}px`);
+        html.style.setProperty('--watchedOpacity', USER_CONFIG.videosWatchedOpacity);
+        html.style.setProperty('--progressBarColor', USER_CONFIG.progressbarColorPicker);
+        html.style.setProperty('--lightSelectionColor', USER_CONFIG.lightModeSelectionColor);
+        html.style.setProperty('--darkSelectionColor', USER_CONFIG.darkModeSelectionColor);
+        html.style.setProperty('--countryCodeColor', USER_CONFIG.visibleCountryCodeColor);
 
         if (USER_CONFIG.pureBWBackground) { html.classList.add('CentAnni-style-pure-bg'); } else { html.classList.remove('CentAnni-style-pure-bg'); }
         if (USER_CONFIG.hideShorts) { html.classList.add('CentAnni-style-hide-shorts'); } else { html.classList.remove('CentAnni-style-hide-shorts'); }
+        if (USER_CONFIG.noAmbientMode) { html.classList.add('CentAnni-style-no-ambient'); } else { html.classList.remove('CentAnni-style-no-ambient'); }
         if (USER_CONFIG.closeChatWindow) { html.classList.add('CentAnni-close-live-chat'); } else { html.classList.remove('CentAnni-close-live-chat'); }
         if (USER_CONFIG.videosPerRow !== 0) { html.classList.add('CentAnni-style-video-row'); } else { html.classList.remove('CentAnni-style-video-row'); }
         if (USER_CONFIG.displayFullTitle) { html.classList.add('CentAnni-style-full-title'); } else { html.classList.remove('CentAnni-style-full-title'); }
@@ -3673,6 +3690,7 @@
         if (USER_CONFIG.lnbHideSubscriptionsTitle) { html.classList.add('CentAnni-style-lnb-hide-subscriptions-title'); } else { html.classList.remove('CentAnni-style-lnb-hide-subscriptions-title'); }
         if (USER_CONFIG.lnbHidePenultimateSection) { html.classList.add('CentAnni-style-lnb-hide-penultimate-section'); } else { html.classList.remove('CentAnni-style-lnb-hide-penultimate-section'); }
         if (USER_CONFIG.lnbHideSubscriptionsSection) { html.classList.add('CentAnni-style-lnb-hide-subscriptions-section'); } else { html.classList.remove('CentAnni-style-lnb-hide-subscriptions-section'); }
+        if (USER_CONFIG.visibleCountryCode && USER_CONFIG.hideBrandText) { html.classList.add('CentAnni-style-visible-country-code'); } else { html.classList.remove('CentAnni-style-visible-country-code'); }
 
         // color code videos
         if (USER_CONFIG.videosHideWatched) { html.classList.add('CentAnni-style-hide-watched-videos'); } else { html.classList.remove('CentAnni-style-hide-watched-videos'); }
@@ -4224,7 +4242,7 @@
             form.appendChild(channelRSSBtn);
 
             // playlist button on channel page
-            const channelPlaylistBtn = createCheckboxField('Add Playlist Buttons to Channel Pages (default: yes)', 'channelPlaylistBtn', USER_CONFIG.channelPlaylistBtn);
+            const channelPlaylistBtn = createCheckboxField('Add Playlist Buttons to Channel Pages (default: no)', 'channelPlaylistBtn', USER_CONFIG.channelPlaylistBtn);
             form.appendChild(channelPlaylistBtn);
 
             // playlist direction buttons in playlist panel
@@ -4260,7 +4278,7 @@
             form.appendChild(VerifiedArtist);
 
             // 1080p enhanced bitrate
-            const defaultQualityPremium = createCheckboxField('Use Enhanced Bitrate for 1080p Videos | Premium Required (default: no)', 'defaultQualityPremium', USER_CONFIG.defaultQualityPremium);
+            const defaultQualityPremium = createCheckboxField('Use Enhanced Bitrate for 1080p Videos | Premium Required! (default: no)', 'defaultQualityPremium', USER_CONFIG.defaultQualityPremium);
             form.appendChild(defaultQualityPremium);
 
             // persistent progress bar
@@ -4315,12 +4333,16 @@
             const compactLayout = createCheckboxField('Compact Layout (default: no)', 'compactLayout', USER_CONFIG.compactLayout);
             form.appendChild(compactLayout);
 
+            // disable ambient mode
+            const noAmbientMode = createCheckboxField('Disable Ambient Mode (default: no)', 'noAmbientMode', USER_CONFIG.noAmbientMode);
+            form.appendChild(noAmbientMode);
+
             // hide shorts
             const hideShorts = createCheckboxField('Hide Shorts (default: no)', 'hideShorts', USER_CONFIG.hideShorts);
             form.appendChild(hideShorts);
 
             // redirect shorts
-            const redirectShorts = createCheckboxField('Redirect Shorts to the Standard Video Page (default: no)', 'redirectShorts', USER_CONFIG.redirectShorts);
+            const redirectShorts = createCheckboxField('Redirect Shorts to Standard Video Pages (default: no)', 'redirectShorts', USER_CONFIG.redirectShorts);
             form.appendChild(redirectShorts);
 
             // hide ad slot
@@ -4372,6 +4394,18 @@
             // hide YouTube brand text within the header
             const hideBrandText = createCheckboxField('Hide YouTube Brand Text in the Header (default: no)', 'hideBrandText', USER_CONFIG.hideBrandText);
             form.appendChild(hideBrandText);
+
+            // color picker country code - toggle | color picker
+            const visibleCountryCodeColor = document.createElement('div');
+            visibleCountryCodeColor.classList.add('videos-colorpicker-container', 'selection-color-container');
+
+            const visibleCountryCode = createCheckboxField('Keep Country Code Visible When Hiding Brand Text (default: no)', 'visibleCountryCode', USER_CONFIG.visibleCountryCode);
+            visibleCountryCodeColor.appendChild(visibleCountryCode);
+
+            const visibleCountryCodePicker = createColorPicker('Country Code Text Color', 'visibleCountryCodeColor');
+            visibleCountryCodeColor.appendChild(visibleCountryCodePicker);
+
+            form.appendChild(visibleCountryCodeColor);
 
             // small subscribed button
             const smallSubscribeButton = createCheckboxField('Small Subscribed Button Under a Video—Displays Only the Notification Icon (default: no)', 'smallSubscribeButton', USER_CONFIG.smallSubscribeButton);
@@ -5126,6 +5160,8 @@
             USER_CONFIG.hideOwnAvatar = subPanelCustomCSS.elements.hideOwnAvatar.checked;
             USER_CONFIG.hideRightSidebarSearch = subPanelCustomCSS.elements.hideRightSidebarSearch.checked;
             USER_CONFIG.hideBrandText = subPanelCustomCSS.elements.hideBrandText.checked;
+            USER_CONFIG.visibleCountryCode = subPanelCustomCSS.elements.visibleCountryCode.checked;
+            USER_CONFIG.visibleCountryCodeColor = subPanelCustomCSS.elements.visibleCountryCodeColor.value;
             USER_CONFIG.disablePlayOnHover = subPanelCustomCSS.elements.disablePlayOnHover.checked;
             USER_CONFIG.preventAutoplay = subPanelCustomCSS.elements.preventAutoplay.checked;
             USER_CONFIG.VerifiedArtist = subPanelCustomCSS.elements.VerifiedArtist.checked;
@@ -5204,6 +5240,7 @@
             USER_CONFIG.squareDesign = subPanelCustomCSS.elements.squareDesign.checked;
             USER_CONFIG.squareAvatars = subPanelCustomCSS.elements.squareAvatars.checked;
             USER_CONFIG.compactLayout = subPanelCustomCSS.elements.compactLayout.checked;
+            USER_CONFIG.noAmbientMode = subPanelCustomCSS.elements.noAmbientMode.checked;
         }
 
         // save sub panels - color code videos
@@ -5274,9 +5311,7 @@
                         USER_CONFIG = { ...DEFAULT_CONFIG, ...importedConfig };
                         GM.setValue('USER_CONFIG', USER_CONFIG);
                         showNotification('Settings have been imported.');
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1000);
+                        setTimeout(() => { location.reload(); }, 1000);
                     } else {
                         showNotification('Invalid JSON format!');
                     }
@@ -5585,6 +5620,15 @@
 
             let loaded = false;
 
+            const fallbackTimer = setTimeout(() => {
+                if (!loaded) {
+                    console.error("YouTubeAlchemy: The transcript took too long to load. Reload this page to try again.");
+                    observer.disconnect();
+                    cleanup(true);
+                    reject();
+                }
+            }, 10000);
+
             const observer = new MutationObserver(() => {
                 const transcriptItems = transcriptPanel.querySelectorAll("ytd-transcript-segment-renderer");
                 if (transcriptItems.length > 0) {
@@ -5599,15 +5643,6 @@
             });
 
             observer.observe(transcriptPanel, { childList: true, subtree: true });
-
-            const fallbackTimer = setTimeout(() => {
-                if (!loaded) {
-                    console.error("YouTubeAlchemy: The transcript took too long to load. Reload this page to try again.");
-                    observer.disconnect();
-                    cleanup(true);
-                    reject();
-                }
-            }, 10000);
 
             function cleanup(failed) {
                 notification.remove();
@@ -6891,17 +6926,22 @@
                     if (/Scheduled for/i.test(text) && !videoContainer.classList.contains('CentAnni-style-upcoming-video'))
                         videoContainer.classList.add('CentAnni-style-upcoming-video');
 
-                    if (/Streamed/i.test(text) && !el.querySelector('.CentAnni-style-streamed-text')) {
-                        el.childNodes.forEach(node => {
-                            if (node.nodeType === Node.TEXT_NODE && /Streamed/i.test(node.nodeValue)) {
-                                const span = document.createElement('span');
-                                span.className = 'CentAnni-style-streamed-text';
-                                span.textContent = node.nodeValue.match(/Streamed/i)[0];
-                                const rest = document.createTextNode(node.nodeValue.replace(/Streamed/i, ''));
-                                el.replaceChild(rest, node);
-                                el.insertBefore(span, rest);
-                            }
-                        });
+                    if (/Streamed/i.test(text)) {
+                        const nextEl = el.nextElementSibling;
+                        if (!nextEl || !nextEl.classList.contains('CentAnni-style-streamed-span')) {
+                            const cloneSpan = document.createElement('span');
+                            cloneSpan.className = 'CentAnni-style-streamed-span';
+
+                            const streamedWordSpan = document.createElement('span');
+                            streamedWordSpan.className = 'CentAnni-style-streamed-text';
+                            streamedWordSpan.textContent = 'Streamed ';
+
+                            const restText = document.createTextNode(text.replace(/Streamed/i, '').trimStart());
+
+                            cloneSpan.appendChild(streamedWordSpan);
+                            cloneSpan.appendChild(restText);
+                            metaBlock.insertBefore(cloneSpan, el.nextSibling);
+                        }
                     }
                 });
             });
@@ -6925,14 +6965,14 @@
         const navigateFinishHandler = () => { setTimeout(cleanupAndReprocessVideos, 300); };
         const pageTypeChangedHandler = function() {
             document.removeEventListener('yt-service-request-sent', serviceRequestSentHandler);
-            document.removeEventListener('yt-service-request-completed', cleanupAndReprocessVideos);
+            document.removeEventListener('yt-service-request-completed', checkProcessedVideos);
             document.removeEventListener('yt-navigate-finish', navigateFinishHandler);
             document.removeEventListener('yt-page-type-changed', pageTypeChangedHandler);
         };
 
         runProcessVideos(6, 250, 500, function() {
             document.addEventListener('yt-service-request-sent', serviceRequestSentHandler);
-            document.addEventListener('yt-service-request-completed', cleanupAndReprocessVideos);
+            document.addEventListener('yt-service-request-completed', checkProcessedVideos);
             document.addEventListener('yt-navigate-finish', navigateFinishHandler);
             setTimeout(checkProcessVideos, 1250);
         });
@@ -6940,8 +6980,8 @@
         document.addEventListener('yt-page-type-changed', pageTypeChangedHandler);
 
         // ensure correct categories
-        function checkProcessVideos() {
-            const processedVideos = Array.from(homePage.querySelectorAll('ytd-rich-item-renderer[data-centanni-video-processed]')).slice(0, 8);
+        function checkProcessedVideos() {
+            const processedVideos = Array.from(homePage.querySelectorAll('ytd-rich-item-renderer')).slice(0, 8);
             if (processedVideos.length === 0) return;
 
             let allCorrect = true;
@@ -6959,52 +6999,29 @@
                     }
                 }
 
-                const spanElements = video.querySelectorAll('span.ytd-video-meta-block');
-                for (const el of spanElements) {
-                    if (/Scheduled for/i.test(el.textContent)) {
-                        expectedCategory = 'upcoming';
-                        break;
-                    }
-                }
+                if (expectedCategory === null) if (Array.from(video.querySelectorAll('span.ytd-video-meta-block')).some(el => /Scheduled for/i.test(el.textContent))) expectedCategory = 'upcoming';
 
-                if (expectedCategory && !video.classList.contains(`CentAnni-style-${expectedCategory}-video`)) {
+                const expectedClassName = expectedCategory ? `CentAnni-style-${expectedCategory}-video` : null;
+
+                let currentVideoIsCorrect = true;
+                if (expectedClassName) {
+                    if (!video.classList.contains(expectedClassName)) currentVideoIsCorrect = false;
+               } else {
+                   for (const cls of video.classList) {
+                       if (cls.startsWith('CentAnni-style-')) {
+                           currentVideoIsCorrect = false;
+                           break;
+                       }
+                   }
+               }
+
+                if (!currentVideoIsCorrect) {
                     allCorrect = false;
                     break;
                 }
             }
 
             if (!allCorrect) cleanupAndReprocessVideos();
-        }
-
-        // handle feed filter 'All' button
-        let allButtonObserver = null;
-        function handleFeedFilterAll() {
-            if (allButtonObserver) return;
-
-            const allButton = document.querySelector('yt-chip-cloud-chip-renderer[chip-shape-data*="All"]');
-            if (!allButton) return;
-
-            allButtonObserver = new MutationObserver((mutations) => {
-                for (const mutation of mutations) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'class' && allButton.classList.contains('iron-selected')) {
-                        checkProcessVideos();
-                        handleFeedFilterAllCleanup();
-                        break;
-                    }
-                }
-            });
-
-            allButtonObserver.observe(allButton, {
-                attributes: true,
-                attributeFilter: ['class', 'selected']
-            });
-        }
-
-        function handleFeedFilterAllCleanup() {
-            if (allButtonObserver) {
-                allButtonObserver.disconnect();
-                allButtonObserver = null;
-            }
         }
 
         // handle cleanup
@@ -7022,13 +7039,44 @@
                 'CentAnni-style-streamed-video'
                 );
 
-                video.querySelectorAll('.CentAnni-style-streamed-text').forEach(span => span.remove());
+                video.querySelectorAll('.CentAnni-style-streamed-span').forEach(el => el.remove());
                 video.removeAttribute('data-centanni-video-processed');
             });
 
             processVideos();
             handleFeedFilterAll();
             addSettingsButton();
+        }
+
+        // handle feed filter 'All' button
+        let allButtonObserver = null;
+        function handleFeedFilterAll() {
+            if (allButtonObserver) return;
+
+            const allButton = document.querySelector('yt-chip-cloud-chip-renderer[chip-shape-data*="All"]');
+            if (!allButton) return;
+
+            allButtonObserver = new MutationObserver((mutations) => {
+                for (const mutation of mutations) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class' && allButton.classList.contains('iron-selected')) {
+                        checkProcessedVideos();
+                        handleFeedFilterAllCleanup();
+                        break;
+                    }
+                }
+            });
+
+            allButtonObserver.observe(allButton, {
+                attributes: true,
+                attributeFilter: ['class', 'selected']
+            });
+        }
+
+        function handleFeedFilterAllCleanup() {
+            if (allButtonObserver) {
+                allButtonObserver.disconnect();
+                allButtonObserver = null;
+            }
         }
     }
 
@@ -7222,6 +7270,11 @@
                 const element = playlistPage.querySelector(selector);
                 if (element) return resolve(element);
 
+                const timer = setTimeout(() => {
+                    observer.disconnect();
+                    resolve();
+                }, timeout);
+
                 const observer = new MutationObserver(() => {
                     const element = playlistPage.querySelector(selector);
                     if (element) {
@@ -7230,11 +7283,6 @@
                         resolve(element);
                     }
                 });
-
-                const timer = setTimeout(() => {
-                    observer.disconnect();
-                    resolve();
-                }, timeout);
 
                 observer.observe(playlistPage, { childList: true, subtree: true });
             });
@@ -7680,11 +7728,7 @@
             }
         });
 
-        const config = {
-            childList: true,
-            subtree: true,
-        };
-
+        const config = { childList: true, subtree: true, };
         observer.observe(watchFlexy, config);
     }
 
@@ -7962,7 +8006,7 @@
             document.querySelector('ytd-playlist-panel-renderer[id="playlist"].style-scope.ytd-watch-flexy')?.classList.remove('CentAnni-tabView-content-active');
         }
 
-        document.querySelectorAll('.button-wrapper:not(:has(#transcript-settings-button)), #CentAnni-channel-btn, .CentAnni-remaining-time-container, .CentAnni-chapter-title, #progress-bar-bar, #progress-bar-start, #progress-bar-end, #yt-transcript-settings-modal').forEach(el => el.remove());
+        document.querySelectorAll('.button-wrapper:not(:has(#transcript-settings-button)), #CentAnni-channel-btn, .CentAnni-remaining-time-container, .CentAnni-chapter-title, .CentAnni-info-date, #progress-bar-bar, #progress-bar-start, #progress-bar-end, #yt-transcript-settings-modal').forEach(el => el.remove());
     }
 
     // initiate the script
@@ -8075,10 +8119,8 @@
                 lastVideoID = videoID;
                 videoID = urlObj.searchParams.get('v');
 
-                document.documentElement.style.setProperty(
-                    '--video-url',
-                    `url("https://i.ytimg.com/vi/${videoID}/maxresdefault.jpg")`
-                ); 
+                if (USER_CONFIG.hideEndCards)
+                    document.documentElement.style.setProperty('--video-url',`url("https://i.ytimg.com/vi/${videoID}/maxresdefault.jpg")`);
             }
 
             if (lastVideoURL === null) initializeDelay = 500;
@@ -8107,7 +8149,7 @@
     document.addEventListener('yt-navigate-finish', handleYouTubeNavigation); // default
     document.addEventListener('yt-page-data-updated', handleYouTubeNavigation); // backup
     document.addEventListener('yt-page-data-fetched', handleYouTubeNavigation); // redundancy
+    if (USER_CONFIG.playbackSpeed) document.addEventListener('yt-player-updated', initialSpeed); // set playback speed
     if (USER_CONFIG.playbackSpeed) document.addEventListener('fullscreenchange', fullscreenCheck); // fullscreen change
     if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo); // prevent autoplay
-    if (USER_CONFIG.playbackSpeed) document.addEventListener('yt-player-updated', initialSpeed); // set playback speed
 })();
