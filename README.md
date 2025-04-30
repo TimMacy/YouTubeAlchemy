@@ -1,16 +1,34 @@
-# YouTube Alchemy <a href="#changelog"><img align="right" src="https://img.shields.io/badge/Version-7.7.4-white.svg" alt="Version: 7.7.4"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.7.7-white.svg" alt="Version: 7.7.7"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization.
 <br clear="left"/>
 
-#### 🔒 Privacy & Security 
-YouTube Alchemy operates completely client-side with no external dependencies. The script doesn't send any data to remote servers or pull resources from third-party sources beyond the standard userscript metadata for update checks (@updateURL, @downloadURL) and icon display (@icon). All settings and preferences are stored locally via GM storage and browser localStorage.
+<details>
+<summary><strong>Table&nbsp;of&nbsp;Contents</strong></summary>
+
+- [🔒 Privacy & Security](#-privacy--security)
+- [✨ Overview](#-overview)
+- [📝 Transcript Exporter](#-transcript-exporter)
+- [🔗 Links in Header](#-links-in-header)
+- [🪄 Features & CSS](#-features--css)
+- [🎨 Color Code Videos](#-color-code-videos)
+- [🌐 Supported Languages](#-supported-languages)
+- [🚀 Installation & Minimum Browser Requirements](#-installation--minimum-browser-requirements)
+- [📜 Changelog](#-changelog)
+- [⚖️ License](#-license)
+- [💡 Read Aloud Speedster](#read-aloud-speedster)
+- [⚠️ Disclaimer](#-disclaimer)
+
+</details>
+
+#### 🔒 Privacy & Security
+YouTube Alchemy operates completely client-side with no external dependencies. The script doesn't send any data to remote servers or pull resources from third-party sources beyond the standard userscript metadata for update checks (@updateURL, @downloadURL) and icon display (@icon). It leverages browser’s built-in Intl APIs while storing all settings and preferences locally via GM storage or browser localStorage.
 
 ### ✨ Overview
 - **Main Settings Panel**: Manage the Transcript Exporter and export, import, or reset settings to their defaults.
   - **Links in Header Panel**: Add custom links next to the YouTube logo and hide the navigation bar.
-  - **Features & CSS Panel**: Access key features like **tab view**, **playback speed**, **video quality**, **direction buttons for playlists**, prevent autoplay, hide Shorts, default transcript language, **disable play on hover**, **square design**, **auto-theater mode**, auto-close chat windows, number of videos per row, modify or hide various UI elements, and much more.
+  - **Features & CSS Panel**: Access key features like **tab view**, **playback speed**, **remove 'Important' section and sort all notifications chronologically**, **video quality**, **direction buttons for playlists**, prevent autoplay, hide Shorts, **set default audio, subtitle, and transcript languages**, **disable play on hover**, **square design**, **auto-theater mode**, auto-close chat windows, number of videos per row, modify or hide various UI elements, and much more.
   - **Color Code Videos Panel**: Apply customizable borders to videos on the Home page, reflecting their age and status, and highlight the last uploaded video on the Subscriptions page with optional auto-scroll.
 
 <p align="center"><img width="100%" alt="YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/f2df120a-973b-4634-9b41-cd5e0870b502" /></p>
@@ -77,7 +95,7 @@ If the left navigation bar is hidden, a replacement icon will prepend the links,
 
 <br>
 
-## 🛠️ Features & CSS
+## 🪄 Features & CSS
 Offers various options to customize the layout and functionality of YouTube.
 
 **General**
@@ -99,7 +117,10 @@ Offers various options to customize the layout and functionality of YouTube.
     - 360p
     - 240p
     - 144p
-  - Transcript Language:
+- Audio Language
+- Subtitle Language
+- Transcript Language
+- Language Options:
     - Auto (default)
     - English
     - Spanish
@@ -111,6 +132,19 @@ Offers various options to customize the layout and functionality of YouTube.
     - Dutch
     - Polish
     - Hebrew
+    - Japanese
+    - Korean
+    - Chinese
+    - Indonesian
+    - Swedish
+    - Norwegian
+    - Danish
+    - Finnish
+    - Czech
+    - Greek
+    - Hungarian
+    - Romanian
+    - Ukrainian
   - Set Font Size
   - Adjust Number of Videos per Row
   - Set Playback Speed for VODs
@@ -126,6 +160,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Auto Theater Mode
   - Prevent Autoplay
   - Disable Play on Hover
+  - Sort Notifications Chronologically
   - Auto Close Initial Chat Windows
   - "Videos" Tab as Default on Channel Page
   - Add RSS Feed Button to Channel Pages
@@ -175,6 +210,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Custom Selection Color for Light and Dark Mode
   - Choose Progress Bar Color
   - Pure Black-and-White Background
+  - No Frosted Glass Effect
   - Hide Video Scrubber
   - Hide Video End Cards
   - Hide End Screens
@@ -245,26 +281,36 @@ Offers various options to customize the layout and functionality of YouTube.
 
 <br>
 
+## 🌐 Supported Languages
+The script works with YouTube UI set to the following languages: English, Spanish, Hindi, Portuguese, German, French, Italian, Dutch, Polish, Hebrew, Japanese, Korean, Chinese, Indonesian, Swedish, Norwegian, Danish, Finnish, Czech, Greek, Hungarian, Romanian, and Ukrainian.<br>
+_Support is a work in progress. Other languages may have limited functionality._
+
+<br>
+
 ## 🚀 Installation & Minimum Browser Requirements
 <p align="center">
-  <a href="#"><img src="https://img.shields.io/badge/Safari_15.4+-Supported-brightgreen?logo=safari" alt="Safari Supported"></a>
-  &nbsp;
-  <a href="#"><img src="https://img.shields.io/badge/Chrome_105+-Supported-brightgreen?logo=googlechrome&logoColor=white" alt="Chrome Supported"></a>
-  &nbsp;
-  <a href="#"><img src="https://img.shields.io/badge/Firefox_121+-Partially Tested-orange?logo=firefoxbrowser" alt="Firefox Partially Tested"></a>
-  &nbsp;
-  <a href="#"><img src="https://img.shields.io/badge/Edge_105+-Untested-yellow" alt="Edge Untested"></a>
-  &nbsp;
-  <a href="#"><img src="https://img.shields.io/badge/Opera_91+-Untested-yellow?logo=opera" alt="Opera Untested"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Safari_18%2B_(flag_required)-Supported-brightgreen?logo=safari" alt="Safari Supported"></a>
+  &nbsp;&nbsp;
+  <a href="#"><img src="https://img.shields.io/badge/Chrome_105%2B-Supported-brightgreen?logo=googlechrome&logoColor=white" alt="Chrome Supported"></a>
+  <br>
+  <a href="#"><img src="https://img.shields.io/badge/Firefox_121%2B-Supported-brightgreen?logo=firefoxbrowser" alt="Firefox Supported"></a>
+  &nbsp;&nbsp;
+  <a href="#"><img src="https://img.shields.io/badge/Edge_105%2B-Supported-brightgreen" alt="Edge Supported"></a>
+  &nbsp;&nbsp;
+  <a href="#"><img src="https://img.shields.io/badge/Opera_91%2B-Supported-brightgreen?logo=opera" alt="Opera Supported"></a>
 </p>
 
 1. **Install or open a userscript manager**.
    A userscript manager is required, such as [Userscripts for Safari](https://itunes.apple.com/us/app/userscripts/id1463298887), [Tampermonkey](https://www.tampermonkey.net/) (available for [Chrome](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo), [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd), [Safari](https://apps.apple.com/us/app/tampermonkey/id1482490089), [Opera Next](https://addons.opera.com/en/extensions/details/tampermonkey-beta/), and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)), or [Violentmonkey](https://violentmonkey.github.io) (available for [Chrome](https://chromewebstore.google.com/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/violentmonkey/), and [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao)).
 2. **Install** [YouTubeAlchemy.js](https://github.com/TimMacy/YouTubeAlchemy/blob/main/YouTubeAlchemy.js).
+<br>
+
+**Important for Safari Users**: This script requires the requestIdleCallback Web API. Activate it under: Settings → Advanced → enable 'Show features for web developers' → Feature Flags → search for 'requestIdleCallback' and ensure it's checked.
 
 <br>
 
 ## 📜 Changelog
+- **7.7.7**: bug fixes and improvements. added multi-language support (work in progress; see supported languages above). add support for "People mentioned" in tab view. new features: sort notifications chronologically, no frosted glass effect, set default audio language, set default subtitle language. **important for Safari users**: this script now requires the requestIdleCallback web API
 - **7.7.4**: adjustments for the latest YouTube changes. bug fixes and improvements. new features: disable ambient mode, keep country code visible when hiding brand text and choose color
 - **7.7.3.2**: removed 'details sections of watch later videos' because of YouTube's recent changes
 - **7.7.3.1**: adjustments for the latest YouTube changes
@@ -287,13 +333,13 @@ Offers various options to customize the layout and functionality of YouTube.
 
 <br>
 
-## License
+## ⚖️ License
 This project is licensed under the AGPL-3.0 License. See the [LICENSE](https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE) file for details.
 
 <br><br>
 
 > [!TIP]
-> # Read Aloud Speedster
+> # 💡 Read Aloud Speedster
 > This script integrates intuitive playback speed controls into the chatbox interface. Clicking the speed display opens a popup menu to set a preferred default playback speed and the option to toggle the square design. Furthermore, the icons under Chat's responses are color-coded, and bold text is highlighted in color.
 >
 > <br>
@@ -302,3 +348,7 @@ This project is licensed under the AGPL-3.0 License. See the [LICENSE](https://g
 >
 > <br>
 > <p align="center"><img width="100%" alt="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/bfb1a08e-3124-47ca-be49-cc08f09303db" /></p>
+<br>
+
+## ⚠️ Disclaimer
+*YouTube Alchemy* is an independent, private project. It's not affiliated with, endorsed by, sponsored by, or in any way officially connected to YouTube, Google LLC, or Alphabet Inc. "YouTube" and the YouTube logo are trademarks of Google LLC; all other trademarks are the property of their respective owners.
