@@ -16,9 +16,9 @@ This toolkit enhances YouTube by customizing the layout and adding more than 130
 - [🌐 Supported Languages](#-supported-languages)
 - [🚀 Installation & Minimum Browser Requirements](#-installation--minimum-browser-requirements)
 - [📜 Changelog](#-changelog)
-- [⚖️ License](#-license)
-- [💡 Read Aloud Speedster](#read-aloud-speedster)
-- [⚠️ Disclaimer](#-disclaimer)
+- [⚖️ License](#%EF%B8%8F-license)
+- [💡 Read Aloud Speedster](#-read-aloud-speedster)
+- [⚠️ Disclaimer](#%EF%B8%8F-disclaimer)
 
 </details>
 
