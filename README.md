@@ -145,16 +145,16 @@ Offers various options to customize the layout and functionality of YouTube.
     - Hungarian
     - Romanian
     - Ukrainian
-  - Set Font Size
-  - Adjust Number of Videos per Row
-  - Set Playback Speed for VODs
-    - from 0.25x to 17x with 0.25x increments
-    - defaults to 1x for live videos
-    - works with Shorts
-    - key toggles:
-      - A: -0.25x
-      - S: toggle 1x/set speed
-      - D: +0.25x
+- Set Font Size
+- Adjust Number of Videos per Row
+- Set Playback Speed for VODs
+  - from 0.25x to 17x with 0.25x increments
+  - defaults to 1x for live videos
+  - works with Shorts
+  - key toggles:
+    - A: -0.25x
+    - S: toggle 1x/set speed
+    - D: +0.25x
 
 **Features**
   - Auto Theater Mode
@@ -180,7 +180,7 @@ Offers various options to customize the layout and functionality of YouTube.
 
 **Layout Changes**
   - Tab View on Video Page
-  - Show Chapters Under Videos
+  - Show Chapters Under Videos, Only Works with Tab View Enabled
   - Hide Comments Section
   - Hide Suggested Videos
   - Square and Compact Search Bar
