@@ -277,7 +277,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - On Subscriptions Page
     - Adds a customizable border to the last uploaded video to highlight it on subsequent visits, with the option to auto-scroll to it.
 
-<p align="center"><img width="50%" alt="Color Code Videos" src="https://github.com/user-attachments/assets/6e6964f1-55e3-45c8-9900-2e112a2dc78c" /></p>
+<p align="center"><img width="50%" alt="Color Code Videos" src="https://github.com/user-attachments/assets/e391fb3c-0be1-4305-a598-08f0b7dbe079" /></p>
 
 <br>
 
