@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.7.7-white.svg" alt="Version: 7.7.7"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.8-white.svg" alt="Version: 7.8"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization.
@@ -47,8 +47,9 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
   - **Buttons with Color-Coded Interface in the Main Settings Panel**
     - **Button One | Green** 🎧 Copies the transcript and opens NotebookLM.
     - **Button Two | Blue** 💬 Copies the transcript with a prompt for summarizing and opens ChatGPT.
-    - **Button Three | Red** ↓ Downloads the transcript as a text file.
-    - **Button Four | White** ⋮ Opens the main settings panel.
+    - **Button Three | White** Copy Transcript to Clipboard.
+    - **Button Four | Red** ↓ Downloads the transcript as a text file.
+    - **Button Five | White** ⋮ Opens the main settings panel.
   - **Transcript Formatting**: Includes timestamps, chapter headers, video title, channel name, upload date, and URL.
   - **Text File Naming Format**
     - Title - Channel.txt (default)
@@ -57,7 +58,7 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
     - uploadDate - Channel - Title.txt
 
 > [!TIP]
-> The URLs for button one and two can be freely chosen, as can all button icons. If a button field is empty, the button won't be added to the YouTube header. The settings button reverts to default if its field is empty.
+> The URLs for buttons one and two, along with all button icons, are fully customizable. If a button field is left empty, that button won’t be added to the header. The settings button reverts to its default if its field is empty. To modify the labels for NotebookLM and ChatGPT, enter "Label | domain.com" into their respective URL fields—this also updates the icons' hover text.
 
 > [!IMPORTANT]
 > Due to the Same-Origin Policy (SOP) in web development, JavaScript cannot directly interact across different websites: i.e. while the script can copy the transcript to the clipboard from YouTube and open a link (e.g. ChatGPT or NotebookLM), the copied transcript must be pasted manually into the text field via CTRL+V (Windows/Linux) or CMD+V (macOS).
@@ -83,7 +84,7 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
 >     </tr>
 > </table>
 
-<p align="center"><img width="50%" alt="Main Settings Panel" src="https://github.com/user-attachments/assets/92f7dbf6-cae4-447e-8265-8fc57043ba9a" /></p>
+<p align="center"><img width="50%" alt="Main Settings Panel" src="https://github.com/user-attachments/assets/9518c2b6-0765-442e-ae10-ba2386d47ccc" /></p>
 
 <br>
 
@@ -310,6 +311,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **7.8**: bug fixes and improvements. new features: added a button to copy the transcript to the clipboard, allow changing the label text for button one (NotebookLM) and button two (ChatGPT), which also updates the hover text for those icons. to change the label text, enter "Label | domain.com" in the respective URL fields.
 - **7.7.7**: bug fixes and improvements. added multi-language support (work in progress; see supported languages above). add support for "People mentioned" in tab view. new features: sort notifications chronologically, no frosted glass effect, set default audio language, set default subtitle language. **important for Safari users**: this script now requires the requestIdleCallback web API
 - **7.7.4**: adjustments for the latest YouTube changes. bug fixes and improvements. new features: disable ambient mode, keep country code visible when hiding brand text and choose color
 - **7.7.3.2**: removed 'details sections of watch later videos' because of YouTube's recent changes
