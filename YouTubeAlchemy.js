@@ -2,8 +2,8 @@
 // @name         YouTube Alchemy
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, set video quality, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto-theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
-// @license      GNU AFFERO GENERAL PUBLIC LICENSE-3.0
-// @version      7.7.7
+// @license      AGPL-3.0-or-later
+// @version      7.8
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.7.7 - YouTube Alchemy                   *
+*                    Version: 7.8 - YouTube Alchemy                     *
 *                    All Rights Reserved.                               *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
@@ -178,20 +178,25 @@
         .buttonIconChatGPT-input-field:focus { border: 1px solid hsl(217, 91%, 59%); }
         .buttonIconDownload-input-field:focus { border: 1px solid hsl(359, 88%, 57%); }
 
+        .buttonIconCopy-input-field:focus,
         .buttonIconSettings-input-field:focus,
         .links-header-container input:focus,
         .sidebar-container input:focus,
         #custom-css-form .select-file-naming:focus,
         #custom-css-form .dropdown-list {
             border: 1px solid hsl(0, 0%, 100%);
-            max-height: 444px;
         }
+
+        .file-naming-container .label-Video-Quality ~ .dropdown-list { max-height: 500px; }
+        .file-naming-container .label-audio-language ~ .dropdown-list, .file-naming-container .label-transcript-language ~ .dropdown-list { max-height: 325px; }
+        .file-naming-container .label-subtitle-language ~ .dropdown-list { max-height: 365px; }
 
         .input-field-targetNotebookLMUrl:hover,
         .input-field-targetChatGPTUrl:hover,
         .buttonIconNotebookLM-input-field:hover,
         .buttonIconChatGPT-input-field:hover,
         .buttonIconDownload-input-field:hover,
+        .buttonIconCopy-input-field:hover,
         .buttonIconSettings-input-field:hover,
         .select-file-naming:hover,
         .input-field-url:hover,
@@ -226,7 +231,7 @@
         }
 
         .container-button-input {
-            width: 80px;
+            width: 73px;
             padding: 8px;
             text-align: center;
             color: ghostwhite;
@@ -425,6 +430,11 @@
             margin:-5px 0px 5px 24px;
             pointer-events: none;
             cursor: default;
+        }
+
+        .button-naming {
+            margin: 0;
+            text-align: center;
         }
 
         .extra-button-container {
@@ -660,7 +670,7 @@
             font-size: 2.3rem;
             font-weight: 600;
             text-align: center;
-            z-index: 2500;
+            z-index: 2050;
             transition: opacity .3s ease;
             opacity: 0;
             -webkit-user-select: none;
@@ -701,6 +711,14 @@
             100% { opacity: 0; }
         }
 
+        #start.ytd-masthead {
+            gap: 12px;
+        }
+
+        #logo.ytd-masthead {
+            width: auto !important;
+        }
+
         .buttons-left {
             font-family: -apple-system, system-ui, "Roboto", "Arial", sans-serif;
             font-size: 14px;
@@ -712,7 +730,8 @@
             color: ghostwhite;
             text-decoration: none;
             cursor: pointer;
-            margin: 0 8px;
+            margin: 0;
+            padding: 0;
             outline: none;
             background: transparent;
             border: none;
@@ -1134,6 +1153,14 @@
             #progress-bar-end {
                 right: 0;
                 background: rgba(255, 255, 255, 0.2);
+            }
+
+            .ytp-autohide .ytp-chrome-bottom .ytp-timed-marker {
+                background-color: black;
+                width: 2px;
+                height: 5px;
+                bottom: -1px;
+                border-radius: 0;
             }
         }
 
@@ -1674,7 +1701,7 @@
             .ytVideoMetadataCarouselViewModelHost {
                 flex-direction: row;
                 padding: 12px;
-                height: 100%;
+                height: fit-content;
                 margin-bottom: 24px;
                 gap: 20px;
                 align-items: center;
@@ -1750,6 +1777,10 @@
                 visibility: hidden;
                 z-index: -1;
                 pointer-events: none;
+            }
+
+            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
+                display: none;
             }
 
             ytd-watch-flexy[theater] #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create] {
@@ -2282,7 +2313,7 @@
             }
 
             #logo.ytd-masthead {
-                width: 45px;
+                width: 45px !important;
                 overflow: hidden;
             }
 
@@ -3435,6 +3466,14 @@
             border: 1px solid var(--yt-spec-10-percent-layer);
         }
 
+        html:not([dark]) ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
+            z-index: 100;
+            background: black;
+            height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x)) !important;
+            max-height: unset !important;
+            margin-top: -52px;
+        }
+
         html:not([dark]) ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"],
         html:not([dark]) ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description] {
             background-color: var(--yt-spec-badge-chip-background);
@@ -3505,6 +3544,8 @@
         YouTubeTranscriptExporter: true,
         targetChatGPTUrl: 'https://ChatGPT.com/',
         targetNotebookLMUrl: 'https://NotebookLM.Google.com/',
+        targetChatGPTLabel: 'ChatGPT',
+        targetNotebookLMLabel: 'NotebookLM',
         fileNamingFormat: 'title-channel',
         includeTimestamps: true,
         includeChapterHeaders: true,
@@ -3515,6 +3556,7 @@
         buttonIcons: {
             settings: '⋮',
             download: '↓',
+            copy: '',
             ChatGPT: '💬',
             NotebookLM: '🎧'
         },
@@ -3890,18 +3932,25 @@
             return container;
         }
 
-        iconsContainer.appendChild(createIconInputField('NotebookLM', 'buttonIconNotebookLM', USER_CONFIG.buttonIcons.NotebookLM, 'label-NotebookLM'));
-        iconsContainer.appendChild(createIconInputField('ChatGPT', 'buttonIconChatGPT', USER_CONFIG.buttonIcons.ChatGPT, 'label-ChatGPT'));
+        iconsContainer.appendChild(createIconInputField(`${NotebookLMLabel}`, 'buttonIconNotebookLM', USER_CONFIG.buttonIcons.NotebookLM, 'label-NotebookLM'));
+        iconsContainer.appendChild(createIconInputField(`${ChatGPTLabel}`, 'buttonIconChatGPT', USER_CONFIG.buttonIcons.ChatGPT, 'label-ChatGPT'));
+        iconsContainer.appendChild(createIconInputField('Copy', 'buttonIconCopy', USER_CONFIG.buttonIcons.copy, 'label-settings'));
         iconsContainer.appendChild(createIconInputField('Download', 'buttonIconDownload', USER_CONFIG.buttonIcons.download, 'label-download'));
         iconsContainer.appendChild(createIconInputField('Settings', 'buttonIconSettings', USER_CONFIG.buttonIcons.settings, 'label-settings'));
 
         form.appendChild(iconsContainer);
 
+        // info for button naming
+        const buttonNaming = document.createElement('small');
+        buttonNaming.innerText = 'Enter "Label | domain.com" in the URL fields to rename the respective labels.';
+        buttonNaming.classList.add('CentAnni-info-text','button-naming');
+        form.appendChild(buttonNaming);
+
         // NotebookLM URL
-        form.appendChild(createInputField('NotebookLM URL (Copy transcript, then open the website):', 'targetNotebookLMUrl', USER_CONFIG.targetNotebookLMUrl, 'label-NotebookLM'));
+        form.appendChild(createInputField(`${NotebookLMLabel} URL (Copy transcript, then open the website):`, 'targetNotebookLMUrl', USER_CONFIG.targetNotebookLMUrl, 'label-NotebookLM'));
 
         // ChatGPT URL
-        form.appendChild(createInputField('ChatGPT URL (Copy transcript with the prompt, then open the website):', 'targetChatGPTUrl', USER_CONFIG.targetChatGPTUrl, 'label-ChatGPT'));
+        form.appendChild(createInputField(`${ChatGPTLabel} URL (Copy transcript with the prompt, then open the website):`, 'targetChatGPTUrl', USER_CONFIG.targetChatGPTUrl, 'label-ChatGPT'));
 
         // SpacerTop10
         const SpacerTop10 = document.createElement('div');
@@ -3966,7 +4015,7 @@
         form.appendChild(extraSettings);
 
         // ChatGPT prompt
-        const promptContainer = createTextareaField('ChatGPT Prompt:', 'ChatGPTPrompt', USER_CONFIG.ChatGPTPrompt, 'label-ChatGPT');
+        const promptContainer = createTextareaField(`${ChatGPTLabel} Prompt:`, 'ChatGPTPrompt', USER_CONFIG.ChatGPTPrompt, 'label-ChatGPT');
 
         // reset ChatGPT prompt
         const resetText = document.createElement('span');
@@ -4396,11 +4445,11 @@
             const displayRemainingTime = createCheckboxField('Display Remaining Time Under Videos Adjusted for Playback Speed (default: yes)', 'displayRemainingTime', USER_CONFIG.displayRemainingTime);
             form.appendChild(displayRemainingTime);
 
-            // info for remaining time minus segments beta
-            const descriptionRemainingTimeBeta = document.createElement('small');
-            descriptionRemainingTimeBeta.innerText = 'To also include Skipped SponsorBlock Segments, ensure "Show time with skips removed" is enabled in SponsorBlock Settings under "Interface."';
-            descriptionRemainingTimeBeta.classList.add('CentAnni-info-text');
-            form.appendChild(descriptionRemainingTimeBeta);
+            // info for remaining time minus segments
+            const descriptionRemainingTime = document.createElement('small');
+            descriptionRemainingTime.innerText = 'To also include Skipped SponsorBlock Segments, ensure "Show time with skips removed" is enabled in SponsorBlock Settings under "Interface."';
+            descriptionRemainingTime.classList.add('CentAnni-info-text');
+            form.appendChild(descriptionRemainingTime);
 
             // layout changes
             const layoutChanges = document.createElement('label');
@@ -5176,17 +5225,30 @@
             return url;
         }
 
-        // validate ChatGPT URL
-        let targetChatGPTUrl = form.elements.targetChatGPTUrl.value.trim();
-        if (targetChatGPTUrl !== '') {
-            USER_CONFIG.targetChatGPTUrl = normalizeUrl(targetChatGPTUrl);
-        } else { delete USER_CONFIG.targetChatGPTUrl; }
+        // validate ChatGPT and NotebookLM URLs
+        function validateUrlAndLabel(formElement, configPrefix) {
+            let url;
+            let shouldNormalizeUrl = false;
+            let targetUrlAndLabel = form.elements[`target${configPrefix}Url`].value.trim();
 
-        // validate NotebookLM URL
-        let targetNotebookLMUrl = form.elements.targetNotebookLMUrl.value.trim();
-        if (targetNotebookLMUrl !== '') {
-            USER_CONFIG.targetNotebookLMUrl = normalizeUrl(targetNotebookLMUrl);
-        } else { delete USER_CONFIG.targetNotebookLMUrl; }
+            if (targetUrlAndLabel !== '') {
+                let split = targetUrlAndLabel.split('|').map(s => s.trim());
+                if (split.length === 2) {
+                    if (/\p{L}+/u.test(split[0])) USER_CONFIG[`target${configPrefix}Label`] = split[0];
+                    url = split[1];
+                    shouldNormalizeUrl = true;
+                } else if (targetUrlAndLabel.includes('.')) {
+                    if (!USER_CONFIG[`target${configPrefix}Label`] || !/\p{L}+/u.test(USER_CONFIG[`target${configPrefix}Label`])) delete USER_CONFIG[`target${configPrefix}Label`];
+                    url = targetUrlAndLabel;
+                    shouldNormalizeUrl = true;
+                }
+            }
+
+            if (shouldNormalizeUrl) USER_CONFIG[`target${configPrefix}Url`] = normalizeUrl(url);
+            else {delete USER_CONFIG[`target${configPrefix}Label`];delete USER_CONFIG[`target${configPrefix}Url`];}
+        }
+        validateUrlAndLabel(form,'ChatGPT');
+        validateUrlAndLabel(form,'NotebookLM');
 
         // save other settings
         USER_CONFIG.YouTubeTranscriptExporter = form.elements.YouTubeTranscriptExporter.checked;
@@ -5201,11 +5263,13 @@
         USER_CONFIG.buttonIcons = USER_CONFIG.buttonIcons || {};
 
         // save button icons, removing empty values to use defaults
+        const buttonIconCopy = form.elements.buttonIconCopy.value.trim();
         const buttonIconDownload = form.elements.buttonIconDownload.value.trim();
         const buttonIconChatGPT = form.elements.buttonIconChatGPT.value.trim();
         const buttonIconNotebookLM = form.elements.buttonIconNotebookLM.value.trim();
         const buttonIconSettings = form.elements.buttonIconSettings.value.trim();
 
+        USER_CONFIG.buttonIcons.copy = buttonIconCopy;
         USER_CONFIG.buttonIcons.download = buttonIconDownload;
         USER_CONFIG.buttonIcons.ChatGPT = buttonIconChatGPT;
         USER_CONFIG.buttonIcons.NotebookLM = buttonIconNotebookLM;
@@ -5538,10 +5602,11 @@
         document.querySelectorAll('.button-wrapper').forEach(el => el.remove());
 
         const buttons = [
-            { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' },
-            { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.' },
-            { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: 'Copy Transcript with a Prompt and Open ChatGPT', ariaLabel: 'Copy Transcript to Clipboard with a Prompt and Open ChatGPT.' },
-            { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: 'Copy Transcript and Open NotebookLM', ariaLabel: 'Copy Transcript to Clipboard and Open NotebookLM.' }
+            { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.'},
+            { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.'},
+            { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.copy, clickHandler: handleCopyClick, tooltip: 'Copy Transcript to Clipboard', ariaLabel: 'Copy Transcript to Clipboard.'},
+            { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy Transcript with a Prompt and Open ${ChatGPTLabel}`, ariaLabel: `Copy Transcript to Clipboard with a Prompt and Open ${ChatGPTLabel}.`},
+            { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: `Copy Transcript and Open ${NotebookLMLabel}`, ariaLabel: `Copy Transcript to Clipboard and Open ${NotebookLMLabel}.`}
         ];
 
         const buttonsToAdd = buttons.filter(button => button.id === 'transcript-settings-button' || (button.text && button.text.trim() !== ''));
@@ -5555,9 +5620,10 @@
     }
 
     // functions to handle the button clicks
-    function handleChatGPTClick() { handleTranscriptAction(function() { selectAndCopyTranscript('ChatGPT'); }); }
-    function handleNotebookLMClick() { handleTranscriptAction(function() { selectAndCopyTranscript('NotebookLM'); }); }
-    function handleDownloadClick() { handleTranscriptAction(downloadTranscriptAsText); }
+    function handleChatGPTClick() { handleTranscriptAction(function() { selectAndCopyTranscript('ChatGPT');});}
+    function handleNotebookLMClick() { handleTranscriptAction(function() { selectAndCopyTranscript('NotebookLM');});}
+    function handleCopyClick() { handleTranscriptAction(function() { selectAndCopyTranscript('Copy2Clipboard');});}
+    function handleDownloadClick() { handleTranscriptAction(downloadTranscriptAsText);}
 
     // function to check for a transcript
     function handleTranscriptAction(callback) {
@@ -5641,15 +5707,18 @@
         if (target === 'ChatGPT') {
             finalText = `YouTube Transcript:\n${transcriptText.trimStart()}\n\n\nAdditional Information about the YouTube Video:\nTitle: ${ytTitle}\nChannel: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nTask Instructions:\n${USER_CONFIG.ChatGPTPrompt}`;
             targetUrl = USER_CONFIG.targetChatGPTUrl;
-        } else if (target === 'NotebookLM') {
+        } else if (target === 'NotebookLM'||target === 'Copy2Clipboard') {
             finalText = `Information about the YouTube Video:\nTitle: ${ytTitle}\nChannel: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nYouTube Transcript:\n${transcriptText.trimStart()}`;
             targetUrl = USER_CONFIG.targetNotebookLMUrl;
         }
 
         navigator.clipboard.writeText(finalText).then(() => {
-            showNotification('Transcript copied. Opening website . . .');
-            if (USER_CONFIG.openSameTab) { window.open(targetUrl, '_self');
-            } else { window.open(targetUrl, '_blank'); }
+            if (target === 'Copy2Clipboard') showNotification('Transcript copied to clipboard.');
+            else {
+                showNotification('Transcript copied. Opening website . . .');
+                if (USER_CONFIG.openSameTab) window.open(targetUrl, '_self');
+                else window.open(targetUrl, '_blank');
+            }
         });
     }
 
@@ -6848,6 +6917,12 @@
             });
         }
 
+        // handle animation frame
+        video.addEventListener('play', handlePlay);
+        video.addEventListener('pause', handlePause);
+        function handlePlay(){if(!animationFrameId)animateProgress();}
+        function handlePause(){if(animationFrameId){cancelAnimationFrame(animationFrameId);animationFrameId=null;}}
+
         // handle layout changes
         function handleTheaterMode() { updateLayout(); }
         function handleResize() { updateLayout(); }
@@ -6860,9 +6935,11 @@
             video.removeEventListener('progress', renderBuffer);
             video.removeEventListener('seeking', renderBuffer);
             window.removeEventListener('resize', handleResize);
+            video.removeEventListener('pause', handlePause);
+            video.removeEventListener('play', handlePlay);
             window.cancelAnimationFrame(animationFrameId);
         }
-        document.addEventListener('yt-navigate-start', cleanupProgressBar);
+        document.addEventListener('yt-navigate-start', cleanupProgressBar, { once: true });
 
         // initialization
         renderBuffer();
@@ -7141,7 +7218,6 @@
                         if (config.text === DEFAULT_CONFIG.mButtonText) {
                             element.style.display = 'inline-block';
                             element.style.fontSize = '25px';
-                            element.style.margin = '0';
                             element.style.padding = '0 0 5px 0';
                             element.style.transform = 'scaleX(1.25)';
                         }
@@ -7347,6 +7423,9 @@
         const videoContainers = subscriptionPage.querySelectorAll('ytd-rich-item-renderer');
         if (!videoContainers.length) return;
 
+        const previousLastSeen = subscriptionPage.querySelector('.CentAnni-style-last-seen');
+        if (previousLastSeen) previousLastSeen.classList.remove('CentAnni-style-last-seen');
+
         // helper function to check if a video is live or upcoming
         const isSpecialVideo = (container) => {
             if (container.querySelector('.badge-style-type-live-now-alternate') !== null) return true;
@@ -7390,7 +7469,7 @@
         let targetElement = null;
 
         // find last seen video
-        const newLastSeenID = findFirstValidVideo((container, videoID) => videoID);
+        const newLastSeenID = findFirstValidVideo((_, videoID) => videoID);
         if (newLastSeenID) localStorage.setItem("CentAnni_lastSeenVideoID", newLastSeenID);
 
         // find previous seen video
@@ -8392,7 +8471,7 @@
 
     // safari: chapter panel scroll fix
     function clickViewAllBtn() {
-        const btn = watchFlexyElement.querySelector('#navigation-button ytd-button-renderer button[aria-label="View all"]');
+        const btn = watchFlexyElement.querySelector(`${infoSel} #navigation-button ytd-button-renderer button[aria-label="View all"]`);
         if (btn) btn.click();
     }
 
@@ -8670,6 +8749,8 @@
     let hideNotificationTimeout;
     let chronoNotificationRunning = false;
     let defaultSpeed = USER_CONFIG.playbackSpeedValue;
+    const ChatGPTLabel = USER_CONFIG.targetChatGPTLabel;
+    const NotebookLMLabel = USER_CONFIG.targetNotebookLMLabel;
     const infoSel = 'ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description]';
     const menuSel = '#primary #top-row #top-level-buttons-computed';
     const fsCnSel = '#movie_player > div.ytp-chrome-bottom';
