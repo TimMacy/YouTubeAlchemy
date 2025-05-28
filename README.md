@@ -159,6 +159,7 @@ Offers various options to customize the layout and functionality of YouTube.
 
 **Features**
   - Auto Theater Mode
+  - Auto Expand Video Description
   - Prevent Autoplay
   - Disable Play on Hover
   - Sort Notifications Chronologically
@@ -311,6 +312,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **7.8.1**: new feature: auto expand video description
 - **7.8**: bug fixes and improvements. new features: added a button to copy the transcript to the clipboard, allow changing the label text for button one (NotebookLM) and button two (ChatGPT), which also updates the hover text for those icons. to change the label text, enter "Label | domain.com" in the respective URL fields.
 - **7.7.7**: bug fixes and improvements. added multi-language support (work in progress; see supported languages above). add support for "People mentioned" in tab view. new features: sort notifications chronologically, no frosted glass effect, set default audio language, set default subtitle language. **important for Safari users**: this script now requires the requestIdleCallback web API
 - **7.7.4**: adjustments for the latest YouTube changes. bug fixes and improvements. new features: disable ambient mode, keep country code visible when hiding brand text and choose color
