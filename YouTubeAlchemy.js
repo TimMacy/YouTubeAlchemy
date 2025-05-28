@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, set video quality, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto-theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.8
+// @version      7.8.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.8 - YouTube Alchemy                     *
+*                    Version: 7.8.1 - YouTube Alchemy                   *
 *                    All Rights Reserved.                               *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
@@ -3666,6 +3666,7 @@
         closeChatWindow: false,
         displayFullTitle: true,
         autoTheaterMode: false,
+        expandVideoDescription: false,
         channelReindirizzare: false,
         channelRSSBtn: false,
         channelPlaylistBtn: false,
@@ -4372,6 +4373,10 @@
             // auto theater mode
             const autoTheaterMode = createCheckboxField('Auto Theater Mode (default: no)', 'autoTheaterMode', USER_CONFIG.autoTheaterMode);
             form.appendChild(autoTheaterMode);
+
+            // expand video description
+            const expandVideoDescription = createCheckboxField('Auto Expand Video Description (default: no)', 'expandVideoDescription', USER_CONFIG.expandVideoDescription);
+            form.appendChild(expandVideoDescription);
 
             // prevent autoplay
             const preventAutoplay = createCheckboxField('Prevent Autoplay (default: no)', 'preventAutoplay', USER_CONFIG.preventAutoplay);
@@ -5367,6 +5372,7 @@
             USER_CONFIG.noFrostedGlass = subPanelCustomCSS.elements.noFrostedGlass.checked;
             USER_CONFIG.removeScrubber = subPanelCustomCSS.elements.removeScrubber.checked;
             USER_CONFIG.autoTheaterMode = subPanelCustomCSS.elements.autoTheaterMode.checked;
+            USER_CONFIG.expandVideoDescription = subPanelCustomCSS.elements.expandVideoDescription.checked;
             USER_CONFIG.channelReindirizzare = subPanelCustomCSS.elements.channelReindirizzare.checked;
             USER_CONFIG.channelRSSBtn = subPanelCustomCSS.elements.channelRSSBtn.checked;
             USER_CONFIG.channelPlaylistBtn = subPanelCustomCSS.elements.channelPlaylistBtn.checked;
@@ -8469,9 +8475,9 @@
         script.remove();
     }
 
-    // safari: chapter panel scroll fix
-    function clickViewAllBtn() {
-        const btn = watchFlexyElement.querySelector(`${infoSel} #navigation-button ytd-button-renderer button[aria-label="View all"]`);
+    // expand video description
+    function clickDescriptionBtn() {
+        const btn = watchFlexyElement.querySelector('ytd-text-inline-expander tp-yt-paper-button#expand');
         if (btn) btn.click();
     }
 
@@ -8784,6 +8790,7 @@
             if (USER_CONFIG.playlistDirectionBtns && isPlaylistVideoPage) playlistDirection();
             if (USER_CONFIG.progressBar && !isLiveVideo && !isLiveStream) keepProgressBarVisible();
             if (USER_CONFIG.displayRemainingTime && !isLiveVideo && !isLiveStream) remainingTime();
+            if (USER_CONFIG.expandVideoDescription && !USER_CONFIG.videoTabView) clickDescriptionBtn();
             if (USER_CONFIG.autoOpenChapters && !USER_CONFIG.videoTabView && hasChapterPanel) openChapters();
             if (USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel) openTranscript();
             if (USER_CONFIG.defaultAudioLanguage!=='auto' || USER_CONFIG.defaultSubtitleLanguage!=='auto') setLanguage();
