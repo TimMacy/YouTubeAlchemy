@@ -47,7 +47,7 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
   - **Buttons with Color-Coded Interface in the Main Settings Panel**
     - **Button One | Green** 🎧 Copies the transcript and opens NotebookLM.
     - **Button Two | Blue** 💬 Copies the transcript with a prompt for summarizing and opens ChatGPT.
-    - **Button Three | Orange** Copy Transcript to Clipboard.
+    - **Button Three | Orange** Copies Transcript to Clipboard.
     - **Button Four | Red** ↓ Downloads the transcript as a text file.
     - **Button Five | White** ⋮ Opens the main settings panel.
   - **Transcript Formatting**: Includes timestamps, chapter headers, video title, channel name, upload date, and URL.
