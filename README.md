@@ -84,7 +84,7 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
 >     </tr>
 > </table>
 
-<p align="center"><img width="50%" alt="Main Settings Panel" src="https://github.com/user-attachments/assets/9518c2b6-0765-442e-ae10-ba2386d47ccc" /></p>
+<p align="center"><img width="50%" alt="Main Settings Panel" src="https://github.com/user-attachments/assets/14733b83-677d-4689-8d4a-33ff6c08ae4d" /></p>
 
 <br>
 
