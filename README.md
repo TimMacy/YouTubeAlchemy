@@ -339,7 +339,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## ⚖️ License
-This project is licensed under the AGPL-3.0 License. See the [LICENSE](https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE) file for details.
+The code of this project is licensed under the AGPL-3.0 License. See the [LICENSE](https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE) file for details. 
 
 <br><br>
 
