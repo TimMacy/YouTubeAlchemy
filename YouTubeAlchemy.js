@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, set video quality, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto-theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.8.5
+// @version      7.8.6
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.8.5 - YouTube Alchemy                   *
+*                    Version: 7.8.6 - YouTube Alchemy                   *
 *                    All Rights Reserved.                               *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
@@ -6344,6 +6344,32 @@
         });
     }
 
+        // keep scrolling to the top until scroll activity stops or a timeout occurs
+    const scrollToTop = () => {
+        let stopTimeout;
+        let frameID;
+
+        const cancelStop = () => {
+            const doScroll = () => {
+                window.scrollTo(0,0);
+                clearTimeout(stopTimeout);
+                stopTimeout = setTimeout(remove,100);
+            };
+            frameID = requestAnimationFrame(doScroll);
+        };
+
+        const remove = () => {
+            window.removeEventListener('scroll',cancelStop);
+            cancelAnimationFrame(frameID);
+            clearTimeout(backupTimeout);
+        };
+
+        window.addEventListener('scroll',cancelStop,{passive: true});
+        const backupTimeout = setTimeout(remove,1000);
+        stopTimeout = setTimeout(remove,100);
+        window.scrollTo(0,0);
+    };
+
     // playback speed functions
     function initialSpeed() {
         document.removeEventListener('yt-player-updated', initialSpeed);
@@ -8844,6 +8870,7 @@
             if (USER_CONFIG.autoOpenChapters && !USER_CONFIG.videoTabView && hasChapterPanel) openChapters();
             if (USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel) openTranscript();
             if (USER_CONFIG.defaultAudioLanguage!=='auto' || USER_CONFIG.defaultSubtitleLanguage!=='auto') setLanguage();
+            if (!USER_CONFIG.videoTabView && ((USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel))) scrollToTop();
 
             // transcript exporter
             let transcriptLoaded = false;
