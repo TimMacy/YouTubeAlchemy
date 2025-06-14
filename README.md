@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.8.6-white.svg" alt="Version: 7.8.6"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.9.1-white.svg" alt="Version: 7.9.1"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization.
@@ -33,7 +33,7 @@ YouTube Alchemy operates completely client-side with no external dependencies. T
 
 <p align="center"><img width="100%" alt="YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/f2df120a-973b-4634-9b41-cd5e0870b502" /></p>
 <p align="center">
-  <img width="49.5%" alt="YouTube Alchemy Tab View" title="YouTube Alchemy Tab View" src="https://github.com/user-attachments/assets/fadcc498-8028-4fbf-9020-c7be35b38f82" /><img width="1%" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" /><img width="49.5%" alt="Read Aloud Speedster by Tim Macy" title="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/bde52bec-1149-4d68-8440-dcdb56b40b76" />
+  <img width="49.5%" alt="YouTube Alchemy Tab View" title="YouTube Alchemy Tab View" src="https://github.com/user-attachments/assets/fadcc498-8028-4fbf-9020-c7be35b38f82" /><img width="1%" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" /><img width="49.5%" alt="Read Aloud Speedster by Tim Macy" title="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/ac496cf1-f07c-4299-a85d-af0ffe655f5e" />
 </p>
 <p align="center">
   <img width="49.5%" alt="YouTube Default" title="YouTube Default" src="https://github.com/user-attachments/assets/2a7eaf1e-2e9d-46a5-8c23-411f4e9c1eb7" /><img width="1%" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" /><img width="49.5%" alt="YouTube Alchemy by Tim Macy" title="YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/c58af4b5-3859-4cf0-b80c-b2037ae53e96" />
@@ -170,6 +170,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Add Direction Buttons to Playlist Panels
   - Open Playlist Videos Without Being in a Playlist When Clicking the Thumbnail or Title
   - Show Trash Can Icon on Owned Playlists to Quickly Remove Videos
+  - Add "Remove Watched Videos" Button to Watch Later Playlist
   - Sort Comments to "Newest First"
   - Automatically Open Chapter Panels
   - Automatically Open Transcript Panels
@@ -178,7 +179,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Use Enhanced Bitrate for 1080p Videos, Premium Required
   - Persistent Progress Bar with Chapter Markers and SponsorBlock Support—Even in Fullscreen
   - Display Remaining Time Under Videos Adjusted for Playback Speed—Even in Fullscreen
-    - To also include Skipped SponsorBlock Segments, ensure "Show time with skips removed" is enabled in SponsorBlock Settings under "Interface."
+    - To also include skipped SponsorBlock segments, ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."
 
 **Layout Changes**
   - Tab View on Video Page
@@ -207,7 +208,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide YouTube Brand Text in the Header
   - Keep Country Code Visible and Choose Color
   - Small Subscribed Button Under a Video—Displays Only the Notification Icon
-  - Hide Join Button under a Videos and on Channel Pages
+  - Hide the Join Button Under Videos and on Channel Pages
   - Display Full Titles
   - Custom Selection Color for Light and Dark Mode
   - Choose Progress Bar Color
@@ -312,6 +313,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **7.9.1**: adjustments for the latest YouTube changes, bug fixes, and improvements. new feature: add "Remove Watched Videos" button to watch later playlist
 - **7.8.6**: prevent YouTube's auto scrolling when "Automatically Open Transcript Panels" is enabled
 - **7.8.5**: adjustments for the latest YouTube changes, security update, bug fixes, and improvements
 - **7.8.1**: new feature: auto expand video description
@@ -324,13 +326,13 @@ _Support is a work in progress. Other languages may have limited functionality._
 - **7.7.2**: bug fixes and improvements. new features: show chapters under videos (only works with tab view enabled and is updated by YouTube itself), hide "Free with ads" videos on the home page, less intrusive bottom gradient
 - **7.7.1**: video gradient bug fix
 - **7.7.0.1**: bug fixes and improvements. fixed an issue with Violentmonkey. new features: add playlist buttons to channel pages, add direction buttons to playlist panels, sort comments to "Newest first," hide "your podcasts" button
-- **7.7**: bug fixes and improvements. new features: tab view, set video quality including premium 1080p enhanced bitrate, choose default transcript language, color code and scroll to last seen video on subscriptions page, add rss feed button to channel pages, added button to reset ChatGPT prompt back to default without changing other settings, change background color of details sections for watch later videos, hide "add to queue" button on hover, hide "Pay to watch" featured videos on the home page, hide "latest posts from . . ." on search page, hide blue info panels, hide comments section, hide notification button and badge, hide own avatar in the header, hide suggested videos, hide various elements in the left navigation bar, open playlist videos without being in a playlist when clicking the thumbnail or title, redirect shorts to the standard video page, show trash can icon on owned playlists to quickly remove videos, square avatars
+- **7.7**: bug fixes and improvements. new features: tab view, set video quality including premium 1080p enhanced bitrate, choose default transcript language, color code and scroll to last seen video on subscriptions page, add RSS feed button to channel pages, added button to reset ChatGPT prompt back to default without changing other settings, change background color of details sections for watch later videos, hide "add to queue" button on hover, hide "Pay to watch" featured videos on the home page, hide "latest posts from . . ." on search page, hide blue info panels, hide comments section, hide notification button and badge, hide own avatar in the header, hide suggested videos, hide various elements in the left navigation bar, open playlist videos without being in a playlist when clicking the thumbnail or title, redirect shorts to the standard video page, show trash can icon on owned playlists to quickly remove videos, square avatars
 - **7.6**: new feature: set playback speed for VODs, defaults to 1x for live videos, color code details section of watch later videos
 - **7.5.5.1**: general bug fixes and improvements. beta feature added: "Display Remaining Time Under a Video, Adjusted for Playback Speed" now also takes SponsorBlock segments into account. if the beta version is enabled, it will be used instead. ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."
 - **7.5.5**: general bug fixes and improvements. updated ChatGPT prompt to better maintain the YouTuber's POV and voice. new features: automatically enable timestamps in transcript panels, hide ad slots on the home page, hide members only featured videos on the home page, hide hashtags under videos, hide fundraiser icons and panels, option to hide various UI elements in the left navigation bar
 - **7.5.1**: fixed missing setting for channel redirect default to videos tab
 - **7.5**: name change to YouTube Alchemy. toggle for 'YouTube Transcript Exporter' added in main settings panel. general bug fixes and improvements. new Features: prevent autoplay, auto-close initial chat windows, hide shorts, hide play next button, hide comment reply button, hide breaking news on home, hide playlists on home, hide right sidebar on search
-- **7.4**: general bug fixes and improvements. reworked initiation of the script. new features: auto-open transcript panels, hide video end cards, hide end screens, hide join and share button under videos, small "subscribed" button (icon only), hide add comment text field, disable play on hover, hide main scrollbar in Safari, choose progress bar color
+- **7.4**: general bug fixes and improvements. reworked initiation of the script. new features: auto-open transcript panels, hide video end cards, hide end screens, hide join and share buttons under videos, small "subscribed" button (icon only), hide add comment text field, disable play on hover, hide main scrollbar in Safari, choose progress bar color
 - **7.3.5**: General bug fixes and improvements. Reorganized the settings panel for upcoming features. New Features: Hide YouTube brand text in the header; Hide video scrubber (red dot in progress bar); Display full titles; and Auto Theater mode
 - **7.3.1**: fixed YouTube scrubber in progress bar
 - **7.3**: New Features: Links in Header, Customize CSS, and Color Code Videos. Also optimized transcript loading and reset function
@@ -340,20 +342,20 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## ⚖️ License
-The code of this project in `YouTubeAlchemy.js` is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See the [LICENSE](https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE) file for details. The `README.md` and all images are Copyright © 2025 Tim Macy. All rights reserved.
+The code in `YouTubeAlchemy.js` is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See the [LICENSE](https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE) file for details. The `README.md` and all images are Copyright © 2025 Tim Macy. All rights reserved.
 
 <br><br>
 
 > [!TIP]
 > # 💡 Read Aloud Speedster
-> This script integrates intuitive playback speed controls into the chatbox interface. Clicking the speed display opens a popup menu to set a preferred default playback speed and the option to toggle the square design. Furthermore, the icons under Chat's responses are color-coded, and bold text is highlighted in color.
+> This script integrates intuitive playback speed controls into the chatbox interface. Clicking the speed display opens a popup menu to set a preferred default playback speed and the option to toggle the square design. Additionally, the icons under Chat's responses are color-coded, and bold text is highlighted in color.
 >
 > <br>
 >
 > **Install It from the Official Repository: [https://github.com/TimMacy/ReadAloudSpeedster](https://github.com/TimMacy/ReadAloudSpeedster)**
 >
 > <br>
-> <p align="center"><img width="100%" alt="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/bfb1a08e-3124-47ca-be49-cc08f09303db" /></p>
+> <p align="center"><img width="100%" alt="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/66c28cae-0653-47e4-b614-56f1a4a3f9d8" /></p>
 <br>
 
 ## ⚠️ Disclaimer
