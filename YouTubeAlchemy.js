@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, set video quality, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto-theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.8.6
+// @version      7.9.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -13,16 +13,15 @@
 // @noframes
 // @homepageURL  https://github.com/TimMacy/YouTubeAlchemy
 // @supportURL   https://github.com/TimMacy/YouTubeAlchemy/issues
-// @updateURL    https://raw.githubusercontent.com/TimMacy/YouTubeAlchemy/refs/heads/main/YouTubeAlchemy.js
-// @downloadURL  https://raw.githubusercontent.com/TimMacy/YouTubeAlchemy/refs/heads/main/YouTubeAlchemy.js
+// @updateURL    https://raw.githubusercontent.com/TimMacy/YouTubeAlchemy/main/YouTubeAlchemy.js
+// @downloadURL  https://raw.githubusercontent.com/TimMacy/YouTubeAlchemy/main/YouTubeAlchemy.js
 // ==/UserScript==
 
 /************************************************************************
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.8.6 - YouTube Alchemy                   *
-*                    All Rights Reserved.                               *
+*                    Version: 7.9.1 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -44,18 +43,18 @@
             height: 100%;
             align-items: center;
             justify-content: center;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,.5);
             backdrop-filter: blur(5px);
         }
 
-        .modal-content {
+        .CentAnni-modal-content {
             z-index: 2077;
-            background-color: rgba(17, 17, 17, 0.8);
+            background-color: rgba(17, 17, 17, .8);
             padding: 20px 0 20px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, .25);
             border-radius: 8px;
             width: 420px;
-            max-height: 90vh;
+            max-height: 90dvh;
             font-family: "Roboto","Arial",sans-serif;
             font-size: 9px;
             line-height: 1.2;
@@ -65,13 +64,13 @@
             -moz-osx-font-smoothing: grayscale !important;
         }
 
-        #yt-transcript-settings-form {
-            max-height: calc(90vh - 40px);
+        #CentAnni-main-settings-form {
+            max-height: calc(90dvh - 40px);
             overflow-y: auto;
             padding-right: 20px;
         }
 
-        .notification {
+        .CentAnni-notification {
             background:hsl(0,0%,7%);
             padding: 20px 30px;
             border-radius: 8px;
@@ -87,7 +86,7 @@
             user-select: none;
         }
 
-        .header-wrapper {
+        .CentAnni-header-wrapper {
             display: grid;
             grid-template-columns: 1fr auto 1fr;
             align-items: baseline;
@@ -96,7 +95,7 @@
             width: calc(100% - 20px);
         }
 
-        .header {
+        .CentAnni-header {
             margin: 0;
             padding: 0;
             border: 0;
@@ -124,9 +123,9 @@
             user-select: none;
         }
 
-        .header:hover { color: white; }
+        .CentAnni-header:hover { color: white; }
 
-        .version-label {
+        .CentAnni-version-label {
             grid-column: 3;
             padding: 0;
             margin: 0 0 0 5px;
@@ -141,7 +140,7 @@
             text-overflow: ellipsis;
         }
 
-        .header:hover + .version-label {
+        .CentAnni-header:hover + .CentAnni-version-label {
             opacity: 1;
         }
 
@@ -215,7 +214,7 @@
             background-color: hsl(0, 0%, 7%);
             border: 1px solid hsl(0, 0%, 18.82%);
             border-radius: 2px;
-            transition: all 0.2s ease-out;
+            transition: all .2s ease-out;
         }
 
         .btn-style-settings:hover { color: white; background-color: hsl(0, 0%, 25%); border-color: transparent; }
@@ -263,17 +262,17 @@
         .spacer-15 { height: 15px; }
         .spacer-20 { height: 20px; }
 
-        .copyright {
+        .CentAnni-copyright {
             font-family: -apple-system, "Roboto", "Arial", sans-serif;
             font-size: 1.4em;
             line-height: 1.5em;
             font-weight: 500;
             color: white;
             text-decoration: none;
-            transition: color 0.2s ease-in-out;
+            transition: color .2s ease-in-out;
         }
 
-        .copyright:hover { color: #369eff; }
+        .CentAnni-copyright:hover { color: #369eff; }
         .url-container { margin-bottom: 10px; }
 
         .input-field-url {
@@ -343,7 +342,7 @@
             top: 115%;
             left: 0;
             width: 100%;
-            max-height: 60vh;
+            max-height: 60dvh;
             overflow-y: auto;
             background-color:hsl(0,0%,7%);
             border: 1px solid hsl(359,88%,57%);
@@ -419,7 +418,7 @@
 
         .checkbox-container { margin-bottom: 5px; }
         .checkbox-label:hover { text-decoration: underline; }
-        .checkbox-field { margin-right: 10px; }
+        .checkbox-field { margin-right: 10px; cursor: pointer; }
 
         .CentAnni-info-text {
             color: rgba(175, 175, 175, .9);
@@ -505,11 +504,31 @@
             margin: 0 12px;
         }
 
-        #masthead-skeleton-icons {
-            display: none !important;
+        .masthead-skeleton-icon {
+            background-color: transparent !important;
+            border-radius: 0;
         }
 
-        .button-wrapper {
+        .masthead-skeleton-icon:first-child {
+            width: 97.5px;
+            height: 36px;
+            margin: 0 8px 0 0;
+        }
+
+        .masthead-skeleton-icon:nth-child(2) {
+            width: 40px;
+            height: 40px;
+            margin: 0 8px 0 0;
+        }
+
+        .masthead-skeleton-icon:last-child {
+            width: 32px;
+            height: 32px;
+            margin: 0 8px;
+            padding: 1px 6px;
+        }
+
+        .CentAnni-button-wrapper {
             position: relative;
             margin-right: 8px;
             display: flex;
@@ -519,8 +538,8 @@
             -moz-osx-font-smoothing: grayscale !important;
         }
 
-        .button-wrapper:not(:has(.button-style-settings)):hover { background-color: rgba(255, 255, 255, 0.1); border-radius: 24px; }
-        .button-wrapper:not(:has(.button-style-settings)):active { background-color: rgba(255, 255, 255, 0.2); border-radius: 24px; }
+        .CentAnni-button-wrapper:not(:has(.button-style-settings)):hover { background-color: rgba(255, 255, 255, .1); border-radius: 24px; }
+        .CentAnni-button-wrapper:not(:has(.button-style-settings)):active { background-color: rgba(255, 255, 255, .2); border-radius: 24px; }
 
         .button-style {
             width: 40px;
@@ -635,7 +654,7 @@
             pointer-events: none !important;
         }
 
-        .notification-error {
+        .CentAnni-notification-error {
             z-index: 2053;
             box-shadow: none;
             text-decoration: none;
@@ -648,7 +667,7 @@
             pointer-events: none;
             cursor: default;
             font-family: 'Roboto', Arial, sans-serif;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, .5);
             text-align: center;
             font-weight: 500;
             font-size: 14px;
@@ -753,7 +772,7 @@
             width: 100%;
             height: 100%;
             display: none;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,.5);
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(1px);
@@ -765,13 +784,13 @@
 
         .sub-panel {
             z-index: 2177;
-            background-color: rgba(17, 17, 17, 0.8);
+            background-color: rgba(17, 17, 17, .8);
             padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, .25);
             border-radius: 8px;
-            width: 50vw;
-            max-width: 70vw;
-            max-height: 90vh;
+            width: 50dvw;
+            max-width: 70dvw;
+            max-height: 90dvh;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -1067,10 +1086,10 @@
 
         /* progress bar css */
         .CentAnni-progress-bar {
-            #progress-bar-bar {
+            #CentAnni-progress-bar-bar {
                 width: 100%;
                 height: 3px;
-                background: rgba(255, 255, 255, 0.2);
+                background: rgba(255, 255, 255, .2);
                 position: absolute;
                 bottom: 0;
                 opacity: 0;
@@ -1078,14 +1097,14 @@
                 pointer-events: none;
             }
 
-            #progress-bar-progress, #progress-bar-buffer {
+            #CentAnni-progress-bar-progress, #CentAnni-progress-bar-buffer {
                 width: 100%;
                 height: 3px;
                 transform-origin: 0 0;
                 position: absolute;
             }
 
-            #progress-bar-progress {
+            #CentAnni-progress-bar-progress {
                 background: var(--progressBarColor);
                 filter: none;
                 z-index: 1;
@@ -1094,14 +1113,13 @@
             .ytp-autohide .ytp-chrome-bottom .ytp-load-progress, .ytp-autohide .ytp-chrome-bottom .ytp-play-progress { display: none !important; }
             .ytp-autohide .ytp-chrome-bottom { opacity: 1 !important; display: block !important; }
             .ytp-autohide .ytp-chrome-bottom .ytp-chrome-controls { opacity: 0 !important; }
-            .ad-interrupting #progress-bar-progress { background: transparent; }
+            .ad-interrupting #CentAnni-progress-bar-progress { background: transparent; }
             .ytp-ad-persistent-progress-bar-container { display: none; }
-            #progress-bar-buffer { background: rgba(255, 255, 255, 0.4); }
+            #CentAnni-progress-bar-buffer { background: rgba(255, 255, 255, .4); }
 
-            .ytp-autohide #progress-bar-start.active,
-            .ytp-autohide #progress-bar-bar.active,
-            .ytp-autohide #progress-bar-end.active
-            { opacity: 1; }
+            .ytp-autohide #CentAnni-progress-bar-start.active,
+            .ytp-autohide #CentAnni-progress-bar-bar.active,
+            .ytp-autohide #CentAnni-progress-bar-end.active { opacity: 1; }
 
             .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar-container {
                 bottom: 0px !important;
@@ -1132,7 +1150,7 @@
                 pointer-events: none;
             }
 
-            #progress-bar-start, #progress-bar-end {
+            #CentAnni-progress-bar-start, #CentAnni-progress-bar-end {
                 position: absolute;
                 height: 3px;
                 width: 12px;
@@ -1142,18 +1160,18 @@
                 pointer-events: none;
             }
 
-            :fullscreen #progress-bar-start, :fullscreen #progress-bar-end { width: 24px; }
-            :-webkit-full-screen #progress-bar-start, :-webkit-full-screen #progress-bar-end { width: 24px; }
-            .html5-video-player.ytp-fullscreen #progress-bar-start, .html5-video-player.ytp-fullscreen #progress-bar-end { width: 24px !important; }
+            :fullscreen #CentAnni-progress-bar-start, :fullscreen #CentAnni-progress-bar-end { width: 24px; }
+            :-webkit-full-screen #CentAnni-progress-bar-start, :-webkit-full-screen #CentAnni-progress-bar-end { width: 24px; }
+            .html5-video-player.ytp-fullscreen #CentAnni-progress-bar-start, .html5-video-player.ytp-fullscreen #CentAnni-progress-bar-end { width: 24px !important; }
 
-            #progress-bar-start {
+            #CentAnni-progress-bar-start {
                 left: 0;
                 background: var(--progressBarColor);
             }
 
-            #progress-bar-end {
+            #CentAnni-progress-bar-end {
                 right: 0;
-                background: rgba(255, 255, 255, 0.2);
+                background: rgba(255, 255, 255, .2);
             }
 
             .ytp-autohide .ytp-chrome-bottom .ytp-timed-marker {
@@ -1207,7 +1225,7 @@
             }
 
             .CentAnni-playback-speed-display {
-                background: rgba(255,255,255,0.1);
+                background: rgba(255,255,255,.1);
                 height: 36px;
                 justify-content: center;
                 align-items: center;
@@ -1243,7 +1261,7 @@
             .CentAnni-playback-speed-display::before,
             .CentAnni-playback-speed-display::after {
                 content: "";
-                background: rgba(255,255,255,0.2);
+                background: rgba(255,255,255,.2);
                 position: initial;
                 right: 0;
                 top: 6px;
@@ -1276,7 +1294,7 @@
                 margin: 0;
                 padding: 0;
                 border-radius: 12px 12px 0 0;
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, .2);
                 overflow: hidden;
                 box-sizing: border-box;
                 background-color: transparent;
@@ -1329,7 +1347,7 @@
                 line-height: 2em;
                 font-weight: 500;
                 margin: 0;
-                background-color: rgba(255,255,255,0.1);
+                background-color: rgba(255,255,255,.1);
                 color: #f1f1f1;
                 text-decoration: none;
                 padding: 0 12px;
@@ -1337,7 +1355,7 @@
             }
 
             .CentAnni-tabView-tab:hover {
-                background: rgba(255,255,255,0.2);
+                background: rgba(255,255,255,.2);
                 border-color: transparent;
             }
 
@@ -1351,7 +1369,7 @@
                 overflow-x: hidden;
                 padding: 0;
                 margin: 0;
-                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
             }
 
             .CentAnni-tabView-content {
@@ -1399,12 +1417,12 @@
             }
 
             #tab-2 {
-                border-top: 1px solid rgba(255, 255, 255, 0.2);
+                border-top: 1px solid rgba(255, 255, 255, .2);
             }
 
             #related.style-scope.ytd-watch-flexy {
                 position: absolute;
-                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: 76px;
                 left: 0;
@@ -1415,14 +1433,14 @@
                 visibility: hidden;
                 opacity: 0;
                 z-index: 5;
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, .2);
                 border-top: none;
                 box-sizing: border-box;
                 border-radius: 0 0 12px 12px;
             }
 
             ytd-watch-metadata.ytd-watch-flexy {
-                margin: 12px 10px 0 10px;
+                margin: 12px 0 0 0;
             }
 
             ytd-watch-flexy ytd-comments {
@@ -1460,7 +1478,7 @@
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
                 position: absolute;
-                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: 76px;
                 left: 0;
@@ -1469,7 +1487,7 @@
                 overflow-y: auto;
                 overflow-x: hidden;
                 z-index: 5;
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, .2);
                 border-top: none;
                 box-sizing: border-box;
             }
@@ -1492,7 +1510,7 @@
 
             ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description] {
                 position: absolute;
-                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: 76px;
                 left: 0;
@@ -1502,7 +1520,7 @@
                 overflow-x: hidden;
                 z-index: 5;
                 background: black;
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, .2);
                 border-top: none;
                 box-sizing: border-box;
             }
@@ -1515,13 +1533,13 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: 76px;
                 margin: 0;
                 padding: 0;
                 z-index: 5;
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, .2);
                 border-top: none;
                 box-sizing: border-box;
             }
@@ -1715,7 +1733,7 @@
             ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
                 z-index: 100;
                 background: black;
-                height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x)) !important;
+                height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x)) !important;
                 max-height: unset !important;
                 margin-top: -52px;
             }
@@ -1746,7 +1764,7 @@
 
 
             ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]) {
-                height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) + 1px) !important;
+                height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) + 1px) !important;
                 border: 1px solid rgb(51, 51, 51);
             }
 
@@ -1755,7 +1773,7 @@
             }
 
             ytd-watch-flexy:not([is-two-columns_])[theater] #chat.ytd-watch-flexy:not([collapsed]) {
-                height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) + 1px) !important;
+                height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) + 1px) !important;
             }
 
             /* theater mode active */
@@ -1816,7 +1834,7 @@
             }
 
             ytd-watch-flexy[is-two-columns_][theater] #columns {
-                max-height: calc(100vh - 56.25vw - var(--ytd-masthead-height,var(--ytd-toolbar-height)));
+                max-height: calc(100dvh - 56.25dvw - var(--ytd-masthead-height,var(--ytd-toolbar-height)));
                 min-height: calc(169px - var(--ytd-masthead-height, var(--ytd-toolbar-height)));
             }
 
@@ -1832,7 +1850,7 @@
 
             #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy {
                     margin-bottom: 0;
-                    max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                    max-height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
                     overflow-y: auto;
             }
 
@@ -1869,7 +1887,7 @@
             ytd-watch-flexy[default-layout] #playlist,
             ytd-watch-flexy[default-layout] #secondary,
             ytd-watch-flexy[default-layout] #container.ytd-playlist-panel-renderer {
-                max-height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
             }
 
             #container.ytd-playlist-panel-renderer {
@@ -1916,7 +1934,7 @@
 
             ytd-watch-flexy:not([is-two-columns_]) .CentAnni-tabView {
                 margin-top: 12px;
-                width: 90vw;
+                width: 90dvw;
             }
 
             ytd-watch-flexy:not([is-two-columns_])[theater] #panels,
@@ -1928,8 +1946,8 @@
             ytd-watch-flexy:not([is-two-columns_]) #related.style-scope.ytd-watch-flexy,
             ytd-watch-flexy:not([is-two-columns_]) #panels ytd-engagement-panel-section-list-renderer {
                 top: calc(var(--ytd-watch-flexy-space-below-player) + 54px);
-                max-height: 50vh !important;
-                width: 90vw;
+                max-height: 50dvh !important;
+                width: 90dvw;
                 margin: 0 !important;
                 left: 50%;
                 transform: translateX(-50%);
@@ -1937,7 +1955,7 @@
 
             ytd-watch-flexy:not([is-two-columns_]):not([theater]) #chat.ytd-watch-flexy:not([collapsed]),
             ytd-watch-flexy:not([is-two-columns_]) .CentAnni-tabView-content {
-                max-height: 50vh !important;
+                max-height: 50dvh !important;
             }
 
             ytd-watch-flexy:not([is-two-columns_])[default-layout]:not([no-top-margin]):not([reduced-top-margin]) #secondary.ytd-watch-flexy {
@@ -1965,6 +1983,15 @@
 
             ytd-watch-flexy:not([is-two-columns_]):has(#chat:not([collapsed]))[theater] #primary {
                 height: max-content;
+            }
+
+            #container.ytd-masthead {
+                padding: 0 24px;
+            }
+
+            ytd-macro-markers-list-renderer:not([browsing-mode]) #sync-container.ytd-macro-markers-list-renderer {
+                transform: unset !important;
+                display: none;
             }
         }
 
@@ -2005,7 +2032,7 @@
                 position: absolute;
                 display: flex;
                 flex-direction: row;
-                z-index: 2025;
+                z-index: 2017;
                 top: 0;
                 right: 0;
                 max-width: calc(50% - 26px);
@@ -2029,7 +2056,7 @@
                 position: absolute;
                 display: none;
                 flex-direction: row;
-                max-width: 50vw;
+                max-width: 50dvw;
                 overflow: hidden;
                 z-index: 2053;
                 bottom: 0;
@@ -2175,11 +2202,16 @@
             background: black !important;
         }
 
-        .CentAnni-style-no-frosted-glass {
-            #frosted-glass.ytd-app,
-            ytd-masthead[frosted-glass-mode=without-chipbar] #background.ytd-masthead {
-                background: black !important;
-            }
+        html[dark].CentAnni-style-no-frosted-glass #frosted-glass.ytd-app,
+        html[dark].CentAnni-style-no-frosted-glass #background.ytd-masthead,
+        html[dark].CentAnni-style-no-frosted-glass #frosted-glass.with-chipbar.ytd-app {
+            background: black !important;
+        }
+
+        html:not([dark]).CentAnni-style-no-frosted-glass #frosted-glass.ytd-app,
+        html:not([dark]).CentAnni-style-no-frosted-glass #background.ytd-masthead,
+        html:not([dark]).CentAnni-style-no-frosted-glass #frosted-glass.with-chipbar.ytd-app {
+            background: white !important;
         }
 
         .CentAnni-style-remove-scrubber {
@@ -2267,6 +2299,7 @@
         }
 
         .CentAnni-style-hide-create-btn {
+            .masthead-skeleton-icon:first-child,
             #end ytd-button-renderer.ytd-masthead[button-renderer][button-next]:not(:last-child) {
                 display: none !important;
             }
@@ -2279,6 +2312,7 @@
         }
 
         .CentAnni-style-hide-notification-btn {
+            .masthead-skeleton-icon:nth-child(2),
             #masthead-container #end #buttons ytd-notification-topbar-button-renderer {
                 display: none !important;
             }
@@ -2301,25 +2335,35 @@
         }
 
         .CentAnni-style-hide-own-avatar {
-            #avatar-btn {
+            #avatar-btn,
+            .masthead-skeleton-icon:last-child {
                 display: none !important;
+            }
+
+            .masthead-skeleton-icon:nth-child(2),
+            #end ytd-notification-topbar-button-renderer {
+                margin-right: 0 !important;
             }
         }
 
         .CentAnni-style-hide-brand-text {
-            ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > picture,
-            #country-code.ytd-topbar-logo-renderer,
-            #logo-icon [id^="youtube-paths_yt"] {
+            #start ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > picture,
+            #start #country-code.ytd-topbar-logo-renderer,
+            #start #logo-icon [id^="youtube-paths_yt"] {
                 display: none;
             }
 
             #logo.ytd-masthead {
-                width: 45px !important;
+                width: 29px !important;
                 overflow: hidden;
             }
 
             ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > ytd-logo {
                 display: block !important;
+            }
+
+            #start yt-icon.ytd-logo {
+                padding: 0;
             }
         }
 
@@ -2327,7 +2371,7 @@
             #country-code.ytd-topbar-logo-renderer {
                 position: absolute;
                 color: var(--countryCodeColor);
-                margin: 7px 0 0 45px;
+                margin: -8px 0 0 27px;
                 display: block !important;
             }
         }
@@ -2349,22 +2393,38 @@
         }
 
         .CentAnni-style-square-search-bar {
-            #center.ytd-masthead { flex: 0 1 500px; }
-            .YtSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; }
-            .YtSearchboxComponentSuggestionsContainer { border-radius: 0 0 10px 10px; }
+            #center.ytd-masthead { flex: 0 1 38.76dvw; margin: 0 8px; }
+            .YtSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; margin-left: 0; padding: 0 4px 0 10px; }
+            .YtSearchboxComponentSuggestionsContainer { border-radius: 0 0 5px 5px; }
             .YtSearchboxComponentSearchButton, .YtSearchboxComponentSearchButtonDark { display: none; }
-            .YtSearchboxComponentHost { margin: 0; }
+            .YtSearchboxComponentHost { margin: 0; padding: 0; }
 
-            .ytSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; }
-            .ytSearchboxComponentSuggestionsContainer { border-radius: 0 0 10px 10px; }
+            .ytSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; margin-left: 0; padding: 0 4px 0 10px; }
+            .ytSearchboxComponentSuggestionsContainer { border-radius: 0 0 5px 5px; }
             .ytSearchboxComponentSearchButton, .ytSearchboxComponentSearchButtonDark { display: none; }
-            .ytSearchboxComponentHost { margin: 0; }
+            .ytSearchboxComponentHost { margin: 0; padding: 0; }
 
             .ytSearchboxComponentDesktop .ytSearchboxComponentClearButton {
                 border-radius: 0;
                 height: 38px;
                 width: 38px;
                 margin-right: 6px;
+            }
+
+            #end.ytd-masthead {
+                min-width: auto;
+            }
+
+            .ytSearchboxComponentInnerSearchIcon {
+                display: none;
+            }
+
+            .ytSearchboxComponentSearchForm {
+                padding: 0 15px 0 0;
+            }
+
+            .ytSuggestionComponentRemoveLinkClearButton:hover {
+                background-color: rgba(255,255,255,.2);
             }
         }
 
@@ -2398,6 +2458,7 @@
             ytd-donation-shelf-renderer[modern-panels],
             .ytp-player-minimized .ytp-miniplayer-scrim,
             yt-interaction.circular .fill.yt-interaction,
+            .ytSuggestionComponentVisualSuggestThumbnail,
             .yt-spec-button-shape-next--icon-only-default,
             yt-interaction.circular .stroke.yt-interaction,
             ytd-watch-flexy[theater] .CentAnni-tabView-tab,
@@ -2448,6 +2509,7 @@
             .yt-sheet-view-model-wiz--contextual,
             .ytVideoMetadataCarouselViewModelHost,
             yt-interaction.ytd-guide-entry-renderer,
+            .ytSuggestionComponentRoundedSuggestion,
             .dropdown-content.tp-yt-paper-menu-button,
             .tp-yt-paper-tooltip[style-target=tooltip],
             #chip-container.yt-chip-cloud-chip-renderer,
@@ -2619,7 +2681,7 @@
                 }
 
                 .style-scope.ytd-two-column-browse-results-renderer {
-                    --ytd-rich-grid-item-max-width: 100vw;
+                    --ytd-rich-grid-item-max-width: 100dvw;
                     --ytd-rich-grid-item-min-width: 310px;
                     --ytd-rich-grid-item-margin: 0px !important;
                     --ytd-rich-grid-content-offset-top: 56px;
@@ -2751,7 +2813,7 @@
                 }
 
                 #header-container {
-                    width: 80vw;
+                    width: 80dvw;
                     align-self: center;
                 }
 
@@ -2826,7 +2888,7 @@
             }
 
             .ytChipShapeChip:hover  {
-                background: rgba(255,255,255,0.2);
+                background: rgba(255,255,255,.2);
                 border-color: transparent;
             }
 
@@ -2854,7 +2916,7 @@
 
             #container.ytd-search ytd-video-renderer[use-bigger-thumbs] ytd-thumbnail.ytd-video-renderer,
             #container.ytd-search ytd-video-renderer[use-bigger-thumbs][bigger-thumbs-style="BIG"] ytd-thumbnail.ytd-video-renderer {
-                max-width: calc(100vh / 1.92 - 64px);
+                max-width: calc(100dvh / 1.92 - 64px);
                 min-width: 250px;
             }
 
@@ -2869,6 +2931,19 @@
 
             ytd-guide-entry-renderer {
                 width: 100%;
+            }
+
+            button.ytd-topbar-menu-button-renderer, {
+                padding: 0;
+            }
+
+            yt-img-shadow.ytd-topbar-menu-button-renderer {
+                margin: 0;
+            }
+
+            .masthead-skeleton-icon:last-child {
+                margin: 0;
+                padding: 0;
             }
         }
 
@@ -2939,16 +3014,19 @@
             .CentAnni-style-playlist-remove-btn {
                 display: flex;
                 align-items: center;
+                justify-content: center;
+                height: 50px;
+                width: 50px;
                 border: 1px dashed red;
                 background: transparent;
                 cursor: pointer;
-                margin: 10px 20px 0px 10px;
-                padding: 15px;
-                transition: background 0.2s, filter 0.2s, transform 0.15s;
+                margin: 12px 24px 4px 12px;
+                padding: 0;
+                transition: background .2s, filter .2s, transform .15s;
                 font-size: 2rem;
                 position: relative;
                 z-index: 1000;
-                border-radius: 2px;
+                border-radius: 0;
             }
 
             .CentAnni-style-playlist-remove-btn:hover {
@@ -2957,12 +3035,20 @@
 
             .CentAnni-style-playlist-remove-btn:active {
                 background: darkred;
-                transform: scale(0.9);
+                transform: scale(.9);
             }
         }
 
         .CentAnni-style-playlist-hide-menu {
             display: none !important;
+        }
+
+        .CentAnni-playlist-remove-btn-hide-menus {
+            tp-yt-iron-overlay-backdrop.opened,
+            ytd-popup-container > tp-yt-paper-dialog,
+            ytd-popup-container > tp-yt-iron-dropdown {
+                display: none !important;
+            }
         }
 
         .CentAnni-style-hide-watched-videos {
@@ -3111,6 +3197,7 @@
             ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
             yt-chip-cloud-chip-renderer[chip-shape-data*='"text":"Shorts"'],
             ytd-reel-shelf-renderer.ytd-structured-description-content-renderer,
+            yt-chip-cloud-chip-renderer:has(yt-formatted-string[title="Shorts"]),
             ytd-rich-section-renderer:has(div ytd-rich-shelf-renderer[is-shorts]),
             #container.ytd-search ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
             ytd-item-section-renderer[page-subtype="subscriptions"]:has(ytd-reel-shelf-renderer),
@@ -3430,15 +3517,15 @@
             color: black;
         }
 
-        ytd-masthead:not([dark]):not([page-dark-theme]) .button-wrapper:not(:has(.button-style-settings)):hover {
-            background-color: rgba(0, 0, 0, 0.1); border-radius: 24px;
+        ytd-masthead:not([dark]):not([page-dark-theme]) .CentAnni-button-wrapper:not(:has(.button-style-settings)):hover {
+            background-color: rgba(0, 0, 0, .1); border-radius: 24px;
         }
 
-        ytd-masthead:not([dark]):not([page-dark-theme]) .button-wrapper:not(:has(.button-style-settings)):active {
-            background-color: rgba(0, 0, 0, 0.2); border-radius: 24px;
+        ytd-masthead:not([dark]):not([page-dark-theme]) .CentAnni-button-wrapper:not(:has(.button-style-settings)):active {
+            background-color: rgba(0, 0, 0, .2); border-radius: 24px;
         }
 
-        ytd-masthead:not([dark]):not([page-dark-theme]) .notification-error {
+        ytd-masthead:not([dark]):not([page-dark-theme]) .CentAnni-notification-error {
             background-color: white;
             border: 1px solid black;
             color: #030303;
@@ -3450,17 +3537,17 @@
 
         html:not([dark]) .CentAnni-tabView-tab,
         html:not([dark]) .CentAnni-playback-speed-display {
-            background-color: rgba(0,0,0,0.05);
+            background-color: rgba(0,0,0,.05);
             color: #0f0f0f;
         }
 
         html:not([dark]) .CentAnni-playback-speed-display::before,
         html:not([dark]) .CentAnni-playback-speed-display::after {
-            background: rgba(0,0,0,0.1);
+            background: rgba(0,0,0,.1);
         }
 
         html:not([dark]) .CentAnni-tabView-tab:hover {
-            background: rgba(0,0,0,0.1);
+            background: rgba(0,0,0,.1);
             border-color: transparent;
         }
 
@@ -3476,7 +3563,7 @@
         html:not([dark]) ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
             z-index: 100;
             background: black;
-            height: calc(100vh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x)) !important;
+            height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x)) !important;
             max-height: unset !important;
             margin-top: -52px;
         }
@@ -3527,6 +3614,14 @@
             background: var(--selection-color);
             color: var(--selection-text-color);
         }
+
+        .ytSearchboxComponentInputBoxDark.ytSearchboxComponentInputBoxHasFocus {
+            border-color: var(--darkSelectionColor) !important;
+        }
+
+        .ytSearchboxComponentInputBoxHasFocus {
+            border-color: var(--lightSelectionColor) !important;
+        }
     `;
 
     // append css
@@ -3534,15 +3629,15 @@
         ? Promise.resolve(document.head)
         : new Promise(resolve => {
             if (document.readyState === 'loading')
-                document.addEventListener('DOMContentLoaded', () => resolve(document.head), { once: true });
+                document.addEventListener('DOMContentLoaded', () => resolve(document.head),{once:true});
             else resolve(document.head);
         })
     ).then(head => {
         if (head)
             head.appendChild(styleSheet);
         else {
-                document.documentElement.appendChild(styleSheet);
-                console.error("YouTubeAlchemy: Failed to find head element. Using backup to append stylesheet.");
+            document.documentElement.appendChild(styleSheet);
+            console.error("YouTubeAlchemy: Failed to find head element. Using backup to append stylesheet.");
         }
     });
 
@@ -3621,6 +3716,7 @@
         lastSeenVideoColor: '#9400D3',
         playlistLinks: false,
         playlistTrashCan: false,
+        plWLBtn: true,
         commentsNewFirst: false,
         defaultTranscriptLanguage: 'auto',
         defaultAudioLanguage: 'auto',
@@ -3744,7 +3840,7 @@
     const docElement = document.documentElement;
     let docBody = document.body;
 
-    // ensure CSS settings load immediately
+    // load CSS settings
     let cssSettingsApplied = false;
     function loadCSSsettings() {
         // features css
@@ -3867,24 +3963,25 @@
 
     // create and show the settings modal
     function showSettingsModal() {
-        const existingModal = document.getElementById('yt-transcript-settings-modal');
+        const existingModal = document.getElementById('yt-alchemy-settings-modal');
         if (existingModal) {
             existingModal.style.display = 'flex';
             docBody.style.overflow = 'hidden';
+            setupModalHandlers(existingModal);
             return;
         }
 
         // create modal elements
         const modal = document.createElement('div');
-        modal.id = 'yt-transcript-settings-modal';
+        modal.id = 'yt-alchemy-settings-modal';
         modal.classList.add('CentAnni-overlay');
 
         const modalContent = document.createElement('div');
-        modalContent.classList.add('modal-content');
+        modalContent.classList.add('CentAnni-modal-content');
 
         // create header container
         const headerWrapper = document.createElement('div');
-        headerWrapper.classList.add('header-wrapper');
+        headerWrapper.classList.add('CentAnni-header-wrapper');
 
         // header
         const header = document.createElement('a');
@@ -3892,21 +3989,22 @@
         header.target = '_blank';
         header.innerText = 'YouTube Alchemy';
         header.title = 'GitHub Repository for YouTube Alchemy';
-        header.classList.add('header');
+        header.rel = 'noopener';
+        header.classList.add('CentAnni-header');
         headerWrapper.appendChild(header);
 
         // version
         const versionSpan = document.createElement('span');
         const scriptVersion = GM.info.script.version;
         versionSpan.innerText = `v${scriptVersion}`;
-        versionSpan.classList.add('version-label');
+        versionSpan.classList.add('CentAnni-version-label');
         headerWrapper.appendChild(versionSpan);
 
         modalContent.appendChild(headerWrapper);
 
         // create form elements for each setting
         const form = document.createElement('form');
-        form.id = 'yt-transcript-settings-form';
+        form.id = 'CentAnni-main-settings-form';
 
         // Button Icons
         const iconsHeader = document.createElement('label');
@@ -3942,7 +4040,7 @@
 
         iconsContainer.appendChild(createIconInputField(`${NotebookLMLabel}`, 'buttonIconNotebookLM', USER_CONFIG.buttonIcons.NotebookLM, 'label-NotebookLM'));
         iconsContainer.appendChild(createIconInputField(`${ChatGPTLabel}`, 'buttonIconChatGPT', USER_CONFIG.buttonIcons.ChatGPT, 'label-ChatGPT'));
-        iconsContainer.appendChild(createIconInputField('Copy', 'buttonIconCopy', USER_CONFIG.buttonIcons.copy, 'label-settings'));
+        iconsContainer.appendChild(createIconInputField('Copy', 'buttonIconCopy', USER_CONFIG.buttonIcons.copy, 'label-copy'));
         iconsContainer.appendChild(createIconInputField('Download', 'buttonIconDownload', USER_CONFIG.buttonIcons.download, 'label-download'));
         iconsContainer.appendChild(createIconInputField('Settings', 'buttonIconSettings', USER_CONFIG.buttonIcons.settings, 'label-settings'));
 
@@ -4065,7 +4163,8 @@
         copyright.target = '_blank';
         copyright.innerText = '© 2024 Tim Macy';
         copyright.title = 'Copyright by Tim Macy';
-        copyright.classList.add('copyright');
+        copyright.rel = 'noopener';
+        copyright.classList.add('CentAnni-copyright');
 
         const spacer = document.createElement('div');
         spacer.style = 'flex: 1;';
@@ -4092,8 +4191,8 @@
                 USER_CONFIG = { ...DEFAULT_CONFIG };
                 await GM.setValue('USER_CONFIG', USER_CONFIG);
                 showNotification('Settings have been reset to default!');
-                document.getElementById('yt-transcript-settings-modal').style.display = 'none';
-                setTimeout(() => { location.reload(); }, 1000);
+                window.closeAlchemySettingsModal();
+                setTimeout(() => {location.reload();},900);
             } catch (error) {
                 showNotification('Error resetting settings to default!');
                 console.error("YouTubeAlchemy: Error resetting settings to default:", error);
@@ -4104,7 +4203,7 @@
         cancelButton.type = 'button';
         cancelButton.innerText = 'Cancel';
         cancelButton.classList.add('btn-style-settings');
-        cancelButton.onclick = () => { modal.style.display = 'none'; docBody.style.overflow = ''; };
+        cancelButton.onclick = () => { window.closeAlchemySettingsModal(); };
 
         exportImportContainer.appendChild(exportButton);
         exportImportContainer.appendChild(importButton);
@@ -4123,6 +4222,7 @@
         modal.appendChild(modalContent);
         docBody.appendChild(modal);
         docBody.style.overflow = 'hidden';
+        setupModalHandlers(modal);
 
         // text area scroll on click
         let animationTriggered = false;
@@ -4131,7 +4231,7 @@
             if (animationTriggered) return;
             animationTriggered = true;
 
-            const modalContent = this.closest('#yt-transcript-settings-form');
+            const modalContent = this.closest('#CentAnni-main-settings-form');
             if (!modalContent) { animationTriggered = false; return; }
 
             const textArea = this;
@@ -4179,47 +4279,57 @@
             requestAnimationFrame(animateScroll);
         });
 
-        // close modal on overlay click
-        function closeModalOverlayClickHandler(event) {
-            const mainModal = document.getElementById('yt-transcript-settings-modal');
-            const openSubPanel = document.querySelector('.sub-panel-overlay.active');
-
-            if (openSubPanel && event.target === openSubPanel) {
-              openSubPanel.classList.remove('active');
-              return;
-            }
-
-            if (mainModal && event.target === mainModal) {
-              mainModal.style.display = 'none';
-              docBody.style.overflow = '';
-              return;
-            }
-        }
-        document.addEventListener('click', closeModalOverlayClickHandler);
-
-        // close modal with ESC key
-        const escKeyListener = function(event) {
-            if (event.key === 'Escape' && event.type === 'keydown') {
+        // modal event handlers
+        function setupModalHandlers(modal) {
+            // close modal on overlay click
+            function closeModalOverlayClickHandler(event) {
+                const mainModal = document.getElementById('yt-alchemy-settings-modal');
                 const openSubPanel = document.querySelector('.sub-panel-overlay.active');
 
-                if (openSubPanel) {
+                if (openSubPanel && event.target === openSubPanel) {
                     openSubPanel.classList.remove('active');
-                } else {
-                    const modal = document.getElementById('yt-transcript-settings-modal');
-                    if (modal) {
-                        modal.style.display = 'none';
-                        docBody.style.overflow = '';
-                    }
+                    return;
+                }
+
+                if (mainModal && event.target === mainModal) {
+                    window.closeAlchemySettingsModal();
+                    return;
                 }
             }
-        };
+            document.addEventListener('click', closeModalOverlayClickHandler);
 
-        window.addEventListener('keydown', escKeyListener);
+            // close modal with ESC key
+            const escKeyListener = function(event) {
+                if (event.key === 'Escape' && event.type === 'keydown') {
+                    const openSubPanel = document.querySelector('.sub-panel-overlay.active');
 
-        document.addEventListener('yt-navigate-start', () => {
-            window.removeEventListener('keydown', escKeyListener);
-            document.removeEventListener('click', closeModalOverlayClickHandler);
-        });
+                    if (openSubPanel) {
+                        openSubPanel.classList.remove('active');
+                    } else {
+                        const modal = document.getElementById('yt-alchemy-settings-modal');
+                        if (modal) window.closeAlchemySettingsModal();
+                    }
+                }
+            };
+            window.addEventListener('keydown', escKeyListener);
+
+            const cleanupModalEventListeners = () => {
+                window.removeEventListener('keydown',escKeyListener);
+                document.removeEventListener('click',closeModalOverlayClickHandler);
+            };
+
+            window.closeAlchemySettingsModal = () => {
+                modal.style.display = 'none';
+                docBody.style.overflow = '';
+                cleanupModalEventListeners();
+            };
+
+            // cleanup
+            const cleanupOnNavigate = () => {
+                cleanupModalEventListeners();
+            };
+            document.addEventListener('yt-navigate-start', cleanupOnNavigate,{once:true});
+        }
 
         // sub-panels
         function showSubPanel(panelContent, panelId) {
@@ -4421,9 +4531,13 @@
             const playlistLinks = createCheckboxField('Open Playlist Videos Without Being in a Playlist When Clicking the Thumbnail or Title (default: no)', 'playlistLinks', USER_CONFIG.playlistLinks);
             form.appendChild(playlistLinks);
 
-            // channel default videos page
+            // show trash can icon on owned playlists
             const playlistTrashCan = createCheckboxField('Show Trash Can Icon on Owned Playlists to Quickly Remove Videos (default: no)', 'playlistTrashCan', USER_CONFIG.playlistTrashCan);
             form.appendChild(playlistTrashCan);
+
+            // remove watched videos from watch later
+            const plWLBtn = createCheckboxField('Add "Remove Watched Videos" Button to Watch Later Playlist (default: yes)', 'plWLBtn', USER_CONFIG.plWLBtn);
+            form.appendChild(plWLBtn);
 
             // sort comments new first
             const commentsNewFirst = createCheckboxField('Sort Comments to "Newest First" (default: no)', 'commentsNewFirst', USER_CONFIG.commentsNewFirst);
@@ -4459,7 +4573,7 @@
 
             // info for remaining time minus segments
             const descriptionRemainingTime = document.createElement('small');
-            descriptionRemainingTime.innerText = 'To also include Skipped SponsorBlock Segments, ensure "Show time with skips removed" is enabled in SponsorBlock Settings under "Interface."';
+            descriptionRemainingTime.innerText = 'To also include skipped SponsorBlock segments, ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."';
             descriptionRemainingTime.classList.add('CentAnni-info-text');
             form.appendChild(descriptionRemainingTime);
 
@@ -4580,7 +4694,7 @@
             form.appendChild(smallSubscribeButton);
 
             // hide join button
-            const hideJoinButton = createCheckboxField('Hide Join Button under a Videos and on Channel Pages (default: no)', 'hideJoinButton', USER_CONFIG.hideJoinButton);
+            const hideJoinButton = createCheckboxField('Hide the Join Button Under Videos and on Channel Pages (default: no)', 'hideJoinButton', USER_CONFIG.hideJoinButton);
             form.appendChild(hideJoinButton);
 
             // display full title
@@ -5078,14 +5192,17 @@
         // open dropdown
         select.addEventListener('click', (event) => {
             event.stopPropagation();
-            document.querySelectorAll('.dropdown-list.show').forEach(list => { if (list !== dropdownList) list.classList.remove('show'); });
-            dropdownList.classList.toggle('show');
+            document.querySelectorAll('.dropdown-list.show').forEach(list => {
+                if (list !== dropdownList) list.classList.remove('show');
+            });
+            const isShown = dropdownList.classList.toggle('show');
+            if (isShown) document.addEventListener('click', closeDropdown, { once: true });
         });
 
         // close dropdown
-        document.addEventListener('click', () => {
+        const closeDropdown = () => {
             dropdownList.classList.remove('show');
-        });
+        };
 
         return container;
     }
@@ -5223,7 +5340,7 @@
 
     // function to save settings
     async function saveSettings() {
-        const form = document.getElementById('yt-transcript-settings-form');
+        const form = document.getElementById('CentAnni-main-settings-form');
         const subPanelLinks = document.getElementById('links-in-header-form');
         const subPanelCustomCSS = document.getElementById('custom-css-form');
         const subPanelColor = document.getElementById('color-code-videos-form');
@@ -5386,6 +5503,7 @@
             USER_CONFIG.playlistDirectionBtns = subPanelCustomCSS.elements.playlistDirectionBtns.checked;
             USER_CONFIG.playlistLinks = subPanelCustomCSS.elements.playlistLinks.checked;
             USER_CONFIG.playlistTrashCan = subPanelCustomCSS.elements.playlistTrashCan.checked;
+            USER_CONFIG.plWLBtn = subPanelCustomCSS.elements.plWLBtn.checked;
             USER_CONFIG.commentsNewFirst = subPanelCustomCSS.elements.commentsNewFirst.checked;
             USER_CONFIG.hideFundraiser = subPanelCustomCSS.elements.hideFundraiser.checked;
             USER_CONFIG.hideMiniPlayer = subPanelCustomCSS.elements.hideMiniPlayer.checked;
@@ -5458,11 +5576,11 @@
             await GM.setValue('USER_CONFIG', USER_CONFIG);
 
             // close modal
-            document.getElementById('yt-transcript-settings-modal').style.display = 'none';
+            window.closeAlchemySettingsModal();
             showNotification('Settings have been updated!');
-            setTimeout(() => { location.reload(); }, 1000);
+            setTimeout(() => {location.reload();},900);
         } catch (error) {
-            showNotification('Error saving new user config!');
+            showNotification('Error saving settings!');
             console.error("YouTubeAlchemy: Error saving user configuration:", error);
         }
     }
@@ -5505,7 +5623,7 @@
                         USER_CONFIG = { ...DEFAULT_CONFIG, ...importedConfig };
                         GM.setValue('USER_CONFIG', USER_CONFIG);
                         showNotification('Settings have been imported.');
-                        setTimeout(() => { location.reload(); }, 1000);
+                        setTimeout(() => {location.reload();},900);
                     } else {
                         showNotification('Invalid JSON format!');
                     }
@@ -5540,7 +5658,7 @@
         overlay.classList.add('CentAnni-overlay');
 
         const modal = document.createElement('div');
-        modal.classList.add('notification');
+        modal.classList.add('CentAnni-notification');
         modal.innerText = message;
 
         overlay.appendChild(modal);
@@ -5557,7 +5675,7 @@
 
                 // button wrapper
                 const buttonWrapper = document.createElement('div');
-                buttonWrapper.classList.add('button-wrapper');
+                buttonWrapper.classList.add('CentAnni-button-wrapper');
 
                 // buttons
                 const button = document.createElement('button');
@@ -5607,17 +5725,17 @@
                     if (callback) callback();
                 }
             });
-            observer.observe(docBody, { childList: true, subtree: true });
+            observer.observe(docBody, {childList:true,subtree:true});
         }
     }
 
     function addButton() {
-        document.querySelectorAll('.button-wrapper').forEach(el => el.remove());
+        document.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
 
         const buttons = [
             { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.'},
             { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.'},
-            { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.copy, clickHandler: handleCopyClick, tooltip: 'Copy Transcript to Clipboard', ariaLabel: 'Copy Transcript to Clipboard.'},
+            { id: 'transcript-copy-button', text: USER_CONFIG.buttonIcons.copy, clickHandler: handleCopyClick, tooltip: 'Copy Transcript to Clipboard', ariaLabel: 'Copy Transcript to Clipboard.'},
             { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy Transcript with a Prompt and Open ${ChatGPTLabel}`, ariaLabel: `Copy Transcript to Clipboard with a Prompt and Open ${ChatGPTLabel}.`},
             { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: `Copy Transcript and Open ${NotebookLMLabel}`, ariaLabel: `Copy Transcript to Clipboard and Open ${NotebookLMLabel}.`}
         ];
@@ -5627,7 +5745,7 @@
     }
 
     function addSettingsButton() {
-        document.querySelectorAll('.button-wrapper').forEach(el => el.remove());
+        document.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
         const buttons = [ { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' }, ];
         buttonLocation(buttons, addSettingsButton);
     }
@@ -5641,12 +5759,12 @@
     // function to check for a transcript
     function handleTranscriptAction(callback) {
         const transcriptButton = document.querySelector('#button-container button[aria-label="Show transcript"]');
-            const transcriptSection = document.querySelector('ytd-video-description-transcript-section-renderer');
+        const transcriptSection = document.querySelector('ytd-video-description-transcript-section-renderer');
 
         if (!transcriptButton && !transcriptSection) {
             console.error("YouTubeAlchemy: Transcript button or section not found. Subtitles or closed captions are unavailable or language is unsupported. Reload this page to try again.");
             alert('Transcript unavailable or cannot be found.\nEnsure the video has a transcript.\nReload this page to try again.');
-                return;
+            return;
         }
 
         const transcriptItems = document.querySelectorAll('ytd-transcript-segment-list-renderer ytd-transcript-segment-renderer');
@@ -5678,7 +5796,9 @@
         }
 
         const transcriptElements = transcriptContainer.children;
-        let transcriptLines = [];
+        const transcriptLines = [];
+        let currentLine = '';
+        let lastTime = null;
 
         [...transcriptElements].forEach(element => {
             if (element.tagName === 'YTD-TRANSCRIPT-SECTION-HEADER-RENDERER') {
@@ -5687,8 +5807,13 @@
                 if (USER_CONFIG.includeChapterHeaders) {
                     const chapterTitleElement = element.querySelector('h2 > span');
                     if (chapterTitleElement) {
+                        if (currentLine) {
+                            transcriptLines.push(currentLine);
+                            currentLine = '';
+                        }
                         const chapterTitle = chapterTitleElement.textContent.trim();
                         transcriptLines.push(`\nChapter: ${chapterTitle}`);
+                        lastTime = null;
                     }
                 }
             } else if (element.tagName === 'YTD-TRANSCRIPT-SEGMENT-RENDERER') {
@@ -5698,14 +5823,20 @@
                 const textElement = element.querySelector('.segment-text');
                 if (timeElement && textElement) {
                     const time = timeElement.textContent.trim();
-                    const text = textElement.innerText.trim();
-                    if (USER_CONFIG.includeTimestamps) {
-                        transcriptLines.push(`${time} ${text}`);
-                    } else { transcriptLines.push(`${text}`); }
+                    const text = textElement.textContent.replace(/\s+/g, ' ').trim();
+
+                    if (time === lastTime) {
+                        currentLine += ` ${text}`;
+                    } else {
+                        if (currentLine) transcriptLines.push(currentLine);
+                        currentLine = USER_CONFIG.includeTimestamps ? `${time} ${text}` : text;
+                        lastTime = time;
+                    }
                 }
             }
         });
 
+        if (currentLine) transcriptLines.push(currentLine);
         return transcriptLines.join('\n');
     }
 
@@ -5768,6 +5899,7 @@
         const a = document.createElement('a');
         a.href = url;
         a.download = fileName;
+        a.style.display = 'none';
         docBody.appendChild(a);
         a.click();
 
@@ -5780,7 +5912,7 @@
     // function to preload the transcript
     function preLoadTranscript() {
         return new Promise((resolve, reject) => {
-            document.querySelectorAll('.button-wrapper').forEach(el => el.remove());
+            document.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
             if (isLiveVideo) {
                 showNotificationError("Live Stream, No Transcript");
                 reject();
@@ -5795,7 +5927,7 @@
 
             const masthead = document.querySelector("#end");
             const notification = document.createElement("div");
-            notification.classList.add("notification-error", "loading");
+            notification.classList.add("CentAnni-notification-error", "loading");
             const textSpan = document.createElement("span");
             textSpan.textContent = "Transcript Is Loading";
             notification.appendChild(textSpan);
@@ -5807,33 +5939,54 @@
             }
 
             let loaded = false;
+            let transcriptObserver;
 
             const fallbackTimer = setTimeout(() => {
                 if (!loaded) {
                     console.error("YouTubeAlchemy: The transcript took too long to load. Reload this page to try again.");
-                    observer.disconnect();
                     cleanup(true);
                     reject();
                 }
             }, 10000);
 
-            const observer = new MutationObserver(() => {
-                const transcriptItems = transcriptPanel.querySelectorAll("ytd-transcript-segment-renderer");
-                if (transcriptItems.length > 0) {
+            const containerObserver = new MutationObserver(() => {
+                const segmentsContainer = transcriptPanel.querySelector('ytd-transcript-segment-list-renderer #segments-container');
+                if (segmentsContainer) {
+                    containerObserver.disconnect();
+                    const checkFirstItem = () => {
+                        const firstItem = segmentsContainer.querySelector('ytd-transcript-segment-renderer');
+                if (firstItem) {
                     loaded = true;
                     cleanup(false);
-                    clearTimeout(fallbackTimer);
-                    observer.disconnect();
                     transcriptMenuButton();
                     if (USER_CONFIG.transcriptTimestamps) enableTimestamps();
                     if (USER_CONFIG.defaultTranscriptLanguage !== 'auto') setTimeout(() => { setTranscriptLanguage(); }, 250);
+                            return true;
+                        }
+                        return false;
+                    };
+
+                    if (!checkFirstItem()) {
+                        transcriptObserver = new MutationObserver(() => {
+                            if (checkFirstItem()) {
+                                transcriptObserver.disconnect();
                     resolve();
                 }
             });
+                        transcriptObserver.observe(segmentsContainer, { childList: true });
+                    } else {
+                        resolve();
+                    }
 
-            observer.observe(transcriptPanel, { childList: true, subtree: true });
+                }
+            });
+
+            containerObserver.observe(transcriptPanel, {childList:true,subtree:true});
 
             function cleanup(failed) {
+                clearTimeout(fallbackTimer);
+                containerObserver.disconnect();
+                if (transcriptObserver) transcriptObserver.disconnect();
                 notification.remove();
                 if (!USER_CONFIG.autoOpenTranscript) {
                     transcriptPanel.classList.remove("transcript-preload");
@@ -5849,7 +6002,7 @@
         const masthead = endElement;
         const notification = document.createElement('div');
         notification.textContent = message;
-        notification.classList.add('notification-error');
+        notification.classList.add('CentAnni-notification-error');
 
         masthead.prepend(notification);
 
@@ -5907,7 +6060,7 @@
                         resolve(node);
                     }
                 });
-                observer.observe(ctx, { childList: true, subtree: true });
+                observer.observe(ctx, {childList:true,subtree:true});
             });
         }
 
@@ -5956,7 +6109,8 @@
 
         let transcriptMenuButtonMoved = false;
         let transcriptLanguageSet = false;
-        let safariPanelCheck = false;
+        let safariPanelSwitch = false;
+        let safariPanelCheck = true;
         let timestampsEnabled = false;
         let lastActiveTab = null;
         let currentActiveTab = null;
@@ -5999,8 +6153,7 @@
                 const activeTab = watchFlexyElement.querySelector('.CentAnni-tabView-tab.active');
                 if (activeTab) lastActiveTab = activeTab.dataset.tab;
 
-                const tabs = watchFlexyElement.querySelectorAll('.CentAnni-tabView-tab');
-                tabs.forEach(tab => tab.classList.remove('active'));
+                tabElements.forEach(obj => obj.element.classList.remove('active'));
                 currentActiveTab = null;
 
                 if (subheaderDiv) subheaderDiv.addEventListener('click', handleTabViewTabClick);
@@ -6008,7 +6161,11 @@
                 isTheaterMode = false;
                 if (lastActiveTab) activateTab(lastActiveTab);
                 else activateTab(determineActiveTab());
+
+                // safari and chrome panel fix
                 if (USER_CONFIG.preventBackgroundExecution) ensurePanelVisibility();
+                else if (currentActiveTab==='tab-4') scrollChapterPanelSafariFix();
+                else safariPanelCheck = true;
 
                 subheaderDiv.removeEventListener('click', handleTabViewTabClick);
             }
@@ -6016,16 +6173,17 @@
 
         // mode change, navigation, and clean up
         document.addEventListener('yt-set-theater-mode-enabled', updateTabView);
-        document.addEventListener('yt-navigate-start', () => {
+        const cleanupOnNavigate = () => {
             tabElements = [];
             subheaderDiv.removeEventListener('click', handleTabViewTabClick);
             document.removeEventListener('yt-set-theater-mode-enabled', updateTabView);
             tabElements.forEach(tab => { tab.element.removeEventListener('click', tab.handler); });
-            watchFlexyElement.querySelectorAll('.CentAnni-tabView-tab').forEach(tab => tab.classList.remove('active') );
+            tabElements.forEach(tab => tab.element.classList.remove('active') );
             if (hasTranscriptPanel) transcriptPanel.remove();
             if (hasChapterPanel) chapterPanel.remove();
             if (videoInfo) videoInfo.remove();
-        });
+        };
+        document.addEventListener('yt-navigate-start', cleanupOnNavigate, {once:true});
 
         // click listener for tabView buttons
         function handleTabViewTabClick(event) {
@@ -6043,10 +6201,9 @@
         }
 
         // include date in info text under videos unless live
-        const infoContainer = watchFlexyElement.querySelector('#info-container');
-        const infoTime = infoContainer?.querySelector('yt-formatted-string span.bold:nth-child(3)');
-
         if (!isLiveVideo) {
+            const infoContainer = watchFlexyElement.querySelector('#info-container');
+            const infoTime = infoContainer?.querySelector('yt-formatted-string span.bold:nth-child(3)');
             if (infoTime) {
                 if (!infoTime.parentNode?.querySelector('.CentAnni-info-date')) {
                     const dateStringElement = watchFlexyElement.querySelector('#info-strings yt-formatted-string');
@@ -6067,9 +6224,12 @@
         const secondaryElement = watchFlexyElement.querySelector('#secondary');
         if (!secondaryElement) return;
 
-        // grab the info, chapter, and transcript panels and open one by default
+        // grab info, donation, and more video panels
         const videoInfo = watchFlexyElement.querySelector(infoSel);
+        const donationShelf = watchFlexyElement.querySelector('#donation-shelf');
+        const videoMore = watchFlexyElement.querySelector('#related.style-scope.ytd-watch-flexy');
 
+        // open info, chapter, or transcript panel by default
         if (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel) {
             transcriptPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
             if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !transcriptLanguageSet){waitForTranscriptWithoutYTE(() => { setTimeout(()=>{setTranscriptLanguage(); },250);}); transcriptLanguageSet = true;}
@@ -6160,21 +6320,19 @@
                 } else currentActiveTab = tabIDs[tabText];
 
                 // remove 'active' from all tabs
-                watchFlexyElement.querySelectorAll('.CentAnni-tabView-tab').forEach(tab => tab.classList.remove('active'));
+                tabElements.forEach(obj => obj.element.classList.remove('active'));
 
                 // mark clicked one as active
                 tabLink.classList.add('active');
 
                 // hide all content sections
-                watchFlexyElement.querySelectorAll('.CentAnni-tabView-content').forEach(content => {
-                    content.classList.remove('active');
-                });
+                contentSections.forEach(content => content.classList.remove('active'));
 
                 // safari: chapter panel scroll fix
-                if (!USER_CONFIG.preventBackgroundExecution && currentActiveTab==='tab-4') scrollChapterPanelSafariFix();
+                if (!USER_CONFIG.preventBackgroundExecution && !isTheaterMode && safariPanelCheck && currentActiveTab==='tab-4') scrollChapterPanelSafariFix();
 
                 // show the target content section
-                const targetDiv = watchFlexyElement.querySelector(`#${tabIDs[tabText]}`);
+                const targetDiv = contentSections[index];
                 if (targetDiv) targetDiv.classList.add('active');
 
                 // info panel
@@ -6193,7 +6351,6 @@
                 }
 
                 // donation-shelf
-                const donationShelf = watchFlexyElement.querySelector('#donation-shelf');
                 if (donationShelf) {
                     if (tabText === 'Donation') {
                         donationShelf.classList.add('CentAnni-tabView-content-active');
@@ -6205,7 +6362,6 @@
                 }
 
                 // more videos
-                const videoMore = watchFlexyElement.querySelector('#related.style-scope.ytd-watch-flexy');
                 if (videoMore) {
                     if (tabText === 'Videos') {
                         videoMore.classList.add('CentAnni-tabView-content-attiva');
@@ -6250,15 +6406,16 @@
         function scrollChapterPanelSafariFix() {
             const chapterBtn = watchFlexyElement.querySelector(`${infoSel} #navigation-button ytd-button-renderer button[aria-label="View all"]`);
             if (chapterBtn) {
-                setTimeout(() => { chapterBtn.click(); }, 25);
-                if (!safariPanelCheck) {
+                setTimeout(() => { chapterBtn.click(); }, 100);
+                safariPanelCheck = false;
+                if (!safariPanelSwitch) {
                     const observer = new MutationObserver((mutations) => {
                         const newChapterPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters][style*="order:"]') || watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters][style*="order:"]');
                         if (newChapterPanel) {
                             chapterPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
                             chapterPanel = newChapterPanel;
                             hasChapterPanel = !!chapterPanel;
-                            safariPanelCheck = true;
+                            safariPanelSwitch = true;
                             observer.disconnect();
                             clearTimeout(timeout);
 
@@ -6272,66 +6429,48 @@
         }
     }
 
-        // add chapter titles under videos
+    // add chapter titles under videos
     async function chapterTitles() {
-        let fullscreenContainer = watchFlexyElement.querySelector(fsCnSel);
-        let titleElement = watchFlexyElement.querySelector('.ytp-chapter-container');
-        let normalContainer = watchFlexyElement.querySelector('#description');
+        const fullscreenContainer = watchFlexyElement.querySelector(fsCnSel);
+        const titleElement = watchFlexyElement.querySelector('.ytp-chapter-container:not([style*="display: none"])');
+        const normalContainer = watchFlexyElement.querySelector('#description');
+        if (!fullscreenContainer || !titleElement || !normalContainer) return;
 
-        if (!fullscreenContainer || !titleElement || !normalContainer) {
-            const videoContainer = watchFlexyElement;if(!videoContainer)return;
-            ({ fullscreenContainer, titleElement, normalContainer } = await new Promise((resolve, reject) => {
-                const timeout = setTimeout(() => {
-                    console.error('YouTubeAlchemy: chapterTitles elements not found!');
-                    observer.disconnect();
-                    reject();
-                }, 7000);
+        const parent = titleElement.parentNode;
+        parent.removeChild(titleElement);
 
-                const observer = new MutationObserver(() => {
-                    const fullscreenContainerElement = watchFlexyElement.querySelector(fsCnSel);
-                    const titleElementElement = watchFlexyElement.querySelector('.ytp-chapter-container');
-                    const normalContainerElement = watchFlexyElement.querySelector('#description');
-                    if (fullscreenContainerElement && titleElementElement && normalContainerElement) {
-                        observer.disconnect();
-                        clearTimeout(timeout);
-                        resolve({fullscreenContainer:fullscreenContainerElement,titleElement:titleElementElement,normalContainer:normalContainerElement});
-                    }
-                });
+        const containerChapterTitle = document.createElement('div');
+        containerChapterTitle.classList.add('CentAnni-chapter-title', 'bold', 'style-scope', 'yt-formatted-string');
 
-                observer.observe(videoContainer, { childList: true, subtree: true });
-            }));
-        }
-            if (!fullscreenContainer || !titleElement || !normalContainer) return;
+        const label = document.createElement('span');
+        label.textContent = 'Chapter:';
 
-            const parent = titleElement.parentNode;
-            parent.removeChild(titleElement);
-
-            const containerChapterTitle = document.createElement('div');
-            containerChapterTitle.classList.add('CentAnni-chapter-title', 'bold', 'style-scope', 'yt-formatted-string');
-
-            const label = document.createElement('span');
-            label.textContent = 'Chapter:';
-
-            containerChapterTitle.appendChild(label);
-            containerChapterTitle.appendChild(titleElement);
+        containerChapterTitle.appendChild(label);
+        containerChapterTitle.appendChild(titleElement);
 
         const existingContainerChapterTitle = watchFlexyElement.querySelector('.CentAnni-chapter-title');
-            if (existingContainerChapterTitle) existingContainerChapterTitle.replaceWith(containerChapterTitle);
-            else normalContainer.appendChild(containerChapterTitle);
+        if (existingContainerChapterTitle) existingContainerChapterTitle.replaceWith(containerChapterTitle);
+        else normalContainer.appendChild(containerChapterTitle);
 
-            const updateContainer = () => {
+        const updateContainer = () => {
             const currentContainer = watchFlexyElement.querySelector('.CentAnni-chapter-title');
             const targetContainer = playerElement?.classList.contains('ytp-fullscreen')
-                    ? fullscreenContainer
-                    : normalContainer;
+                ? fullscreenContainer
+                : normalContainer;
 
-                if (currentContainer) targetContainer.appendChild(currentContainer);
-                else targetContainer.appendChild(containerChapterTitle);
-            };
+            if (currentContainer) targetContainer.appendChild(currentContainer);
+            else targetContainer.appendChild(containerChapterTitle);
+        };
 
-            function handleFullscreenChangeCT() { updateContainer(); }
+        function handleFullscreenChangeCT() { updateContainer(); }
+        document.removeEventListener('fullscreenchange', handleFullscreenChangeCT);
+        document.addEventListener('fullscreenchange', handleFullscreenChangeCT);
+        document.addEventListener('yt-navigate-start', moveChapterTitleBack,{once:true});
+        function moveChapterTitleBack() {
             document.removeEventListener('fullscreenchange', handleFullscreenChangeCT);
-            document.addEventListener('fullscreenchange', handleFullscreenChangeCT);
+            if (parent && titleElement)
+                parent.appendChild(titleElement);
+        }
     }
 
     // function to hide the 'X Products' span
@@ -6344,7 +6483,7 @@
         });
     }
 
-        // keep scrolling to the top until scroll activity stops or a timeout occurs
+    // keep scrolling to the top until scroll activity stops or a timeout occurs
     const scrollToTop = () => {
         let stopTimeout;
         let frameID;
@@ -6370,6 +6509,24 @@
         window.scrollTo(0,0);
     };
 
+    // playback speed icon
+    const playbackSpeedIconTemplate = (() => {
+        const div = document.createElement('div');
+        div.className = 'CentAnni-playback-speed-icon';
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('height', '24');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('width', '24');
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M10,8v8l6-4L10,8L10,8z M6.3,5L5.7,4.2C7.2,3,9,2.2,11,2l0.1,1C9.3,3.2,7.7,3.9,6.3,5z M5,6.3L4.2,5.7C3,7.2,2.2,9,2,11 l1,.1C3.2,9.3,3.9,7.7,5,6.3z M5,17.7c-1.1-1.4-1.8-3.1-2-4.8L2,13c0.2,2,1,3.8,2.2,5.4L5,17.7z M11.1,21c-1.8-0.2-3.4-0.9-4.8-2 l-0.6,.8C7.2,21,9,21.8,11,22L11.1,21z M22,12c0-5.2-3.9-9.4-9-10l-0.1,1c4.6,.5,8.1,4.3,8.1,9s-3.5,8.5-8.1,9l0.1,1 C18.2,21.5,22,17.2,22,12z');
+        path.setAttribute('fill','whitesmoke');
+        svg.appendChild(path);
+        div.appendChild(svg);
+        return div;
+    })();
+    function createPlaybackSpeedIcon() {return playbackSpeedIconTemplate.cloneNode(true);}
+
     // playback speed functions
     function initialSpeed() {
         document.removeEventListener('yt-player-updated', initialSpeed);
@@ -6385,6 +6542,7 @@
         if (new URL(window.location.href).pathname.startsWith('/shorts/')) video.playbackRate = lastUserRate !== null ? lastUserRate : defaultSpeed;
         else if (document.querySelector('.ytp-time-display')?.classList.contains('ytp-live')) video.playbackRate = 1;
         else video.playbackRate = defaultSpeed;
+        video.defaultPlaybackRate = video.playbackRate;
     }
 
     // speed controller
@@ -6395,27 +6553,6 @@
         const STEP_SIZE = 0.25;
 
         let video = watchFlexyElement.querySelector(videoSelector);
-        if (!video) {
-            const videoContainer = watchFlexyElement.querySelector('ytd-player');if(!videoContainer)return;
-            video = await new Promise((resolve, reject) => {
-                const timeout = setTimeout(() => {
-                    console.error('YouTubeAlchemy: createPlaybackSpeedController video not found!')
-                    observer.disconnect();
-                    reject();
-                }, 7000);
-
-                const observer = new MutationObserver(() => {
-                    const videoElement = watchFlexyElement.querySelector(videoSelector);
-                    if (videoElement) {
-                        observer.disconnect();
-                        clearTimeout(timeout);
-                        resolve(videoElement);
-                    }
-                });
-
-                observer.observe(videoContainer, { childList: true, subtree: true, });
-            });
-        }
         if (!video) return null;
 
         function updateSpeedDisplay() {
@@ -6428,7 +6565,7 @@
             ignoreRateChange = true;
             const clamped = Math.max(MIN_SPEED, Math.min(MAX_SPEED, video.playbackRate));
             video.playbackRate = clamped;
-            video.mozPreservesPitch = video.webkitPreservesPitch = video.preservePitch = true;
+            video.preservesPitch = video.mozPreservesPitch = video.webkitPreservesPitch = true;
 
             updateSpeedDisplay();
             lastUserRate = video.playbackRate;
@@ -6440,6 +6577,7 @@
             if (isShortPage) { video.playbackRate = lastUserRate !== null ? lastUserRate : defaultSpeed; }
             else if ((USER_CONFIG.VerifiedArtist && isMusicVideo) || isLiveVideo || isLiveStream) video.playbackRate = 1;
             else video.playbackRate = defaultSpeed;
+            video.defaultPlaybackRate = video.playbackRate;
 
             video.addEventListener('ratechange', updateSpeedDisplay);
             setSpeed();
@@ -6484,12 +6622,13 @@
             window.addEventListener('keydown', playbackSpeedKeyListener);
 
             // clean up event listeners on navigation
-            document.addEventListener('yt-navigate-start', () => {
+            const cleanupOnNavigate = () => {
                 window.removeEventListener('keydown', playbackSpeedKeyListener);
                 video.removeEventListener('ratechange', updateSpeedDisplay);
                 video.removeEventListener('ratechange', onRateChange);
                 speedNotification = false;
-            });
+            };
+            document.addEventListener('yt-navigate-start', cleanupOnNavigate, {once:true});
         }
 
         // initialize function return controller API
@@ -6505,29 +6644,7 @@
     // playback speed regular videos
     async function videoPlaybackSpeed() {
         let menuRenderer = watchFlexyElement.querySelector(menuSel);
-        if (!menuRenderer) {
-            await new Promise((resolve) => {
-                const observer = new MutationObserver((mutations, obs) => {
-                    if ((menuRenderer = watchFlexyElement.querySelector(menuSel))) {
-                        clearTimeout(timeout);
-                        obs.disconnect();
-                        resolve();
-                    }
-                });
-
-                observer.observe(docBody, {
-                    childList: true,
-                    subtree: true
-                });
-
-                const timeout = setTimeout(() => {
-                    observer.disconnect();
-                    resolve();
-                }, 7000);
-            });
-
-            if (!menuRenderer) return;
-        }
+        if (!menuRenderer) return;
 
         // create controller
         const controller = await createPlaybackSpeedController();
@@ -6536,69 +6653,45 @@
 
         // create container for buttons, display speed, and icon
         const oldControlDiv = document.getElementById("CentAnni-playback-speed-control");
-        if (menuRenderer) {
-            const controlDiv = document.createElement("div");
-            controlDiv.id = "CentAnni-playback-speed-control";
-            controlDiv.classList.add(
-                "CentAnni-playback-control",
-                "top-level-buttons",
-                "style-scope",
-                "ytd-menu-renderer"
+        const controlDiv = document.createElement("div");
+        controlDiv.id = "CentAnni-playback-speed-control";
+        controlDiv.classList.add("CentAnni-playback-control","top-level-buttons","style-scope","ytd-menu-renderer");
+
+        // create the SVG icon
+        const iconDiv = createPlaybackSpeedIcon();
+        controlDiv.appendChild(iconDiv);
+
+        // display the speed
+        const speedDisplay = document.createElement("span");
+        speedDisplay.id = "CentAnni-speed-display";
+        speedDisplay.classList.add("CentAnni-playback-speed-display","animated-rolling-number-wiz");
+        speedDisplay.textContent = `${video.playbackRate}x`;
+
+        // create minus and plus buttons
+        const createButton = (change) => {
+            const button = document.createElement("button");
+            button.textContent = change > 0 ? "+" : "-";
+            button.classList.add(
+                "CentAnni-playback-speed-button",
+                "yt-spec-button-shape-next",
+                "yt-spec-button-shape-next--tonal",
+                "yt-spec-button-shape-next--mono",
+                "yt-spec-button-shape-next--size-m",
+                "yt-spec-button-shape-next--icon-button"
             );
+            button.addEventListener("click", () => {
+                video.playbackRate = video.playbackRate + change;
+                setSpeed();
+            });
+            return button;
+        };
 
-            // create the SVG icon
-            const iconDiv = document.createElement("div");
-            iconDiv.className = "CentAnni-playback-speed-icon";
+        controlDiv.appendChild(createButton(-STEP_SIZE));
+        controlDiv.appendChild(speedDisplay);
+        controlDiv.appendChild(createButton(STEP_SIZE));
 
-            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            svg.setAttribute("fill", "none");
-            svg.setAttribute("height", "24");
-            svg.setAttribute("viewBox", "0 0 24 24");
-            svg.setAttribute("width", "24");
-
-            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            path.setAttribute("d", "M10,8v8l6-4L10,8L10,8z M6.3,5L5.7,4.2C7.2,3,9,2.2,11,2l0.1,1C9.3,3.2,7.7,3.9,6.3,5z            M5,6.3L4.2,5.7C3,7.2,2.2,9,2,11 l1,.1C3.2,9.3,3.9,7.7,5,6.3z            M5,17.7c-1.1-1.4-1.8-3.1-2-4.8L2,13c0.2,2,1,3.8,2.2,5.4L5,17.7z            M11.1,21c-1.8-0.2-3.4-0.9-4.8-2 l-0.6,.8C7.2,21,9,21.8,11,22L11.1,21z            M22,12c0-5.2-3.9-9.4-9-10l-0.1,1c4.6,.5,8.1,4.3,8.1,9s-3.5,8.5-8.1,9l0.1,1 C18.2,21.5,22,17.2,22,12z");
-            path.setAttribute("fill", "whitesmoke");
-
-            svg.appendChild(path);
-            iconDiv.appendChild(svg);
-            controlDiv.appendChild(iconDiv);
-
-            // display the speed
-            const speedDisplay = document.createElement("span");
-            speedDisplay.id = "CentAnni-speed-display";
-            speedDisplay.classList.add(
-                "CentAnni-playback-speed-display",
-                "animated-rolling-number-wiz"
-            );
-            speedDisplay.textContent = video ? `${video.playbackRate}x` : `${defaultSpeed}x`;
-
-            // create minus and plus buttons
-            const createButton = (change) => {
-                const button = document.createElement("button");
-                button.textContent = change > 0 ? "+" : "-";
-                button.classList.add(
-                    "CentAnni-playback-speed-button",
-                    "yt-spec-button-shape-next",
-                    "yt-spec-button-shape-next--tonal",
-                    "yt-spec-button-shape-next--mono",
-                    "yt-spec-button-shape-next--size-m",
-                    "yt-spec-button-shape-next--icon-button"
-                );
-                button.addEventListener("click", () => {
-                    video.playbackRate = video.playbackRate + change;
-                    setSpeed();
-                });
-                return button;
-            };
-
-            controlDiv.appendChild(createButton(-STEP_SIZE));
-            controlDiv.appendChild(speedDisplay);
-            controlDiv.appendChild(createButton(STEP_SIZE));
-
-            if (oldControlDiv) oldControlDiv.replaceWith(controlDiv);
-            else menuRenderer.children[0].after(controlDiv);
-        }
+        if (oldControlDiv) oldControlDiv.replaceWith(controlDiv);
+        else menuRenderer.children[0].after(controlDiv);
     }
 
     // playback speed notification
@@ -6617,9 +6710,7 @@
         notification.classList.add('active');
 
         if (hideNotificationTimeout) clearTimeout(hideNotificationTimeout);
-        hideNotificationTimeout = setTimeout(() => {
-            notification.classList.remove('active');
-        }, 900);
+        hideNotificationTimeout = setTimeout(() => {notification.classList.remove('active');},900);
 
         if (isFullscreen) fullscreenContainer.appendChild(notification);
         else docBody.appendChild(notification);
@@ -6630,30 +6721,6 @@
         let fullscreenContainer = watchFlexyElement.querySelector(fsCnSel);
         let normalContainer = watchFlexyElement.querySelector(prBeSel);
         let video = watchFlexyElement.querySelector('.video-stream.html5-main-video');
-
-        if (!fullscreenContainer || !normalContainer || !video) {
-            const videoContainer = watchFlexyElement;if(!videoContainer)return;
-            ({ fullscreenContainer, normalContainer, video } = await new Promise((resolve, reject) => {
-                const timeout = setTimeout(() => {
-                    console.error('YouTubeAlchemy: remainingTime elements not found!');
-                    observer.disconnect();
-                    reject();
-                }, 7000);
-
-                const observer = new MutationObserver(() => {
-                    const fullscreenContainerElement = watchFlexyElement.querySelector(fsCnSel);
-                    const normalContainerElement = watchFlexyElement.querySelector(prBeSel);
-                    const videoElement = watchFlexyElement.querySelector('.video-stream.html5-main-video');
-                    if (fullscreenContainerElement && normalContainerElement && videoElement) {
-                        observer.disconnect();
-                        clearTimeout(timeout);
-                        resolve({fullscreenContainer:fullscreenContainerElement,normalContainer:normalContainerElement,video:videoElement});
-                    }
-                });
-
-                observer.observe(videoContainer, { childList: true, subtree: true });
-            }));
-        }
         if (!fullscreenContainer || !normalContainer || !video) return;
 
         // function to format seconds into time string
@@ -6706,13 +6773,15 @@
         // time update event listener
         if (video) {
             if (!video.paused && !video.ended && video.readyState > 2) remainingTimeMinusSponsorBlockSegments();
-            else video.addEventListener('playing', remainingTimeMinusSponsorBlockSegments, { once: true });
+            else video.addEventListener('playing', remainingTimeMinusSponsorBlockSegments, {once:true});
         }
 
         // calculates and displays remaining time while accounting for SponsorBlock segments
         function remainingTimeMinusSponsorBlockSegments() {
             let baseEffective = NaN;
             let cachedSegments = null;
+            let cachedMergedSegments = null;
+            let lastRawSegments = null;
             let lastVideoTime = -1;
             let lastDuration = -1;
 
@@ -6774,14 +6843,42 @@
                 return merged;
             }
 
+            function getMergedSegments(rawDuration) {
+                const rawSegments = getSegments(rawDuration);
+                if (rawSegments === lastRawSegments && cachedMergedSegments)
+                    return cachedMergedSegments;
+
+                const merged = mergeSegments(rawSegments);
+                lastRawSegments = rawSegments;
+                cachedMergedSegments = merged;
+                return merged;
+            }
+
+            let addedIndex = 0;
+            let addedSum = 0;
+            let lastSegmentsRef = null;
+            let lastTimeChecked = -1;
+
             function computeAddedTime(segments, currentTime) {
-                let sum = 0;
-                segments.forEach(seg => {
-                    if (currentTime >= seg.start - 0.001) {
-                        sum += seg.duration;
-                    }
-                });
-                return Math.round(sum * 1000) / 1000;
+                if (segments !== lastSegmentsRef) {
+                    lastSegmentsRef = segments;
+                    addedIndex = 0;
+                    addedSum = 0;
+                    lastTimeChecked = -1;
+                }
+
+                if (currentTime < lastTimeChecked) {
+                    addedIndex = 0;
+                    addedSum = 0;
+                }
+
+                while (addedIndex < segments.length && currentTime >= segments[addedIndex].start - 0.001) {
+                    addedSum += segments[addedIndex].duration;
+                    addedIndex++;
+                }
+
+                lastTimeChecked = currentTime;
+                return Math.round(addedSum * 1000) / 1000;
             }
 
             // debounce the update to prevent excessive updates
@@ -6804,8 +6901,7 @@
                     lastVideoTime = currentTime;
 
                     const playbackRate = video.playbackRate;
-                    const rawSegments = getSegments(rawDuration);
-                    const segments = mergeSegments(rawSegments);
+                    const segments = getMergedSegments(rawDuration);
                     const addedTime = computeAddedTime(segments, currentTime);
                     const effectiveTotal = baseEffective + addedTime;
                     const remaining = (effectiveTotal - currentTime) / playbackRate;
@@ -6831,56 +6927,27 @@
     }
 
     // function to keep the progress bar visible with chapters container
-    async function keepProgressBarVisible() {
-        let player = watchFlexyElement?.querySelector(vidPSel);
-        let video = player?.querySelector('video[src]');
-        let chaptersContainer = player && player.querySelector(chapSel);
-        let progressBarContainer = player && player.querySelector(prBaSel);
-
-        if (!player || !video || !chaptersContainer || !progressBarContainer) {
-            const videoContainer = watchFlexyElement.querySelector('ytd-player');if(!videoContainer)return;
-            ({ player, video, chaptersContainer, progressBarContainer } = await new Promise((resolve, reject) => {
-                const timeout = setTimeout(() => {
-                    console.error('YouTubeAlchemy: progress bar elements not found!');
-                    observer.disconnect();
-                    reject();
-                }, 7000);
-
-                const observer = new MutationObserver(() => {
-                    const playerElement = watchFlexyElement?.querySelector(vidPSel);
-                    if (playerElement) {
-                        const videoElement = playerElement.querySelector('video[src]');
-                        const chaptersContainerElement = playerElement.querySelector(chapSel);
-                        const progressBarContainerElement = playerElement.querySelector(prBaSel);
-                        if (playerElement && videoElement && chaptersContainerElement && progressBarContainerElement) {
-                            observer.disconnect();
-                            clearTimeout(timeout);
-                            resolve({player:playerElement,video:videoElement,chaptersContainer:chaptersContainerElement,progressBarContainer:progressBarContainerElement});
-                        }
-                    }
-                });
-
-                observer.observe(videoContainer, { childList: true, subtree: true });
-            }));
-        }
+    function keepProgressBarVisible() {
+        const player = watchFlexyElement?.querySelector(vidPSel);
+        const video = player?.querySelector('video[src]');
+        const chaptersContainer = player && player.querySelector(chapSel);
+        const progressBarContainer = player && player.querySelector(prBaSel);
         if (!player || !video || !chaptersContainer || !progressBarContainer ) return;
 
-        docElement.classList.add('progressBar');
-
         const bar = document.createElement('div');
-        bar.id = 'progress-bar-bar';
+        bar.id = 'CentAnni-progress-bar-bar';
 
         const progress = document.createElement('div');
-        progress.id = 'progress-bar-progress';
+        progress.id = 'CentAnni-progress-bar-progress';
 
         const buffer = document.createElement('div');
-        buffer.id = 'progress-bar-buffer';
+        buffer.id = 'CentAnni-progress-bar-buffer';
 
         const startDiv = document.createElement('div');
-        startDiv.id = 'progress-bar-start';
+        startDiv.id = 'CentAnni-progress-bar-start';
 
         const endDiv = document.createElement('div');
-        endDiv.id = 'progress-bar-end';
+        endDiv.id = 'CentAnni-progress-bar-end';
 
         player.appendChild(bar);
         bar.appendChild(buffer);
@@ -6890,32 +6957,26 @@
 
         progress.style.transform = 'scaleX(0)';
 
-        // live stream check
-        if (isLiveVideo) {
-            bar.classList.remove('active');
-            startDiv.classList.remove('active');
-            endDiv.classList.remove('active');
-        } else {
-            bar.classList.add('active');
-            startDiv.classList.add('active');
-            endDiv.classList.add('active');
-        }
+        startDiv.classList.add('active');
+        bar.classList.add('active');
+        endDiv.classList.add('active');
 
         let animationFrameId;
-        function animateProgress() {
+        const animateProgress = () => {
+            if (video.duration > 0) {
             const fraction = video.currentTime / video.duration;
             progress.style.transform = `scaleX(${fraction})`;
+            }
             animationFrameId = requestAnimationFrame(animateProgress);
-        }
-        animationFrameId = requestAnimationFrame(animateProgress);
+        };
 
-        function renderBuffer() {
+        const renderBuffer = () => {
             for (let i = video.buffered.length - 1; i >= 0; i--) {
                 if (video.currentTime < video.buffered.start(i)) continue;
                 buffer.style.transform = `scaleX(${video.buffered.end(i) / video.duration})`;
                 break;
             }
-        }
+        };
 
         video.addEventListener('progress', renderBuffer);
         video.addEventListener('seeking', renderBuffer);
@@ -6923,26 +6984,36 @@
         // chapters container
         let previousChaptersLength = 0;
         let cachedMaskImage = null;
+        let resizeObserver;
+        let widthObserver;
+        const cleanupWidthObserver = () => {
+            if (widthObserver) {
+                widthObserver.disconnect();
+                clearTimeout(widthObserver.fallback);
+                widthObserver = null;
+            }
+        };
 
-        function updateLayout() {
-            const initialWidth = progressBarContainer.getBoundingClientRect().width;
-
-            let attempts = 0;
-            const maxAttempts = 6;
-
-            const waitForSizeChange = new Promise((resolve) => {
-                const intervalId = setInterval(() => {
-                    const currentWidth = progressBarContainer.getBoundingClientRect().width;
-
-                    if (currentWidth !== initialWidth) { clearInterval(intervalId); resolve(); }
-                    else if (++attempts >= maxAttempts) { clearInterval(intervalId); resolve(); }
-                }, 250);
-            });
-
-            waitForSizeChange.then(() => {
+        const updateLayout = () => {
                 const playerRect = player.getBoundingClientRect();
                 const progressBarRect = progressBarContainer.getBoundingClientRect();
                 const progressBarWidth = progressBarRect.width;
+                if (!progressBarWidth) {
+                    cachedMaskImage = null;
+                    if (!widthObserver) {
+                        widthObserver = new MutationObserver(() => {
+                            if (progressBarContainer.getBoundingClientRect().width) {
+                                cleanupWidthObserver();
+                                updateLayout();
+                            }
+                        });
+                        widthObserver.observe(progressBarContainer, {attributes:true,childList:true,subtree:true});
+                        widthObserver.fallback = setTimeout(() => {cleanupWidthObserver();},7000);
+                    }
+                    return;
+                }
+                if (widthObserver) {cleanupWidthObserver();}
+
 
                 bar.style.position = 'absolute';
                 bar.style.left = (progressBarRect.left - playerRect.left) + 'px';
@@ -6964,19 +7035,17 @@
                                 const rect = chapter.getBoundingClientRect();
                                 const startPx = rect.left - progressBarRect.left;
                                 const chapterWidth = rect.width;
-
                                 const startPerc = (startPx / progressBarWidth) * svgWidth;
                                 const widthPerc = (chapterWidth / progressBarWidth) * svgWidth;
 
-                                rects += `<rect x="${startPerc}" y="0" width="${widthPerc}" height="${svgHeight}" fill="white"/>`;
+                                if (Number.isFinite(startPerc) && Number.isFinite(widthPerc))
+                                    rects += `<rect x="${startPerc}" y="0" width="${widthPerc}" height="${svgHeight}" fill="white"/>`;
                             });
 
                             const svg = `<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`;
                             const encoded = encodeURIComponent(svg).replace(/%20/g, ' ');
                             cachedMaskImage = `url("data:image/svg+xml;utf8,${encoded}")`;
-                        } else {
-                            cachedMaskImage = null;
-                        }
+                        } else cachedMaskImage = null;
                     }
 
                     // Apply mask based on current state
@@ -6996,23 +7065,23 @@
                         bar.style.webkitMaskSize = '';
                     }
                 }
-            });
-        }
+        };
 
         // handle animation frame
+        const handlePlay = () => { if (!animationFrameId) animateProgress();};
+        const handlePause = () => { if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null;}};
         video.addEventListener('play', handlePlay);
         video.addEventListener('pause', handlePause);
-        function handlePlay(){if(!animationFrameId)animateProgress();}
-        function handlePause(){if(animationFrameId){cancelAnimationFrame(animationFrameId);animationFrameId=null;}}
+        if (!video.paused) handlePlay();
 
         // handle layout changes
-        function handleTheaterMode() { updateLayout(); }
-        function handleResize() { updateLayout(); }
+        const handleTheaterMode = () => {updateLayout();};
+        const handleResize = () => {updateLayout();};
         document.addEventListener('yt-set-theater-mode-enabled', handleTheaterMode);
         window.addEventListener('resize', handleResize);
 
         // handle cleanup
-        function cleanupProgressBar() {
+        const cleanupProgressBar = () => {
             document.removeEventListener('yt-set-theater-mode-enabled', handleTheaterMode);
             video.removeEventListener('progress', renderBuffer);
             video.removeEventListener('seeking', renderBuffer);
@@ -7020,12 +7089,17 @@
             video.removeEventListener('pause', handlePause);
             video.removeEventListener('play', handlePlay);
             window.cancelAnimationFrame(animationFrameId);
-        }
-        document.addEventListener('yt-navigate-start', cleanupProgressBar, { once: true });
+            resizeObserver?.disconnect();
+            cleanupWidthObserver();
+        };
+
+        document.addEventListener('yt-navigate-start', cleanupProgressBar, {once:true});
 
         // initialization
         renderBuffer();
         updateLayout();
+        resizeObserver = new ResizeObserver(updateLayout);
+        resizeObserver.observe(progressBarContainer);
     }
 
     // close live chat initially
@@ -7158,9 +7232,9 @@
         async function setVideoQualityPremium() {
             document.documentElement.classList.add('CentAnni-style-hide-yt-settings');
             await setQualityPremium();
-                document.body.click();
-                document.documentElement.classList.remove('CentAnni-style-hide-yt-settings');
-            }
+            document.body.click();
+            document.documentElement.classList.remove('CentAnni-style-hide-yt-settings');
+        }
 
         async function setQualityPremium() {
             const qualityTranslations = {
@@ -7212,7 +7286,7 @@
                             resolve(node);
                         }
                     });
-                    observer.observe(ctx, { childList: true, subtree: true });
+                    observer.observe(ctx, {childList:true,subtree:true});
                 });
             }
 
@@ -7230,10 +7304,10 @@
             await waitFor('.ytp-menuitem', panel);
 
             const premiumQualitySelector = () => [...panel.querySelectorAll('.ytp-menuitem')]
-                    .find(item => {
-                        const labelEl = item.querySelector('.ytp-menuitem-label');
+                .find(item => {
+                    const labelEl = item.querySelector('.ytp-menuitem-label');
                     return labelEl && labelEl.innerText.includes('1080p Premium');
-                    });
+                });
 
             const premiumOption = premiumQualitySelector();
             if (!premiumOption) return;
@@ -7312,24 +7386,26 @@
 
     // color code videos on home
     function homeColorCodeVideos() {
-        let processedAllVideos = false;
-        // define age categories
-        const categories = categoriesMatrix[uiLanguage] || categoriesMatrix['en'];
+        let homePageObserver = null;
+
+        // define age categories and regex
+        const rawCategories = categoriesMatrix[uiLanguage] || categoriesMatrix['en'];
+        const categories = {};
+        for (const [key, arr] of Object.entries(rawCategories)) categories[key] = arr.map(w => typeof w === 'string' ? w.toLowerCase() : w);
+        const streamedRegex = new RegExp(`(?:${categories.streamed.join('|')})`, 'i');
         const homePage = document.querySelector('ytd-browse[page-subtype="home"]:not([hidden])');
+        const targetContainer = homePage.querySelector('ytd-rich-grid-renderer > #contents') || homePage;
         if (!homePage) return;
 
-        function processVideos() {
-            const unprocessedVideos = [...homePage.querySelectorAll('ytd-rich-item-renderer:not([data-centanni-video-processed])')];
-            if (unprocessedVideos.length === 0) { processedAllVideos = true; return; }
-
-            unprocessedVideos.forEach(videoContainer => {
+        // process each individual video
+        function processVideo(videoContainer) {
                 videoContainer.setAttribute('data-centanni-video-processed', 'true');
                 const metaBlock = videoContainer.querySelector('#metadata-line');
                 if (!metaBlock) return;
 
                 const textContent = metaBlock.textContent.trim().toLowerCase();
                 for (const [className, ages] of Object.entries(categories)) {
-                    if (ages.some(age => textContent.includes(age.toLowerCase()))) {
+                    if (ages.some(age => textContent.includes(age))) {
                         videoContainer.classList.add(`CentAnni-style-${className}-video`);
                         break;
                     }
@@ -7338,11 +7414,12 @@
                 const spanElements = videoContainer.querySelectorAll('span.ytd-video-meta-block');
                 spanElements.forEach(el => {
                     const text = el.textContent;
+                    const textLower = text.toLowerCase();
 
-                    if (categories.upcoming.some(word => text.toLowerCase().includes(word)) && !videoContainer.classList.contains('CentAnni-style-upcoming-video'))
+                    if (categories.upcoming.some(word => textLower.includes(word)) && !videoContainer.classList.contains('CentAnni-style-upcoming-video'))
                         videoContainer.classList.add('CentAnni-style-upcoming-video');
 
-                    if (categories.streamed.some(word => text.toLowerCase().includes(word))) {
+                    if (categories.streamed.some(word => textLower.includes(word))) {
                         const nextEl = el.nextElementSibling;
                         if (!nextEl || !nextEl.classList.contains('CentAnni-style-streamed-span')) {
                             const cloneSpan = document.createElement('span');
@@ -7350,43 +7427,58 @@
 
                             const streamedWordSpan = document.createElement('span');
                             streamedWordSpan.className = 'CentAnni-style-streamed-text';
-                            const matched = categories.streamed.find(word => text.toLowerCase().includes(word)) || categories.streamed[0];
+                            const matched = categories.streamed.find(word => textLower.includes(word)) || categories.streamed[0];
                             streamedWordSpan.textContent = matched.charAt(0).toUpperCase() + matched.slice(1) + ' ';
-                            const restText = document.createTextNode(text.replace(new RegExp(`(?:${categories.streamed.join('|')})`,'i'),'').trimStart());
+                            const restText = document.createTextNode(text.replace(streamedRegex,'').trimStart());
 
                             cloneSpan.appendChild(streamedWordSpan);
                             cloneSpan.appendChild(restText);
                             metaBlock.insertBefore(cloneSpan, el.nextSibling);
                         }
                     }
-                });
             });
         }
 
-        function runProcessVideos(times, initialDelay, interval, callback) {
-            let count = 0;
+        // gather all unprocessed videos for processVideo
+        function processVideos() {
+            const unprocessedVideos = [...targetContainer.querySelectorAll('ytd-rich-item-renderer:not([data-centanni-video-processed])')];
+            unprocessedVideos.forEach(processVideo);
+        }
 
-            function runProcess() {
-                processVideos();
-                count++;
-                if (count < times && !processedAllVideos) setTimeout(runProcess, interval);
-                else if (callback) callback();
-            }
+        // manage the initial processing and observer
+        function runProcessVideos(callback) {
+            if (homePageObserver) homePageObserver.disconnect();
 
-            setTimeout(runProcess, initialDelay);
+            processVideos();
+
+            homePageObserver = new MutationObserver(mutations => {
+                for (const mutation of mutations) {
+                    for (const node of mutation.addedNodes) {
+                        if (node.nodeType !== 1) continue;
+                        if (node.matches && node.matches('ytd-rich-item-renderer')) processVideo(node);
+                        else if (node.querySelectorAll) node.querySelectorAll('ytd-rich-item-renderer').forEach(processVideo);
+                    }
+                }
+            });
+
+            const config = {childList:true};
+            if (targetContainer === homePage) config.subtree=true;
+            homePageObserver.observe(targetContainer,config);
+            if (callback) callback();
         }
 
         // handle navigation
-        const serviceRequestSentHandler = () => { runProcessVideos(3, 1000, 1000, null); };
+        const serviceRequestSentHandler = () => { runProcessVideos(); };
         const navigateFinishHandler = () => { setTimeout(cleanupAndReprocessVideos, 300); };
         const pageTypeChangedHandler = function() {
             document.removeEventListener('yt-service-request-sent', serviceRequestSentHandler);
             document.removeEventListener('yt-service-request-completed', checkProcessedVideos);
             document.removeEventListener('yt-navigate-finish', navigateFinishHandler);
             document.removeEventListener('yt-page-type-changed', pageTypeChangedHandler);
+            if (homePageObserver) { homePageObserver.disconnect(); homePageObserver = null; }
         };
 
-        runProcessVideos(6, 250, 500, function() {
+        runProcessVideos(function() {
             document.addEventListener('yt-service-request-sent', serviceRequestSentHandler);
             document.addEventListener('yt-service-request-completed', checkProcessedVideos);
             document.addEventListener('yt-navigate-finish', navigateFinishHandler);
@@ -7397,7 +7489,7 @@
 
         // ensure correct categories
         function checkProcessedVideos() {
-            const processedVideos = [...homePage.querySelectorAll('ytd-rich-item-renderer')].slice(0, 8);
+            const processedVideos = [...homePage.querySelectorAll('ytd-rich-item-renderer')].slice(0, 13);
             if (processedVideos.length === 0) return;
 
             let allCorrect = true;
@@ -7409,7 +7501,7 @@
                 let expectedCategory = null;
 
                 for (const [className, ages] of Object.entries(categories)) {
-                    if (ages.some(age => textContent.includes(age.toLowerCase()))) {
+                    if (ages.some(age => textContent.includes(age))) {
                         expectedCategory = className;
                         break;
                     }
@@ -7422,21 +7514,19 @@
                 let currentVideoIsCorrect = true;
                 if (expectedClassName) {
                     if (!video.classList.contains(expectedClassName)) currentVideoIsCorrect = false;
-               } else {
-                   for (const cls of video.classList) {
-                       if (cls.startsWith('CentAnni-style-')) {
-                           currentVideoIsCorrect = false;
-                           break;
-                       }
-                   }
-               }
-
+                } else {
+                    for (const cls of video.classList) {
+                        if (cls.startsWith('CentAnni-style-')) {
+                            currentVideoIsCorrect = false;
+                            break;
+                        }
+                    }
+                }
                 if (!currentVideoIsCorrect) {
                     allCorrect = false;
                     break;
                 }
             }
-
             if (!allCorrect) cleanupAndReprocessVideos();
         }
 
@@ -7470,7 +7560,7 @@
         function handleFeedFilterAll() {
             if (allButtonObserver) return;
 
-            const allButton = document.querySelector('yt-chip-cloud-chip-renderer[chip-shape-data*="All"]');
+            const allButton = document.querySelector('yt-chip-cloud-chip-renderer:first-child');
             if (!allButton) return;
 
             allButtonObserver = new MutationObserver((mutations) => {
@@ -7482,10 +7572,9 @@
                     }
                 }
             });
-
             allButtonObserver.observe(allButton, {
                 attributes: true,
-                attributeFilter: ['class', 'selected']
+                attributeFilter: ['class','selected']
             });
         }
 
@@ -7498,7 +7587,7 @@
     }
 
     // mark last seen video on subscription page
-    async function markLastSeenVideo() {
+    function markLastSeenVideo() {
         const subscriptionPage = document.querySelector('ytd-browse[page-subtype="subscriptions"]:not([hidden])');
         if (!subscriptionPage) return;
 
@@ -7516,9 +7605,7 @@
             // backup checks
             const metadataItems = container.querySelectorAll('.inline-metadata-item');
             for (const item of metadataItems) {
-                if (item.textContent.includes('Scheduled for') || item.textContent.includes('watching')) {
-                    return true;
-                }
+                if (item.textContent.includes('Scheduled for') || item.textContent.includes('watching')) return true;
             }
             return false;
         };
@@ -7526,44 +7613,32 @@
         // helper function to extract video ID
         const extractVideoID = (container) => {
             const mainThumbnail = container.querySelector('ytd-thumbnail a#thumbnail[href*="/watch?v="]');
-            if (!mainThumbnail) return null;
-
-            const href = mainThumbnail.getAttribute('href');
-            if (!href) return null;
-
-            return new URLSearchParams(href.split('?')[1]).get("v");
-        };
-
-        // helper function to find first valid video
-        const findFirstValidVideo = (callback) => {
-            for (const container of videoContainers) {
-                if (isSpecialVideo(container)) continue;
-                const videoID = extractVideoID(container);
-                if (!videoID) continue;
-
-                const result = callback(container, videoID);
-                if (result) return result;
-            }
-            return null;
+            if (!mainThumbnail || !mainThumbnail.href || !mainThumbnail.href.includes('/watch?v=')) return null;
+            return new URL(mainThumbnail.href, location.origin).searchParams.get('v');
         };
 
         const lastSeenID = localStorage.getItem("CentAnni_lastSeenVideoID");
         let targetElement = null;
+        let newLastSeenID = null;
 
-        // find last seen video
-        const newLastSeenID = findFirstValidVideo((_, videoID) => videoID);
-        if (newLastSeenID) localStorage.setItem("CentAnni_lastSeenVideoID", newLastSeenID);
+        for (const container of videoContainers) {
+            if (isSpecialVideo(container)) continue;
+            const videoID = extractVideoID(container);
+            if (!videoID) continue;
 
-        // find previous seen video
-        if (lastSeenID) {
-            targetElement = findFirstValidVideo((container, videoID) => {
-                if (videoID === lastSeenID) {
-                    container.classList.add("CentAnni-style-last-seen");
-                    return container;
-                }
-                return null;
-            });
+            if (!newLastSeenID) newLastSeenID = videoID;
+
+            if (videoID === lastSeenID) {
+                container.classList.add("CentAnni-style-last-seen");
+                targetElement = container;
+            }
+
+            if (newLastSeenID && targetElement) break;
         }
+
+        // update last seen video ID in localStorage
+        if (newLastSeenID && newLastSeenID !== lastSeenID)
+            localStorage.setItem("CentAnni_lastSeenVideoID", newLastSeenID);
 
         // scroll to the last seen video
         if (USER_CONFIG.lastSeenVideoScroll && targetElement) {
@@ -7585,9 +7660,14 @@
         if (!playlistContainer) return;
 
         // watch for playlist changes
-        const playlistObserver = new MutationObserver(() => {
-            const videoElements = playlistPage.querySelectorAll('ytd-playlist-video-renderer:not([data-centanni-playlist-video-processed])');
-            if (videoElements.length > 0) videoElements.forEach(attachRemoveButtonToVideo);
+        const playlistObserver = new MutationObserver(mutations => {
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType !== 1) continue;
+                    if (node.matches && node.matches('ytd-playlist-video-renderer')) attachRemoveButtonToVideo(node);
+                    else node.querySelectorAll && node.querySelectorAll('ytd-playlist-video-renderer').forEach(attachRemoveButtonToVideo);
+                }
+            }
         });
 
         playlistObserver.observe(playlistContainer, {
@@ -7600,13 +7680,11 @@
         const navigateHandler = () => {
             playlistObserver.disconnect();
             cleanupRemoveButtons();
-            document.removeEventListener('yt-navigate-start', navigateHandler);
         };
-        document.addEventListener('yt-navigate-start', navigateHandler);
+        document.addEventListener('yt-navigate-start', navigateHandler, {once:true});
 
         function attachRemoveButtonToVideo(videoEl) {
             if (videoEl.hasAttribute('data-centanni-playlist-video-processed')) return;
-            videoEl.setAttribute('data-centanni-playlist-video-processed', 'true');
 
             const metaContainer = videoEl.querySelector('#meta');
             if (!metaContainer) return;
@@ -7624,6 +7702,7 @@
                     .finally(() => { removeBtn.classList.remove('removing'); });
             });
             metaContainer.appendChild(removeBtn);
+            videoEl.setAttribute('data-centanni-playlist-video-processed', 'true');
         }
 
         function attachRemoveButtonsToAllVideos() {
@@ -7690,23 +7769,70 @@
                 const element = playlistPage.querySelector(selector);
                 if (element) return resolve(element);
 
-                const timer = setTimeout(() => {
-                    observer.disconnect();
-                    resolve();
-                }, timeout);
-
+                let timer;
                 const observer = new MutationObserver(() => {
-                    const element = playlistPage.querySelector(selector);
-                    if (element) {
+                    const el = playlistPage.querySelector(selector);
+                    if (el) {
                         clearTimeout(timer);
                         observer.disconnect();
-                        resolve(element);
+                        resolve(el);
                     }
                 });
 
-                observer.observe(playlistPage, { childList: true, subtree: true });
+                timer = setTimeout(() => {observer.disconnect();resolve();},timeout);
+                observer.observe(playlistPage, {childList:true,subtree:true});
             });
         }
+    }
+
+    // add button to remove watched videos from playlist
+    function playlistRemoveWatchedButton() {
+        const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"]:not([hidden])');
+        const wrapper = document.querySelector('#page-manager ytd-browse ytd-playlist-header-renderer .metadata-buttons-wrapper');
+        const menuRenderer = wrapper?.querySelector('ytd-menu-renderer');
+        const menuButton = menuRenderer?.querySelector('button');
+        if (!playlistPage||!wrapper||!menuRenderer||!menuButton||document.querySelector('#CentAnni-remove-watched-btn')) return;
+
+        const waitForElement = (selector,callback,timeout=700) => {
+            const observer = new MutationObserver(() => {
+                const element = document.querySelector(selector);
+                if (element) {observer.disconnect();callback(element);}
+            });
+            observer.observe(document,{childList:true,subtree:true});
+            const cnl = () => {
+                observer.disconnect();
+                docElement.classList.remove('CentAnni-playlist-remove-btn-hide-menus');
+                docBody.click();
+            };
+            setTimeout(cnl, timeout);
+        };
+
+        const handleBtnClick = () => {
+            docElement.classList.add('CentAnni-playlist-remove-btn-hide-menus');
+            menuButton.click();
+
+            waitForElement('ytd-popup-container > tp-yt-iron-dropdown a:has(svg path[d^="M12"])',(removeLink) => {
+                removeLink.click();
+                waitForElement('#confirm-button > yt-button-shape > button',(confirmButton) => {
+                    confirmButton.click();
+                    showNotification('Removed from Watch Later Playlist.');
+                    if (USER_CONFIG.playlistLinks) setTimeout(() => {location.reload();},900);
+                    docElement.classList.remove('CentAnni-playlist-remove-btn-hide-menus');
+                });
+            });
+        };
+
+        const btn = document.createElement('button');
+        btn.id = 'CentAnni-remove-watched-btn';
+        btn.className = 'yt-spec-button-shape-next yt-spec-button-shape-next--tonal yt-spec-button-shape-next--overlay yt-spec-button-shape-next--size-m';
+        btn.textContent = 'Remove Watched Videos';
+        btn.addEventListener('click',handleBtnClick);
+        wrapper.insertBefore(btn, menuRenderer.nextSibling);
+
+        document.addEventListener('yt-navigate-start', () => {
+            docElement.classList.remove('CentAnni-playlist-remove-btn-hide-menus');
+            playlistPage.querySelector('#CentAnni-remove-watched-btn')?.remove();
+        },{once:true});
     }
 
     // open playlist videos without being in a playlist
@@ -7728,6 +7854,7 @@
         function processVideos() {
             const unprocessedVideos = [...playlistPage.querySelectorAll('#contents > ytd-playlist-video-list-renderer > #contents > ytd-playlist-video-renderer:not([data-centanni-list-video-processed])')];
             if (unprocessedVideos.length === 0) { processedAllListVideos = true; return; }
+            processedAllListVideos = false;
 
             unprocessedVideos.forEach(videoItem => {
                 videoItem.setAttribute('data-centanni-list-video-processed', 'true');
@@ -7757,6 +7884,7 @@
         }
 
         function runProcessVideos(times, initialDelay, interval, callback) {
+            processedAllListVideos = false;
             let count = 0;
 
             function runProcess() {
@@ -7789,7 +7917,7 @@
             document.addEventListener('yt-service-request-sent', serviceRequestSentHandler);
         });
 
-        document.addEventListener('yt-navigate-start', pageTypeChangedHandler);
+        document.addEventListener('yt-navigate-start', pageTypeChangedHandler, {once:true});
     }
 
     // RSS feed button on channel page
@@ -7904,10 +8032,12 @@
         let videoAboveInfo;
         let videoBelowInfo;
         let nextButton;
+        let observer;
+        let nextBtnObserver;
         let cleanupDone = false;
         let playNextBtnStatus = false;
-        let ValidDataVideoAbove = false;
-        let ValidDataVideoBelow = false;
+        let validDataVideoAbove = false;
+        let validDataVideoBelow = false;
         let savedDirection = localStorage.getItem('CentAnni_playlistDirection') || 'down';
         let reverseDirection = savedDirection === 'up';
 
@@ -7931,7 +8061,10 @@
                 const link = videoElement.querySelector('a#wc-endpoint');
                 const title = videoElement.querySelector('#video-title');
                 const href = link ? link.href : null;
-                const thumbnailUrl = getVideoThumbnailURL(href);
+                let thumbnailUrl = null;
+                const thumbImg = videoElement.querySelector('ytd-thumbnail img');
+                if (thumbImg && thumbImg.src) thumbnailUrl = thumbImg.src;
+                else thumbnailUrl = getVideoThumbnailURL(href);
 
                 if (!(link && title)) return { info: null, isValid: false };
 
@@ -7960,17 +8093,17 @@
                 const videoAbove = playlistItems[currentVideoIndex - 1];
                 const result = processVideoInfo(videoAbove);
                 videoAboveInfo = result.info;
-                ValidDataVideoAbove = result.isValid;
+                validDataVideoAbove = result.isValid;
             }
 
             if (currentVideoIndex < playlistItems.length - 1) {
                 const videoBelow = playlistItems[currentVideoIndex + 1];
                 const result = processVideoInfo(videoBelow);
                 videoBelowInfo = result.info;
-                ValidDataVideoBelow = result.isValid;
+                validDataVideoBelow = result.isValid;
             }
 
-            const success = ValidDataVideoAbove && ValidDataVideoBelow;
+            const success = validDataVideoAbove && validDataVideoBelow;
             return success;
         }
 
@@ -8031,36 +8164,53 @@
             return { upButton, downButton };
         }
 
+        function setNextButton(info) {
+            if (!nextButton || !info) return;
+            if (info.href && info.thumbnail && info.title) {
+                nextButton.href = info.href;
+                nextButton.dataset.preview = info.thumbnail;
+                nextButton.dataset.tooltipText = info.title;
+            }
+        }
+
         function upNextBtn() {
             if (reverseDirection === playNextBtnStatus || !nextButton) return;
             if (reverseDirection) {
                 if (videoAboveInfo) {
-                    if (videoAboveInfo.href && videoAboveInfo.thumbnail && videoAboveInfo.title) {
-                        nextButton.href = videoAboveInfo.href;
-                        nextButton.dataset.preview = videoAboveInfo.thumbnail;
-                        nextButton.dataset.tooltipText = videoAboveInfo.title;
-                    }
-
+                    setNextButton(videoAboveInfo);
                     nextButton.removeEventListener('click', nextButtonClickHandler, true);
                     nextButton.addEventListener('click', nextButtonClickHandler, true);
                     document.addEventListener('keydown', handleKeyboardShortcut, true);
-
                     playNextBtnStatus = true;
                 }
             } else {
                 document.removeEventListener('keydown', handleKeyboardShortcut, true);
                 nextButton.removeEventListener('click', nextButtonClickHandler, true);
-
-                if (videoBelowInfo) {
-                    if (videoBelowInfo.href && videoBelowInfo.thumbnail && videoBelowInfo.title) {
-                        nextButton.href = videoBelowInfo.href;
-                        nextButton.dataset.preview = videoBelowInfo.thumbnail;
-                        nextButton.dataset.tooltipText = videoBelowInfo.title;
-                    }
-                }
-
+                if (videoBelowInfo) setNextButton(videoBelowInfo);
                 playNextBtnStatus = false;
             }
+        }
+
+        function observeNextButtonReady(cb) {
+            if (!nextButton || !cb) return;
+            if (nextButton.href && nextButton.dataset.preview && nextButton.dataset.tooltipText) {
+                cb();
+                return;
+            }
+
+            let timeoutNextBtnObs = setTimeout(() => {
+                if (nextBtnObserver) nextBtnObserver.disconnect();
+                cb();
+            },7000);
+
+            nextBtnObserver = new MutationObserver(() => {
+                if (nextButton.href && nextButton.dataset.preview && nextButton.dataset.tooltipText) {
+                    clearTimeout(timeoutNextBtnObs);
+                    nextBtnObserver.disconnect();
+                    cb();
+                }
+            });
+            nextBtnObserver.observe(nextButton,{attributes:true});
         }
 
         function nextButtonClickHandler(e) {
@@ -8095,7 +8245,7 @@
             upNextBtn();
         }
 
-        // Handle down button click
+        // handle down button click
         function downButtonHandler() {
             localStorage.setItem('CentAnni_playlistDirection', 'down');
             reverseDirection = false;
@@ -8115,6 +8265,8 @@
             nextButton.removeEventListener('click', nextButtonClickHandler, true);
             upButton.removeEventListener('click', upButtonHandler);
             downButton.removeEventListener('click', downButtonHandler);
+            if (nextBtnObserver) nextBtnObserver.disconnect();
+            if (observer) observer.disconnect();
             cleanupDone = true;
         };
 
@@ -8135,19 +8287,19 @@
             downButton.addEventListener('click', downButtonHandler);
         }
 
-        const observer = new MutationObserver((mutations) => {
+        observer = new MutationObserver(() => {
             const selectedItem = watchFlexyElement.querySelector('ytd-playlist-panel-video-renderer[selected]');
-            const nextButton = watchFlexyElement.querySelector('.ytp-next-button');
+            nextButton = watchFlexyElement.querySelector('.ytp-next-button');
             if (selectedItem && nextButton) {
                 if (getPlaylistInfo()) {
                     observer.disconnect();
-                    setTimeout(() => { upNextBtn(); },1000);
+                    observeNextButtonReady(upNextBtn);
                     return;
                 }
             }
         });
 
-        const config = { childList: true, subtree: true, };
+        const config = {childList:true,subtree:true,};
         observer.observe(watchFlexyElement, config);
     }
 
@@ -8214,8 +8366,12 @@
 
     // function to sort comments newest first
     function sortCommentsNewFirst() {
-        let observationTimeout = null;
-        let dropdownTimeout = null;
+        let commentObserver = null;
+        let headerObserver = null;
+        let dropdownObserver = null;
+        let commentFallback = null;
+        let dropdownFallback = null;
+        const lang = commentMatrix[uiLanguage];
 
         // handler for YouTube service requests in tab view mode
         const serviceRequestHandler = function(event) {
@@ -8231,74 +8387,98 @@
             if (USER_CONFIG.videoTabView) {
                 document.removeEventListener('yt-service-request-sent', serviceRequestHandler);
                 document.addEventListener('yt-service-request-sent', serviceRequestHandler);
-                }
-            else observeCommentSection();
+            } else observeCommentSection();
         }
 
         // observe comment section and detect when it's loaded
         function observeCommentSection() {
-            const commentsSection = watchFlexyElement.querySelector(cmtsSel);
-            if (!commentsSection) {
-                if (observationTimeout) clearTimeout(observationTimeout);
-                observationTimeout = setTimeout(observeCommentSection, 250);
+            const existing = watchFlexyElement.querySelector(cmtsSel);
+            if (existing) {
+                monitorHeader(existing);
                 return;
             }
 
-            const observer = new MutationObserver((mutations) => {
-                for (const mutation of mutations) {
-                    if (mutation.addedNodes.length > 0) {
+            commentObserver = new MutationObserver(() => {
+                const commentsSection = watchFlexyElement.querySelector(cmtsSel);
+                if (commentsSection) {
+                    clearTimeout(commentFallback);
+                    commentObserver.disconnect();
+                    commentObserver = null;
+                    monitorHeader(commentsSection);
+                }
+            });
+            commentObserver.observe(watchFlexyElement, {childList:true,subtree:true});
+            commentFallback = setTimeout(() => {
+                if (commentObserver) {
+                    commentObserver.disconnect();
+                    commentObserver = null;
+                }
+            }, 7000);
+        }
+
+        function monitorHeader(commentsSection) {
+            if (commentsSection.textContent.includes(lang.off)) return;
+
+            headerObserver = new MutationObserver(() => {
                         const commentsHeader = commentsSection.querySelector('ytd-comments-header-renderer');
                         const sortButton = commentsSection.querySelector('yt-sort-filter-sub-menu-renderer');
 
                         if (commentsHeader && sortButton) {
-                            observer.disconnect();
+                    headerObserver.disconnect();
+                    headerObserver = null;
                             changeSortingToNewestFirst();
-                            return;
-                        }
-                    }
                 }
             });
-
-            observer.observe(commentsSection, { childList: true, subtree: true, attributes: false });
+            headerObserver.observe(commentsSection, {childList:true,subtree:true});
         }
 
         // set newest first
         function changeSortingToNewestFirst() {
             const sortButton = watchFlexyElement.querySelector('yt-sort-filter-sub-menu-renderer yt-dropdown-menu tp-yt-paper-button');
-            if (sortButton) {
-                sortButton.click();
+            if (!sortButton) return;
+            sortButton.click();
 
-                if (dropdownTimeout) clearTimeout(dropdownTimeout);
-                dropdownTimeout = setTimeout(() => {
-                    const options = document.querySelectorAll('tp-yt-paper-listbox a.yt-simple-endpoint');
+            dropdownObserver = new MutationObserver(() => {
+                const listBox = document.querySelector('tp-yt-paper-listbox');
+                if (!listBox) return;
+
+                const options = listBox.querySelectorAll('a.yt-simple-endpoint');
                     let newestFirstOption = null;
-
                     for (const option of options) {
-                        if (option.textContent.toLowerCase().includes('newest')) {
+                    if (option.textContent.toLowerCase().includes(lang.newest.toLowerCase())) {
                             newestFirstOption = option;
                             break;
                         }
                     }
-
                     if (!newestFirstOption && options.length > 1) newestFirstOption = options[1];
-                    if (newestFirstOption) newestFirstOption.click();
-                }, 200);
-            }
+
+                if (newestFirstOption) {
+                    newestFirstOption.click();
+                    dropdownObserver.disconnect();
+                    dropdownObserver = null;
+                    clearTimeout(dropdownFallback);
+                    dropdownFallback = null;
+                }
+            });
+            dropdownObserver.observe(document.documentElement, {childList:true,subtree:true});
+
+            dropdownFallback = setTimeout(() => {
+                if (dropdownObserver) {
+                    dropdownObserver.disconnect();
+                    dropdownObserver = null;
+                }
+            }, 7000);
         }
 
-        document.addEventListener('yt-navigate-start', () => {
+        const cleanupOnNavigate = () => {
             document.removeEventListener('yt-service-request-sent', serviceRequestHandler);
-
-            if (observationTimeout) {
-                clearTimeout(observationTimeout);
-                observationTimeout = null;
-            }
-
-            if (dropdownTimeout) {
-                clearTimeout(dropdownTimeout);
-                dropdownTimeout = null;
-            }
-        });
+            if (commentObserver) {commentObserver.disconnect();commentObserver = null;}
+            if (headerObserver) {headerObserver.disconnect();headerObserver = null;}
+            if (dropdownObserver) {dropdownObserver.disconnect();dropdownObserver = null;}
+            if (commentFallback) {clearTimeout(commentFallback);commentFallback = null;}
+            if (dropdownFallback) {clearTimeout(dropdownFallback);dropdownFallback = null;}
+        };
+        document.addEventListener('yt-navigate-start', cleanupOnNavigate, {once:true});
 
         setupCommentSortingDetection();
     }
@@ -8475,7 +8655,7 @@
             }
         });
 
-        transcriptObserver.observe(transcriptPanel, { childList: true, subtree: true });
+        transcriptObserver.observe(transcriptPanel, {childList:true,subtree:true});
 
         const transcriptFallbackTimer = setTimeout(() => {
             if (!transcriptLoadedWithoutYTE) transcriptObserver.disconnect();
@@ -8521,17 +8701,22 @@
         window.location.href = window.location.href.replace('/shorts/', '/watch?v=');
     }
 
+    // expand video description
+    function clickDescriptionBtn() {
+        const btn = watchFlexyElement.querySelector('ytd-text-inline-expander tp-yt-paper-button#expand');
+        if (btn) btn.click();
+    }
+
     // reset function
     function handleYTNavigation() {
         if (USER_CONFIG.playbackSpeed) document.addEventListener('yt-player-updated', initialSpeed); // set playback speed
         if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo); // prevent autoplay
-
         if (USER_CONFIG.videoTabView) {
             document.querySelector('#related.style-scope.ytd-watch-flexy')?.classList.remove('CentAnni-tabView-content-attiva');
             document.querySelector('ytd-playlist-panel-renderer[id="playlist"].style-scope.ytd-watch-flexy')?.classList.remove('CentAnni-tabView-content-active');
         }
 
-        document.querySelectorAll('.button-wrapper:not(:has(#transcript-settings-button)), #CentAnni-channel-btn, .CentAnni-remaining-time-container, .CentAnni-chapter-title, .CentAnni-info-date, #progress-bar-bar, #progress-bar-start, #progress-bar-end, #yt-transcript-settings-modal').forEach(el => el.remove());
+        document.querySelectorAll('.CentAnni-button-wrapper:not(:has(#transcript-settings-button)), #CentAnni-channel-btn, .CentAnni-remaining-time-container, .CentAnni-info-date, #CentAnni-progress-bar-bar, #CentAnni-progress-bar-start, #CentAnni-progress-bar-end, #yt-alchemy-settings-modal').forEach(el => el.remove());
     }
 
     // cache elements
@@ -8549,12 +8734,6 @@
         script.text = policy?policy.createScript(code):code;
         document.documentElement.appendChild(script);
         script.remove();
-    }
-
-    // expand video description
-    function clickDescriptionBtn() {
-        const btn = watchFlexyElement.querySelector('ytd-text-inline-expander tp-yt-paper-button#expand');
-        if (btn) btn.click();
     }
 
     //  ┌───────────────────────────────────────────────────────────────────┐
@@ -8787,10 +8966,38 @@
         }
     });
 
+    // sort comments newest first
+    const commentMatrix = {
+        en: { off: 'Comments are turned off',             newest: 'newest' },
+        es: { off: 'Los comentarios están desactivados',  newest: 'más recientes' },
+        hi: { off: 'टिप्पणियाँ बंद हैं',                         newest: 'नवीनतम' },
+        pt: { off: 'Os comentários estão desativados',    newest: 'mais recentes' },
+        de: { off: 'Kommentare sind deaktiviert',         newest: 'neueste' },
+        fr: { off: 'Les commentaires sont désactivés',    newest: 'les plus récents' },
+        it: { off: 'I commenti sono disattivati',         newest: 'più recenti' },
+        nl: { off: 'Reacties zijn uitgeschakeld',         newest: 'nieuwste' },
+        pl: { off: 'Komentarze są wyłączone',             newest: 'najnowsze' },
+        he: { off: 'התגובות מושבתות',                    newest: 'החדשות ביותר' },
+        ja: { off: 'コメントはオフになっています',           newest: '新しい順' },
+        ko: { off: '댓글이 사용 중지되었습니다',               newest: '최신' },
+        zh: { off: '评论已关闭',                           newest: '最新' },
+        id: { off: 'Komentar dimatikan',                  newest: 'terbaru' },
+        sv: { off: 'Kommentarer är inaktiverade',         newest: 'nyaste' },
+        no: { off: 'Kommentarer er slått av',             newest: 'nyeste' },
+        da: { off: 'Kommentarer er slået fra',            newest: 'nyeste' },
+        fi: { off: 'Kommentit ovat pois päältä',          newest: 'uusimmat' },
+        cs: { off: 'Komentáře jsou vypnuty',              newest: 'nejnovější' },
+        el: { off: 'Τα σχόλια είναι απενεργοποιημένα',   newest: 'νεότερα' },
+        hu: { off: 'A hozzászólások ki vannak kapcsolva', newest: 'legújabb' },
+        ro: { off: 'Comentariile sunt dezactivate',       newest: 'cele mai noi' },
+        uk: { off: 'Коментарі вимкнено',                  newest: 'найновіші' }
+    };
+
     //  ┌───────────────────────────────────────────────────────────────────┐
-    //  │                         initialization                            │
+    //  │                          initialization                           │
     //  └───────────────────────────────────────────────────────────────────┘
 
+    let pageObserver;
     let currentURL = null;
     let videoID = null;
     let lastVideoID = null;
@@ -8802,6 +9009,7 @@
     let isSubscriptionsPage = false;
     let isPlaylistPage = false;
     let isPlaylistVideoPage = false;
+    let isWatchLater = false;
     let playerElement = null;
     let watchFlexyElement = null;
     let endElement = null;
@@ -8841,9 +9049,14 @@
     const chapSel = '.ytp-chapters-container';
     const cmtsSel = 'ytd-comments#comments';
     const vidPSel = '.html5-video-player';
+    const videoTargets = [infoSel, menuSel, cmtsSel, vidPSel, chapSel, prBaSel, fsCnSel, prBeSel];
+    const browseTargets = ['#contents img'];
+    const videoContainer = 'ytd-app #page-manager > ytd-watch-flexy:not([hidden])';
+    const browseContainer = 'ytd-app #page-manager > ytd-browse:not([hidden]), ytd-app #page-manager > ytd-search:not([hidden])';
 
+    // initiate the script
     async function initializeAlchemy() {
-        if (USER_CONFIG.preventBackgroundExecution) { await chromeUserWait(); }
+        if (USER_CONFIG.preventBackgroundExecution) {await chromeUserWait();}
         updateCachedElements();
         buttonsLeftHeader();
 
@@ -8856,21 +9069,21 @@
             chapterPanelCheck();
             playlistPanelCheck();
             transcriptPanelCheck();
-            if (USER_CONFIG.videoTabView) tabView();
-            if (USER_CONFIG.hideAdSlots) hideProductsSpan();
-            if (USER_CONFIG.playbackSpeed) videoPlaybackSpeed();
-            if (USER_CONFIG.commentsNewFirst) sortCommentsNewFirst();
             if (USER_CONFIG.defaultQuality!=='auto') runSetVideoQuality();
             if (USER_CONFIG.autoTheaterMode && !isTheaterMode) toggleTheaterMode();
-            if (USER_CONFIG.closeChatWindow) setTimeout(() => { chatWindowCheck(); }, 500);
-            if (USER_CONFIG.playlistDirectionBtns && isPlaylistVideoPage) playlistDirection();
+            if (USER_CONFIG.playbackSpeed) videoPlaybackSpeed();
             if (USER_CONFIG.progressBar && !isLiveVideo && !isLiveStream) keepProgressBarVisible();
             if (USER_CONFIG.displayRemainingTime && !isLiveVideo && !isLiveStream) remainingTime();
+            if (USER_CONFIG.closeChatWindow) setTimeout(() => { chatWindowCheck(); }, 500);
+            if (USER_CONFIG.playlistDirectionBtns && isPlaylistVideoPage) playlistDirection();
+            if (USER_CONFIG.hideAdSlots) hideProductsSpan();
+            if (USER_CONFIG.commentsNewFirst && !isLiveVideo && !isLiveStream) sortCommentsNewFirst();
             if (USER_CONFIG.expandVideoDescription && !USER_CONFIG.videoTabView) clickDescriptionBtn();
             if (USER_CONFIG.autoOpenChapters && !USER_CONFIG.videoTabView && hasChapterPanel) openChapters();
             if (USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel) openTranscript();
             if (USER_CONFIG.defaultAudioLanguage!=='auto' || USER_CONFIG.defaultSubtitleLanguage!=='auto') setLanguage();
             if (!USER_CONFIG.videoTabView && ((USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel))) scrollToTop();
+            if (USER_CONFIG.videoTabView) tabView();
 
             // transcript exporter
             let transcriptLoaded = false;
@@ -8882,6 +9095,7 @@
         } else {
             addSettingsButton();
             if (USER_CONFIG.channelRSSBtn && isChannelPage) addRSSFeedButton();
+            if (USER_CONFIG.plWLBtn && isWatchLater) playlistRemoveWatchedButton();
             if (USER_CONFIG.playlistLinks && isPlaylistPage) handlePlaylistLinks();
             if (USER_CONFIG.channelPlaylistBtn && isChannelPage) addPlaylistButtons();
             if (USER_CONFIG.lastSeenVideo && isSubscriptionsPage) markLastSeenVideo();
@@ -8898,6 +9112,7 @@
         if (newURL !== currentURL) {
             currentURL = newURL;
             // console.log("YouTubeAlchemy: Only One Survived");
+            if (pageObserver) pageObserver.disconnect();
             if (!docBody) docBody = document.body;
             if (!cssSettingsApplied) loadCSSsettings();
             chronoNotificationRunning = false;
@@ -8909,7 +9124,8 @@
             isLiveStream = urlObj.pathname.startsWith('/live/');
             isShortPage = urlObj.pathname.startsWith('/shorts/');
             isPlaylistPage = urlObj.pathname === '/playlist';
-            isPlaylistVideoPage = newURL.includes('&list=');
+            isPlaylistVideoPage = urlObj.searchParams.has('list');
+            isWatchLater = urlObj.searchParams.get('list') === 'WL';
             isSubscriptionsPage = urlObj.pathname === '/feed/subscriptions';
             isChannelPage = /^\/@[a-zA-Z0-9._-]+/.test(urlObj.pathname);
             isChannelHome = /^(\/@[a-zA-Z0-9._-]+|\/channel\/[a-zA-Z0-9_\-=.]+)$/.test(urlObj.pathname);
@@ -8925,41 +9141,36 @@
                 if (USER_CONFIG.closeChatWindow) docElement.classList.add('CentAnni-close-live-chat');
             }
 
-            // initiate the script
-            const a   = [infoSel,menuSel,cmtsSel,vidPSel,chapSel,prBaSel,fsCnSel,prBeSel];
-            const b   = ['#contents img'];
-            const c   = ['ytd-app #page-manager > ytd-watch-flexy:not([hidden])'];
-            const d   = ['ytd-app #page-manager > ytd-browse:not([hidden]),ytd-app #page-manager > ytd-search:not([hidden])'];
-            const tar = (isVideoPage||isLiveStream)?a:b;
-            const sel = (isVideoPage||isLiveStream)?c:d;
-            const ctn = document.querySelector(sel);if(!ctn)return;
+            // wait for targets
+            const tar = (isVideoPage || isLiveStream) ? videoTargets:browseTargets;
+            const sel = (isVideoPage || isLiveStream) ? videoContainer:browseContainer;
+            const ctn = document.querySelector(sel); if (!ctn) return;
+            const init = () => { if (pageObserver){pageObserver.disconnect();pageObserver=null;}requestIdleCallback(initializeAlchemy,{timeout:2500});};
+            const t = setTimeout(init,2500);
 
-            let o;
-            const init = () => {o.disconnect();requestIdleCallback(() => {initializeAlchemy();},{timeout:2000});};
-            const t = setTimeout(init,3000);
-            o = new MutationObserver(() => {
-                for (let s of tar) if (!ctn.querySelector(s)) return;
-                clearTimeout(t);
-                init();
+            let remaining = new Set();
+            for (const s of tar) if (!ctn.querySelector(s)) remaining.add(s);
+            if (!remaining.size) {clearTimeout(t);init();return;}
+            pageObserver = new MutationObserver(() => {
+                for (const s of remaining) if (ctn.querySelector(s)) remaining.delete(s);
+                if (!remaining.size) {clearTimeout(t);init();}
             });
-
-            o.observe(ctn, { childList: true, subtree: true });
+            pageObserver.observe(ctn,{childList:true,subtree:true});
         }
     }
 
     // pause script until tab becomes visible
-    async function chromeUserWait() {
-        if (document.visibilityState !== 'visible') {
-            //console.log("YouTubeAlchemy: Waiting for this tab to become visible...");
-            return new Promise((resolve) => {
-                document.addEventListener('visibilitychange', function onVisibilityChange() {
-                    if (document.visibilityState === 'visible') {
-                        document.removeEventListener('visibilitychange', onVisibilityChange);
-                        resolve();
-                    }
-                });
-            });
-        }
+    function chromeUserWait() {
+        if (document.visibilityState === 'visible') return Promise.resolve();
+        return new Promise(resolve => {
+            const onVisibility = () => {
+                if (document.visibilityState === 'visible') {
+                    document.removeEventListener('visibilitychange', onVisibility);
+                    resolve();
+                }
+            };
+            document.addEventListener('visibilitychange', onVisibility);
+        });
     }
 
     // event listeners
@@ -8970,5 +9181,5 @@
     if (USER_CONFIG.playbackSpeed) document.addEventListener('yt-player-updated', initialSpeed); // set playback speed
     if (USER_CONFIG.playbackSpeed) document.addEventListener('fullscreenchange', fullscreenCheck); // fullscreen change
     if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo); // prevent autoplay
-    if (USER_CONFIG.chronologicalNotifications) {document.addEventListener('yt-update-unseen-notification-count', () => setTimeout( () => requestIdleCallback(chronoNotifications, {timeout:250}),100));} // sort notifications
+    if (USER_CONFIG.chronologicalNotifications) {document.addEventListener('yt-update-unseen-notification-count', () => setTimeout( () => requestIdleCallback(chronoNotifications, {timeout:250}),100));} // sort notifications chronologically
 })();
