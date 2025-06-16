@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, set video quality, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto-theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.9.2
+// @version      7.9.5
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.9.2 - YouTube Alchemy                   *
+*                    Version: 7.9.5 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1084,6 +1084,25 @@
             display: none;
         }
 
+        :is(:fullscreen, :-webkit-full-screen, .html5-video-player.ytp-fullscreen)
+            :is(#CentAnni-progress-bar-start, #CentAnni-progress-bar-end) {
+                width: 24px !important;
+        }
+
+        :is(:fullscreen, :-webkit-full-screen, .html5-video-player.ytp-fullscreen)
+                :has(.CentAnni-remaining-time-container)
+                #ytp-caption-window-container {
+                    top: 0;
+                    bottom: unset;
+        }
+
+        :is(:fullscreen, :-webkit-full-screen, .html5-video-player.ytp-fullscreen)
+                :has(.CentAnni-remaining-time-container)
+                .ytp-autohide #ytp-caption-window-container {
+                    bottom: 40px;
+                    top: unset;
+        }
+
         /* progress bar css */
         .CentAnni-progress-bar {
             #CentAnni-progress-bar-bar {
@@ -1159,10 +1178,6 @@
                 opacity: 0;
                 pointer-events: none;
             }
-
-            :fullscreen #CentAnni-progress-bar-start, :fullscreen #CentAnni-progress-bar-end { width: 24px; }
-            :-webkit-full-screen #CentAnni-progress-bar-start, :-webkit-full-screen #CentAnni-progress-bar-end { width: 24px; }
-            .html5-video-player.ytp-fullscreen #CentAnni-progress-bar-start, .html5-video-player.ytp-fullscreen #CentAnni-progress-bar-end { width: 24px !important; }
 
             #CentAnni-progress-bar-start {
                 left: 0;
@@ -2091,7 +2106,7 @@
                 }
 
                 & ytd-watch-flexy #description > #description-inner #info-container {
-                    height: 41px;
+                    height: fit-content;
                 }
 
                 & ytd-watch-flexy #description > #description-inner #info span.CentAnni-info-date + span::after {
@@ -3133,7 +3148,7 @@
                 }
 
                 ytd-watch-flexy #description > #description-inner #info-container {
-                    height: 18px !important;
+                    height: fit-content;
                 }
 
                 .CentAnni-chapter-title {
