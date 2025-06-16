@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, set video quality, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto-theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.9.1
+// @version      7.9.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.9.1 - YouTube Alchemy                   *
+*                    Version: 7.9.2 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -3207,29 +3207,6 @@
             }
         }
 
-        .CentAnni-style-hide-ad-slots {
-            #player-ads,
-            .yt-consent,
-            #masthead-ad,
-            #promotion-shelf,
-            .yt-consent-banner,
-            #top_advertisement,
-            .ytp-subscribe-card,
-            .ytp-featured-product,
-            ytd-search-pyv-renderer,
-            #yt-lang-alert-container,
-            .ytd-merch-shelf-renderer,
-            .ytd-primetime-promo-renderer,
-            ytd-brand-video-singleton-renderer,
-            #related ytd-in-feed-ad-layout-renderer,
-            ytd-rich-section-renderer:has(ytd-statement-banner-renderer),
-            ytd-rich-item-renderer:has(> #content > ytd-ad-slot-renderer),
-            ytd-rich-item-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"])
-            ytd-compact-video-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"]) {
-                display: none!important;
-            }
-        }
-
         .CentAnni-style-hide-members-only {
             ytd-compact-video-renderer:has(.badge-style-type-members-only),
             ytd-rich-item-renderer:has(.badge-style-type-members-only) {
@@ -3741,7 +3718,7 @@
         hideCommentsSection: false,
         hideVideosSection: false,
         redirectShorts: false,
-        hideAdSlots: false,
+        hideProdTxt: false,
         hidePayToWatch: false,
         hideFreeWithAds: false,
         hideMembersOnly: false,
@@ -3865,7 +3842,6 @@
         if (USER_CONFIG.noAmbientMode) { docElement.classList.add('CentAnni-style-no-ambient'); } else { docElement.classList.remove('CentAnni-style-no-ambient'); }
         if (USER_CONFIG.videosPerRow !== 0) { docElement.classList.add('CentAnni-style-video-row'); } else { docElement.classList.remove('CentAnni-style-video-row'); }
         if (USER_CONFIG.displayFullTitle) { docElement.classList.add('CentAnni-style-full-title'); } else { docElement.classList.remove('CentAnni-style-full-title'); }
-        if (USER_CONFIG.hideAdSlots) { docElement.classList.add('CentAnni-style-hide-ad-slots'); } else { docElement.classList.remove('CentAnni-style-hide-ad-slots'); }
         if (USER_CONFIG.hideHashtags) { docElement.classList.add('CentAnni-style-hide-hashtags'); } else { docElement.classList.remove('CentAnni-style-hide-hashtags'); }
         if (USER_CONFIG.squareDesign) { docElement.classList.add('CentAnni-style-square-design'); } else { docElement.classList.remove('CentAnni-style-square-design'); }
         if (USER_CONFIG.hideQueueBtn) { docElement.classList.add('CentAnni-style-hide-queue-btn'); } else { docElement.classList.remove('CentAnni-style-hide-queue-btn'); }
@@ -4627,9 +4603,9 @@
             const redirectShorts = createCheckboxField('Redirect Shorts to Standard Video Pages (default: no)', 'redirectShorts', USER_CONFIG.redirectShorts);
             form.appendChild(redirectShorts);
 
-            // hide ad slot
-            const hideAdSlots = createCheckboxField('Hide Ad Slots on the Home Page (default: no)', 'hideAdSlots', USER_CONFIG.hideAdSlots);
-            form.appendChild(hideAdSlots);
+            // hide product span
+            const hideProdTxt = createCheckboxField('Hide "X products" Text Under Videos (default: no)', 'hideProdTxt', USER_CONFIG.hideProdTxt);
+            form.appendChild(hideProdTxt);
 
             // hide pay to watch
             const hidePayToWatch = createCheckboxField('Hide "Pay to Watch" Featured Videos on the Home Page (default: no)', 'hidePayToWatch', USER_CONFIG.hidePayToWatch);
@@ -5444,7 +5420,7 @@
             USER_CONFIG.progressBar = subPanelCustomCSS.elements.progressBar.checked;
             USER_CONFIG.hideShorts = subPanelCustomCSS.elements.hideShorts.checked;
             USER_CONFIG.redirectShorts = subPanelCustomCSS.elements.redirectShorts.checked;
-            USER_CONFIG.hideAdSlots = subPanelCustomCSS.elements.hideAdSlots.checked;
+            USER_CONFIG.hideProdTxt = subPanelCustomCSS.elements.hideProdTxt.checked;
             USER_CONFIG.hidePayToWatch = subPanelCustomCSS.elements.hidePayToWatch.checked;
             USER_CONFIG.hideFreeWithAds = subPanelCustomCSS.elements.hideFreeWithAds.checked;
             USER_CONFIG.hideMembersOnly = subPanelCustomCSS.elements.hideMembersOnly.checked;
@@ -9076,7 +9052,7 @@
             if (USER_CONFIG.displayRemainingTime && !isLiveVideo && !isLiveStream) remainingTime();
             if (USER_CONFIG.closeChatWindow) setTimeout(() => { chatWindowCheck(); }, 500);
             if (USER_CONFIG.playlistDirectionBtns && isPlaylistVideoPage) playlistDirection();
-            if (USER_CONFIG.hideAdSlots) hideProductsSpan();
+            if (USER_CONFIG.hideProdTxt) hideProductsSpan();
             if (USER_CONFIG.commentsNewFirst && !isLiveVideo && !isLiveStream) sortCommentsNewFirst();
             if (USER_CONFIG.expandVideoDescription && !USER_CONFIG.videoTabView) clickDescriptionBtn();
             if (USER_CONFIG.autoOpenChapters && !USER_CONFIG.videoTabView && hasChapterPanel) openChapters();
