@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.9.1-white.svg" alt="Version: 7.9.1"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.9.2-white.svg" alt="Version: 7.9.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization.
@@ -313,6 +313,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **7.9.2**: removed the option "Hide Ad Slots on the Home Page (default: no)" as it now appears to trigger the "Ad blockers violate YouTube's Terms of Service" warning. in addition, added an option to hide the "X products" text under videos
 - **7.9.1**: adjustments for the latest YouTube changes, bug fixes, and improvements. new feature: add "Remove Watched Videos" button to watch later playlist
 - **7.8.6**: prevent YouTube's auto scrolling when "Automatically Open Transcript Panels" is enabled
 - **7.8.5**: adjustments for the latest YouTube changes, security update, bug fixes, and improvements
