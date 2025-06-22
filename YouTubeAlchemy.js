@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, set video quality, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto-theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.9.5
+// @version      7.9.6
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.9.5 - YouTube Alchemy                   *
+*                    Version: 7.9.6 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2166,6 +2166,13 @@
             }
         }
 
+        .CentAnni-style-home-disable-hover {
+            ytd-rich-item-renderer[rich-grid-hover-highlight] {
+                background-color: unset !important;
+                box-shadow: unset !important;
+            }
+        }
+
         html #above-the-fold h1,
         h1.ytd-watch-metadata,
         #video-title {
@@ -2213,7 +2220,7 @@
             background: white !important;
         }
 
-        html.CentAnni-style-pure-bg[dark] ytd-app {
+        html.CentAnni-style-pure-bg[dark] ytd-app,#page-header-container.ytd-tabbed-page-header,#tabs-container.ytd-tabbed-page-header,#page-header.ytd-tabbed-page-header  {
             background: black !important;
         }
 
@@ -2459,9 +2466,11 @@
             ytd-playlist-video-renderer,
             .ytOfficialCardViewModelHost,
             #dismissed.ytd-rich-grid-media,
+            .yt-thumbnail-view-model--large,
             ytd-info-panel-content-renderer,
             ytd-expandable-metadata-renderer,
             .yt-thumbnail-view-model--medium,
+            ytd-author-comment-badge-renderer,
             .badge.ytd-badge-supported-renderer,
             .yt-spec-button-shape-next--size-xs,
             #related.style-scope.ytd-watch-flexy,
@@ -2477,6 +2486,7 @@
             .yt-spec-button-shape-next--icon-only-default,
             yt-interaction.circular .stroke.yt-interaction,
             ytd-watch-flexy[theater] .CentAnni-tabView-tab,
+            .collections-stack-wiz__collection-stack1--large,
             tp-yt-paper-toast.yt-notification-action-renderer,
             .collections-stack-wiz__collection-stack1--medium,
             .metadata-container.ytd-reel-player-overlay-renderer,
@@ -2490,6 +2500,7 @@
             ytd-live-chat-frame[rounded-container] iframe.ytd-live-chat-frame,
             .html5-video-player:not(.ytp-touch-mode) ::-webkit-scrollbar-thumb,
             .CentAnni-tabView:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]),
+            ytd-author-comment-badge-renderer[enable-modern-comment-badges][creator],
             ytd-thumbnail[size="large"] a.ytd-thumbnail, ytd-thumbnail[size="large"]::before,
             ytd-watch-flexy[rounded-player-large][default-layout] #ytd-player.ytd-watch-flexy,
             ytd-thumbnail[size="medium"] a.ytd-thumbnail, ytd-thumbnail[size="medium"]::before,
@@ -2517,7 +2528,6 @@
             ytd-multi-page-menu-renderer,
             #description.ytd-watch-metadata,
             .badge-shape-wiz--thumbnail-badge,
-            ytd-author-comment-badge-renderer,
             .yt-spec-button-shape-next--size-s,
             .yt-spec-button-shape-next--size-m,
             ytd-rich-metadata-renderer[rounded],
@@ -3052,6 +3062,10 @@
                 background: darkred;
                 transform: scale(.9);
             }
+
+            ytd-item-section-renderer[page-subtype=playlist] #header.ytd-item-section-renderer {
+                background:unset;
+            }
         }
 
         .CentAnni-style-playlist-hide-menu {
@@ -3209,6 +3223,7 @@
             ytd-rich-item-renderer:has(a[href^="/shorts/"]),
             ytd-watch-metadata #description ytd-reel-shelf-renderer,
             ytd-browse[page-subtype="channels"] ytd-reel-shelf-renderer,
+            grid-shelf-view-model:has(h2 span:where(:is(:first-child))),
             ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
             yt-chip-cloud-chip-renderer[chip-shape-data*='"text":"Shorts"'],
             ytd-reel-shelf-renderer.ytd-structured-description-content-renderer,
@@ -3654,8 +3669,8 @@
             ChatGPT: '💬',
             NotebookLM: '🎧'
         },
-        buttonLeft1Text: 'ABC News',
-        buttonLeft1Url: 'https://www.youtube.com/@ABCNews/videos',
+        buttonLeft1Text: '',
+        buttonLeft1Url: 'https://www.youtube.com/@ABCNews/streams',
         buttonLeft2Text: 'CNN',
         buttonLeft2Url: 'https://www.youtube.com/@CNN/videos',
         buttonLeft3Text: '',
@@ -3664,12 +3679,12 @@
         buttonLeft4Url: 'https://www.youtube.com/@FoxNews/videos',
         buttonLeft5Text: '',
         buttonLeft5Url: 'https://www.youtube.com/@NBCNews/videos',
-        buttonLeft6Text: '',
-        buttonLeft6Url: 'https://www.youtube.com/@kcalnews/videos',
-        buttonLeft7Text: '',
-        buttonLeft7Url: 'https://www.youtube.com/foxla/videos',
+        buttonLeft6Text: 'Mark Rober',
+        buttonLeft6Url: 'https://www.youtube.com/@MarkRober/videos',
+        buttonLeft7Text: 'EarthCam',
+        buttonLeft7Url: 'https://www.youtube.com/@EarthCam/streams',
         buttonLeft8Text: '',
-        buttonLeft8Url: 'https://www.youtube.com/@earthcam/streams',
+        buttonLeft8Url: 'https://www.youtube.com/@FIAWEC/videos',
         buttonLeft9Text: '',
         buttonLeft9Url: 'https://www.youtube.com/@Formula1/videos',
         buttonLeft10Text: '',
@@ -3677,6 +3692,7 @@
         mButtonText: '☰',
         mButtonDisplay: false,
         colorCodeVideosEnabled: true,
+        homeDisableHover: false,
         videosHideWatchedGlobal: false,
         videosHideWatched: false,
         videosOldOpacity: 0.5,
@@ -3896,6 +3912,7 @@
         if (USER_CONFIG.squareSearchBar) { docElement.classList.add('CentAnni-style-square-search-bar'); } else { docElement.classList.remove('CentAnni-style-square-search-bar'); }
         if (USER_CONFIG.hideFreeWithAds) { docElement.classList.add('CentAnni-style-hide-free-with-ads'); } else { docElement.classList.remove('CentAnni-style-hide-free-with-ads'); }
         if (USER_CONFIG.lnbHideMusicBtn) { docElement.classList.add('CentAnni-style-lnb-hide-music-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-music-btn'); }
+        if (USER_CONFIG.homeDisableHover) { docElement.classList.add('CentAnni-style-home-disable-hover'); } else { docElement.classList.remove('CentAnni-style-home-disable-hover'); }
         if (USER_CONFIG.hidePlayNextButton) { docElement.classList.add('CentAnni-style-hide-playnext-btn'); } else { docElement.classList.remove('CentAnni-style-hide-playnext-btn'); }
         if (USER_CONFIG.hideCommentsSection) { docElement.classList.add('CentAnni-style-hide-comments-btn'); } else { docElement.classList.remove('CentAnni-style-hide-comments-btn'); }
         if (USER_CONFIG.lnbHideMoviesBtn) { docElement.classList.add('CentAnni-style-lnb-hide-movies-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-movies-btn'); }
@@ -4681,7 +4698,7 @@
             form.appendChild(visibleCountryCodeColor);
 
             // small subscribed button
-            const smallSubscribeButton = createCheckboxField('Small Subscribed Button Under a Video—Displays Only the Notification Icon (default: no)', 'smallSubscribeButton', USER_CONFIG.smallSubscribeButton);
+            const smallSubscribeButton = createCheckboxField('Small Subscribed Button Under Videos—Displays Only the Notification Icon (default: no)', 'smallSubscribeButton', USER_CONFIG.smallSubscribeButton);
             form.appendChild(smallSubscribeButton);
 
             // hide join button
@@ -5008,11 +5025,15 @@
             form.appendChild(infoColorCodeVideosHome);
 
             // activate color code videos on home
-            const checkboxField = createCheckboxField('Color Code Videos Based on Age and Status (default: yes)', 'colorCodeVideosEnabled', USER_CONFIG.colorCodeVideosEnabled );
-            form.appendChild(checkboxField);
+            const colorCodeVideosEnabled = createCheckboxField('Color Code Videos Based on Age and Status (default: yes)', 'colorCodeVideosEnabled', USER_CONFIG.colorCodeVideosEnabled );
+            form.appendChild(colorCodeVideosEnabled);
 
-            const checkboxFieldWatched = createCheckboxField('Hide Watched Videos—Only on Home (default: no)', 'videosHideWatched', USER_CONFIG.videosHideWatched );
-            form.appendChild(checkboxFieldWatched);
+            // disable hover effect
+            const homeDisableHover = createCheckboxField('Disable Hover Effect (default: no)', 'homeDisableHover', USER_CONFIG.homeDisableHover );
+            form.appendChild(homeDisableHover);
+
+            const videosHideWatched = createCheckboxField('Hide Watched Videos—Only on Home (default: no)', 'videosHideWatched', USER_CONFIG.videosHideWatched );
+            form.appendChild(videosHideWatched);
 
             // opacity picker for old videos
             const videosOldContainer = createSliderInputField('Change Opacity of Videos Uploaded More than 1 Year Ago:', 'videosOldOpacity', USER_CONFIG.videosOldOpacity, '0', '1', '0.1');
@@ -5548,6 +5569,7 @@
         // save sub panels - color code videos
         if (subPanelColor) {
             USER_CONFIG.colorCodeVideosEnabled = subPanelColor.elements.colorCodeVideosEnabled.checked;
+            USER_CONFIG.homeDisableHover = subPanelColor.elements.homeDisableHover.checked;
             USER_CONFIG.videosHideWatched = subPanelColor.elements.videosHideWatched.checked;
             USER_CONFIG.videosOldOpacity = parseFloat(subPanelColor.elements.videosOldOpacity.value);
             USER_CONFIG.videosAgeColorPickerNewly = subPanelColor.elements.videosAgeColorPickerNewly.value;
@@ -7551,7 +7573,7 @@
         function handleFeedFilterAll() {
             if (allButtonObserver) return;
 
-            const allButton = document.querySelector('yt-chip-cloud-chip-renderer:first-child');
+            const allButton = homePage.querySelector('yt-chip-cloud-chip-renderer:first-child');
             if (!allButton) return;
 
             allButtonObserver = new MutationObserver((mutations) => {
