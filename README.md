@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.9.6-white.svg" alt="Version: 7.9.6"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.9.7-white.svg" alt="Version: 7.9.7"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization.
@@ -308,11 +308,16 @@ _Support is a work in progress. Other languages may have limited functionality._
 2. **Install** [YouTubeAlchemy.js](https://github.com/TimMacy/YouTubeAlchemy/blob/main/YouTubeAlchemy.js).
 <br>
 
-**Important for Safari Users**: This script requires the requestIdleCallback Web API. Activate it under: Settings → Advanced → enable 'Show features for web developers' → Feature Flags → search for 'requestIdleCallback' and ensure it's checked.
+> [!IMPORTANT]
+> **Important for Safari Users**: This script requires the requestIdleCallback Web API. Activate it under: Settings → Advanced → enable 'Show features for web developers' → Feature Flags → search for 'requestIdleCallback' and ensure it's checked.
+
+> [!NOTE]
+> This script is designed primarily for desktop browsers; compatibility and functionality on mobile devices may vary.
 
 <br>
 
 ## 📜 Changelog
+- **7.9.7**: bug fixes and improvements
 - **7.9.6**: bug fixes and adjustments for the latest YouTube changes: new feature: disable hover effect for videos on the home page (can be found under 'Color Code Videos')
 - **7.9.5**: fixed a bug where captions in fullscreen overlapped the remaining time and chapter containers. improved fullscreen progress bar CSS selectors
 - **7.9.2**: removed the option "Hide Ad Slots on the Home Page (default: no)" as it now appears to trigger the "Ad blockers violate YouTube's Terms of Service" warning. in addition, added an option to hide the "X products" text under videos
