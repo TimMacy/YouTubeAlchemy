@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, set video quality, export transcripts, prevent autoplay, hide shorts, hide ad slots, disable play on hover, square design, auto-theater mode, number of videos per row, display remaining time—adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.9.6
+// @version      7.9.7
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.9.6 - YouTube Alchemy                   *
+*                    Version: 7.9.7 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -414,6 +414,7 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            white-space: pre-line;
         }
 
         .checkbox-container { margin-bottom: 5px; }
@@ -430,6 +431,7 @@
             margin:-5px 0px 5px 24px;
             pointer-events: none;
             cursor: default;
+            white-space: pre-line;
         }
 
         .button-naming {
@@ -2008,6 +2010,11 @@
                 transform: unset !important;
                 display: none;
             }
+
+            #ghost-cards.ytd-continuation-item-renderer,
+            #ghost-comment-section.ytd-continuation-item-renderer {
+                display:none;
+            }
         }
 
         .CentAnni-video-tabView:fullscreen #related.style-scope.ytd-watch-flexy,
@@ -2222,6 +2229,17 @@
 
         html.CentAnni-style-pure-bg[dark] ytd-app,#page-header-container.ytd-tabbed-page-header,#tabs-container.ytd-tabbed-page-header,#page-header.ytd-tabbed-page-header  {
             background: black !important;
+        }
+
+        .CentAnni-style-pure-bg {
+            #tabs-inner-container.ytd-tabbed-page-header,
+            ytd-item-section-renderer[page-subtype=playlist] #header.ytd-item-section-renderer {
+                background:unset;
+            }
+
+            #tabs-divider.ytd-tabbed-page-header {
+                border:none;
+            }
         }
 
         html[dark].CentAnni-style-no-frosted-glass #frosted-glass.ytd-app,
@@ -2970,6 +2988,14 @@
                 margin: 0;
                 padding: 0;
             }
+
+            ytd-browse[page-subtype="playlist"], ytd-browse[has-page-header-sidebar] {
+                padding-top: 0;
+            }
+
+            ytd-sort-filter-header-renderer[is-playlist] #header-container.ytd-sort-filter-header-renderer {
+                margin: 6px 0 12px 0;
+            }
         }
 
         .CentAnni-style-no-ambient {
@@ -3063,8 +3089,14 @@
                 transform: scale(.9);
             }
 
-            ytd-item-section-renderer[page-subtype=playlist] #header.ytd-item-section-renderer {
-                background:unset;
+            ytd-item-section-renderer[page-subtype="playlist"] #header.ytd-item-section-renderer {
+                position: relative;
+                top: 0;
+            }
+
+            yt-sort-filter-sub-menu-renderer:hover,
+            ytd-menu-renderer .ytd-menu-renderer[style-target=button]:hover {
+                background-color: var(--yt-spec-badge-chip-background);
             }
         }
 
@@ -3995,16 +4027,16 @@
         const header = document.createElement('a');
         header.href = 'https://github.com/TimMacy/YouTubeAlchemy';
         header.target = '_blank';
-        header.innerText = 'YouTube Alchemy';
-        header.title = 'GitHub Repository for YouTube Alchemy';
         header.rel = 'noopener';
+        header.textContent = 'YouTube Alchemy';
+        header.title = 'GitHub Repository for YouTube Alchemy';
         header.classList.add('CentAnni-header');
         headerWrapper.appendChild(header);
 
         // version
         const versionSpan = document.createElement('span');
         const scriptVersion = GM.info.script.version;
-        versionSpan.innerText = `v${scriptVersion}`;
+        versionSpan.textContent = `v${scriptVersion}`;
         versionSpan.classList.add('CentAnni-version-label');
         headerWrapper.appendChild(versionSpan);
 
@@ -4016,7 +4048,7 @@
 
         // Button Icons
         const iconsHeader = document.createElement('label');
-        iconsHeader.innerText = 'Button Icons:';
+        iconsHeader.textContent = 'Button Icons:';
         iconsHeader.classList.add('button-icons');
         form.appendChild(iconsHeader);
 
@@ -4036,7 +4068,7 @@
             input.classList.add(iconInputClass);
 
             const label = document.createElement('label');
-            label.innerText = labelText;
+            label.textContent = labelText;
             label.className = labelClass;
             label.classList.add('container-button-label');
 
@@ -4056,7 +4088,7 @@
 
         // info for button naming
         const buttonNaming = document.createElement('small');
-        buttonNaming.innerText = 'Enter "Label | domain.com" in the URL fields to rename the respective labels.';
+        buttonNaming.textContent = 'Enter "Label | domain.com" in the URL fields to rename the respective labels.';
         buttonNaming.classList.add('CentAnni-info-text','button-naming');
         form.appendChild(buttonNaming);
 
@@ -4096,7 +4128,7 @@
 
         // info for Chrome
         const description = document.createElement('small');
-        description.innerText = 'Ensures compatibility and prevents early script execution in background tabs.\nWhile this feature is superfluous in Safari, it is essential for Chrome.';
+        description.textContent = 'Ensures compatibility and prevents early script execution in background tabs.\nWhile this feature is superfluous in Safari, it is essential for Chrome.';
         description.classList.add('CentAnni-info-text');
         form.appendChild(description);
 
@@ -4106,19 +4138,19 @@
 
         const buttonsLeft = document.createElement('button');
         buttonsLeft.type = 'button';
-        buttonsLeft.innerText = 'Links in Header';
+        buttonsLeft.textContent = 'Links in Header';
         buttonsLeft.classList.add('btn-style-settings');
         buttonsLeft.onclick = () => showSubPanel(createLinksInHeaderContent(), 'linksInHeader');
 
         const customCSSButton = document.createElement('button');
         customCSSButton.type = 'button';
-        customCSSButton.innerText = 'Features & CSS';
+        customCSSButton.textContent = 'Features & CSS';
         customCSSButton.classList.add('btn-style-settings');
         customCSSButton.onclick = () => showSubPanel(createCustomCSSContent(), 'createcustomCSS');
 
         const colorCodeVideos = document.createElement('button');
         colorCodeVideos.type = 'button';
-        colorCodeVideos.innerText = 'Color Code Videos';
+        colorCodeVideos.textContent = 'Color Code Videos';
         colorCodeVideos.classList.add('btn-style-settings');
         colorCodeVideos.onclick = () => showSubPanel(createColorCodeVideosContent(), 'colorCodeVideos');
 
@@ -4133,7 +4165,7 @@
 
         // reset ChatGPT prompt
         const resetText = document.createElement('span');
-        resetText.innerText = 'Reset Prompt';
+        resetText.textContent = 'Reset Prompt';
         resetText.className = 'reset-prompt-text';
         resetText.addEventListener('click', function() {
             const textarea = promptContainer.querySelector('textarea[name="ChatGPTPrompt"]');
@@ -4155,13 +4187,13 @@
 
         const exportButton = document.createElement('button');
         exportButton.type = 'button';
-        exportButton.innerText = 'Export Settings';
+        exportButton.textContent = 'Export Settings';
         exportButton.classList.add('btn-style-settings');
         exportButton.onclick = exportSettings;
 
         const importButton = document.createElement('button');
         importButton.type = 'button';
-        importButton.innerText = 'Import Settings';
+        importButton.textContent = 'Import Settings';
         importButton.classList.add('btn-style-settings');
         importButton.onclick = importSettings;
 
@@ -4169,9 +4201,9 @@
         const copyright = document.createElement('a');
         copyright.href = 'https://github.com/TimMacy';
         copyright.target = '_blank';
-        copyright.innerText = '© 2024 Tim Macy';
-        copyright.title = 'Copyright by Tim Macy';
         copyright.rel = 'noopener';
+        copyright.textContent = '© 2024 Tim Macy';
+        copyright.title = 'Copyright © 2024-2025 Tim Macy';
         copyright.classList.add('CentAnni-copyright');
 
         const spacer = document.createElement('div');
@@ -4183,13 +4215,13 @@
 
         const saveButton = document.createElement('button');
         saveButton.type = 'button';
-        saveButton.innerText = 'Save';
+        saveButton.textContent = 'Save';
         saveButton.classList.add('btn-style-settings');
         saveButton.onclick = saveSettings;
 
         const resetButton = document.createElement('button');
         resetButton.type = 'button';
-        resetButton.innerText = 'Reset to Default';
+        resetButton.textContent = 'Reset to Default';
         resetButton.classList.add('btn-style-settings');
         resetButton.onclick = async () => {
             const userConfirmed = window.confirm("All settings will be reset to their default values.");
@@ -4209,7 +4241,7 @@
 
         const cancelButton = document.createElement('button');
         cancelButton.type = 'button';
-        cancelButton.innerText = 'Cancel';
+        cancelButton.textContent = 'Cancel';
         cancelButton.classList.add('btn-style-settings');
         cancelButton.onclick = () => { window.closeAlchemySettingsModal(); };
 
@@ -4353,7 +4385,7 @@
 
                 const closeButton = document.createElement('button');
                 closeButton.type = 'button';
-                closeButton.innerText = 'Close';
+                closeButton.textContent = 'Close';
                 closeButton.classList.add('btn-style-settings');
                 closeButton.onclick = () => { subPanelOverlay.classList.remove('active'); };
                 subPanel.appendChild(closeButton);
@@ -4377,7 +4409,7 @@
             form.appendChild(subPanelHeader);
 
             const infoLinksHeader = document.createElement('small');
-            infoLinksHeader.innerText = "Up to ten links can be added next to the YouTube logo. An empty 'Link Text' field won't insert the link into the header.\nIf the navigation bar is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.";
+            infoLinksHeader.textContent = "Up to ten links can be added next to the YouTube logo. An empty 'Link Text' field won't insert the link into the header.\nIf the navigation bar is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.";
             infoLinksHeader.classList.add('CentAnni-info-text');
             form.appendChild(infoLinksHeader);
 
@@ -4429,7 +4461,7 @@
 
             // general
             const general = document.createElement('label');
-            general.innerText = 'General';
+            general.textContent = 'General';
             general.classList.add('button-icons', 'features-text');
             form.appendChild(general);
 
@@ -4491,7 +4523,7 @@
 
             // features
             const features = document.createElement('label');
-            features.innerText = 'Features';
+            features.textContent = 'Features';
             features.classList.add('button-icons', 'features-text');
             form.appendChild(features);
 
@@ -4581,13 +4613,13 @@
 
             // info for remaining time minus segments
             const descriptionRemainingTime = document.createElement('small');
-            descriptionRemainingTime.innerText = 'To also include skipped SponsorBlock segments, ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."';
+            descriptionRemainingTime.textContent = 'To also include skipped SponsorBlock segments, ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."';
             descriptionRemainingTime.classList.add('CentAnni-info-text');
             form.appendChild(descriptionRemainingTime);
 
             // layout changes
             const layoutChanges = document.createElement('label');
-            layoutChanges.innerText = 'Layout Changes';
+            layoutChanges.textContent = 'Layout Changes';
             layoutChanges.classList.add('button-icons', 'features-text');
             form.appendChild(layoutChanges);
 
@@ -4657,7 +4689,7 @@
 
             // modify or hide ui elements
             const uielements = document.createElement('label');
-            uielements.innerText = 'Modify or Hide UI Elements';
+            uielements.textContent = 'Modify or Hide UI Elements';
             uielements.classList.add('button-icons', 'features-text');
             form.appendChild(uielements);
 
@@ -4818,7 +4850,7 @@
 
             // left navigation bar
             const leftnavbar = document.createElement('label');
-            leftnavbar.innerText = 'Hide UI Elements in the Left Navigation Bar';
+            leftnavbar.textContent = 'Hide UI Elements in the Left Navigation Bar';
             leftnavbar.classList.add('button-icons', 'features-text');
             form.appendChild(leftnavbar);
 
@@ -5015,12 +5047,12 @@
 
             // on home page
             const colorCodeVideosOnHome = document.createElement('label');
-            colorCodeVideosOnHome.innerText = 'Home Page';
+            colorCodeVideosOnHome.textContent = 'Home Page';
             colorCodeVideosOnHome.classList.add('button-icons', 'features-text');
             form.appendChild(colorCodeVideosOnHome);
 
             const infoColorCodeVideosHome = document.createElement('small');
-            infoColorCodeVideosHome.innerText = "These settings apply only to the Home page.";
+            infoColorCodeVideosHome.textContent = "These settings apply only to the Home page.";
             infoColorCodeVideosHome.classList.add('CentAnni-info-text');
             form.appendChild(infoColorCodeVideosHome);
 
@@ -5049,7 +5081,7 @@
 
                 const label = document.createElement('span');
                 label.classList.add('label-style-settings');
-                label.innerText = labelText;
+                label.textContent = labelText;
                 row.appendChild(label);
 
                 const colorPicker = document.createElement('input');
@@ -5073,12 +5105,12 @@
 
             // on subscriptions page
             const colorCodeVideosOnSubscriptions = document.createElement('label');
-            colorCodeVideosOnSubscriptions.innerText = 'Subscriptions Page';
+            colorCodeVideosOnSubscriptions.textContent = 'Subscriptions Page';
             colorCodeVideosOnSubscriptions.classList.add('button-icons', 'features-text');
             form.appendChild(colorCodeVideosOnSubscriptions);
 
             const infoColorCodeVideosSubscriptions = document.createElement('small');
-            infoColorCodeVideosSubscriptions.innerText = "These settings apply only to the Subscriptions page.\nOn each visit, the newest uploaded video is saved, allowing subsequent visits to highlight and optionally auto-scroll to that video. On first page load, YouTube loads about 84 videos, so highlighting and scrolling apply within this limit.";
+            infoColorCodeVideosSubscriptions.textContent = "These settings apply only to the Subscriptions page.\nOn each visit, the newest uploaded video is saved, allowing subsequent visits to highlight and optionally auto-scroll to that video. On first page load, YouTube loads about 84 videos, so highlighting and scrolling apply within this limit.";
             infoColorCodeVideosSubscriptions.classList.add('CentAnni-info-text');
             form.appendChild(infoColorCodeVideosSubscriptions);
 
@@ -5092,7 +5124,7 @@
 
                 const label = document.createElement('span');
                 label.classList.add('label-style-settings');
-                label.innerText = labelText;
+                label.textContent = labelText;
                 row.appendChild(label);
 
                 const colorPicker = document.createElement('input');
@@ -5126,7 +5158,7 @@
         container.classList.add('url-container');
 
         const label = document.createElement('label');
-        label.innerText = labelText;
+        label.textContent = labelText;
         label.className = labelClass;
         label.classList.add('label-style-settings');
         container.appendChild(label);
@@ -5149,14 +5181,14 @@
         container.classList.add('file-naming-container');
 
         const label = document.createElement('label');
-        label.innerText = labelText;
+        label.textContent = labelText;
         label.className = labelClass;
         label.classList.add('label-style-settings');
         container.appendChild(label);
 
         const select = document.createElement('div');
         select.classList.add('select-file-naming');
-        select.innerText = options[settingValue];
+        select.textContent = options[settingValue];
         select.setAttribute('tabindex', '0');
         container.appendChild(select);
 
@@ -5181,7 +5213,7 @@
         for (const [value, text] of Object.entries(options)) {
             const item = document.createElement('div');
             item.classList.add('dropdown-item');
-            item.innerText = text;
+            item.textContent = text;
             item.dataset.value = value;
 
             if (value === settingValue) { item.classList.add('dropdown-item-selected'); }
@@ -5193,7 +5225,7 @@
                 }
 
                 item.classList.add('dropdown-item-selected');
-                select.innerText = text;
+                select.textContent = text;
                 hiddenSelect.value = value;
                 dropdownList.classList.remove('show');
             });
@@ -5235,7 +5267,7 @@
         label.appendChild(checkbox);
 
         const span = document.createElement('span');
-        span.innerText = labelText;
+        span.textContent = labelText;
         label.appendChild(span);
 
         container.appendChild(label);
@@ -5261,7 +5293,7 @@
         label.appendChild(numberInput);
 
         const span = document.createElement('span');
-        span.innerText = labelText;
+        span.textContent = labelText;
         label.appendChild(span);
 
         container.appendChild(label);
@@ -5275,14 +5307,14 @@
 
         const label = document.createElement('span');
         label.classList.add('label-style-settings');
-        label.innerText = labelText;
+        label.textContent = labelText;
         container.appendChild(label);
 
         const sliderContainer = document.createElement('div');
         sliderContainer.classList.add('slider-container');
 
         const leftLabel = document.createElement('span');
-        leftLabel.innerText = min;
+        leftLabel.textContent = min;
         sliderContainer.appendChild(leftLabel);
 
         const slider = document.createElement('input');
@@ -5295,18 +5327,18 @@
         sliderContainer.appendChild(slider);
 
         const rightLabel = document.createElement('span');
-        rightLabel.innerText = max;
+        rightLabel.textContent = max;
         sliderContainer.appendChild(rightLabel);
 
         const currentValue = document.createElement('span');
-        currentValue.innerText = `(${parseFloat(slider.value).toFixed(1)})`;
+        currentValue.textContent = `(${parseFloat(slider.value).toFixed(1)})`;
         sliderContainer.appendChild(currentValue);
 
         container.appendChild(sliderContainer);
 
         slider.addEventListener('input', (e) => {
             const value = parseFloat(e.target.value).toFixed(1);
-            currentValue.innerText = `(${value})`;
+            currentValue.textContent = `(${value})`;
         });
 
         return container;
@@ -5317,7 +5349,7 @@
         const container = document.createElement('chatgpt-prompt');
 
         const label = document.createElement('label');
-        label.innerText = labelText;
+        label.textContent = labelText;
         label.className = labelClass;
         label.classList.add('label-style-settings');
         container.appendChild(label);
@@ -5344,7 +5376,7 @@
 
         const label = document.createElement('span');
         label.classList.add('label-style-settings');
-        label.innerText = labelText;
+        label.textContent = labelText;
         row.appendChild(label);
 
         return row;
@@ -5672,7 +5704,7 @@
 
         const modal = document.createElement('div');
         modal.classList.add('CentAnni-notification');
-        modal.innerText = message;
+        modal.textContent = message;
 
         overlay.appendChild(modal);
         docBody.appendChild(overlay);
@@ -5693,7 +5725,7 @@
                 // buttons
                 const button = document.createElement('button');
                 button.id = id;
-                button.innerText = text;
+                button.textContent = text;
                 button.classList.add('button-style');
                 if (id === 'transcript-settings-button') {
                     button.classList.add('button-style-settings'); }
@@ -5702,7 +5734,7 @@
 
                 // tooltip div
                 const tooltipDiv = document.createElement('div');
-                tooltipDiv.innerText = tooltip;
+                tooltipDiv.textContent = tooltip;
                 tooltipDiv.classList.add('button-tooltip');
 
                 // tooltip arrow
@@ -6920,10 +6952,12 @@
                     const remaining = (effectiveTotal - currentTime) / playbackRate;
                     const watchedPercent = rawDuration ? Math.round((currentTime / rawDuration) * 100) + '%' : '0%';
                     const totalFormatted = formatTime(baseEffective);
+                    const rawTotalFormatted = formatTime(rawDuration);
+                    const totalDisplay = Math.round(rawDuration) !== Math.round(baseEffective) ? `${rawTotalFormatted} (${totalFormatted})` : rawTotalFormatted;
                     const elapsedFormatted = formatTime(currentTime);
                     const remainingFormatted = formatTime(remaining);
 
-                    textNode.data = `total: ${totalFormatted} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
+                    textNode.data = `total: ${totalDisplay} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
 
                     animationFrameId = null;
                 });
@@ -7319,7 +7353,7 @@
             const premiumQualitySelector = () => [...panel.querySelectorAll('.ytp-menuitem')]
                 .find(item => {
                     const labelEl = item.querySelector('.ytp-menuitem-label');
-                    return labelEl && labelEl.innerText.includes('1080p Premium');
+                    return labelEl && labelEl.textContent.includes('1080p Premium');
                 });
 
             const premiumOption = premiumQualitySelector();
@@ -7705,7 +7739,7 @@
             const removeBtn = document.createElement('button');
             removeBtn.className = 'CentAnni-style-playlist-remove-btn';
             removeBtn.title = 'Remove from Playlist';
-            removeBtn.innerText = '🗑️';
+            removeBtn.textContent = '🗑️';
             removeBtn.addEventListener('click', (event) => {
                 event.stopPropagation();
                 event.preventDefault();
