@@ -18,7 +18,7 @@ This toolkit enhances YouTube by customizing the layout and adding more than 130
 - [📜 Changelog](#-changelog)
 - [⚖️ License](#%EF%B8%8F-license)
 - [💡 Read Aloud Speedster](#-read-aloud-speedster)
-- [🔸 Disclaimer](#%EF%B8%8F-disclaimer)
+- [🔸 Disclaimer](#-disclaimer)
 
 </details>
 
