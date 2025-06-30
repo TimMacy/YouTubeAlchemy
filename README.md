@@ -18,7 +18,7 @@ This toolkit enhances YouTube by customizing the layout and adding more than 130
 - [📜 Changelog](#-changelog)
 - [⚖️ License](#%EF%B8%8F-license)
 - [💡 Read Aloud Speedster](#-read-aloud-speedster)
-- [⚠️ Disclaimer](#%EF%B8%8F-disclaimer)
+- [🔸 Disclaimer](#%EF%B8%8F-disclaimer)
 
 </details>
 
@@ -367,5 +367,5 @@ The code in `YouTubeAlchemy.js` is licensed under the GNU Affero General Public 
 > <p align="center"><img width="100%" alt="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/66c28cae-0653-47e4-b614-56f1a4a3f9d8" /></p>
 <br>
 
-## ⚠️ Disclaimer
+## 🔸 Disclaimer
 *YouTube Alchemy* is an independent, private project. It's not affiliated with, endorsed by, sponsored by, or in any way officially connected to YouTube, Google LLC, or Alphabet Inc. "YouTube" and the YouTube logo are trademarks of Google LLC; all other trademarks are the property of their respective owners.
