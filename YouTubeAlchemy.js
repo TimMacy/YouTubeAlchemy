@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.9.9
+// @version      7.9.9.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.9.9 - YouTube Alchemy                   *
+*                    Version: 7.9.9.2 - YouTube Alchemy                 *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -3470,13 +3470,13 @@
         }
 
         .CentAnni-style-lnb-hide-explore-section {
-            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="feed/trending"]) {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="gaming"]) {
                 display: none;
             }
         }
 
         .CentAnni-style-lnb-hide-explore-title {
-            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="feed/trending"]) #guide-section-title {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="gaming"]) #guide-section-title {
                 display: none;
             }
         }
@@ -3542,13 +3542,13 @@
         }
 
         .CentAnni-style-lnb-hide-more-section {
-            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="/premium"]) {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="youtubekids.com"]) {
                 display: none;
             }
         }
 
         .CentAnni-style-lnb-hide-more-title {
-            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="youtubekids"]) #guide-section-title {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="studio.youtube.com"]) #guide-section-title:not([is-empty]) {
                 display: none;
             }
         }
@@ -6177,8 +6177,8 @@
     // set audio and subtitle language
     async function setLanguage() {
         docElement.classList.add('CentAnni-style-hide-yt-settings');
-        if (USER_CONFIG.defaultAudioLanguage!=='auto') await setTrackLanguage('.ytp-menuitem.ytp-audio-menu-item',audioInLanguage);
-        if (USER_CONFIG.defaultSubtitleLanguage !== 'auto'){ await setTrackLanguage(() => [...watchFlexyElement.querySelectorAll('.ytp-menuitem')].find(el => el.textContent.toLowerCase().includes(Object.values(languageMap).find(item => item.code === uiLanguage).nativeSubtitles.toLowerCase())),subtitleInLanguage);}
+        if (USER_CONFIG.defaultAudioLanguage !== 'auto') await setTrackLanguage('.ytp-menuitem.ytp-audio-menu-item',audioInLanguage);
+        if (USER_CONFIG.defaultSubtitleLanguage !== 'auto') { await setTrackLanguage(() => [...watchFlexyElement.querySelectorAll('.ytp-menuitem')].find(el => el.textContent.toLowerCase().includes(languageMap[new Intl.DisplayNames(['en'],{type:'language'}).of(uiLanguage).toLowerCase()].nativeSubtitles.toLowerCase())),subtitleInLanguage);}
         docBody.click();
         watchFlexyElement.querySelector('#movie_player').focus();
         docElement.classList.remove('CentAnni-style-hide-yt-settings');
@@ -6223,7 +6223,7 @@
         }
 
         const categoryItem = typeof categorySelector === 'function' ? categorySelector() : panel.querySelector(categorySelector);
-        if (!categoryItem){console.error('YouTubeAlchemy Category not found'); return;}
+        if (!categoryItem){console.error('YouTubeAlchemy Category not found');return;}
         categoryItem.click();
 
         await waitFor('.ytp-menuitem',panel);
@@ -6233,7 +6233,7 @@
         if (!target){console.error('YouTubeAlchemy Language not found');return;}
         target.click();
 
-        if (languagePattern === 'off') {
+        if (USER_CONFIG.defaultSubtitleLanguage === 'off') {
             setTimeout(() => {
                 const ccButton = watchFlexyElement.querySelector('.ytp-chrome-bottom .ytp-subtitles-button');
                 if (ccButton?.getAttribute('aria-pressed') === 'true') ccButton.click();
@@ -8941,13 +8941,13 @@
     // localize languages
     function languageCheck() {
         const targetLanguageAudio = USER_CONFIG.defaultAudioLanguage.replace('auto','english');
-        const targetLanguageSubtitles = USER_CONFIG.defaultSubtitleLanguage .replace('auto','english');
+        const targetLanguageSubtitles = USER_CONFIG.defaultSubtitleLanguage.replace('auto','english');
         const targetLanguageTranscript = USER_CONFIG.defaultTranscriptLanguage.replace('auto','english');
         const namesInUI = new Intl.DisplayNames([uiLanguage],{type:'language'});
-        audioInLanguage = namesInUI.of(languageMap[targetLanguageAudio].code).toLowerCase();
-        subtitleInLanguage = targetLanguageSubtitles === 'off' ? languageMap[namesInUI.of(uiLanguage).toLowerCase()].offNative.toLowerCase() : namesInUI.of(languageMap[targetLanguageSubtitles].code).toLowerCase();
-        transcriptInLanguage = namesInUI.of(languageMap[targetLanguageTranscript].code).toLowerCase();
-        englishInLanguage = namesInUI.of(languageMap.english.code).toLowerCase();
+        if (USER_CONFIG.defaultAudioLanguage !== 'auto') audioInLanguage = namesInUI.of(languageMap[targetLanguageAudio].code).toLowerCase();
+        if (USER_CONFIG.defaultSubtitleLanguage !== 'auto') subtitleInLanguage = targetLanguageSubtitles === 'off' ? languageMap[new Intl.DisplayNames(['en'],{type:'language'}).of(uiLanguage).toLowerCase()].offNative.toLowerCase() : namesInUI.of(languageMap[targetLanguageSubtitles].code).toLowerCase();
+        if (USER_CONFIG.defaultTranscriptLanguage !== 'auto') transcriptInLanguage = namesInUI.of(languageMap[targetLanguageTranscript].code).toLowerCase();
+        if (USER_CONFIG.defaultTranscriptLanguage !== 'auto' || USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto') englishInLanguage = namesInUI.of(languageMap.english.code).toLowerCase();
     }
 
     // redirect channel page to videos
