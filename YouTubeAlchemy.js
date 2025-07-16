@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.9.8
+// @version      7.9.9
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.9.8 - YouTube Alchemy                   *
+*                    Version: 7.9.9 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2016,6 +2016,11 @@
                 display: none;
             }
 
+            ytd-macro-markers-list-renderer.browsing-mode #sync-container.ytd-macro-markers-list-renderer {
+                transform:translateY(0);
+                display:flex;
+            }
+
             #ghost-cards.ytd-continuation-item-renderer,
             #ghost-comment-section.ytd-continuation-item-renderer {
                 display:none;
@@ -2367,7 +2372,8 @@
         }
 
         .CentAnni-style-hide-queue-btn {
-            ytd-thumbnail-overlay-toggle-button-renderer[aria-label="Add to queue"] {
+            ytd-thumbnail-overlay-toggle-button-renderer[aria-label="Add to queue"],
+            .ytThumbnailHoverOverlayToggleActionsViewModelButton:has(button[aria-label="Add to queue"]) {
                 display: none;
             }
         }
@@ -2487,6 +2493,11 @@
             .ytSuggestionComponentRemoveLinkClearButton:hover {
                 background-color: rgba(255,255,255,.2);
             }
+        }
+
+        ytd-app #masthead-container yt-searchbox .ytSuggestionComponentSuggestion,
+        ytd-app #masthead-container yt-searchbox .ytSuggestionComponentSuggestion > .ytSuggestionComponentText {
+            cursor:pointer;
         }
 
         .ytd-page-manager[page-subtype="home"] {
@@ -3325,6 +3336,32 @@
             }
         }
 
+        .CentAnni-style-hide-ad-slots {
+            :is(#secondary,ytd-browse,ytd-search) :is(
+                #player-ads,
+                .yt-consent,
+                #masthead-ad,
+                #promotion-shelf,
+                .yt-consent-banner,
+                #top_advertisement,
+                .ytp-subscribe-card,
+                .ytp-featured-product,
+                ytd-search-pyv-renderer,
+                #yt-lang-alert-container,
+                .ytd-merch-shelf-renderer,
+                .ytd-primetime-promo-renderer,
+                ytd-brand-video-singleton-renderer,
+                #related ytd-in-feed-ad-layout-renderer,
+                ytd-item-section-renderer ytd-ad-slot-renderer,
+                ytd-rich-section-renderer:has(ytd-statement-banner-renderer),
+                ytd-rich-item-renderer:has(> #content > ytd-ad-slot-renderer),
+                ytd-rich-item-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"]),
+                ytd-compact-video-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"])
+            ) {
+                display:none!important;
+            }
+        }
+
         .CentAnni-style-hide-members-only {
             ytd-compact-video-renderer:has(.badge-style-type-members-only),
             ytd-rich-item-renderer:has(.badge-style-type-members-only) {
@@ -3837,6 +3874,7 @@
         hideCommentsSection: false,
         hideVideosSection: false,
         redirectShorts: false,
+        hideAdSlots: false,
         hideProdTxt: false,
         hidePayToWatch: false,
         hideFreeWithAds: false,
@@ -3961,6 +3999,7 @@
         if (USER_CONFIG.noAmbientMode) { docElement.classList.add('CentAnni-style-no-ambient'); } else { docElement.classList.remove('CentAnni-style-no-ambient'); }
         if (USER_CONFIG.videosPerRow !== 0) { docElement.classList.add('CentAnni-style-video-row'); } else { docElement.classList.remove('CentAnni-style-video-row'); }
         if (USER_CONFIG.displayFullTitle) { docElement.classList.add('CentAnni-style-full-title'); } else { docElement.classList.remove('CentAnni-style-full-title'); }
+        if (USER_CONFIG.hideAdSlots) { docElement.classList.add('CentAnni-style-hide-ad-slots'); } else { docElement.classList.remove('CentAnni-style-hide-ad-slots'); }
         if (USER_CONFIG.hideHashtags) { docElement.classList.add('CentAnni-style-hide-hashtags'); } else { docElement.classList.remove('CentAnni-style-hide-hashtags'); }
         if (USER_CONFIG.squareDesign) { docElement.classList.add('CentAnni-style-square-design'); } else { docElement.classList.remove('CentAnni-style-square-design'); }
         if (USER_CONFIG.hideQueueBtn) { docElement.classList.add('CentAnni-style-hide-queue-btn'); } else { docElement.classList.remove('CentAnni-style-hide-queue-btn'); }
@@ -4722,6 +4761,10 @@
             // redirect shorts
             const redirectShorts = createCheckboxField('Redirect Shorts to Standard Video Pages (default: no)', 'redirectShorts', USER_CONFIG.redirectShorts);
             form.appendChild(redirectShorts);
+
+            // hide ad slot
+            const hideAdSlots = createCheckboxField('Hide Ad Slots on the Home Page (default: no)', 'hideAdSlots', USER_CONFIG.hideAdSlots);
+            form.appendChild(hideAdSlots);
 
             // hide product span
             const hideProdTxt = createCheckboxField('Hide "X products" Text Under Videos (default: no)', 'hideProdTxt', USER_CONFIG.hideProdTxt);
@@ -5544,6 +5587,7 @@
             USER_CONFIG.progressBar = subPanelCustomCSS.elements.progressBar.checked;
             USER_CONFIG.hideShorts = subPanelCustomCSS.elements.hideShorts.checked;
             USER_CONFIG.redirectShorts = subPanelCustomCSS.elements.redirectShorts.checked;
+            USER_CONFIG.hideAdSlots = subPanelCustomCSS.elements.hideAdSlots.checked;
             USER_CONFIG.hideProdTxt = subPanelCustomCSS.elements.hideProdTxt.checked;
             USER_CONFIG.hidePayToWatch = subPanelCustomCSS.elements.hidePayToWatch.checked;
             USER_CONFIG.hideFreeWithAds = subPanelCustomCSS.elements.hideFreeWithAds.checked;
@@ -6133,13 +6177,14 @@
     // set audio and subtitle language
     async function setLanguage() {
         docElement.classList.add('CentAnni-style-hide-yt-settings');
-        if (USER_CONFIG.defaultAudioLanguage!=='auto') await setTrackLanguage('.ytp-menuitem.ytp-audio-menu-item', audioInLanguage);
-        if (USER_CONFIG.defaultSubtitleLanguage !== 'auto'){ await setTrackLanguage(() => [...watchFlexyElement.querySelectorAll('.ytp-menuitem')].find(el => el.textContent.toLowerCase().includes(Object.values(languageMap).find(item => item.code === uiLanguage).nativeSubtitles.toLowerCase())), subtitleInLanguage );}
+        if (USER_CONFIG.defaultAudioLanguage!=='auto') await setTrackLanguage('.ytp-menuitem.ytp-audio-menu-item',audioInLanguage);
+        if (USER_CONFIG.defaultSubtitleLanguage !== 'auto'){ await setTrackLanguage(() => [...watchFlexyElement.querySelectorAll('.ytp-menuitem')].find(el => el.textContent.toLowerCase().includes(Object.values(languageMap).find(item => item.code === uiLanguage).nativeSubtitles.toLowerCase())),subtitleInLanguage);}
         docBody.click();
+        watchFlexyElement.querySelector('#movie_player').focus();
         docElement.classList.remove('CentAnni-style-hide-yt-settings');
     }
 
-    async function setTrackLanguage(categorySelector, languagePattern) {
+    async function setTrackLanguage(categorySelector,languagePattern) {
         const settingsPanel  = '.ytp-settings-menu';
         const settingsHeader = '.ytp-panel-header';
         const settingsButton = '.ytp-settings-button';
@@ -6174,22 +6219,28 @@
         const headerBtn = panel.querySelector(settingsHeader);
         if (headerBtn) {
             headerBtn.click();
-            await waitFor(categorySelector, panel);
+            await waitFor(categorySelector,panel);
         }
 
-        const categoryItem = typeof categorySelector === 'function'
-            ? categorySelector()
-            : panel.querySelector(categorySelector);
+        const categoryItem = typeof categorySelector === 'function' ? categorySelector() : panel.querySelector(categorySelector);
         if (!categoryItem){console.error('YouTubeAlchemy Category not found'); return;}
         categoryItem.click();
 
-        await waitFor('.ytp-menuitem', panel);
+        await waitFor('.ytp-menuitem',panel);
 
         const items  = [...panel.querySelectorAll('.ytp-menuitem')];
         const target = items.find(el => new RegExp(`^${languagePattern}\\b`,'i').test(el.textContent.trim())) || items.find(el => new RegExp(`^${englishInLanguage}\\b`,'i').test(el.textContent.trim()));
         if (!target){console.error('YouTubeAlchemy Language not found');return;}
         target.click();
-        await new Promise(resolve => setTimeout(resolve, 100));
+
+        if (languagePattern === 'off') {
+            setTimeout(() => {
+                const ccButton = watchFlexyElement.querySelector('.ytp-chrome-bottom .ytp-subtitles-button');
+                if (ccButton?.getAttribute('aria-pressed') === 'true') ccButton.click();
+            }, 500);
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 125));
     }
 
     // set default transcript language
@@ -6506,13 +6557,13 @@
         function scrollChapterPanelSafariFix() {
             const chapterBtn = watchFlexyElement.querySelector(`${infoSel} #navigation-button ytd-button-renderer button[aria-label="View all"]`);
             if (chapterBtn) {
-                setTimeout(() => { chapterBtn.click(); }, 100);
+                setTimeout(() => { chapterBtn.click(); }, 50);
                 safariPanelCheck = false;
                 if (!safariPanelSwitch) {
                     const observer = new MutationObserver((mutations) => {
                         const newChapterPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters][style*="order:"]') || watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters][style*="order:"]');
                         if (newChapterPanel) {
-                            chapterPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
+                            if (!autoChapters) chapterPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
                             chapterPanel = newChapterPanel;
                             hasChapterPanel = !!chapterPanel;
                             safariPanelSwitch = true;
@@ -8797,6 +8848,7 @@
     function chapterPanelCheck() {
         chapterPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters]') || watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters]');
         hasChapterPanel = !!chapterPanel;
+        if (hasChapterPanel) autoChapters = chapterPanel.getAttribute("target-id") === "engagement-panel-macro-markers-auto-chapters";
     }
 
     // function to automatically open the chapter panel
@@ -8893,7 +8945,7 @@
         const targetLanguageTranscript = USER_CONFIG.defaultTranscriptLanguage.replace('auto','english');
         const namesInUI = new Intl.DisplayNames([uiLanguage],{type:'language'});
         audioInLanguage = namesInUI.of(languageMap[targetLanguageAudio].code).toLowerCase();
-        subtitleInLanguage = targetLanguageSubtitles === 'off'?Object.values(languageMap).find(entry => entry.code === uiLanguage).offNative.toLowerCase():namesInUI.of(languageMap[targetLanguageSubtitles].code).toLowerCase();
+        subtitleInLanguage = targetLanguageSubtitles === 'off' ? languageMap[namesInUI.of(uiLanguage).toLowerCase()].offNative.toLowerCase() : namesInUI.of(languageMap[targetLanguageSubtitles].code).toLowerCase();
         transcriptInLanguage = namesInUI.of(languageMap[targetLanguageTranscript].code).toLowerCase();
         englishInLanguage = namesInUI.of(languageMap.english.code).toLowerCase();
     }
@@ -9069,8 +9121,8 @@
                 uk: { subs: 'Субтитри',      off: 'Вимкнено'       }
             };
 
-            const dnUI = new Intl.DisplayNames([uiLanguage],{ type:'language'});
-            const dnNative = new Intl.DisplayNames([langCode],{ type:'language'});
+            const dnUI = new Intl.DisplayNames([uiLanguage],{type:'language'});
+            const dnNative = new Intl.DisplayNames([langCode],{type:'language'});
             const uiLabels = fixedLabels[uiLanguage];
 
             return cache[key] = {
@@ -9236,6 +9288,7 @@
     let isTheaterMode = null;
     let hasChapterPanel = null;
     let chapterPanel = null;
+    let autoChapters = false;
     let hasTranscriptPanel = null;
     let transcriptPanel = null;
     let hasChatPanel = null;
