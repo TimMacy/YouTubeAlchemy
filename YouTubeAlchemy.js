@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.9.9.2
+// @version      7.9.9.3
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.9.9.2 - YouTube Alchemy                 *
+*                    Version: 7.9.9.3 - YouTube Alchemy                 *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1301,6 +1301,10 @@
             ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata {
                 width: 10%;
             }
+
+            .ytp-menuitem:has(path[d^="M10,8v8l6-4L10"]) {
+                display:none;
+            }
         }
 
         /* video tab view css */
@@ -2212,6 +2216,7 @@
 
         ytd-compact-video-renderer ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer),
         ytd-rich-item-renderer ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer),
+        yt-thumbnail-view-model:has(yt-thumbnail-overlay-progress-bar-view-model),
         ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
             opacity: var(--watchedOpacity);
         }
@@ -3331,6 +3336,7 @@
             #container.ytd-search ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
             ytd-item-section-renderer[page-subtype="subscriptions"]:has(ytd-reel-shelf-renderer),
             ytd-browse[page-subtype="hashtag-landing-page"] tp-yt-app-toolbar.ytd-tabbed-page-header,
+            #header #wrapper > #header > #contentContainer #tabsContent > tp-yt-paper-tab:nth-child(4),
             #tabsContent > yt-tab-group-shape > div.yt-tab-group-shape-wiz__tabs > yt-tab-shape[tab-title="Shorts"] {
                 display: none !important;
             }
@@ -5387,7 +5393,7 @@
         numberInput.value = settingValue;
         numberInput.min = 1;
         numberInput.max = 20;
-        numberInput.step = 1;
+        numberInput.step = 0.25;
         numberInput.classList.add('number-input-field');
         label.appendChild(numberInput);
 
@@ -5598,7 +5604,7 @@
             USER_CONFIG.hideCommentsSection = subPanelCustomCSS.elements.hideCommentsSection.checked;
             USER_CONFIG.hideVideosSection = subPanelCustomCSS.elements.hideVideosSection.checked;
             USER_CONFIG.playbackSpeed = subPanelCustomCSS.elements.playbackSpeed.checked;
-            USER_CONFIG.playbackSpeedValue = parseInt(subPanelCustomCSS.elements.playbackSpeedValue.value);
+            USER_CONFIG.playbackSpeedValue = parseFloat(subPanelCustomCSS.elements.playbackSpeedValue.value);
             USER_CONFIG.defaultQuality = subPanelCustomCSS.elements.defaultQuality.value;
             USER_CONFIG.defaultTranscriptLanguage = subPanelCustomCSS.elements.defaultTranscriptLanguage.value;
             USER_CONFIG.defaultAudioLanguage = subPanelCustomCSS.elements.defaultAudioLanguage.value;
@@ -6747,12 +6753,14 @@
         // keyboard control handler
         function playbackSpeedKeyListener(event) {
             const key = event.key?.toLowerCase?.();
-            const isValidKey = ['a', 's', 'd'].includes(key);
+            const isValidKey = ['a','s','d','<','>'].includes(key);
 
             const tagName = event.target?.tagName?.toLowerCase?.() || '';
             const isTextInput = ['input', 'textarea', 'select', 'contenteditable'].includes(tagName) || event.target?.isContentEditable;
 
             if (!video || !isValidKey || isTextInput) return;
+            event.preventDefault();
+            event.stopPropagation();
 
             switch (key) {
                 case 's':
@@ -6760,10 +6768,12 @@
                     setSpeed();
                     break;
                 case 'a':
+                case '<':
                     video.playbackRate = video.playbackRate - STEP_SIZE;
                     setSpeed();
                     break;
                 case 'd':
+                case '>':
                     video.playbackRate = video.playbackRate + STEP_SIZE;
                     setSpeed();
                     break;
@@ -6779,7 +6789,7 @@
         function setupEventListeners() {
             // clean up on Navigation
             const cleanupOnNavigation = () => {
-                window.removeEventListener('keydown', playbackSpeedKeyListener);
+                window.removeEventListener('keydown', playbackSpeedKeyListener,true);
                 video.removeEventListener('ratechange', updateSpeedDisplay);
                 video.removeEventListener('ratechange', onRateChange);
                 document.removeEventListener('yt-navigate-start', cleanupOnNavigation);
@@ -6788,7 +6798,7 @@
 
             // event listeners
             video.addEventListener('ratechange', onRateChange);
-            window.addEventListener('keydown', playbackSpeedKeyListener);
+            window.addEventListener('keydown', playbackSpeedKeyListener,true);
             document.addEventListener('yt-navigate-start', cleanupOnNavigation,{once:true});
             cleanupPlaybackSpeedListeners = cleanupOnNavigation;
         }
@@ -8980,9 +8990,9 @@
 
     // cache elements
     function updateCachedElements() {
-        playerElement = document.getElementById('movie_player');
-        watchFlexyElement = document.querySelector('ytd-watch-flexy');
-        endElement = document.querySelector('#end');
+        playerElement = document?.getElementById('movie_player');
+        watchFlexyElement = document?.querySelector('ytd-watch-flexy');
+        endElement = document?.querySelector('#masthead #end');
     }
 
     // Chrome CSP compliance for setVideoQuality
