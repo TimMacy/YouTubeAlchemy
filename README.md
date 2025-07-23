@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.9.9.2-white.svg" alt="Version: 7.9.9.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.9.9.3-white.svg" alt="Version: 7.9.9.3"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="https://github.com/TimMacy/YouTubeAlchemy"><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization.
@@ -153,9 +153,9 @@ Offers various options to customize the layout and functionality of YouTube.
   - defaults to 1x for live videos
   - works with Shorts
   - key toggles:
-    - A: -0.25x
+    - A (or <): -0.25x
     - S: toggle 1x/set speed
-    - D: +0.25x
+    - D (or >): +0.25x
 
 **Features**
   - Auto Theater Mode
@@ -317,6 +317,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **7.9.9.3**: bug fixes
 - **7.9.9.2**: bug fixes
 - **7.9.9**: bug fixes, improvements, and re-added the option "Hide Ad Slots on the Home Page (default: no)". it should now avoid triggering the "Ad blockers violate YouTube's Terms of Service" warning by excluding the video player area
 - **7.9.8**: bug fixes, improvements, and resolved script execution issue on YouTube Shorts. new features: loop control, auto-scroll option, and persistent progress bar for YouTube Shorts
