@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.9.9.3
+// @version      7.9.9.4
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.9.9.3 - YouTube Alchemy                 *
+*                    Version: 7.9.9.4 - YouTube Alchemy                 *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -539,6 +539,26 @@
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
+
+        .CentAnni-btn-tooltip {
+            .CentAnni-button-wrapper:has(#transcript-settings-button) .button-tooltip {
+                white-space:normal;
+            }
+
+            .CentAnni-button-wrapper:has(#transcript-download-button) .button-tooltip {
+                white-space:normal;
+                width:75px;
+            }
+
+            .CentAnni-button-wrapper:has(#transcript-ChatGPT-button) .button-tooltip {
+                white-space:normal;
+                width:172px;
+            }
+        }
+
+        html:not([dark]) #guide-wrapper .button-style-settings:hover { color:black; }
+        html:not([dark]) #guide-wrapper .CentAnni-button-wrapper:has(#transcript-settings-button):hover { background-color: rgba(0, 0, 0, .1); border-radius: 24px; }
+        html:not([dark]) #guide-wrapper .CentAnni-button-wrapper:has(#transcript-settings-button):active { background-color: rgba(0, 0, 0, .2); border-radius: 24px; }
 
         .CentAnni-button-wrapper:not(:has(.button-style-settings)):hover { background-color: rgba(255, 255, 255, .1); border-radius: 24px; }
         .CentAnni-button-wrapper:not(:has(.button-style-settings)):active { background-color: rgba(255, 255, 255, .2); border-radius: 24px; }
@@ -1544,7 +1564,7 @@
                 overflow-y: auto;
                 overflow-x: hidden;
                 z-index: 5;
-                background: black;
+                background: transparent;
                 border: 1px solid rgba(255, 255, 255, .2);
                 border-top: none;
                 box-sizing: border-box;
@@ -1664,6 +1684,7 @@
             ytd-compact-video-renderer:hover,
             ytd-video-description-course-section-renderer > #topic-link:hover,
             #infocards-section > ytd-compact-infocard-renderer > #content:hover,
+            #related ytd-item-section-renderer yt-lockup-view-model > div:hover,
             #items > ytd-video-description-infocards-section-renderer > #header:hover,
             ytd-watch-card-compact-video-renderer.ytd-vertical-watch-card-list-renderer:not([is-condensed]):hover,
             #always-shown > ytd-rich-metadata-row-renderer > #contents > ytd-rich-metadata-renderer > #endpoint-link:hover,
@@ -2246,22 +2267,6 @@
             }
         }
 
-        html.CentAnni-style-pure-bg:not([dark]) ytd-app {
-            background: white !important;
-        }
-
-        html.CentAnni-style-pure-bg[dark] :is(
-            ytd-shorts[anchored-panel-active] .navigation-container.ytd-shorts,
-            #page-header-container.ytd-tabbed-page-header,
-            .playlist-items.ytd-playlist-panel-renderer,
-            #tabs-container.ytd-tabbed-page-header,
-            #page-header.ytd-tabbed-page-header,
-            .header.ytd-playlist-panel-renderer,
-            ytd-app
-        ) {
-            background: black !important;
-        }
-
         .CentAnni-style-pure-bg {
             #tabs-inner-container.ytd-tabbed-page-header,
             ytd-item-section-renderer[page-subtype=playlist] #header.ytd-item-section-renderer {
@@ -2271,18 +2276,43 @@
             #tabs-divider.ytd-tabbed-page-header {
                 border:none;
             }
+
+            #cinematics-container #cinematics > div > div {
+                transform:scale(2, 2)!important;
+            }
         }
 
         html[dark].CentAnni-style-no-frosted-glass #frosted-glass.ytd-app,
         html[dark].CentAnni-style-no-frosted-glass #background.ytd-masthead,
         html[dark].CentAnni-style-no-frosted-glass #frosted-glass.with-chipbar.ytd-app {
-            background: black !important;
+            background: #0f0f0f !important;
         }
 
         html:not([dark]).CentAnni-style-no-frosted-glass #frosted-glass.ytd-app,
         html:not([dark]).CentAnni-style-no-frosted-glass #background.ytd-masthead,
         html:not([dark]).CentAnni-style-no-frosted-glass #frosted-glass.with-chipbar.ytd-app {
             background: white !important;
+        }
+
+        html.CentAnni-style-pure-bg:not([dark]) ytd-app {
+            background: white !important;
+        }
+
+        html.CentAnni-style-pure-bg[dark] :is(
+            ytd-shorts[anchored-panel-active] .navigation-container.ytd-shorts,
+            tp-yt-app-drawer.ytd-app[persistent] #guide-content > #header,
+            #page-header-container.ytd-tabbed-page-header,
+            ytd-app tp-yt-app-drawer.ytd-app[persistent],
+            .playlist-items.ytd-playlist-panel-renderer,
+            #tabs-container.ytd-tabbed-page-header,
+            #page-header.ytd-tabbed-page-header,
+            .header.ytd-playlist-panel-renderer,
+            #frosted-glass.with-chipbar.ytd-app,
+            #background.ytd-masthead,
+            #frosted-glass.ytd-app,
+            ytd-app
+        ) {
+            background: black !important;
         }
 
         .CentAnni-style-remove-scrubber {
@@ -2430,7 +2460,7 @@
                 overflow: hidden;
             }
 
-            ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > ytd-logo {
+            #start ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > ytd-logo {
                 display: block !important;
             }
 
@@ -3333,6 +3363,7 @@
             ytd-reel-shelf-renderer.ytd-structured-description-content-renderer,
             yt-chip-cloud-chip-renderer:has(yt-formatted-string[title="Shorts"]),
             ytd-rich-section-renderer:has(div ytd-rich-shelf-renderer[is-shorts]),
+            ytd-watch-flexy #secondary ytd-reel-shelf-renderer.ytd-item-section-renderer,
             #container.ytd-search ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
             ytd-item-section-renderer[page-subtype="subscriptions"]:has(ytd-reel-shelf-renderer),
             ytd-browse[page-subtype="hashtag-landing-page"] tp-yt-app-toolbar.ytd-tabbed-page-header,
@@ -3704,11 +3735,6 @@
             height: calc(100dvh - var(--ytd-masthead-height,var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x)) !important;
             max-height: unset !important;
             margin-top: -52px;
-        }
-
-        html:not([dark]) ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"],
-        html:not([dark]) ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description] {
-            background-color: var(--yt-spec-badge-chip-background);
         }
 
         html:not([dark]) ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
@@ -4567,8 +4593,8 @@
             form.appendChild(general);
 
             // dim watched videos
-            const videosWatchedContainer = createSliderInputField('Change Opacity of Watched Videos (default 0.5):', 'videosWatchedOpacity', USER_CONFIG.videosWatchedOpacity, '0', '1', '0.1');
-            form.appendChild(videosWatchedContainer);
+            const videosWatchedOpacity = createSliderInputField('Change Opacity of Watched Videos (default 0.5):', 'videosWatchedOpacity', USER_CONFIG.videosWatchedOpacity, '0', '1', '0.1');
+            form.appendChild(videosWatchedOpacity);
 
             // title text transform
             form.appendChild(createSelectField('Title Case:', 'label-Text-Transform', 'textTransform', USER_CONFIG.textTransform, {
@@ -5393,7 +5419,7 @@
         numberInput.value = settingValue;
         numberInput.min = 1;
         numberInput.max = 20;
-        numberInput.step = 0.25;
+        numberInput.step = .25;
         numberInput.classList.add('number-input-field');
         label.appendChild(numberInput);
 
@@ -5892,13 +5918,13 @@
         ];
 
         const buttonsToAdd = buttons.filter(button => button.id === 'transcript-settings-button' || (button.text && button.text.trim() !== ''));
-        buttonLocation(buttonsToAdd, addButton);
+        buttonLocation(buttonsToAdd,addButton);
     }
 
     function addSettingsButton() {
         document.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
-        const buttons = [ { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' }, ];
-        buttonLocation(buttons, addSettingsButton);
+        const buttons = [{id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.'},];
+        buttonLocation(buttons,addSettingsButton);
     }
 
     // functions to handle the button clicks
@@ -6563,19 +6589,18 @@
         function scrollChapterPanelSafariFix() {
             const chapterBtn = watchFlexyElement.querySelector(`${infoSel} #navigation-button ytd-button-renderer button[aria-label="View all"]`);
             if (chapterBtn) {
-                setTimeout(() => { chapterBtn.click(); }, 50);
+                setTimeout(() => { chapterBtn.click(); }, 75);
                 safariPanelCheck = false;
                 if (!safariPanelSwitch) {
                     const observer = new MutationObserver((mutations) => {
                         const newChapterPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters][style*="order:"]') || watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters][style*="order:"]');
                         if (newChapterPanel) {
-                            if (!autoChapters) chapterPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
+                            chapterPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
                             chapterPanel = newChapterPanel;
                             hasChapterPanel = !!chapterPanel;
                             safariPanelSwitch = true;
                             observer.disconnect();
                             clearTimeout(timeout);
-
                         }
                     });
 
@@ -8858,7 +8883,6 @@
     function chapterPanelCheck() {
         chapterPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters]') || watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters]');
         hasChapterPanel = !!chapterPanel;
-        if (hasChapterPanel) autoChapters = chapterPanel.getAttribute("target-id") === "engagement-panel-macro-markers-auto-chapters";
     }
 
     // function to automatically open the chapter panel
@@ -9298,7 +9322,6 @@
     let isTheaterMode = null;
     let hasChapterPanel = null;
     let chapterPanel = null;
-    let autoChapters = false;
     let hasTranscriptPanel = null;
     let transcriptPanel = null;
     let hasChatPanel = null;
