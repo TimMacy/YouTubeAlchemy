@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.9.9.4
+// @version      7.10
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.9.9.4 - YouTube Alchemy                 *
+*                    Version: 7.10 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2261,6 +2261,8 @@
         }
 
         .CentAnni-style-hide-watched-videos-global {
+            yt-lockup-view-model:has(yt-thumbnail-overlay-progress-bar-view-model),
+            ytd-rich-item-renderer:has(yt-thumbnail-overlay-progress-bar-view-model),
             ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer),
             ytd-grid-video-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer) {
                 display: none !important;
@@ -2278,7 +2280,7 @@
             }
 
             #cinematics-container #cinematics > div > div {
-                transform:scale(2, 2)!important;
+                transform:scale(2,2)!important;
             }
         }
 
@@ -2850,7 +2852,8 @@
             }
 
             .ytd-page-manager[page-subtype="home"] {
-                ytd-menu-renderer.ytd-rich-grid-media {
+                ytd-menu-renderer.ytd-rich-grid-media,
+                .yt-lockup-metadata-view-model-wiz__menu-button {
                     position: absolute;
                     height: 36px;
                     width: 36px;
@@ -2883,6 +2886,34 @@
 
                 .style-scope.ytd-two-column-browse-results-renderer {
                     --ytd-rich-grid-item-margin: .5% !important;
+                }
+
+                .yt-lockup-metadata-view-model-wiz__avatar {
+                    margin:0 7px 0 5px;
+                }
+
+                .yt-lockup-metadata-view-model-wiz__menu-button {
+                    top:43px;
+                }
+
+                .ytLockupAttachmentsViewModelAttachment {
+                    margin-top:23px;
+                }
+
+                .yt-lockup-view-model-wiz--vertical.yt-lockup-view-model-wiz--rich-grid-legacy-margin .yt-lockup-view-model-wiz__content-image {
+                    padding-bottom:6px;
+                }
+
+                .yt-spec-button-shape-next--mono.yt-spec-button-shape-next--text:hover {
+                    border-radius:50%;
+                }
+
+                #content.ytd-rich-item-renderer>.lockup.ytd-rich-item-renderer {
+                    height:100%;
+                }
+
+                .yt-lockup-view-model-wiz__metadata {
+                    margin-bottom:3px;
                 }
             }
 
@@ -3149,7 +3180,8 @@
             .CentAnni-style-lately-video { outline-color: var(--latelyVideo); }
             .CentAnni-style-latterly-video { outline-color: var(--latterlyVideo); }
             .CentAnni-style-old-video { opacity: var(--oldVideo); }
-            #metadata-line > span.inline-metadata-item:has(+ span.CentAnni-style-streamed-span) { display: none !important; }
+            #metadata-line > span.inline-metadata-item:has(+ span.CentAnni-style-streamed-span),
+            yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-row > .yt-content-metadata-view-model-wiz__metadata-text:has(+ .CentAnni-style-streamed-span) { display: none !important; }
             #metadata-line > span.inline-metadata-item + span.inline-metadata-item:has(+ span.CentAnni-style-streamed-span) + span.CentAnni-style-streamed-span::before {
                 content: "•";
                 margin: 0 4px;
@@ -3216,6 +3248,7 @@
 
         .CentAnni-style-hide-watched-videos {
             .ytd-page-manager[page-subtype="home"] {
+                ytd-rich-item-renderer:has(yt-thumbnail-overlay-progress-bar-view-model),
                 ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer) {
                     display: none;
                 }
@@ -3327,6 +3360,7 @@
         }
 
         .CentAnni-style-hide-news-home {
+            ytd-browse[page-subtype="home"] ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[elements-per-row="3"][is-show-less-hidden][restrict-contents-overflow] #title):has(.yt-spec-avatar-shape__live-badge),
             ytd-browse[page-subtype="home"] ytd-rich-grid-renderer ytd-rich-section-renderer:has(yt-icon:empty) {
                 display: none;
             }
@@ -7588,13 +7622,13 @@
         for (const [key, arr] of Object.entries(rawCategories)) categories[key] = arr.map(w => typeof w === 'string' ? w.toLowerCase() : w);
         const streamedRegex = new RegExp(`(?:${categories.streamed.join('|')})`, 'i');
         const homePage = document.querySelector('ytd-browse[page-subtype="home"]:not([hidden])');
-        const targetContainer = homePage.querySelector('ytd-rich-grid-renderer > #contents') || homePage;
+        const targetContainer = homePage?.querySelector('ytd-rich-grid-renderer > #contents') || homePage;
         if (!homePage) return;
 
         // process each individual video
         function processVideo(videoContainer) {
-                videoContainer.setAttribute('data-centanni-video-processed', 'true');
-                const metaBlock = videoContainer.querySelector('#metadata-line');
+                videoContainer.setAttribute('data-centanni-video-processed','true');
+                const metaBlock = videoContainer.querySelector('yt-content-metadata-view-model');
                 if (!metaBlock) return;
 
                 const textContent = metaBlock.textContent.trim().toLowerCase();
@@ -7605,7 +7639,7 @@
                     }
                 }
 
-                const spanElements = videoContainer.querySelectorAll('span.ytd-video-meta-block');
+                const spanElements = videoContainer.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text');
                 spanElements.forEach(el => {
                     const text = el.textContent;
                     const textLower = text.toLowerCase();
@@ -7617,7 +7651,7 @@
                         const nextEl = el.nextElementSibling;
                         if (!nextEl || !nextEl.classList.contains('CentAnni-style-streamed-span')) {
                             const cloneSpan = document.createElement('span');
-                            cloneSpan.className = 'CentAnni-style-streamed-span';
+                            cloneSpan.className = 'yt-content-metadata-view-model-wiz__metadata-text CentAnni-style-streamed-span';
 
                             const streamedWordSpan = document.createElement('span');
                             streamedWordSpan.className = 'CentAnni-style-streamed-text';
@@ -7627,7 +7661,7 @@
 
                             cloneSpan.appendChild(streamedWordSpan);
                             cloneSpan.appendChild(restText);
-                            metaBlock.insertBefore(cloneSpan, el.nextSibling);
+                            el.closest('.yt-content-metadata-view-model-wiz__metadata-row').insertBefore(cloneSpan, el.nextSibling);
                         }
                     }
             });
@@ -7683,12 +7717,12 @@
 
         // ensure correct categories
         function checkProcessedVideos() {
-            const processedVideos = [...homePage.querySelectorAll('ytd-rich-item-renderer')].slice(0, 13);
+            const processedVideos = [...homePage.querySelectorAll('ytd-rich-item-renderer')].slice(0,13);
             if (processedVideos.length === 0) return;
 
             let allCorrect = true;
             for (const video of processedVideos) {
-                const metaBlock = video.querySelector('#metadata-line');
+                const metaBlock = video.querySelector('yt-content-metadata-view-model');
                 if (!metaBlock) continue;
 
                 const textContent = metaBlock.textContent.trim().toLowerCase();
@@ -7701,7 +7735,7 @@
                     }
                 }
 
-                if (expectedCategory === null) if ([...video.querySelectorAll('span.ytd-video-meta-block')].some(el => /Scheduled for/i.test(el.textContent))) expectedCategory = 'upcoming';
+                if (expectedCategory === null) if ([...video.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text')].some(el => /Scheduled for/i.test(el.textContent))) expectedCategory = 'upcoming';
 
                 const expectedClassName = expectedCategory ? `CentAnni-style-${expectedCategory}-video` : null;
 
