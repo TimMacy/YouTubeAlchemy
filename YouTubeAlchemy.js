@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.10.1
+// @version      7.10.4
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.10.1 - YouTube Alchemy                  *
+*                    Version: 7.10.4 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2498,13 +2498,14 @@
 
         .CentAnni-style-square-search-bar {
             #center.ytd-masthead { flex: 0 1 38.76dvw; margin: 0 8px; }
+
             .YtSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; margin-left: 0; padding: 0 4px 0 10px; }
             .YtSearchboxComponentSuggestionsContainer { border-radius: 0 0 5px 5px; }
             .YtSearchboxComponentSearchButton, .YtSearchboxComponentSearchButtonDark { display: none; }
             .YtSearchboxComponentHost { margin: 0; padding: 0; }
 
             .ytSearchboxComponentInputBox { border: 1px solid hsl(0,0%,18.82%); border-radius: 0; margin-left: 0; padding: 0 4px 0 10px; }
-            .ytSearchboxComponentSuggestionsContainer { border-radius: 0 0 5px 5px; }
+            .ytSearchboxComponentSuggestionsContainer { max-width:500px; border-radius: 0 0 5px 5px; }
             .ytSearchboxComponentSearchButton, .ytSearchboxComponentSearchButtonDark { display: none; }
             .ytSearchboxComponentHost { margin: 0; padding: 0; }
 
@@ -2923,6 +2924,9 @@
                 .yt-lockup-view-model-wiz__metadata {
                     margin-bottom:3px;
                 }
+
+                .yt-spec-button-shape-next--overlay-dark.yt-spec-button-shape-next--tonal {background:rgba(0, 0, 0, .6)}
+                .yt-spec-button-shape-next--overlay-dark.yt-spec-button-shape-next--tonal:hover {background:rgba(0, 0, 0, .8)}
             }
 
             .ytd-page-manager[page-subtype="channels"] {
@@ -3037,9 +3041,9 @@
 
                 .title-badge.ytd-rich-grid-media, .video-badge.ytd-rich-grid-media {
                     position: absolute;
-                    margin: 0px 10% 0 0;
+                    margin: -25px 8px 0 0;
                     right: 0;
-                    top: 6em;
+                    top: 0;
                 }
             }
 
@@ -3693,18 +3697,8 @@
         }
 
         /* hide main scrollbar in safari */
-        html {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
         html::-webkit-scrollbar {
             display: none;
-        }
-
-        .scrollable-div {
-            scrollbar-width: auto;
-            -ms-overflow-style: auto;
         }
 
         .scrollable-div::-webkit-scrollbar {
@@ -3787,12 +3781,14 @@
             fill: black;
         }
 
-        html:not([dark]) ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
-        html:not([dark]) ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters],
-        html:not([dark]) ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-        html:not([dark]) ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-        html:not([dark]) ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-        html:not([dark]) #related.style-scope.ytd-watch-flexy {
+        :is(html:not([dark]).CentAnni-video-tabView) :is(
+            ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters],
+            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
+            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+            #related.style-scope.ytd-watch-flexy
+        ) {
             border: 1px solid var(--yt-spec-10-percent-layer);
             border-top: none;
         }
@@ -7636,7 +7632,7 @@
         // process each individual video
         function processVideo(videoContainer) {
                 videoContainer.setAttribute('data-centanni-video-processed','true');
-                const metaBlock = videoContainer.querySelector('yt-content-metadata-view-model');
+                const metaBlock = videoContainer.querySelector('yt-content-metadata-view-model,#metadata-line');
                 if (!metaBlock) return;
 
                 const textContent = metaBlock.textContent.trim().toLowerCase();
@@ -7647,7 +7643,7 @@
                     }
                 }
 
-                const spanElements = videoContainer.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text');
+                const spanElements = videoContainer.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text:not(:has(a)):last-of-type,span.ytd-video-meta-block');
                 spanElements.forEach(el => {
                     const text = el.textContent;
                     const textLower = text.toLowerCase();
@@ -7669,7 +7665,8 @@
 
                             cloneSpan.appendChild(streamedWordSpan);
                             cloneSpan.appendChild(restText);
-                            el.closest('.yt-content-metadata-view-model-wiz__metadata-row').insertBefore(cloneSpan, el.nextSibling);
+                            const metadataRow = el.closest('yt-content-metadata-view-model > .yt-content-metadata-view-model-wiz__metadata-row:nth-of-type(2)') || metaBlock;
+                            metadataRow?.insertBefore(cloneSpan, el.nextSibling);
                         }
                     }
             });
@@ -7730,7 +7727,7 @@
 
             let allCorrect = true;
             for (const video of processedVideos) {
-                const metaBlock = video.querySelector('yt-content-metadata-view-model');
+                const metaBlock = video.querySelector('yt-content-metadata-view-model,#metadata-line');
                 if (!metaBlock) continue;
 
                 const textContent = metaBlock.textContent.trim().toLowerCase();
@@ -7743,7 +7740,7 @@
                     }
                 }
 
-                if (expectedCategory === null) if ([...video.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text')].some(el => /Scheduled for/i.test(el.textContent))) expectedCategory = 'upcoming';
+                if (expectedCategory === null) if ([...video.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text,span.ytd-video-meta-block')].some(el => /Scheduled for/i.test(el.textContent))) expectedCategory = 'upcoming';
 
                 const expectedClassName = expectedCategory ? `CentAnni-style-${expectedCategory}-video` : null;
 
