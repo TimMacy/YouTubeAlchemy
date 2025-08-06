@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.10.4
+// @version      7.11
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.10.4 - YouTube Alchemy                  *
+*                    Version: 7.11 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -154,7 +154,7 @@
         }
 
         .reset-prompt-text {
-            display: inline-block;
+            display: block;
             float: right;
             cursor: pointer;
             margin: 4px 10px 0 0;
@@ -319,7 +319,7 @@
 
             -webkit-user-select: none;
             -moz-user-select: none;
-            -ms-user-select: none;]
+            -ms-user-select: none;
             user-select: none;
         }
 
@@ -583,7 +583,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        .button-style-settings { width: 10px; color: rgb(170, 170, 170); }
+        .button-style-settings { width: fit-content; min-width: 10px; color: rgb(170,170,170); }
         .button-style-settings:hover { color: white; }
 
         .button-tooltip {
@@ -2232,6 +2232,7 @@
             #video-title {
                 max-height: unset !important;
                 -webkit-line-clamp: unset !important;
+                line-clamp: unset !important;
             }
         }
 
@@ -2240,6 +2241,10 @@
         yt-thumbnail-view-model:has(yt-thumbnail-overlay-progress-bar-view-model),
         ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
             opacity: var(--watchedOpacity);
+        }
+
+        .CentAnni-marked-watched {
+            display:none!important;
         }
 
         ytd-search ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
@@ -2531,6 +2536,10 @@
             .ytSuggestionComponentRemoveLinkClearButton:hover {
                 background-color: rgba(255,255,255,.2);
             }
+
+            .ytSuggestionComponentLeftContainer {
+                max-width:398px;
+            }
         }
 
         ytd-app #masthead-container yt-searchbox .ytSuggestionComponentSuggestion,
@@ -2787,6 +2796,7 @@
             font-weight: 400!important;
             overflow: hidden;
             -webkit-line-clamp: 1;
+            line-clamp: 1;
             display: flex;
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
@@ -3103,8 +3113,9 @@
                 min-width: 250px;
             }
 
-            ytd-watch-flexy .ryd-tooltip-new-design {
-                display: none;
+            ytd-watch-flexy .ryd-tooltip-new-design .ryd-tooltip-bar-container {
+                padding:0;
+                margin-top:-2px;
             }
 
             ytd-watch-flexy #above-the-fold #top-row {
@@ -3116,7 +3127,7 @@
                 width: 100%;
             }
 
-            button.ytd-topbar-menu-button-renderer, {
+            button.ytd-topbar-menu-button-renderer {
                 padding: 0;
             }
 
@@ -3904,6 +3915,13 @@
         textTransform: 'normal-case',
         defaultFontSize: 10,
         videosWatchedOpacity: 0.5,
+        videosHideWatchedGlobalJS: 0,
+        videosHideWatchedHome: true,
+        videosHideWatchedSubscriptions: false,
+        videosHideWatchedChannels: false,
+        videosHideWatchedPlaylist: false,
+        videosHideWatchedVideo: true,
+        videosHideWatchedSearch: false,
         videosPerRow: 0,
         playProgressColor: false,
         videoTabView: true,
@@ -4668,7 +4686,7 @@
             form.appendChild(createSelectField('Transcript Language:', 'label-transcript-language', 'defaultTranscriptLanguage', USER_CONFIG.defaultTranscriptLanguage, labeledLangs(false)));
 
             // font size
-            const defaultFontSizeField = createNumberInputField('Set Font Size (default: 10)', 'defaultFontSize', USER_CONFIG.defaultFontSize);
+            const defaultFontSizeField = createNumberInputField('Font Size (default: 10)', 'defaultFontSize', USER_CONFIG.defaultFontSize);
             form.appendChild(defaultFontSizeField);
 
             // videos per row
@@ -4680,7 +4698,7 @@
             playbackSpeedContainer.className = 'playback-speed-container';
 
             const playbackSpeed = createCheckboxField('Enabled (default: yes)\nkey toggles: A: -0.25x | S: toggle 1x/set speed | D: +0.25x', 'playbackSpeed', USER_CONFIG.playbackSpeed);
-            const playbackSpeedValue = createNumberInputField('Set Playback Speed for VODs\n(defaults to 1x for live videos)', 'playbackSpeedValue', USER_CONFIG.playbackSpeedValue);
+            const playbackSpeedValue = createNumberInputField('Playback Speed for VODs\n(defaults to 1x for live videos)', 'playbackSpeedValue', USER_CONFIG.playbackSpeedValue);
 
             playbackSpeedContainer.appendChild(playbackSpeedValue);
             playbackSpeedContainer.appendChild(playbackSpeed);
@@ -5014,8 +5032,57 @@
             form.appendChild(hideRightSidebarSearch);
 
             // hide watched videos globally
-            const videosHideWatchedGlobal = createCheckboxField('Hide Watched Videos Globally (default: no)', 'videosHideWatchedGlobal', USER_CONFIG.videosHideWatchedGlobal);
+            const hideWatchedGlobal = document.createElement('label');
+            hideWatchedGlobal.textContent = 'Hide Watched Videos';
+            hideWatchedGlobal.classList.add('button-icons', 'features-text');
+            form.appendChild(hideWatchedGlobal);
+
+            // css version
+            const videosHideWatchedGlobal = createCheckboxField('Hide Watched Videos Regardless of Progress Everywhere (default: no)', 'videosHideWatchedGlobal', USER_CONFIG.videosHideWatchedGlobal);
             form.appendChild(videosHideWatchedGlobal);
+
+            // hide watched only on home
+            const videosHideWatched = createCheckboxField('Hide Watched Videos Regardless of Progress Only on the Home Page (default: no)', 'videosHideWatched', USER_CONFIG.videosHideWatched );
+            form.appendChild(videosHideWatched);
+
+            // Spacer-5
+            const spacer5Watched = document.createElement('div');
+            spacer5Watched.classList.add('spacer-5');
+            form.appendChild(spacer5Watched);
+
+            // info for hiding watched videos
+            const descriptionHideWatchedVideos = document.createElement('small');
+            descriptionHideWatchedVideos.textContent = 'Please Pick Either a CSS Version Above or the JavaScript Version Below to Hide Watched Videos.';
+            descriptionHideWatchedVideos.classList.add('CentAnni-info-text');
+            form.appendChild(descriptionHideWatchedVideos);
+
+            // js version
+            const videosHideWatchedGlobalJS = createNumberInputField("Percent Watched to Hide Videos (default: 0 | disabled)", 'videosHideWatchedGlobalJS', USER_CONFIG.videosHideWatchedGlobalJS);
+            form.appendChild(videosHideWatchedGlobalJS);
+
+            // hide percentage watched on home page
+            const videosHideWatchedHome = createCheckboxField('Hide X Percentage Watched Videos on the Home Page (default: yes)', 'videosHideWatchedHome', USER_CONFIG.videosHideWatchedHome);
+            form.appendChild(videosHideWatchedHome);
+
+            // hide percentage watched on sub page
+            const videosHideWatchedSubscriptions = createCheckboxField('Hide X Percentage Watched Videos on the Subscription Page (default: no)', 'videosHideWatchedSubscriptions', USER_CONFIG.videosHideWatchedSubscriptions);
+            form.appendChild(videosHideWatchedSubscriptions);
+
+            // hide percentage watched on channel page
+            const videosHideWatchedChannels = createCheckboxField('Hide X Percentage Watched Videos on Channel Pages (default: no)', 'videosHideWatchedChannels', USER_CONFIG.videosHideWatchedChannels);
+            form.appendChild(videosHideWatchedChannels);
+
+            // hide percentage watched on pl
+            const videosHideWatchedPlaylist = createCheckboxField('Hide X Percentage Watched Videos on Playlists (default: no)', 'videosHideWatchedPlaylist', USER_CONFIG.videosHideWatchedPlaylist);
+            form.appendChild(videosHideWatchedPlaylist);
+
+            // hide percentage watched on videos
+            const videosHideWatchedVideo = createCheckboxField('Hide X Percentage Watched Videos on Video Pages (default: yes)', 'videosHideWatchedVideo', USER_CONFIG.videosHideWatchedVideo);
+            form.appendChild(videosHideWatchedVideo);
+
+            // hide percentage watched on search
+            const videosHideWatchedSearch = createCheckboxField('Hide X Percentage Watched Videos on Search Pages (default: no)', 'videosHideWatchedSearch', USER_CONFIG.videosHideWatchedSearch);
+            form.appendChild(videosHideWatchedSearch);
 
             // left navigation bar
             const leftnavbar = document.createElement('label');
@@ -5232,9 +5299,6 @@
             // disable hover effect
             const homeDisableHover = createCheckboxField('Disable Hover Effect (default: no)', 'homeDisableHover', USER_CONFIG.homeDisableHover );
             form.appendChild(homeDisableHover);
-
-            const videosHideWatched = createCheckboxField('Hide Watched Videos—Only on Home (default: no)', 'videosHideWatched', USER_CONFIG.videosHideWatched );
-            form.appendChild(videosHideWatched);
 
             // opacity picker for old videos
             const videosOldContainer = createSliderInputField('Change Opacity of Videos Uploaded More than 1 Year Ago:', 'videosOldOpacity', USER_CONFIG.videosOldOpacity, '0', '1', '0.1');
@@ -5649,7 +5713,15 @@
             USER_CONFIG.defaultFontSize = parseFloat(subPanelCustomCSS.elements.defaultFontSize.value);
             USER_CONFIG.videosWatchedOpacity = parseFloat(subPanelCustomCSS.elements.videosWatchedOpacity.value);
             USER_CONFIG.videosHideWatchedGlobal = subPanelCustomCSS.elements.videosHideWatchedGlobal.checked;
+            USER_CONFIG.videosHideWatched = subPanelCustomCSS.elements.videosHideWatched.checked;
             USER_CONFIG.videosPerRow = parseInt(subPanelCustomCSS.elements.videosPerRow.value);
+            USER_CONFIG.videosHideWatchedGlobalJS = parseInt(subPanelCustomCSS.elements.videosHideWatchedGlobalJS.value);
+            USER_CONFIG.videosHideWatchedHome = subPanelCustomCSS.elements.videosHideWatchedHome.checked;
+            USER_CONFIG.videosHideWatchedSubscriptions = subPanelCustomCSS.elements.videosHideWatchedSubscriptions.checked;
+            USER_CONFIG.videosHideWatchedChannels = subPanelCustomCSS.elements.videosHideWatchedChannels.checked;
+            USER_CONFIG.videosHideWatchedPlaylist = subPanelCustomCSS.elements.videosHideWatchedPlaylist.checked;
+            USER_CONFIG.videosHideWatchedVideo = subPanelCustomCSS.elements.videosHideWatchedVideo.checked;
+            USER_CONFIG.videosHideWatchedSearch = subPanelCustomCSS.elements.videosHideWatchedSearch.checked;
             USER_CONFIG.autoOpenChapters = subPanelCustomCSS.elements.autoOpenChapters.checked;
             USER_CONFIG.autoOpenTranscript = subPanelCustomCSS.elements.autoOpenTranscript.checked;
             USER_CONFIG.transcriptTimestamps = subPanelCustomCSS.elements.transcriptTimestamps.checked;
@@ -5772,7 +5844,6 @@
         if (subPanelColor) {
             USER_CONFIG.colorCodeVideosEnabled = subPanelColor.elements.colorCodeVideosEnabled.checked;
             USER_CONFIG.homeDisableHover = subPanelColor.elements.homeDisableHover.checked;
-            USER_CONFIG.videosHideWatched = subPanelColor.elements.videosHideWatched.checked;
             USER_CONFIG.videosOldOpacity = parseFloat(subPanelColor.elements.videosOldOpacity.value);
             USER_CONFIG.videosAgeColorPickerNewly = subPanelColor.elements.videosAgeColorPickerNewly.value;
             USER_CONFIG.videosAgeColorPickerRecent = subPanelColor.elements.videosAgeColorPickerRecent.value;
@@ -9039,10 +9110,58 @@
         if (btn) btn.click();
     }
 
+    // function to hide watched videos based on percentage
+    function markWatchedVideos() {
+        markWatchedVideosObserver?.disconnect();
+
+        const homePage = (USER_CONFIG.videosHideWatchedHome && !USER_CONFIG.videosHideWatched) ? document.querySelector('ytd-browse[page-subtype="home"]:not([hidden]) #primary > ytd-rich-grid-renderer > #contents') : false;
+        const subscriptionPage = USER_CONFIG.videosHideWatchedSubscriptions ? document.querySelector('ytd-browse[page-subtype="subscriptions"]:not([hidden]) #primary > ytd-rich-grid-renderer > #contents') : false;
+        const channelPage = USER_CONFIG.videosHideWatchedChannels ? document.querySelector('ytd-browse[page-subtype="channels"]:not([hidden]) #primary #contents') : false;
+        const playlistPage = USER_CONFIG.videosHideWatchedPlaylist ? document.querySelector('ytd-browse[page-subtype="playlist"]:not([hidden]) #primary ytd-playlist-video-list-renderer > #contents') : false;
+        const videoPage = USER_CONFIG.videosHideWatchedVideo ? document.querySelector('ytd-watch-flexy:not([hidden]) #secondary #related #items') : false;
+        const searchPage = USER_CONFIG.videosHideWatchedSearch ? document.querySelector('ytd-search:not([hidden]) ytd-section-list-renderer > #contents') : false;
+        const location = subscriptionPage || homePage || videoPage || channelPage || playlistPage || searchPage;
+        if (!location) return;
+
+        const tags = ['ytd-rich-item-renderer','ytd-video-renderer','ytd-grid-video-renderer','ytd-playlist-video-renderer','ytd-rich-grid-media','yt-lockup-view-model'];
+        const selector = tags.map(t => `${t}:has(.ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment,#progress):not(.CentAnni-marked-watched)`).join(',');
+        const percentage = USER_CONFIG.videosHideWatchedGlobalJS;
+
+        const processVideos = () => {
+            const videoContainers = location.querySelectorAll(selector);
+            videoContainers.forEach(container => {
+                const progressBar = container.querySelector('.ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment,#overlays #progress,#progress');
+                if (progressBar) {
+                    const percent = parseFloat(progressBar.style.width.replace('%','')) || 0;
+                    if (percent >= percentage) container.classList.add('CentAnni-marked-watched');
+                }
+            });
+        };
+        processVideos();
+
+        markWatchedVideosObserver = new MutationObserver(() => {
+            clearTimeout(markWatchedVideosTimeout);
+            markWatchedVideosTimeout = setTimeout(() => {
+                const newVideos = location.querySelectorAll(selector);
+                if (newVideos.length > 0) processVideos();
+            }, 50);
+        });
+        markWatchedVideosObserver.observe(location,{childList:true,subtree:true});
+        document.addEventListener('yt-navigate-start', () => {markWatchedVideosObserver?.disconnect();},{once:true});
+    }
+
     // reset function
     function handleYTNavigation() {
-        if (USER_CONFIG.playbackSpeed) document.addEventListener('yt-player-updated', initialSpeed); // set playback speed
-        if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo); // prevent autoplay
+        if (USER_CONFIG.playbackSpeed) { // set playback speed
+            document.removeEventListener('yt-player-updated',initialSpeed);
+            document.addEventListener('yt-player-updated',initialSpeed);
+        }
+
+        if (USER_CONFIG.preventAutoplay) { // prevent autoplay
+            document.removeEventListener('yt-player-updated',pauseYouTubeVideo);
+            document.addEventListener('yt-player-updated',pauseYouTubeVideo);
+        }
+
         if (USER_CONFIG.videoTabView) {
             document.querySelector('#related.style-scope.ytd-watch-flexy')?.classList.remove('CentAnni-tabView-content-attiva');
             document.querySelector('ytd-playlist-panel-renderer[id="playlist"].style-scope.ytd-watch-flexy')?.classList.remove('CentAnni-tabView-content-active');
@@ -9365,6 +9484,8 @@
     let transcriptPanel = null;
     let hasChatPanel = null;
     let isFullscreen = null;
+    let markWatchedVideosTimeout;
+    let markWatchedVideosObserver;
     let ignoreRateChange = false;
     let lastUserRate = null;
     let speedNotification = false;
@@ -9466,6 +9587,7 @@
             uiLanguage = (docElement.lang || navigator.language || 'en').split('-')[0];
             if (USER_CONFIG.channelReindirizzare && isChannelHome) {channelRedirect();return;}
             if (USER_CONFIG.redirectShorts && isShortPage) {redirectShortsToVideoPage();return;}
+            if (USER_CONFIG.videosHideWatchedGlobalJS !== 0 && !USER_CONFIG.videosHideWatchedGlobal) markWatchedVideos();
 
             if (isVideoPage || isLiveStream || isShortPage) {
                 lastVideoID = videoID;
