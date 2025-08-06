@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.10.4-white.svg" alt="Version: 7.10.4"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.11-white.svg" alt="Version: 7.11"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization.
@@ -146,7 +146,7 @@ Offers various options to customize the layout and functionality of YouTube.
     - Hungarian
     - Romanian
     - Ukrainian
-- Set Font Size
+- Choose Font Size
 - Adjust Number of Videos per Row
 - Set Playback Speed for VODs
   - from 0.25x to 17x with 0.25x increments
@@ -198,6 +198,17 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide "Free with ads" Videos on the Home Page
   - Hide Members Only Featured Videos on the Home Page
   - Hide "Latest posts from . . ." on Search Page
+
+**Hide Watched Videos**
+  - Hide Watched Videos Regardless of Progress Everywhere
+  - Hide Watched Videos Regardless of Progress Only on the Home Page
+  - Pick a Percentage to Hide Videos on
+    - Home Page
+    - Subscription Page
+    - Channel Pages
+    - Playlists
+    - Video Pages
+    - Search Pages
 
 **Modify or Hide UI Elements**
   - Hide "Voice Search" Button
@@ -317,6 +328,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **7.11**: bug fixes and adjustments for the latest YouTube changes. new feature: hide watched videos based on watch percentage on selected pages
 - **7.10.4**: bug fixes and adjustments for the latest YouTube changes
 - **7.10.1**: adjustments for the latest YouTube changes
 - **7.10**: adjustments for the latest YouTube changes
