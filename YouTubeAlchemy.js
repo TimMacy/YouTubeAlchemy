@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.11
+// @version      7.12
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,13 +21,13 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.11 - YouTube Alchemy                    *
+*                    Version: 7.12 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
 ************************************************************************/
 
-(async function() {
+(async function () {
     'use strict';
     // CSS
     const styleSheet = document.createElement('style');
@@ -1266,15 +1266,17 @@
             }
 
             .CentAnni-playback-speed-display {
-                background: rgba(255,255,255,.1);
-                height: 36px;
-                justify-content: center;
-                align-items: center;
-                cursor: default;
-                user-select: none;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
+                background:rgba(255,255,255,.1);
+                height:36px;
+                min-width:32px;
+                padding: 0 8px;
+                justify-content:center;
+                align-items:center;
+                cursor:default;
+                user-select:none;
+                -webkit-user-select:none;
+                -moz-user-select:none;
+                -ms-user-select:none;
             }
 
             .CentAnni-playback-speed-button {
@@ -1299,23 +1301,23 @@
                 background: rgb(72,72,72) !important;
             }
 
-            .CentAnni-playback-speed-display::before,
-            .CentAnni-playback-speed-display::after {
-                content: "";
-                background: rgba(255,255,255,.2);
-                position: initial;
-                right: 0;
-                top: 6px;
-                height: 24px;
-                width: 1px;
+            .CentAnni-playback-speed-button:last-child::before,
+            .CentAnni-playback-speed-button:nth-child(2)::after {
+                content:"";
+                background:rgba(255,255,255,.2);
+                position:initial;
+                right:0;
+                top:6px;
+                height:24px;
+                width:1px;
             }
 
-            .CentAnni-playback-speed-display::before {
-                margin-right: 10px;
+            .CentAnni-playback-speed-button:nth-child(2)::after {
+                transform:translateX(15.5px);
             }
 
-            .CentAnni-playback-speed-display::after {
-                margin-left: 10px;
+            .CentAnni-playback-speed-button:last-child::before {
+                transform:translateX(-14px);
             }
 
             ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata {
@@ -3842,7 +3844,7 @@
         ? Promise.resolve(document.head)
         : new Promise(resolve => {
             document.readyState === 'loading'
-                ? document.addEventListener('DOMContentLoaded', () => resolve(document.head),{once:true})
+                ? document.addEventListener('DOMContentLoaded', () => resolve(document.head), { once: true })
                 : resolve(document.head);
         })
     ).then(head => {
@@ -3864,7 +3866,7 @@
         fileNamingFormat: 'title-channel',
         includeTimestamps: true,
         includeChapterHeaders: true,
-        openSameTab:true,
+        openSameTab: true,
         transcriptTimestamps: false,
         preventBackgroundExecution: true,
         ChatGPTPrompt: `You are an expert at summarizing YouTube video transcripts and are capable of analyzing and understanding a YouTuber's unique tone of voice and style from a transcript alone to mimic their communication style perfectly. Respond only in English while being mindful of American English spelling, vocabulary, and a casual, conversational tone. You prefer to use clauses instead of complete sentences while avoiding self-referential discourse signals like "I explain" or "I will show." Ignore advertisement, promotional, and sponsorship segments. Respond only in chat. Do not open a canvas. In your initial response, do not answer any question from the transcript, do not use the web tool, and avoid using colons outside the two headers. Do not hallucinate. Do not make up factual information. Do not speculate. Before you write your initial answer, take a moment to think about how you have to adopt your own writing to capture the YouTuber's specific word choices and communication style—study the provided transcript and utilize it as a style guide. Write as if you are the YouTuber speaking directly to your audience. Avoid any narrator-like phrases such as "the transcript" or "this video." Summarize the provided YouTube transcript into two distinct sections. The first section is a quick three-line bullet point overview, with each point fewer than 30 words, in a section called "### Key Takeaways:" and highlight important words by **bolding** them—only for this first section maintain a neutral tone. Then write the second section, a one-paragraph summary of at least 100 words while focusing on the main points and key takeaways into a section called "### One-Paragraph Summary:" and **bold** multiple phrases within the paragraph that together form an encapsulated, abridged version, that allows for quick identification and understanding of the core message.`,
@@ -4272,7 +4274,7 @@
         // info for button naming
         const buttonNaming = document.createElement('small');
         buttonNaming.textContent = 'Enter "Label | domain.com" in the URL fields to rename the respective labels.';
-        buttonNaming.classList.add('CentAnni-info-text','button-naming');
+        buttonNaming.classList.add('CentAnni-info-text', 'button-naming');
         form.appendChild(buttonNaming);
 
         // NotebookLM URL
@@ -4350,7 +4352,7 @@
         const resetText = document.createElement('span');
         resetText.textContent = 'Reset Prompt';
         resetText.className = 'reset-prompt-text';
-        resetText.addEventListener('click', function() {
+        resetText.addEventListener('click', function () {
             const textarea = promptContainer.querySelector('textarea[name="ChatGPTPrompt"]');
             if (textarea) textarea.value = DEFAULT_CONFIG.ChatGPTPrompt;
         });
@@ -4415,7 +4417,7 @@
                 await GM.setValue('USER_CONFIG', USER_CONFIG);
                 showNotification('Settings have been reset to default!');
                 window.closeAlchemySettingsModal();
-                setTimeout(() => {location.reload();},900);
+                setTimeout(() => { location.reload(); }, 900);
             } catch (error) {
                 showNotification('Error resetting settings to default!');
                 console.error("YouTubeAlchemy: Error resetting settings to default:", error);
@@ -4476,7 +4478,8 @@
 
             let desiredScrollTop;
 
-            if (contentWillFit) { desiredScrollTop = contentHeightAfterExpansion - modalVisibleHeight;
+            if (contentWillFit) {
+                desiredScrollTop = contentHeightAfterExpansion - modalVisibleHeight;
             } else { desiredScrollTop = buttonsBottom + (endHeight - startHeight) - modalVisibleHeight; }
 
             const newScrollTop = Math.min(desiredScrollTop, maxScrollTop);
@@ -4495,7 +4498,8 @@
                 const currentScrollTop = startScrollTop + scrollDistance * easeProgress;
                 modalContent.scrollTop = currentScrollTop;
 
-                if (progress < 1) { requestAnimationFrame(animateScroll);
+                if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
                 } else { animationTriggered = false; }
             }
 
@@ -4522,7 +4526,7 @@
             document.addEventListener('click', closeModalOverlayClickHandler);
 
             // close modal with ESC key
-            const escKeyListener = function(event) {
+            const escKeyListener = function (event) {
                 if (event.key === 'Escape' && event.type === 'keydown') {
                     const openSubPanel = document.querySelector('.sub-panel-overlay.active');
 
@@ -4537,8 +4541,8 @@
             window.addEventListener('keydown', escKeyListener);
 
             const cleanupModalEventListeners = () => {
-                window.removeEventListener('keydown',escKeyListener);
-                document.removeEventListener('click',closeModalOverlayClickHandler);
+                window.removeEventListener('keydown', escKeyListener);
+                document.removeEventListener('click', closeModalOverlayClickHandler);
             };
 
             window.closeAlchemySettingsModal = () => {
@@ -4551,14 +4555,14 @@
             const cleanupOnNavigation = () => {
                 cleanupModalEventListeners();
             };
-            document.addEventListener('yt-navigate-start', cleanupOnNavigation,{once:true});
+            document.addEventListener('yt-navigate-start', cleanupOnNavigation, { once: true });
         }
 
         // sub-panels
         function showSubPanel(panelContent, panelId) {
             let subPanelOverlay = document.querySelector(`.sub-panel-overlay[data-panel-id="${panelId}"]`);
 
-            if (!subPanelOverlay){
+            if (!subPanelOverlay) {
                 subPanelOverlay = document.createElement('div');
                 subPanelOverlay.classList.add('sub-panel-overlay');
                 subPanelOverlay.setAttribute('data-panel-id', panelId);
@@ -5042,7 +5046,7 @@
             form.appendChild(videosHideWatchedGlobal);
 
             // hide watched only on home
-            const videosHideWatched = createCheckboxField('Hide Watched Videos Regardless of Progress Only on the Home Page (default: no)', 'videosHideWatched', USER_CONFIG.videosHideWatched );
+            const videosHideWatched = createCheckboxField('Hide Watched Videos Regardless of Progress Only on the Home Page (default: no)', 'videosHideWatched', USER_CONFIG.videosHideWatched);
             form.appendChild(videosHideWatched);
 
             // Spacer-5
@@ -5293,11 +5297,11 @@
             form.appendChild(infoColorCodeVideosHome);
 
             // activate color code videos on home
-            const colorCodeVideosEnabled = createCheckboxField('Color Code Videos Based on Age and Status (default: yes)', 'colorCodeVideosEnabled', USER_CONFIG.colorCodeVideosEnabled );
+            const colorCodeVideosEnabled = createCheckboxField('Color Code Videos Based on Age and Status (default: yes)', 'colorCodeVideosEnabled', USER_CONFIG.colorCodeVideosEnabled);
             form.appendChild(colorCodeVideosEnabled);
 
             // disable hover effect
-            const homeDisableHover = createCheckboxField('Disable Hover Effect (default: no)', 'homeDisableHover', USER_CONFIG.homeDisableHover );
+            const homeDisableHover = createCheckboxField('Disable Hover Effect (default: no)', 'homeDisableHover', USER_CONFIG.homeDisableHover);
             form.appendChild(homeDisableHover);
 
             // opacity picker for old videos
@@ -5343,7 +5347,7 @@
             form.appendChild(colorCodeVideosOnSubscriptions);
 
             const infoColorCodeVideosSubscriptions = document.createElement('small');
-            infoColorCodeVideosSubscriptions.textContent = "These settings apply only to the Subscriptions page.\nOn each visit, the newest uploaded video is saved, allowing subsequent visits to highlight and optionally auto-scroll to that video. On first page load, YouTube loads about 84 videos, so highlighting and scrolling apply within this limit.";
+            infoColorCodeVideosSubscriptions.textContent = "These settings apply only to the Subscriptions page.\nOn each visit, the newest uploaded video ID is saved, allowing subsequent visits to highlight and optionally auto-scroll to that video. On first page load, YouTube loads about 84 videos, so highlighting and scrolling apply within this limit.";
             infoColorCodeVideosSubscriptions.classList.add('CentAnni-info-text');
             form.appendChild(infoColorCodeVideosSubscriptions);
 
@@ -5651,10 +5655,10 @@
             }
 
             if (shouldNormalizeUrl) USER_CONFIG[`target${configPrefix}Url`] = normalizeUrl(url);
-            else {delete USER_CONFIG[`target${configPrefix}Label`];delete USER_CONFIG[`target${configPrefix}Url`];}
+            else { delete USER_CONFIG[`target${configPrefix}Label`]; delete USER_CONFIG[`target${configPrefix}Url`]; }
         }
-        validateUrlAndLabel(form,'ChatGPT');
-        validateUrlAndLabel(form,'NotebookLM');
+        validateUrlAndLabel(form, 'ChatGPT');
+        validateUrlAndLabel(form, 'NotebookLM');
 
         // save other settings
         USER_CONFIG.YouTubeTranscriptExporter = form.elements.YouTubeTranscriptExporter.checked;
@@ -5864,7 +5868,7 @@
             // close modal
             window.closeAlchemySettingsModal();
             showNotification('Settings have been updated!');
-            setTimeout(() => {location.reload();},900);
+            setTimeout(() => { location.reload(); }, 900);
         } catch (error) {
             showNotification('Error saving settings!');
             console.error("YouTubeAlchemy: Error saving user configuration:", error);
@@ -5888,10 +5892,10 @@
             URL.revokeObjectURL(url);
 
             showNotification('Settings have been exported.');
-            } catch (error) {
-                showNotification("Error exporting settings!");
-                console.error("YouTubeAlchemy: Error exporting user settings:", error);
-            }
+        } catch (error) {
+            showNotification("Error exporting settings!");
+            console.error("YouTubeAlchemy: Error exporting user settings:", error);
+        }
     }
 
     let fileInputSettings;
@@ -5909,7 +5913,7 @@
                         USER_CONFIG = { ...DEFAULT_CONFIG, ...importedConfig };
                         GM.setValue('USER_CONFIG', USER_CONFIG);
                         showNotification('Settings have been imported.');
-                        setTimeout(() => {location.reload();},900);
+                        setTimeout(() => { location.reload(); }, 900);
                     } else {
                         showNotification('Invalid JSON format!');
                     }
@@ -5922,13 +5926,13 @@
 
         const createOrResetFileInput = () => {
             if (!fileInputSettings) {
-            fileInputSettings = document.createElement('input');
-            fileInputSettings.type = 'file';
-            fileInputSettings.accept = 'application/json';
-            fileInputSettings.id = 'fileInputSettings';
-            fileInputSettings.style.display = 'none';
-            fileInputSettings.addEventListener('change', handleFile);
-            docBody.appendChild(fileInputSettings);
+                fileInputSettings = document.createElement('input');
+                fileInputSettings.type = 'file';
+                fileInputSettings.accept = 'application/json';
+                fileInputSettings.id = 'fileInputSettings';
+                fileInputSettings.style.display = 'none';
+                fileInputSettings.addEventListener('change', handleFile);
+                docBody.appendChild(fileInputSettings);
             } else {
                 fileInputSettings.value = '';
             }
@@ -5969,7 +5973,8 @@
                 button.textContent = text;
                 button.classList.add('button-style');
                 if (id === 'transcript-settings-button') {
-                    button.classList.add('button-style-settings'); }
+                    button.classList.add('button-style-settings');
+                }
 
                 button.addEventListener('click', clickHandler);
 
@@ -6011,7 +6016,7 @@
                     if (callback) callback();
                 }
             });
-            observer.observe(docBody, {childList:true,subtree:true});
+            observer.observe(docBody, { childList: true, subtree: true });
         }
     }
 
@@ -6019,28 +6024,28 @@
         document.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
 
         const buttons = [
-            { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.'},
-            { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.'},
-            { id: 'transcript-copy-button', text: USER_CONFIG.buttonIcons.copy, clickHandler: handleCopyClick, tooltip: 'Copy Transcript to Clipboard', ariaLabel: 'Copy Transcript to Clipboard.'},
-            { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy Transcript with a Prompt and Open ${ChatGPTLabel}`, ariaLabel: `Copy Transcript to Clipboard with a Prompt and Open ${ChatGPTLabel}.`},
-            { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: `Copy Transcript and Open ${NotebookLMLabel}`, ariaLabel: `Copy Transcript to Clipboard and Open ${NotebookLMLabel}.`}
+            { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' },
+            { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.' },
+            { id: 'transcript-copy-button', text: USER_CONFIG.buttonIcons.copy, clickHandler: handleCopyClick, tooltip: 'Copy Transcript to Clipboard', ariaLabel: 'Copy Transcript to Clipboard.' },
+            { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy Transcript with a Prompt and Open ${ChatGPTLabel}`, ariaLabel: `Copy Transcript to Clipboard with a Prompt and Open ${ChatGPTLabel}.` },
+            { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: `Copy Transcript and Open ${NotebookLMLabel}`, ariaLabel: `Copy Transcript to Clipboard and Open ${NotebookLMLabel}.` }
         ];
 
         const buttonsToAdd = buttons.filter(button => button.id === 'transcript-settings-button' || (button.text && button.text.trim() !== ''));
-        buttonLocation(buttonsToAdd,addButton);
+        buttonLocation(buttonsToAdd, addButton);
     }
 
     function addSettingsButton() {
         document.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
-        const buttons = [{id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.'},];
-        buttonLocation(buttons,addSettingsButton);
+        const buttons = [{ id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' },];
+        buttonLocation(buttons, addSettingsButton);
     }
 
     // functions to handle the button clicks
-    function handleChatGPTClick() { handleTranscriptAction(function() { selectAndCopyTranscript('ChatGPT');});}
-    function handleNotebookLMClick() { handleTranscriptAction(function() { selectAndCopyTranscript('NotebookLM');});}
-    function handleCopyClick() { handleTranscriptAction(function() { selectAndCopyTranscript('Copy2Clipboard');});}
-    function handleDownloadClick() { handleTranscriptAction(downloadTranscriptAsText);}
+    function handleChatGPTClick() { handleTranscriptAction(function () { selectAndCopyTranscript('ChatGPT'); }); }
+    function handleNotebookLMClick() { handleTranscriptAction(function () { selectAndCopyTranscript('NotebookLM'); }); }
+    function handleCopyClick() { handleTranscriptAction(function () { selectAndCopyTranscript('Copy2Clipboard'); }); }
+    function handleDownloadClick() { handleTranscriptAction(downloadTranscriptAsText); }
 
     // function to check for a transcript
     function handleTranscriptAction(callback) {
@@ -6137,7 +6142,7 @@
         if (target === 'ChatGPT') {
             finalText = `YouTube Transcript:\n${transcriptText.trimStart()}\n\n\nAdditional Information about the YouTube Video:\nTitle: ${ytTitle}\nChannel: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nTask Instructions:\n${USER_CONFIG.ChatGPTPrompt}`;
             targetUrl = USER_CONFIG.targetChatGPTUrl;
-        } else if (target === 'NotebookLM'||target === 'Copy2Clipboard') {
+        } else if (target === 'NotebookLM' || target === 'Copy2Clipboard') {
             finalText = `Information about the YouTube Video:\nTitle: ${ytTitle}\nChannel: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nYouTube Transcript:\n${transcriptText.trimStart()}`;
             targetUrl = USER_CONFIG.targetNotebookLMUrl;
         }
@@ -6241,12 +6246,12 @@
                     containerObserver.disconnect();
                     const checkFirstItem = () => {
                         const firstItem = segmentsContainer.querySelector('ytd-transcript-segment-renderer');
-                if (firstItem) {
-                    loaded = true;
-                    cleanup(false);
-                    transcriptMenuButton();
-                    if (USER_CONFIG.transcriptTimestamps) enableTimestamps();
-                    if (USER_CONFIG.defaultTranscriptLanguage !== 'auto') setTimeout(() => { setTranscriptLanguage(); }, 250);
+                        if (firstItem) {
+                            loaded = true;
+                            cleanup(false);
+                            transcriptMenuButton();
+                            if (USER_CONFIG.transcriptTimestamps) enableTimestamps();
+                            if (USER_CONFIG.defaultTranscriptLanguage !== 'auto') setTimeout(() => { setTranscriptLanguage(); }, 250);
                             return true;
                         }
                         return false;
@@ -6256,9 +6261,9 @@
                         transcriptObserver = new MutationObserver(() => {
                             if (checkFirstItem()) {
                                 transcriptObserver.disconnect();
-                    resolve();
-                }
-            });
+                                resolve();
+                            }
+                        });
                         transcriptObserver.observe(segmentsContainer, { childList: true });
                     } else {
                         resolve();
@@ -6267,7 +6272,7 @@
                 }
             });
 
-            containerObserver.observe(transcriptPanel, {childList:true,subtree:true});
+            containerObserver.observe(transcriptPanel, { childList: true, subtree: true });
 
             function cleanup(failed) {
                 clearTimeout(fallbackTimer);
@@ -6318,23 +6323,23 @@
     // set audio and subtitle language
     async function setLanguage() {
         docElement.classList.add('CentAnni-style-hide-yt-settings');
-        if (USER_CONFIG.defaultAudioLanguage !== 'auto') await setTrackLanguage('.ytp-menuitem.ytp-audio-menu-item',audioInLanguage);
-        if (USER_CONFIG.defaultSubtitleLanguage !== 'auto') { await setTrackLanguage(() => [...watchFlexyElement.querySelectorAll('.ytp-menuitem')].find(el => el.textContent.toLowerCase().includes(languageMap[new Intl.DisplayNames(['en'],{type:'language'}).of(uiLanguage).toLowerCase()].nativeSubtitles.toLowerCase())),subtitleInLanguage);}
+        if (USER_CONFIG.defaultAudioLanguage !== 'auto') await setTrackLanguage('.ytp-menuitem.ytp-audio-menu-item', audioInLanguage);
+        if (USER_CONFIG.defaultSubtitleLanguage !== 'auto') { await setTrackLanguage(() => [...watchFlexyElement.querySelectorAll('.ytp-menuitem')].find(el => el.textContent.toLowerCase().includes(languageMap[new Intl.DisplayNames(['en'], { type: 'language' }).of(uiLanguage).toLowerCase()].nativeSubtitles.toLowerCase())), subtitleInLanguage); }
         docBody.click();
         watchFlexyElement.querySelector('#movie_player').focus();
         docElement.classList.remove('CentAnni-style-hide-yt-settings');
     }
 
-    async function setTrackLanguage(categorySelector,languagePattern) {
-        const settingsPanel  = '.ytp-settings-menu';
+    async function setTrackLanguage(categorySelector, languagePattern) {
+        const settingsPanel = '.ytp-settings-menu';
         const settingsHeader = '.ytp-panel-header';
         const settingsButton = '.ytp-settings-button';
 
         function waitFor(selectorOrFn, ctx = document, timeout = 7000) {
             return new Promise((resolve, reject) => {
                 const lookup = () => (typeof selectorOrFn === 'function')
-                ? selectorOrFn()
-                : ctx.querySelector(selectorOrFn);
+                    ? selectorOrFn()
+                    : ctx.querySelector(selectorOrFn);
 
                 if (lookup()) { resolve(lookup()); return; }
 
@@ -6347,7 +6352,7 @@
                         resolve(node);
                     }
                 });
-                observer.observe(ctx, {childList:true,subtree:true});
+                observer.observe(ctx, { childList: true, subtree: true });
             });
         }
 
@@ -6360,18 +6365,18 @@
         const headerBtn = panel.querySelector(settingsHeader);
         if (headerBtn) {
             headerBtn.click();
-            await waitFor(categorySelector,panel);
+            await waitFor(categorySelector, panel);
         }
 
         const categoryItem = typeof categorySelector === 'function' ? categorySelector() : panel.querySelector(categorySelector);
-        if (!categoryItem){console.error('YouTubeAlchemy Category not found');return;}
+        if (!categoryItem) { console.error('YouTubeAlchemy Category not found'); return; }
         categoryItem.click();
 
-        await waitFor('.ytp-menuitem',panel);
+        await waitFor('.ytp-menuitem', panel);
 
-        const items  = [...panel.querySelectorAll('.ytp-menuitem')];
-        const target = items.find(el => new RegExp(`^${languagePattern}\\b`,'i').test(el.textContent.trim())) || items.find(el => new RegExp(`^${englishInLanguage}\\b`,'i').test(el.textContent.trim()));
-        if (!target){console.error('YouTubeAlchemy Language not found');return;}
+        const items = [...panel.querySelectorAll('.ytp-menuitem')];
+        const target = items.find(el => new RegExp(`^${languagePattern}\\b`, 'i').test(el.textContent.trim())) || items.find(el => new RegExp(`^${englishInLanguage}\\b`, 'i').test(el.textContent.trim()));
+        if (!target) { console.error('YouTubeAlchemy Language not found'); return; }
         target.click();
 
         if (USER_CONFIG.defaultSubtitleLanguage === 'off') {
@@ -6390,9 +6395,9 @@
         const labelTextEl = transcriptPanel.querySelector('#label-text');
         if (!menuTrigger || !labelTextEl) return;
 
-        const itemsArray  = [...transcriptPanel.querySelectorAll('tp-yt-paper-item')];
-        const target = itemsArray.find(el => new RegExp(`^${transcriptInLanguage}\\b`,'i').test(el.textContent.trim())) || itemsArray.find(el => new RegExp(`^${englishInLanguage}\\b`,'i').test(el.textContent.trim()));
-        if (!target){console.error('YouTubeAlchemy Language not found');return;}
+        const itemsArray = [...transcriptPanel.querySelectorAll('tp-yt-paper-item')];
+        const target = itemsArray.find(el => new RegExp(`^${transcriptInLanguage}\\b`, 'i').test(el.textContent.trim())) || itemsArray.find(el => new RegExp(`^${englishInLanguage}\\b`, 'i').test(el.textContent.trim()));
+        if (!target) { console.error('YouTubeAlchemy Language not found'); return; }
         target.click();
     }
 
@@ -6457,7 +6462,7 @@
 
                 // safari and chrome panel fix
                 if (USER_CONFIG.preventBackgroundExecution) ensurePanelVisibility();
-                else if (currentActiveTab==='tab-4') scrollChapterPanelSafariFix();
+                else if (currentActiveTab === 'tab-4') scrollChapterPanelSafariFix();
                 else safariPanelCheck = true;
 
                 subheaderDiv.removeEventListener('click', handleTabViewTabClick);
@@ -6471,12 +6476,12 @@
             subheaderDiv.removeEventListener('click', handleTabViewTabClick);
             document.removeEventListener('yt-set-theater-mode-enabled', updateTabView);
             tabElements.forEach(tab => { tab.element.removeEventListener('click', tab.handler); });
-            tabElements.forEach(tab => tab.element.classList.remove('active') );
+            tabElements.forEach(tab => tab.element.classList.remove('active'));
             if (hasTranscriptPanel) transcriptPanel.remove();
             if (hasChapterPanel) chapterPanel.remove();
             if (videoInfo) videoInfo.remove();
         };
-        document.addEventListener('yt-navigate-start', cleanupOnNavigation,{once:true});
+        document.addEventListener('yt-navigate-start', cleanupOnNavigation, { once: true });
 
         // click listener for tabView buttons
         function handleTabViewTabClick(event) {
@@ -6525,9 +6530,9 @@
         // open info, chapter, or transcript panel by default
         if (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel) {
             transcriptPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-            if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !transcriptLanguageSet){waitForTranscriptWithoutYTE(() => { setTimeout(()=>{setTranscriptLanguage(); },250);}); transcriptLanguageSet = true;}
-            if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.transcriptTimestamps && !timestampsEnabled) {waitForTranscriptWithoutYTE(enableTimestamps); timestampsEnabled = true;}
-            if (!USER_CONFIG.YouTubeTranscriptExporter && !transcriptMenuButtonMoved) {waitForTranscriptWithoutYTE(transcriptMenuButton); transcriptMenuButtonMoved = true;}
+            if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !transcriptLanguageSet) { waitForTranscriptWithoutYTE(() => { setTimeout(() => { setTranscriptLanguage(); }, 250); }); transcriptLanguageSet = true; }
+            if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.transcriptTimestamps && !timestampsEnabled) { waitForTranscriptWithoutYTE(enableTimestamps); timestampsEnabled = true; }
+            if (!USER_CONFIG.YouTubeTranscriptExporter && !transcriptMenuButtonMoved) { waitForTranscriptWithoutYTE(transcriptMenuButton); transcriptMenuButtonMoved = true; }
         }
         else if (USER_CONFIG.autoOpenChapters && hasChapterPanel) chapterPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
         else if (videoInfo) videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
@@ -6622,7 +6627,7 @@
                 contentSections.forEach(content => content.classList.remove('active'));
 
                 // safari: chapter panel scroll fix
-                if (!USER_CONFIG.preventBackgroundExecution && !isTheaterMode && safariPanelCheck && currentActiveTab==='tab-4') scrollChapterPanelSafariFix();
+                if (!USER_CONFIG.preventBackgroundExecution && !isTheaterMode && safariPanelCheck && currentActiveTab === 'tab-4') scrollChapterPanelSafariFix();
 
                 // show the target content section
                 const targetDiv = contentSections[index];
@@ -6636,7 +6641,7 @@
                     if (tabText === 'Playlist') {
                         playlistPanel.classList.add('CentAnni-tabView-content-active');
                         playlistPanel.classList.remove('CentAnni-tabView-content-hidden');
-                        if (playlistSelectedVideo) setTimeout(() => { playlistSelectedVideo.scrollIntoView({ behavior: 'instant', block: 'center' }); },25);
+                        if (playlistSelectedVideo) setTimeout(() => { playlistSelectedVideo.scrollIntoView({ behavior: 'instant', block: 'center' }); }, 25);
                     } else {
                         playlistPanel.classList.add('CentAnni-tabView-content-hidden');
                         playlistPanel.classList.remove('CentAnni-tabView-content-active');
@@ -6672,9 +6677,9 @@
                 if (hasTranscriptPanel) {
                     if (tabText === 'Transcript') {
                         transcriptPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-                        if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !transcriptLanguageSet){waitForTranscriptWithoutYTE(() => { setTimeout(()=>{setTranscriptLanguage(); },250);}); transcriptLanguageSet = true;}
-                        if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.transcriptTimestamps && !timestampsEnabled) {waitForTranscriptWithoutYTE(enableTimestamps); timestampsEnabled = true;}
-                        if (!USER_CONFIG.YouTubeTranscriptExporter && !transcriptMenuButtonMoved) {waitForTranscriptWithoutYTE(transcriptMenuButton); transcriptMenuButtonMoved = true;}
+                        if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !transcriptLanguageSet) { waitForTranscriptWithoutYTE(() => { setTimeout(() => { setTranscriptLanguage(); }, 250); }); transcriptLanguageSet = true; }
+                        if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.transcriptTimestamps && !timestampsEnabled) { waitForTranscriptWithoutYTE(enableTimestamps); timestampsEnabled = true; }
+                        if (!USER_CONFIG.YouTubeTranscriptExporter && !transcriptMenuButtonMoved) { waitForTranscriptWithoutYTE(transcriptMenuButton); transcriptMenuButtonMoved = true; }
                     } else transcriptPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
                 }
             };
@@ -6713,8 +6718,8 @@
                         }
                     });
 
-                    observer.observe(watchFlexyElement,{childList:true,subtree:true});
-                    const timeout = setTimeout(() => {observer.disconnect();},2500);
+                    observer.observe(watchFlexyElement, { childList: true, subtree: true });
+                    const timeout = setTimeout(() => { observer.disconnect(); }, 2500);
                 }
             }
         }
@@ -6755,7 +6760,7 @@
         function handleFullscreenChangeCT() { updateContainer(); }
         document.removeEventListener('fullscreenchange', handleFullscreenChangeCT);
         document.addEventListener('fullscreenchange', handleFullscreenChangeCT);
-        document.addEventListener('yt-navigate-start', moveChapterTitleBack,{once:true});
+        document.addEventListener('yt-navigate-start', moveChapterTitleBack, { once: true });
         function moveChapterTitleBack() {
             document.removeEventListener('fullscreenchange', handleFullscreenChangeCT);
             if (parent && titleElement)
@@ -6780,23 +6785,23 @@
 
         const cancelStop = () => {
             const doScroll = () => {
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
                 clearTimeout(stopTimeout);
-                stopTimeout = setTimeout(remove,100);
+                stopTimeout = setTimeout(remove, 100);
             };
             frameID = requestAnimationFrame(doScroll);
         };
 
         const remove = () => {
-            window.removeEventListener('scroll',cancelStop);
+            window.removeEventListener('scroll', cancelStop);
             cancelAnimationFrame(frameID);
             clearTimeout(backupTimeout);
         };
 
-        window.addEventListener('scroll',cancelStop,{passive: true});
-        const backupTimeout = setTimeout(remove,1000);
-        stopTimeout = setTimeout(remove,100);
-        window.scrollTo(0,0);
+        window.addEventListener('scroll', cancelStop, { passive: true });
+        const backupTimeout = setTimeout(remove, 1000);
+        stopTimeout = setTimeout(remove, 100);
+        window.scrollTo(0, 0);
     };
 
     // playback speed icon
@@ -6810,12 +6815,12 @@
         svg.setAttribute('width', '24');
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('d', 'M10,8v8l6-4L10,8L10,8z M6.3,5L5.7,4.2C7.2,3,9,2.2,11,2l0.1,1C9.3,3.2,7.7,3.9,6.3,5z M5,6.3L4.2,5.7C3,7.2,2.2,9,2,11 l1,.1C3.2,9.3,3.9,7.7,5,6.3z M5,17.7c-1.1-1.4-1.8-3.1-2-4.8L2,13c0.2,2,1,3.8,2.2,5.4L5,17.7z M11.1,21c-1.8-0.2-3.4-0.9-4.8-2 l-0.6,.8C7.2,21,9,21.8,11,22L11.1,21z M22,12c0-5.2-3.9-9.4-9-10l-0.1,1c4.6,.5,8.1,4.3,8.1,9s-3.5,8.5-8.1,9l0.1,1 C18.2,21.5,22,17.2,22,12z');
-        path.setAttribute('fill','whitesmoke');
+        path.setAttribute('fill', 'whitesmoke');
         svg.appendChild(path);
         div.appendChild(svg);
         return div;
     })();
-    function createPlaybackSpeedIcon() {return playbackSpeedIconTemplate.cloneNode(true);}
+    function createPlaybackSpeedIcon() { return playbackSpeedIconTemplate.cloneNode(true); }
 
     // playback speed functions
     function initialSpeed() {
@@ -6825,7 +6830,7 @@
         if (!video) return;
 
         if (USER_CONFIG.VerifiedArtist) {
-            const isMusicVideoMeta = !!( docElement.querySelector('meta[itemprop="genre"][content="Music"]') && docElement.querySelector('ytd-watch-flexy #below ytd-badge-supported-renderer .badge-style-type-verified-artist'));
+            const isMusicVideoMeta = !!(docElement.querySelector('meta[itemprop="genre"][content="Music"]') && docElement.querySelector('ytd-watch-flexy #below ytd-badge-supported-renderer .badge-style-type-verified-artist'));
             if (isMusicVideoMeta) { video.playbackRate = 1; return; }
         }
 
@@ -6887,7 +6892,7 @@
         // keyboard control handler
         function playbackSpeedKeyListener(event) {
             const key = event.key?.toLowerCase?.();
-            const isValidKey = ['a','s','d','<','>'].includes(key);
+            const isValidKey = ['a', 's', 'd', '<', '>'].includes(key);
 
             const tagName = event.target?.tagName?.toLowerCase?.() || '';
             const isTextInput = ['input', 'textarea', 'select', 'contenteditable'].includes(tagName) || event.target?.isContentEditable;
@@ -6923,7 +6928,7 @@
         function setupEventListeners() {
             // clean up on Navigation
             const cleanupOnNavigation = () => {
-                window.removeEventListener('keydown', playbackSpeedKeyListener,true);
+                window.removeEventListener('keydown', playbackSpeedKeyListener, true);
                 video.removeEventListener('ratechange', updateSpeedDisplay);
                 video.removeEventListener('ratechange', onRateChange);
                 document.removeEventListener('yt-navigate-start', cleanupOnNavigation);
@@ -6932,8 +6937,8 @@
 
             // event listeners
             video.addEventListener('ratechange', onRateChange);
-            window.addEventListener('keydown', playbackSpeedKeyListener,true);
-            document.addEventListener('yt-navigate-start', cleanupOnNavigation,{once:true});
+            window.addEventListener('keydown', playbackSpeedKeyListener, true);
+            document.addEventListener('yt-navigate-start', cleanupOnNavigation, { once: true });
             cleanupPlaybackSpeedListeners = cleanupOnNavigation;
         }
 
@@ -6961,7 +6966,7 @@
         const oldControlDiv = document.getElementById("CentAnni-playback-speed-control");
         const controlDiv = document.createElement("div");
         controlDiv.id = "CentAnni-playback-speed-control";
-        controlDiv.classList.add("CentAnni-playback-control","top-level-buttons","style-scope","ytd-menu-renderer");
+        controlDiv.classList.add("CentAnni-playback-control", "top-level-buttons", "style-scope", "ytd-menu-renderer");
 
         // create the SVG icon
         const iconDiv = createPlaybackSpeedIcon();
@@ -6970,7 +6975,7 @@
         // display the speed
         const speedDisplay = document.createElement("span");
         speedDisplay.id = "CentAnni-speed-display";
-        speedDisplay.classList.add("CentAnni-playback-speed-display","animated-rolling-number-wiz");
+        speedDisplay.classList.add("CentAnni-playback-speed-display", "animated-rolling-number-wiz");
         speedDisplay.textContent = `${video.playbackRate}x`;
 
         // create minus and plus buttons
@@ -7014,7 +7019,7 @@
         notification.classList.add('active');
 
         if (hideNotificationTimeout) clearTimeout(hideNotificationTimeout);
-        hideNotificationTimeout = setTimeout(() => {notification.classList.remove('active');},900);
+        hideNotificationTimeout = setTimeout(() => { notification.classList.remove('active'); }, 900);
     }
 
     // function to display the remaining time based on playback speed minus SponsorBlock segments
@@ -7074,7 +7079,7 @@
         // time update event listener
         if (video) {
             if (!video.paused && !video.ended && video.readyState > 2) remainingTimeMinusSponsorBlockSegments();
-            else video.addEventListener('playing', remainingTimeMinusSponsorBlockSegments,{once:true});
+            else video.addEventListener('playing', remainingTimeMinusSponsorBlockSegments, { once: true });
         }
 
         // calculates and displays remaining time while accounting for SponsorBlock segments
@@ -7235,7 +7240,7 @@
         const video = player?.querySelector('video[src]');
         const chaptersContainer = player && player.querySelector(chapSel);
         const progressBarContainer = player && player.querySelector(prBaSel);
-        if (!player || !video || !chaptersContainer || !progressBarContainer ) return;
+        if (!player || !video || !chaptersContainer || !progressBarContainer) return;
 
         const bar = document.createElement('div');
         bar.id = 'CentAnni-progress-bar-bar';
@@ -7267,8 +7272,8 @@
         let animationFrameId;
         const animateProgress = () => {
             if (video.duration > 0) {
-            const fraction = video.currentTime / video.duration;
-            progress.style.transform = `scaleX(${fraction})`;
+                const fraction = video.currentTime / video.duration;
+                progress.style.transform = `scaleX(${fraction})`;
             }
             animationFrameId = requestAnimationFrame(animateProgress);
         };
@@ -7298,88 +7303,88 @@
         };
 
         const updateLayout = () => {
-                const playerRect = player.getBoundingClientRect();
-                const progressBarRect = progressBarContainer.getBoundingClientRect();
-                const progressBarWidth = progressBarRect.width;
-                if (!progressBarWidth) {
-                    cachedMaskImage = null;
-                    if (!widthObserver) {
-                        widthObserver = new MutationObserver(() => {
-                            if (progressBarContainer.getBoundingClientRect().width) {
-                                cleanupWidthObserver();
-                                updateLayout();
-                            }
+            const playerRect = player.getBoundingClientRect();
+            const progressBarRect = progressBarContainer.getBoundingClientRect();
+            const progressBarWidth = progressBarRect.width;
+            if (!progressBarWidth) {
+                cachedMaskImage = null;
+                if (!widthObserver) {
+                    widthObserver = new MutationObserver(() => {
+                        if (progressBarContainer.getBoundingClientRect().width) {
+                            cleanupWidthObserver();
+                            updateLayout();
+                        }
+                    });
+                    widthObserver.observe(progressBarContainer, { attributes: true, childList: true, subtree: true });
+                    widthObserver.fallback = setTimeout(() => { cleanupWidthObserver(); }, 7000);
+                }
+                return;
+            }
+            if (widthObserver) { cleanupWidthObserver(); }
+
+
+            bar.style.position = 'absolute';
+            bar.style.left = (progressBarRect.left - playerRect.left) + 'px';
+            bar.style.width = progressBarWidth + 'px';
+
+            if (chaptersContainer) {
+                const chapters = chaptersContainer.querySelectorAll('.ytp-chapter-hover-container');
+
+                // Only regenerate SVG if chapters changed
+                if (chapters.length !== previousChaptersLength || !cachedMaskImage) {
+                    previousChaptersLength = chapters.length;
+
+                    if (chapters.length) {
+                        const svgWidth = 100;
+                        const svgHeight = 10;
+                        let rects = '';
+
+                        chapters.forEach((chapter) => {
+                            const rect = chapter.getBoundingClientRect();
+                            const startPx = rect.left - progressBarRect.left;
+                            const chapterWidth = rect.width;
+                            const startPerc = (startPx / progressBarWidth) * svgWidth;
+                            const widthPerc = (chapterWidth / progressBarWidth) * svgWidth;
+
+                            if (Number.isFinite(startPerc) && Number.isFinite(widthPerc))
+                                rects += `<rect x="${startPerc}" y="0" width="${widthPerc}" height="${svgHeight}" fill="white"/>`;
                         });
-                        widthObserver.observe(progressBarContainer, {attributes:true,childList:true,subtree:true});
-                        widthObserver.fallback = setTimeout(() => {cleanupWidthObserver();},7000);
-                    }
-                    return;
+
+                        const svg = `<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`;
+                        const encoded = encodeURIComponent(svg).replace(/%20/g, ' ');
+                        cachedMaskImage = `url("data:image/svg+xml;utf8,${encoded}")`;
+                    } else cachedMaskImage = null;
                 }
-                if (widthObserver) {cleanupWidthObserver();}
 
-
-                bar.style.position = 'absolute';
-                bar.style.left = (progressBarRect.left - playerRect.left) + 'px';
-                bar.style.width = progressBarWidth + 'px';
-
-                if (chaptersContainer) {
-                    const chapters = chaptersContainer.querySelectorAll('.ytp-chapter-hover-container');
-
-                    // Only regenerate SVG if chapters changed
-                    if (chapters.length !== previousChaptersLength || !cachedMaskImage) {
-                        previousChaptersLength = chapters.length;
-
-                        if (chapters.length) {
-                            const svgWidth = 100;
-                            const svgHeight = 10;
-                            let rects = '';
-
-                            chapters.forEach((chapter) => {
-                                const rect = chapter.getBoundingClientRect();
-                                const startPx = rect.left - progressBarRect.left;
-                                const chapterWidth = rect.width;
-                                const startPerc = (startPx / progressBarWidth) * svgWidth;
-                                const widthPerc = (chapterWidth / progressBarWidth) * svgWidth;
-
-                                if (Number.isFinite(startPerc) && Number.isFinite(widthPerc))
-                                    rects += `<rect x="${startPerc}" y="0" width="${widthPerc}" height="${svgHeight}" fill="white"/>`;
-                            });
-
-                            const svg = `<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`;
-                            const encoded = encodeURIComponent(svg).replace(/%20/g, ' ');
-                            cachedMaskImage = `url("data:image/svg+xml;utf8,${encoded}")`;
-                        } else cachedMaskImage = null;
-                    }
-
-                    // Apply mask based on current state
-                    if (cachedMaskImage) {
-                        bar.style.maskImage = cachedMaskImage;
-                        bar.style.webkitMaskImage = cachedMaskImage;
-                        bar.style.maskRepeat = 'no-repeat';
-                        bar.style.webkitMaskRepeat = 'no-repeat';
-                        bar.style.maskSize = '100% 100%';
-                        bar.style.webkitMaskSize = '100% 100%';
-                    } else {
-                        bar.style.maskImage = '';
-                        bar.style.webkitMaskImage = '';
-                        bar.style.maskRepeat = '';
-                        bar.style.webkitMaskRepeat = '';
-                        bar.style.maskSize = '';
-                        bar.style.webkitMaskSize = '';
-                    }
+                // Apply mask based on current state
+                if (cachedMaskImage) {
+                    bar.style.maskImage = cachedMaskImage;
+                    bar.style.webkitMaskImage = cachedMaskImage;
+                    bar.style.maskRepeat = 'no-repeat';
+                    bar.style.webkitMaskRepeat = 'no-repeat';
+                    bar.style.maskSize = '100% 100%';
+                    bar.style.webkitMaskSize = '100% 100%';
+                } else {
+                    bar.style.maskImage = '';
+                    bar.style.webkitMaskImage = '';
+                    bar.style.maskRepeat = '';
+                    bar.style.webkitMaskRepeat = '';
+                    bar.style.maskSize = '';
+                    bar.style.webkitMaskSize = '';
                 }
+            }
         };
 
         // handle animation frame
-        const handlePlay = () => { if (!animationFrameId) animateProgress();};
-        const handlePause = () => { if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null;}};
+        const handlePlay = () => { if (!animationFrameId) animateProgress(); };
+        const handlePause = () => { if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; } };
         video.addEventListener('play', handlePlay);
         video.addEventListener('pause', handlePause);
         if (!video.paused) handlePlay();
 
         // handle layout changes
-        const handleTheaterMode = () => {updateLayout();};
-        const handleResize = () => {updateLayout();};
+        const handleTheaterMode = () => { updateLayout(); };
+        const handleResize = () => { updateLayout(); };
         document.addEventListener('yt-set-theater-mode-enabled', handleTheaterMode);
         window.addEventListener('resize', handleResize);
 
@@ -7396,7 +7401,7 @@
             cleanupWidthObserver();
         };
 
-        document.addEventListener('yt-navigate-start', cleanupProgressBar,{once:true});
+        document.addEventListener('yt-navigate-start', cleanupProgressBar, { once: true });
 
         // initialization
         renderBuffer();
@@ -7497,7 +7502,7 @@
 
         // get available qualities for the video and check for UHD
         const availableQualities = player.getAvailableQualityLevels();
-        if ( availableQualities.includes('hd1440') || availableQualities.includes('hd2160') || availableQualities.includes('highres') ) qualityUHD = true;
+        if (availableQualities.includes('hd1440') || availableQualities.includes('hd2160') || availableQualities.includes('highres')) qualityUHD = true;
 
         // helper function to reduce repetition and store picked quality
         const setQuality = (quality) => {
@@ -7512,8 +7517,8 @@
             setQuality(availableQualities[0]);
         } else if (desiredQuality === "lowest") {
             const lowest = availableQualities[availableQualities.length - 1] === "auto"
-            ? availableQualities[availableQualities.length - 2]
-            : availableQualities[availableQualities.length - 1];
+                ? availableQualities[availableQualities.length - 2]
+                : availableQualities[availableQualities.length - 1];
             setQuality(lowest);
         } else {
             const desiredIndex = qualityLevels.indexOf(desiredQuality);
@@ -7575,8 +7580,8 @@
             function waitFor(selectorOrFn, ctx = document, timeout = 7000) {
                 return new Promise((resolve, reject) => {
                     const lookup = () => (typeof selectorOrFn === 'function')
-                    ? selectorOrFn()
-                    : ctx.querySelector(selectorOrFn);
+                        ? selectorOrFn()
+                        : ctx.querySelector(selectorOrFn);
 
                     if (lookup()) { resolve(lookup()); return; }
 
@@ -7589,7 +7594,7 @@
                             resolve(node);
                         }
                     });
-                    observer.observe(ctx, {childList:true,subtree:true});
+                    observer.observe(ctx, { childList: true, subtree: true });
                 });
             }
 
@@ -7702,44 +7707,44 @@
 
         // process each individual video
         function processVideo(videoContainer) {
-                videoContainer.setAttribute('data-centanni-video-processed','true');
-                const metaBlock = videoContainer.querySelector('yt-content-metadata-view-model,#metadata-line');
-                if (!metaBlock) return;
+            videoContainer.setAttribute('data-centanni-video-processed', 'true');
+            const metaBlock = videoContainer.querySelector('yt-content-metadata-view-model,#metadata-line');
+            if (!metaBlock) return;
 
-                const textContent = metaBlock.textContent.trim().toLowerCase();
-                for (const [className, ages] of Object.entries(categories)) {
-                    if (ages.some(age => textContent.includes(age))) {
-                        videoContainer.classList.add(`CentAnni-style-${className}-video`);
-                        break;
+            const textContent = metaBlock.textContent.trim().toLowerCase();
+            for (const [className, ages] of Object.entries(categories)) {
+                if (ages.some(age => textContent.includes(age))) {
+                    videoContainer.classList.add(`CentAnni-style-${className}-video`);
+                    break;
+                }
+            }
+
+            const spanElements = videoContainer.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text:not(:has(a)):last-of-type,span.ytd-video-meta-block');
+            spanElements.forEach(el => {
+                const text = el.textContent;
+                const textLower = text.toLowerCase();
+
+                if (categories.upcoming.some(word => textLower.includes(word)) && !videoContainer.classList.contains('CentAnni-style-upcoming-video'))
+                    videoContainer.classList.add('CentAnni-style-upcoming-video');
+
+                if (categories.streamed.some(word => textLower.includes(word))) {
+                    const nextEl = el.nextElementSibling;
+                    if (!nextEl || !nextEl.classList.contains('CentAnni-style-streamed-span')) {
+                        const cloneSpan = document.createElement('span');
+                        cloneSpan.className = 'yt-content-metadata-view-model-wiz__metadata-text CentAnni-style-streamed-span';
+
+                        const streamedWordSpan = document.createElement('span');
+                        streamedWordSpan.className = 'CentAnni-style-streamed-text';
+                        const matched = categories.streamed.find(word => textLower.includes(word)) || categories.streamed[0];
+                        streamedWordSpan.textContent = matched.charAt(0).toUpperCase() + matched.slice(1) + ' ';
+                        const restText = document.createTextNode(text.replace(streamedRegex, '').trimStart());
+
+                        cloneSpan.appendChild(streamedWordSpan);
+                        cloneSpan.appendChild(restText);
+                        const metadataRow = el.closest('yt-content-metadata-view-model > .yt-content-metadata-view-model-wiz__metadata-row:nth-of-type(2)') || metaBlock;
+                        metadataRow?.insertBefore(cloneSpan, el.nextSibling);
                     }
                 }
-
-                const spanElements = videoContainer.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text:not(:has(a)):last-of-type,span.ytd-video-meta-block');
-                spanElements.forEach(el => {
-                    const text = el.textContent;
-                    const textLower = text.toLowerCase();
-
-                    if (categories.upcoming.some(word => textLower.includes(word)) && !videoContainer.classList.contains('CentAnni-style-upcoming-video'))
-                        videoContainer.classList.add('CentAnni-style-upcoming-video');
-
-                    if (categories.streamed.some(word => textLower.includes(word))) {
-                        const nextEl = el.nextElementSibling;
-                        if (!nextEl || !nextEl.classList.contains('CentAnni-style-streamed-span')) {
-                            const cloneSpan = document.createElement('span');
-                            cloneSpan.className = 'yt-content-metadata-view-model-wiz__metadata-text CentAnni-style-streamed-span';
-
-                            const streamedWordSpan = document.createElement('span');
-                            streamedWordSpan.className = 'CentAnni-style-streamed-text';
-                            const matched = categories.streamed.find(word => textLower.includes(word)) || categories.streamed[0];
-                            streamedWordSpan.textContent = matched.charAt(0).toUpperCase() + matched.slice(1) + ' ';
-                            const restText = document.createTextNode(text.replace(streamedRegex,'').trimStart());
-
-                            cloneSpan.appendChild(streamedWordSpan);
-                            cloneSpan.appendChild(restText);
-                            const metadataRow = el.closest('yt-content-metadata-view-model > .yt-content-metadata-view-model-wiz__metadata-row:nth-of-type(2)') || metaBlock;
-                            metadataRow?.insertBefore(cloneSpan, el.nextSibling);
-                        }
-                    }
             });
         }
 
@@ -7765,16 +7770,16 @@
                 }
             });
 
-            const config = {childList:true};
-            if (targetContainer === homePage) config.subtree=true;
-            homePageObserver.observe(targetContainer,config);
+            const config = { childList: true };
+            if (targetContainer === homePage) config.subtree = true;
+            homePageObserver.observe(targetContainer, config);
             if (callback) callback();
         }
 
         // handle navigation
         const serviceRequestSentHandler = () => { runProcessVideos(); };
         const navigateFinishHandler = () => { setTimeout(cleanupAndReprocessVideos, 300); };
-        const pageTypeChangedHandler = function() {
+        const pageTypeChangedHandler = function () {
             document.removeEventListener('yt-service-request-sent', serviceRequestSentHandler);
             document.removeEventListener('yt-service-request-completed', checkProcessedVideos);
             document.removeEventListener('yt-navigate-finish', navigateFinishHandler);
@@ -7782,7 +7787,7 @@
             if (homePageObserver) { homePageObserver.disconnect(); homePageObserver = null; }
         };
 
-        runProcessVideos(function() {
+        runProcessVideos(function () {
             document.addEventListener('yt-service-request-sent', serviceRequestSentHandler);
             document.addEventListener('yt-service-request-completed', checkProcessedVideos);
             document.addEventListener('yt-navigate-finish', navigateFinishHandler);
@@ -7793,7 +7798,7 @@
 
         // ensure correct categories
         function checkProcessedVideos() {
-            const processedVideos = [...homePage.querySelectorAll('ytd-rich-item-renderer')].slice(0,13);
+            const processedVideos = [...homePage.querySelectorAll('ytd-rich-item-renderer')].slice(0, 13);
             if (processedVideos.length === 0) return;
 
             let allCorrect = true;
@@ -7840,14 +7845,14 @@
 
             videosToReprocess.forEach(video => {
                 video.classList.remove(
-                'CentAnni-style-live-video',
-                'CentAnni-style-upcoming-video',
-                'CentAnni-style-newly-video',
-                'CentAnni-style-recent-video',
-                'CentAnni-style-lately-video',
-                'CentAnni-style-latterly-video',
-                'CentAnni-style-old-video',
-                'CentAnni-style-streamed-video'
+                    'CentAnni-style-live-video',
+                    'CentAnni-style-upcoming-video',
+                    'CentAnni-style-newly-video',
+                    'CentAnni-style-recent-video',
+                    'CentAnni-style-lately-video',
+                    'CentAnni-style-latterly-video',
+                    'CentAnni-style-old-video',
+                    'CentAnni-style-streamed-video'
                 );
 
                 video.querySelectorAll('.CentAnni-style-streamed-span').forEach(el => el.remove());
@@ -7878,7 +7883,7 @@
             });
             allButtonObserver.observe(allButton, {
                 attributes: true,
-                attributeFilter: ['class','selected']
+                attributeFilter: ['class', 'selected']
             });
         }
 
@@ -7954,7 +7959,7 @@
 
     // add trashcan icon to playlists to easily remove videos
     function playlistRemovalButtons() {
-        const sortButton = document.querySelector('#filter, #filter-menu');
+        const sortButton = document.querySelector('#filter:not(:empty),#filter-menu');
         if (!sortButton) return;
 
         const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"]:not([hidden])');
@@ -7985,7 +7990,7 @@
             playlistObserver.disconnect();
             cleanupRemoveButtons();
         };
-        document.addEventListener('yt-navigate-start', navigateHandler,{once:true});
+        document.addEventListener('yt-navigate-start', navigateHandler, { once: true });
 
         function attachRemoveButtonToVideo(videoEl) {
             if (videoEl.hasAttribute('data-centanni-playlist-video-processed')) return;
@@ -8061,7 +8066,7 @@
                         resolve();
                     })
                     .catch(() => {
-                        try { docBody.click(); } catch (e) {}
+                        try { docBody.click(); } catch (e) { }
                         if (popupContainer) popupContainer.classList.remove('CentAnni-style-playlist-hide-menu');
                         resolve();
                     });
@@ -8083,8 +8088,8 @@
                     }
                 });
 
-                timer = setTimeout(() => {observer.disconnect();resolve();},timeout);
-                observer.observe(playlistPage, {childList:true,subtree:true});
+                timer = setTimeout(() => { observer.disconnect(); resolve(); }, timeout);
+                observer.observe(playlistPage, { childList: true, subtree: true });
             });
         }
     }
@@ -8095,14 +8100,14 @@
         const wrapper = document.querySelector('#page-manager ytd-browse ytd-playlist-header-renderer .metadata-buttons-wrapper');
         const menuRenderer = wrapper?.querySelector('ytd-menu-renderer');
         const menuButton = menuRenderer?.querySelector('button');
-        if (!playlistPage||!wrapper||!menuRenderer||!menuButton||document.querySelector('#CentAnni-remove-watched-btn')) return;
+        if (!playlistPage || !wrapper || !menuRenderer || !menuButton || document.querySelector('#CentAnni-remove-watched-btn')) return;
 
-        const waitForElement = (selector,callback,timeout=700) => {
+        const waitForElement = (selector, callback, timeout = 700) => {
             const observer = new MutationObserver(() => {
                 const element = document.querySelector(selector);
-                if (element) {observer.disconnect();callback(element);}
+                if (element) { observer.disconnect(); callback(element); }
             });
-            observer.observe(document,{childList:true,subtree:true});
+            observer.observe(document, { childList: true, subtree: true });
             const cnl = () => {
                 observer.disconnect();
                 docElement.classList.remove('CentAnni-playlist-remove-btn-hide-menus');
@@ -8115,12 +8120,12 @@
             docElement.classList.add('CentAnni-playlist-remove-btn-hide-menus');
             menuButton.click();
 
-            waitForElement('ytd-popup-container > tp-yt-iron-dropdown a:has(svg path[d^="M12"])',(removeLink) => {
+            waitForElement('ytd-popup-container > tp-yt-iron-dropdown a:has(svg path[d^="M12"])', (removeLink) => {
                 removeLink.click();
-                waitForElement('#confirm-button > yt-button-shape > button',(confirmButton) => {
+                waitForElement('#confirm-button > yt-button-shape > button', (confirmButton) => {
                     confirmButton.click();
-                    showNotification('Removed from Watch Later Playlist.');
-                    if (USER_CONFIG.playlistLinks) setTimeout(() => {location.reload();},900);
+                    showNotification('Videos Removed from Watch Later Playlist.');
+                    if (USER_CONFIG.playlistLinks) setTimeout(() => { location.reload(); }, 900);
                     docElement.classList.remove('CentAnni-playlist-remove-btn-hide-menus');
                 });
             });
@@ -8130,13 +8135,13 @@
         btn.id = 'CentAnni-remove-watched-btn';
         btn.className = 'yt-spec-button-shape-next yt-spec-button-shape-next--tonal yt-spec-button-shape-next--overlay yt-spec-button-shape-next--size-m';
         btn.textContent = 'Remove Watched Videos';
-        btn.addEventListener('click',handleBtnClick);
+        btn.addEventListener('click', handleBtnClick);
         wrapper.insertBefore(btn, menuRenderer.nextSibling);
 
         document.addEventListener('yt-navigate-start', () => {
             docElement.classList.remove('CentAnni-playlist-remove-btn-hide-menus');
             playlistPage.querySelector('#CentAnni-remove-watched-btn')?.remove();
-        },{once:true});
+        }, { once: true });
     }
 
     // open playlist videos without being in a playlist
@@ -8144,7 +8149,7 @@
         let processedAllListVideos = false;
 
         function chromeClickHandler(event) {
-            if(!event.ctrlKey && !event.metaKey && !event.shiftKey) {
+            if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
                 event.stopImmediatePropagation();
                 event.preventDefault();
                 const cleanUrl = event.currentTarget.getAttribute('CentAnni-chrome-pl-url');
@@ -8173,7 +8178,7 @@
                             if (videoID) {
                                 const cleanUrl = `https://www.youtube.com/watch?v=${videoID}`;
                                 link.href = cleanUrl;
-                                if (!USER_CONFIG.preventBackgroundExecution) link.setAttribute('onclick',`if(!event.ctrlKey&&!event.metaKey&&!event.shiftKey){event.stopPropagation();event.preventDefault();window.location='${cleanUrl}';return!1}return!0`);
+                                if (!USER_CONFIG.preventBackgroundExecution) link.setAttribute('onclick', `if(!event.ctrlKey&&!event.metaKey&&!event.shiftKey){event.stopPropagation();event.preventDefault();window.location='${cleanUrl}';return!1}return!0`);
                                 else {
                                     link.setAttribute('CentAnni-chrome-pl-url', cleanUrl);
                                     link.addEventListener('click', chromeClickHandler, true);
@@ -8203,7 +8208,7 @@
 
         // handle navigation
         const serviceRequestSentHandler = () => { runProcessVideos(3, 1000, 1000, null); };
-        const pageTypeChangedHandler = function() {
+        const pageTypeChangedHandler = function () {
             document.removeEventListener('yt-service-request-sent', serviceRequestSentHandler);
             document.removeEventListener('yt-navigate-start', pageTypeChangedHandler);
             document.querySelectorAll('[data-centanni-list-video-processed]').forEach(el => {
@@ -8217,11 +8222,11 @@
             }
         };
 
-        runProcessVideos(6, 250, 500, function() {
+        runProcessVideos(6, 250, 500, function () {
             document.addEventListener('yt-service-request-sent', serviceRequestSentHandler);
         });
 
-        document.addEventListener('yt-navigate-start', pageTypeChangedHandler,{once:true});
+        document.addEventListener('yt-navigate-start', pageTypeChangedHandler, { once: true });
     }
 
     // RSS feed button on channel page
@@ -8504,7 +8509,7 @@
             let timeoutNextBtnObs = setTimeout(() => {
                 if (nextBtnObserver) nextBtnObserver.disconnect();
                 cb();
-            },7000);
+            }, 7000);
 
             nextBtnObserver = new MutationObserver(() => {
                 if (nextButton.href && nextButton.dataset.preview && nextButton.dataset.tooltipText) {
@@ -8513,7 +8518,7 @@
                     cb();
                 }
             });
-            nextBtnObserver.observe(nextButton,{attributes:true});
+            nextBtnObserver.observe(nextButton, { attributes: true });
         }
 
         function nextButtonClickHandler(e) {
@@ -8602,7 +8607,7 @@
             }
         });
 
-        const config = {childList:true,subtree:true,};
+        const config = { childList: true, subtree: true, };
         observer.observe(watchFlexyElement, config);
     }
 
@@ -8670,11 +8675,11 @@
     // YouTube Shorts loop control and auto-scroll
     const SVG_NS = "http://www.w3.org/2000/svg";
     const createLoopIcon = () => {
-        const svg = document.createElementNS(SVG_NS,"svg");
-        const path = document.createElementNS(SVG_NS,"path");
+        const svg = document.createElementNS(SVG_NS, "svg");
+        const path = document.createElementNS(SVG_NS, "path");
 
-        [["width","24"],["height","24"],["viewBox","0 0 24 24"],["fill","currentColor"],].forEach(([k,v]) => svg.setAttribute(k,v));
-        path.setAttribute("d","M7 7H17V10L21 6L17 2V5H5V11H7V7ZM17 17H7V14L3 18L7 22V19H19V13H17V17Z");
+        [["width", "24"], ["height", "24"], ["viewBox", "0 0 24 24"], ["fill", "currentColor"],].forEach(([k, v]) => svg.setAttribute(k, v));
+        path.setAttribute("d", "M7 7H17V10L21 6L17 2V5H5V11H7V7ZM17 17H7V14L3 18L7 22V19H19V13H17V17Z");
 
         svg.appendChild(path);
         return svg;
@@ -8692,8 +8697,8 @@
         let endedListener = null;
 
         const cleanup = () => {
-            if (animationID) {cancelAnimationFrame(animationID);animationID = null;}
-            if (endedListener) {shortVideo.removeEventListener('ended',endedListener);endedListener = null;}
+            if (animationID) { cancelAnimationFrame(animationID); animationID = null; }
+            if (endedListener) { shortVideo.removeEventListener('ended', endedListener); endedListener = null; }
         };
 
         const cleanupOnNavigation = () => {
@@ -8717,12 +8722,12 @@
                     removeLoop();
                     break;
                 case 'loop':
-                    shortVideo.setAttribute('loop','');
+                    shortVideo.setAttribute('loop', '');
                     break;
                 case 'auto':
                     removeLoop();
                     endedListener = nextShort;
-                    shortVideo.addEventListener('ended',endedListener);
+                    shortVideo.addEventListener('ended', endedListener);
                     break;
             }
         };
@@ -8738,14 +8743,14 @@
                 activeBtn.classList.add('active');
             };
 
-            const createButton = (label,mode,title) => {
+            const createButton = (label, mode, title) => {
                 const btn = document.createElement('button');
                 btn.className = `${BTN_CLASS} CentAnni-yt-shorts-control-btn`;
                 btn.title = title;
                 typeof label === 'string' ? (btn.textContent = label) : btn.appendChild(label);
                 if (savedMode === mode) btn.classList.add('active');
                 btn.addEventListener('click', () => {
-                    localStorage.setItem(savedShortsSetting,mode);
+                    localStorage.setItem(savedShortsSetting, mode);
                     setActive(btn);
                     applyMode(mode);
                 });
@@ -8753,16 +8758,16 @@
             };
 
             container.append(
-                createButton('off','off','Disable Looping'),
-                createButton(createLoopIcon(),'loop','Loop Short'),
-                createButton('auto','auto','Auto Scroll')
+                createButton('off', 'off', 'Disable Looping'),
+                createButton(createLoopIcon(), 'loop', 'Loop Short'),
+                createButton('auto', 'auto', 'Auto Scroll')
             );
 
-                const existingContainer = document.getElementById('CentAnni-yt-shorts-controls');
-                existingContainer ? existingContainer.replaceWith(container) : menuBtn.appendChild(container);
+            const existingContainer = document.getElementById('CentAnni-yt-shorts-controls');
+            existingContainer ? existingContainer.replaceWith(container) : menuBtn.appendChild(container);
         };
 
-        document.addEventListener('yt-navigate-start',cleanupOnNavigation,{once:true});
+        document.addEventListener('yt-navigate-start', cleanupOnNavigation, { once: true });
         createButtons();
         applyMode(savedMode);
     }
@@ -8777,7 +8782,7 @@
         const lang = commentMatrix[uiLanguage];
 
         // handler for YouTube service requests in tab view mode
-        const serviceRequestHandler = function(event) {
+        const serviceRequestHandler = function (event) {
             const commentsTab = watchFlexyElement.querySelector('.CentAnni-tabView-tab[data-tab="tab-2"]');
             if (commentsTab && commentsTab.classList.contains('active')) {
                 document.removeEventListener('yt-service-request-sent', serviceRequestHandler);
@@ -8810,7 +8815,7 @@
                     monitorHeader(commentsSection);
                 }
             });
-            commentObserver.observe(watchFlexyElement, {childList:true,subtree:true});
+            commentObserver.observe(watchFlexyElement, { childList: true, subtree: true });
             commentFallback = setTimeout(() => {
                 if (commentObserver) {
                     commentObserver.disconnect();
@@ -8823,16 +8828,16 @@
             if (commentsSection.textContent.includes(lang.off)) return;
 
             headerObserver = new MutationObserver(() => {
-                        const commentsHeader = commentsSection.querySelector('ytd-comments-header-renderer');
-                        const sortButton = commentsSection.querySelector('yt-sort-filter-sub-menu-renderer');
+                const commentsHeader = commentsSection.querySelector('ytd-comments-header-renderer');
+                const sortButton = commentsSection.querySelector('yt-sort-filter-sub-menu-renderer');
 
-                        if (commentsHeader && sortButton) {
+                if (commentsHeader && sortButton) {
                     headerObserver.disconnect();
                     headerObserver = null;
-                            changeSortingToNewestFirst();
+                    changeSortingToNewestFirst();
                 }
             });
-            headerObserver.observe(commentsSection, {childList:true,subtree:true});
+            headerObserver.observe(commentsSection, { childList: true, subtree: true });
         }
 
         // set newest first
@@ -8846,14 +8851,14 @@
                 if (!listBox) return;
 
                 const options = listBox.querySelectorAll('a.yt-simple-endpoint');
-                    let newestFirstOption = null;
-                    for (const option of options) {
+                let newestFirstOption = null;
+                for (const option of options) {
                     if (option.textContent.toLowerCase().includes(lang.newest.toLowerCase())) {
-                            newestFirstOption = option;
-                            break;
-                        }
+                        newestFirstOption = option;
+                        break;
                     }
-                    if (!newestFirstOption && options.length > 1) newestFirstOption = options[1];
+                }
+                if (!newestFirstOption && options.length > 1) newestFirstOption = options[1];
 
                 if (newestFirstOption) {
                     newestFirstOption.click();
@@ -8863,7 +8868,7 @@
                     dropdownFallback = null;
                 }
             });
-            dropdownObserver.observe(document.documentElement, {childList:true,subtree:true});
+            dropdownObserver.observe(document.documentElement, { childList: true, subtree: true });
 
             dropdownFallback = setTimeout(() => {
                 if (dropdownObserver) {
@@ -8875,13 +8880,13 @@
 
         const cleanupOnNavigation = () => {
             document.removeEventListener('yt-service-request-sent', serviceRequestHandler);
-            if (commentObserver) {commentObserver.disconnect();commentObserver = null;}
-            if (headerObserver) {headerObserver.disconnect();headerObserver = null;}
-            if (dropdownObserver) {dropdownObserver.disconnect();dropdownObserver = null;}
-            if (commentFallback) {clearTimeout(commentFallback);commentFallback = null;}
-            if (dropdownFallback) {clearTimeout(dropdownFallback);dropdownFallback = null;}
+            if (commentObserver) { commentObserver.disconnect(); commentObserver = null; }
+            if (headerObserver) { headerObserver.disconnect(); headerObserver = null; }
+            if (dropdownObserver) { dropdownObserver.disconnect(); dropdownObserver = null; }
+            if (commentFallback) { clearTimeout(commentFallback); commentFallback = null; }
+            if (dropdownFallback) { clearTimeout(dropdownFallback); dropdownFallback = null; }
         };
-        document.addEventListener('yt-navigate-start', cleanupOnNavigation,{once:true});
+        document.addEventListener('yt-navigate-start', cleanupOnNavigation, { once: true });
 
         setupCommentSortingDetection();
     }
@@ -8897,10 +8902,10 @@
         const unitPositions = getUnitPositions(uiLanguage);
 
         const ready = () => {
-            const  spinner   = panel.querySelector('#spinner'),
-                   header    = panel.querySelector('#header'),
-                   container = panel.querySelector('#container'),
-                   content   = panel.querySelectorAll(`${sectionSelector} ytd-notification-renderer`);
+            const spinner = panel.querySelector('#spinner'),
+                header = panel.querySelector('#header'),
+                container = panel.querySelector('#container'),
+                content = panel.querySelectorAll(`${sectionSelector} ytd-notification-renderer`);
             return content.length >= 4 && spinner && header && container && spinner.hasAttribute('hidden') && !header.hasAttribute('hidden') && !container.hasAttribute('hidden');
         };
 
@@ -8911,36 +8916,36 @@
                 reject();
             }, 7000);
 
-            const check = () => { if (ready()) {observer.disconnect(); clearTimeout(timeout); resolve();}};
+            const check = () => { if (ready()) { observer.disconnect(); clearTimeout(timeout); resolve(); } };
             const observer = new MutationObserver(check);
-            observer.observe(panel, {subtree: true, attributes: true, attributeFilter: ['hidden']});
+            observer.observe(panel, { subtree: true, attributes: true, attributeFilter: ['hidden'] });
             check();
         });
 
         whenReady.then(() => {
             const sections = panel.querySelectorAll(sectionSelector);
-            if (sections.length < 2) {chronoNotificationRunning = false; return;}
+            if (sections.length < 2) { chronoNotificationRunning = false; return; }
 
-            const importantSection   = sections[0];
-            const moreSection        = sections[1];
+            const importantSection = sections[0];
+            const moreSection = sections[1];
             const moreItemsContainer = moreSection.querySelector('#items');
-            const currentMoreItems   = [...moreItemsContainer.children];
-            const importantItems     = [...importantSection.querySelectorAll('ytd-notification-renderer')];
+            const currentMoreItems = [...moreItemsContainer.children];
+            const importantItems = [...importantSection.querySelectorAll('ytd-notification-renderer')];
             if (importantItems.length === 0) { chronoNotificationRunning = false; return; }
 
             function getSortKey(el) {
                 const time = el.querySelector('.metadata yt-formatted-string:last-child');
                 if (!time) return { position: -1, numericValue: Infinity };
 
-                const rawTime      = time.textContent.trim();
-                const digitMatch   = rawTime.match(/(\d+)/);
-                const numericToken = digitMatch?digitMatch[1]:'0';
+                const rawTime = time.textContent.trim();
+                const digitMatch = rawTime.match(/(\d+)/);
+                const numericToken = digitMatch ? digitMatch[1] : '0';
                 const numericValue = Number(numericToken);
-                const unitString   = rawTime .replace(numericToken,'').replace(/\s+/g,' ').trim().toLowerCase();
-                const unitIndex    = sequence.findIndex(u => unitString.includes(u));
-                const position     = unitIndex === -1 ? -1 : unitPositions[sequence[unitIndex]];
+                const unitString = rawTime.replace(numericToken, '').replace(/\s+/g, ' ').trim().toLowerCase();
+                const unitIndex = sequence.findIndex(u => unitString.includes(u));
+                const position = unitIndex === -1 ? -1 : unitPositions[sequence[unitIndex]];
 
-                return { position,numericValue };
+                return { position, numericValue };
             }
 
             importantItems.forEach(item => {
@@ -8981,7 +8986,7 @@
     }
 
     function musicVideoCheck() {
-        isMusicVideo = !!( docElement.querySelector('meta[itemprop="genre"][content="Music"]') && docElement.querySelector('ytd-watch-flexy #below ytd-badge-supported-renderer .badge-style-type-verified-artist'));
+        isMusicVideo = !!(docElement.querySelector('meta[itemprop="genre"][content="Music"]') && docElement.querySelector('ytd-watch-flexy #below ytd-badge-supported-renderer .badge-style-type-verified-artist'));
     }
 
     // live stream check
@@ -9058,7 +9063,7 @@
             }
         });
 
-        transcriptObserver.observe(transcriptPanel, {childList:true,subtree:true});
+        transcriptObserver.observe(transcriptPanel, { childList: true, subtree: true });
 
         const transcriptFallbackTimer = setTimeout(() => {
             if (!transcriptLoadedWithoutYTE) transcriptObserver.disconnect();
@@ -9084,12 +9089,12 @@
 
     // localize languages
     function languageCheck() {
-        const targetLanguageAudio = USER_CONFIG.defaultAudioLanguage.replace('auto','english');
-        const targetLanguageSubtitles = USER_CONFIG.defaultSubtitleLanguage.replace('auto','english');
-        const targetLanguageTranscript = USER_CONFIG.defaultTranscriptLanguage.replace('auto','english');
-        const namesInUI = new Intl.DisplayNames([uiLanguage],{type:'language'});
+        const targetLanguageAudio = USER_CONFIG.defaultAudioLanguage.replace('auto', 'english');
+        const targetLanguageSubtitles = USER_CONFIG.defaultSubtitleLanguage.replace('auto', 'english');
+        const targetLanguageTranscript = USER_CONFIG.defaultTranscriptLanguage.replace('auto', 'english');
+        const namesInUI = new Intl.DisplayNames([uiLanguage], { type: 'language' });
         if (USER_CONFIG.defaultAudioLanguage !== 'auto') audioInLanguage = namesInUI.of(languageMap[targetLanguageAudio].code).toLowerCase();
-        if (USER_CONFIG.defaultSubtitleLanguage !== 'auto') subtitleInLanguage = targetLanguageSubtitles === 'off' ? languageMap[new Intl.DisplayNames(['en'],{type:'language'}).of(uiLanguage).toLowerCase()].offNative.toLowerCase() : namesInUI.of(languageMap[targetLanguageSubtitles].code).toLowerCase();
+        if (USER_CONFIG.defaultSubtitleLanguage !== 'auto') subtitleInLanguage = targetLanguageSubtitles === 'off' ? languageMap[new Intl.DisplayNames(['en'], { type: 'language' }).of(uiLanguage).toLowerCase()].offNative.toLowerCase() : namesInUI.of(languageMap[targetLanguageSubtitles].code).toLowerCase();
         if (USER_CONFIG.defaultTranscriptLanguage !== 'auto') transcriptInLanguage = namesInUI.of(languageMap[targetLanguageTranscript].code).toLowerCase();
         if (USER_CONFIG.defaultTranscriptLanguage !== 'auto' || USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto') englishInLanguage = namesInUI.of(languageMap.english.code).toLowerCase();
     }
@@ -9123,7 +9128,7 @@
         const location = subscriptionPage || homePage || videoPage || channelPage || playlistPage || searchPage;
         if (!location) return;
 
-        const tags = ['ytd-rich-item-renderer','ytd-video-renderer','ytd-grid-video-renderer','ytd-playlist-video-renderer','ytd-rich-grid-media','yt-lockup-view-model'];
+        const tags = ['ytd-rich-item-renderer', 'yt-lockup-view-model', 'ytd-grid-video-renderer', 'ytd-playlist-video-renderer', 'ytd-video-renderer'];
         const selector = tags.map(t => `${t}:has(.ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment,#progress):not(.CentAnni-marked-watched)`).join(',');
         const percentage = USER_CONFIG.videosHideWatchedGlobalJS;
 
@@ -9132,7 +9137,7 @@
             videoContainers.forEach(container => {
                 const progressBar = container.querySelector('.ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment,#overlays #progress,#progress');
                 if (progressBar) {
-                    const percent = parseFloat(progressBar.style.width.replace('%','')) || 0;
+                    const percent = parseFloat(progressBar.style.width.replace('%', '')) || 0;
                     if (percent >= percentage) container.classList.add('CentAnni-marked-watched');
                 }
             });
@@ -9146,20 +9151,20 @@
                 if (newVideos.length > 0) processVideos();
             }, 50);
         });
-        markWatchedVideosObserver.observe(location,{childList:true,subtree:true});
-        document.addEventListener('yt-navigate-start', () => {markWatchedVideosObserver?.disconnect();},{once:true});
+        markWatchedVideosObserver.observe(location, { childList: true, subtree: true });
+        document.addEventListener('yt-navigate-start', () => { markWatchedVideosObserver?.disconnect(); }, { once: true });
     }
 
     // reset function
     function handleYTNavigation() {
         if (USER_CONFIG.playbackSpeed) { // set playback speed
-            document.removeEventListener('yt-player-updated',initialSpeed);
-            document.addEventListener('yt-player-updated',initialSpeed);
+            document.removeEventListener('yt-player-updated', initialSpeed);
+            document.addEventListener('yt-player-updated', initialSpeed);
         }
 
         if (USER_CONFIG.preventAutoplay) { // prevent autoplay
-            document.removeEventListener('yt-player-updated',pauseYouTubeVideo);
-            document.addEventListener('yt-player-updated',pauseYouTubeVideo);
+            document.removeEventListener('yt-player-updated', pauseYouTubeVideo);
+            document.addEventListener('yt-player-updated', pauseYouTubeVideo);
         }
 
         if (USER_CONFIG.videoTabView) {
@@ -9180,9 +9185,9 @@
     // Chrome CSP compliance for setVideoQuality
     function runSetVideoQuality() {
         const code = `(${setVideoQuality})(${JSON.stringify(USER_CONFIG.defaultQuality)},${JSON.stringify(USER_CONFIG.defaultQualityPremium)});`;
-        const policy = window.trustedTypes && trustedTypes.createPolicy('CentAnniAlchemy',{createScript: s => s });
+        const policy = window.trustedTypes && trustedTypes.createPolicy('CentAnniAlchemy', { createScript: s => s });
         const script = document.createElement('script');
-        script.text = policy?policy.createScript(code):code;
+        script.text = policy ? policy.createScript(code) : code;
         document.documentElement.appendChild(script);
         script.remove();
     }
@@ -9193,30 +9198,30 @@
 
     // settings panel: audio, subtitles, and transcript languages
     const flag = {
-        auto:       '🌐',
-        english:    '🇺🇸',
-        spanish:    '🇪🇸',
-        hindi:      '🇮🇳',
+        auto: '🌐',
+        english: '🇺🇸',
+        spanish: '🇪🇸',
+        hindi: '🇮🇳',
         portuguese: '🇵🇹',
-        german:     '🇩🇪',
-        french:     '🇫🇷',
-        italian:    '🇮🇹',
-        dutch:      '🇳🇱',
-        polish:     '🇵🇱',
-        hebrew:     '🇮🇱',
-        japanese:   '🇯🇵',
-        korean:     '🇰🇷',
-        chinese:    '🇨🇳',
+        german: '🇩🇪',
+        french: '🇫🇷',
+        italian: '🇮🇹',
+        dutch: '🇳🇱',
+        polish: '🇵🇱',
+        hebrew: '🇮🇱',
+        japanese: '🇯🇵',
+        korean: '🇰🇷',
+        chinese: '🇨🇳',
         indonesian: '🇮🇩',
-        swedish:    '🇸🇪',
-        norwegian:  '🇳🇴',
-        danish:     '🇩🇰',
-        finnish:    '🇫🇮',
-        czech:      '🇨🇿',
-        greek:      '🇬🇷',
-        hungarian:  '🇭🇺',
-        romanian:   '🇷🇴',
-        ukrainian:  '🇺🇦'
+        swedish: '🇸🇪',
+        norwegian: '🇳🇴',
+        danish: '🇩🇰',
+        finnish: '🇫🇮',
+        czech: '🇨🇿',
+        greek: '🇬🇷',
+        hungarian: '🇭🇺',
+        romanian: '🇷🇴',
+        ukrainian: '🇺🇦'
     };
 
     const langs = {
@@ -9258,63 +9263,63 @@
 
     // set audio and subtitles
     const languageMap = new Proxy(Object.create(null), {
-        get(cache,key) {
+        get(cache, key) {
             if (cache[key]) return cache[key];
             const langCode = {
-                english    : 'en',
-                spanish    : 'es',
-                hindi      : 'hi',
-                portuguese : 'pt',
-                german     : 'de',
-                french     : 'fr',
-                italian    : 'it',
-                dutch      : 'nl',
-                polish     : 'pl',
-                hebrew     : 'he',
-                japanese   : 'ja',
-                korean     : 'ko',
-                chinese    : 'zh',
-                indonesian : 'id',
-                swedish    : 'sv',
-                norwegian  : 'no',
-                danish     : 'da',
-                finnish    : 'fi',
-                czech      : 'cs',
-                greek      : 'el',
-                hungarian  : 'hu',
-                romanian   : 'ro',
-                ukrainian  : 'uk'
+                english: 'en',
+                spanish: 'es',
+                hindi: 'hi',
+                portuguese: 'pt',
+                german: 'de',
+                french: 'fr',
+                italian: 'it',
+                dutch: 'nl',
+                polish: 'pl',
+                hebrew: 'he',
+                japanese: 'ja',
+                korean: 'ko',
+                chinese: 'zh',
+                indonesian: 'id',
+                swedish: 'sv',
+                norwegian: 'no',
+                danish: 'da',
+                finnish: 'fi',
+                czech: 'cs',
+                greek: 'el',
+                hungarian: 'hu',
+                romanian: 'ro',
+                ukrainian: 'uk'
             }[key];
             if (!langCode) return;
 
             const fixedLabels = {
-                en: { subs: 'Subtitles',     off: 'Off'            },
-                es: { subs: 'Subtítulos',    off: 'Desactivados'   },
-                hi: { subs: 'उपशीर्षक',        off: 'बंद'              },
-                pt: { subs: 'Legendas',      off: 'Desativar'      },
-                de: { subs: 'Untertitel',    off: 'Aus'            },
-                fr: { subs: 'Sous-titres',   off: 'Désactivés'     },
-                it: { subs: 'Sottotitoli',   off: 'Disattivati'    },
-                nl: { subs: 'Ondertiteling', off: 'Uit'            },
-                pl: { subs: 'Napisy',        off: 'Wyłączone'      },
-                he: { subs: 'כתוביות',       off: 'כבוי'           },
-                ja: { subs: '字幕',           off: 'オフ'           },
-                ko: { subs: '자막',           off: '끄기'            },
-                zh: { subs: '字幕',           off: '关闭'           },
-                id: { subs: 'Subtitle',      off: 'Nonaktifkan'    },
-                sv: { subs: 'Undertexter',   off: 'Av'             },
-                no: { subs: 'Undertekster',  off: 'Av'             },
-                da: { subs: 'Undertekster',  off: 'Fra'            },
-                fi: { subs: 'Tekstitys',     off: 'Pois'           },
-                cs: { subs: 'Titulky',       off: 'Vypnuto'        },
-                el: { subs: 'Υπότιτλοι',     off: 'Απενεργοποίηση' },
-                hu: { subs: 'Feliratok',     off: 'Ki'             },
-                ro: { subs: 'Subtitrări',    off: 'Dezactivat'     },
-                uk: { subs: 'Субтитри',      off: 'Вимкнено'       }
+                en: { subs: 'Subtitles', off: 'Off' },
+                es: { subs: 'Subtítulos', off: 'Desactivados' },
+                hi: { subs: 'उपशीर्षक', off: 'बंद' },
+                pt: { subs: 'Legendas', off: 'Desativar' },
+                de: { subs: 'Untertitel', off: 'Aus' },
+                fr: { subs: 'Sous-titres', off: 'Désactivés' },
+                it: { subs: 'Sottotitoli', off: 'Disattivati' },
+                nl: { subs: 'Ondertiteling', off: 'Uit' },
+                pl: { subs: 'Napisy', off: 'Wyłączone' },
+                he: { subs: 'כתוביות', off: 'כבוי' },
+                ja: { subs: '字幕', off: 'オフ' },
+                ko: { subs: '자막', off: '끄기' },
+                zh: { subs: '字幕', off: '关闭' },
+                id: { subs: 'Subtitle', off: 'Nonaktifkan' },
+                sv: { subs: 'Undertexter', off: 'Av' },
+                no: { subs: 'Undertekster', off: 'Av' },
+                da: { subs: 'Undertekster', off: 'Fra' },
+                fi: { subs: 'Tekstitys', off: 'Pois' },
+                cs: { subs: 'Titulky', off: 'Vypnuto' },
+                el: { subs: 'Υπότιτλοι', off: 'Απενεργοποίηση' },
+                hu: { subs: 'Feliratok', off: 'Ki' },
+                ro: { subs: 'Subtitrări', off: 'Dezactivat' },
+                uk: { subs: 'Субтитри', off: 'Вимкнено' }
             };
 
-            const dnUI = new Intl.DisplayNames([uiLanguage],{type:'language'});
-            const dnNative = new Intl.DisplayNames([langCode],{type:'language'});
+            const dnUI = new Intl.DisplayNames([uiLanguage], { type: 'language' });
+            const dnNative = new Intl.DisplayNames([langCode], { type: 'language' });
             const uiLabels = fixedLabels[uiLanguage];
 
             return cache[key] = {
@@ -9329,13 +9334,13 @@
 
     // sort notifications chronologically
     const unitMatrix = new Proxy({}, {
-        get(cache,locale) {
+        get(cache, locale) {
             if (cache[locale]) return cache[locale];
 
-            const rtf   = new Intl.RelativeTimeFormat(locale,{ numeric: 'always' });
-            const pr    = new Intl.PluralRules(locale);
-            const base  = ['second','minute','hour','day','week','month','year'];
-            const arr   = [];
+            const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'always' });
+            const pr = new Intl.PluralRules(locale);
+            const base = ['second', 'minute', 'hour', 'day', 'week', 'month', 'year'];
+            const arr = [];
 
             function localWord(unit, num) {
                 const fullString = rtf.format(-num, unit);
@@ -9355,57 +9360,57 @@
     // home color code videos
     const categoriesMatrix = new Proxy({
         en: {
-            live:     ['watching'],
-            upcoming: ['waiting','scheduled for'],
-            newly:    ['1 day ago','hours ago','hour ago','minutes ago','minute ago','seconds ago','second ago'],
-            lately:   ['1 month ago','weeks ago','14 days ago','13 days ago','12 days ago','11 days ago','10 days ago','9 days ago','8 days ago'],
-            recent:   ['1 week ago','7 days ago','6 days ago','5 days ago','4 days ago','3 days ago','2 days ago'],
-            latterly: ['12 months ago','11 months ago','10 months ago','9 months ago','8 months ago','7 months ago','6 months ago','5 months ago','4 months ago','3 months ago','2 months ago'],
-            old:      ['years ago','1 year ago'],
+            live: ['watching'],
+            upcoming: ['waiting', 'scheduled for'],
+            newly: ['1 day ago', 'hours ago', 'hour ago', 'minutes ago', 'minute ago', 'seconds ago', 'second ago'],
+            lately: ['1 month ago', 'weeks ago', '14 days ago', '13 days ago', '12 days ago', '11 days ago', '10 days ago', '9 days ago', '8 days ago'],
+            recent: ['1 week ago', '7 days ago', '6 days ago', '5 days ago', '4 days ago', '3 days ago', '2 days ago'],
+            latterly: ['12 months ago', '11 months ago', '10 months ago', '9 months ago', '8 months ago', '7 months ago', '6 months ago', '5 months ago', '4 months ago', '3 months ago', '2 months ago'],
+            old: ['years ago', '1 year ago'],
             streamed: ['streamed']
         }
     }, {
         get(cache, locale) {
             if (cache[locale]) return cache[locale];
 
-            const rtf      = new Intl.RelativeTimeFormat(locale, { numeric: 'always' });
-            const format   = (num, unit) => rtf.format(-num,unit).replace(/^-?\d+\s*/, '').toLowerCase();
-            const uniq     = arr => [...new Set(arr)];
-            const newly    = uniq([[1,'day'],[2,'hour'],[1,'hour'],[2,'minute'],[1,'minute'],[2,'second'],[1,'second']].map(([n,u]) => format(n,u)));
-            const lately   = uniq([[1,'month'],[2,'week'],[14,'day'],[13,'day'],[12,'day'],[11,'day'],[10,'day'],[9,'day'],[8,'day']].map(([n,u])=> format(n,u)));
-            const recent   = uniq([[1,'week'],[7,'day'],[6,'day'],[5,'day'],[4,'day'],[3,'day'],[2,'day']].map(([n,u]) => format(n,u)));
-            const latterly = uniq([12,11,10,9,8,7,6,5,4,3,2].map(n => format(n,'month')));
-            const old      = uniq([[2,'year'],[1,'year']].map(([n,u]) => format(n,u)));
+            const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'always' });
+            const format = (num, unit) => rtf.format(-num, unit).replace(/^-?\d+\s*/, '').toLowerCase();
+            const uniq = arr => [...new Set(arr)];
+            const newly = uniq([[1, 'day'], [2, 'hour'], [1, 'hour'], [2, 'minute'], [1, 'minute'], [2, 'second'], [1, 'second']].map(([n, u]) => format(n, u)));
+            const lately = uniq([[1, 'month'], [2, 'week'], [14, 'day'], [13, 'day'], [12, 'day'], [11, 'day'], [10, 'day'], [9, 'day'], [8, 'day']].map(([n, u]) => format(n, u)));
+            const recent = uniq([[1, 'week'], [7, 'day'], [6, 'day'], [5, 'day'], [4, 'day'], [3, 'day'], [2, 'day']].map(([n, u]) => format(n, u)));
+            const latterly = uniq([12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2].map(n => format(n, 'month')));
+            const old = uniq([[2, 'year'], [1, 'year']].map(([n, u]) => format(n, u)));
 
             const keywordTable = {
-                en: { live: ['watching','live'],                     upcoming: ['waiting','scheduled for'],        streamed: ['streamed']                 },
-                es: { live: ['espectadores','en vivo'],              upcoming: ['esperando','programado para'],    streamed: ['emitido','transmitido']    },
-                hi: { live: ['देख रहे','लाइव'],                         upcoming: ['प्रतीक्षा','निर्धारित'],                   streamed: ['स्ट्रीम किया']                  },
-                pt: { live: ['assistindo','ao vivo'],                upcoming: ['aguardando','programado para'],   streamed: ['transmitido']              },
-                de: { live: ['zuschauer','live'],                    upcoming: ['wartend','geplant für'],          streamed: ['gestreamt']                },
-                fr: { live: ['spectateurs','en direct'],             upcoming: ['en attente','programmé pour'],    streamed: ['diffusé']                  },
-                it: { live: ['guardando','in diretta','spettatori'], upcoming: ['in attesa','programmato per'],    streamed: ['trasmesso','in streaming'] },
-                nl: { live: ['kijkers','live'],                      upcoming: ['wachten','gepland voor'],         streamed: ['gestreamd']                },
-                pl: { live: ['oglądających','na żywo'],              upcoming: ['oczekujących','zaplanowano na'],  streamed: ['transmitowano']            },
-                he: { live: ['צופים','בשידור חי'],                   upcoming: ['ממתין','מתוזמן ל'],               streamed: ['שודר']                     },
-                ja: { live: ['人が視聴中','ライブ'],                    upcoming: ['待機中','予定'],                   streamed: ['配信済み']                   },
-                ko: { live: ['명 시청 중','라이브'],                     upcoming: ['명 대기 중','예정됨'],                streamed: ['스트리밍됨']                  },
-                zh: { live: ['人正在观看','直播'],                     upcoming: ['正在等待','计划于'],                 streamed: ['已直播']                    },
-                id: { live: ['orang menonton','langsung'],           upcoming: ['menunggu','dijadwalkan pada'],    streamed: ['streaming']                },
-                sv: { live: ['tittare','direkt'],                    upcoming: ['väntar','planerat till'],         streamed: ['sändes']                   },
-                no: { live: ['seere','direkte'],                     upcoming: ['venter','planlagt til'],          streamed: ['strømmet']                 },
-                da: { live: ['seere','direkte'],                     upcoming: ['venter','planlagt til'],          streamed: ['streamet']                 },
-                fi: { live: ['katsojaa','suorana'],                  upcoming: ['odottaa','suunniteltu'],          streamed: ['striimattu']               },
-                cs: { live: ['sledujících','živě'],                  upcoming: ['čeká','naplánováno na'],          streamed: ['vysíláno']                 },
-                el: { live: ['θεατές','ζωντανά'],                    upcoming: ['αναμονή','προγραμματισμένο για'], streamed: ['μεταδόθηκε']               },
-                hu: { live: ['néző','élő'],                          upcoming: ['várakozik','ütemezve'],           streamed: ['streamelve']               },
-                ro: { live: ['spectatori','în direct'],              upcoming: ['așteaptă','programat pentru'],    streamed: ['transmis']                 },
-                uk: { live: ['глядачів','наживо'],                   upcoming: ['очікує','заплановано на'],        streamed: ['трансляція']               }
+                en: { live: ['watching', 'live'], upcoming: ['waiting', 'scheduled for'], streamed: ['streamed'] },
+                es: { live: ['espectadores', 'en vivo'], upcoming: ['esperando', 'programado para'], streamed: ['emitido', 'transmitido'] },
+                hi: { live: ['देख रहे', 'लाइव'], upcoming: ['प्रतीक्षा', 'निर्धारित'], streamed: ['स्ट्रीम किया'] },
+                pt: { live: ['assistindo', 'ao vivo'], upcoming: ['aguardando', 'programado para'], streamed: ['transmitido'] },
+                de: { live: ['zuschauer', 'live'], upcoming: ['wartend', 'geplant für'], streamed: ['gestreamt'] },
+                fr: { live: ['spectateurs', 'en direct'], upcoming: ['en attente', 'programmé pour'], streamed: ['diffusé'] },
+                it: { live: ['guardando', 'in diretta', 'spettatori'], upcoming: ['in attesa', 'programmato per'], streamed: ['trasmesso', 'in streaming'] },
+                nl: { live: ['kijkers', 'live'], upcoming: ['wachten', 'gepland voor'], streamed: ['gestreamd'] },
+                pl: { live: ['oglądających', 'na żywo'], upcoming: ['oczekujących', 'zaplanowano na'], streamed: ['transmitowano'] },
+                he: { live: ['צופים', 'בשידור חי'], upcoming: ['ממתין', 'מתוזמן ל'], streamed: ['שודר'] },
+                ja: { live: ['人が視聴中', 'ライブ'], upcoming: ['待機中', '予定'], streamed: ['配信済み'] },
+                ko: { live: ['명 시청 중', '라이브'], upcoming: ['명 대기 중', '예정됨'], streamed: ['스트리밍됨'] },
+                zh: { live: ['人正在观看', '直播'], upcoming: ['正在等待', '计划于'], streamed: ['已直播'] },
+                id: { live: ['orang menonton', 'langsung'], upcoming: ['menunggu', 'dijadwalkan pada'], streamed: ['streaming'] },
+                sv: { live: ['tittare', 'direkt'], upcoming: ['väntar', 'planerat till'], streamed: ['sändes'] },
+                no: { live: ['seere', 'direkte'], upcoming: ['venter', 'planlagt til'], streamed: ['strømmet'] },
+                da: { live: ['seere', 'direkte'], upcoming: ['venter', 'planlagt til'], streamed: ['streamet'] },
+                fi: { live: ['katsojaa', 'suorana'], upcoming: ['odottaa', 'suunniteltu'], streamed: ['striimattu'] },
+                cs: { live: ['sledujících', 'živě'], upcoming: ['čeká', 'naplánováno na'], streamed: ['vysíláno'] },
+                el: { live: ['θεατές', 'ζωντανά'], upcoming: ['αναμονή', 'προγραμματισμένο για'], streamed: ['μεταδόθηκε'] },
+                hu: { live: ['néző', 'élő'], upcoming: ['várakozik', 'ütemezve'], streamed: ['streamelve'] },
+                ro: { live: ['spectatori', 'în direct'], upcoming: ['așteaptă', 'programat pentru'], streamed: ['transmis'] },
+                uk: { live: ['глядачів', 'наживо'], upcoming: ['очікує', 'заплановано на'], streamed: ['трансляція'] }
             };
             const keywordMatrix = keywordTable[locale] || keywordTable.en;
 
             return cache[locale] = {
-                live:     keywordMatrix.live,
+                live: keywordMatrix.live,
                 upcoming: keywordMatrix.upcoming,
                 streamed: keywordMatrix.streamed,
                 newly,
@@ -9419,29 +9424,29 @@
 
     // sort comments newest first
     const commentMatrix = {
-        en: { off: 'Comments are turned off',             newest: 'newest' },
-        es: { off: 'Los comentarios están desactivados',  newest: 'más recientes' },
-        hi: { off: 'टिप्पणियाँ बंद हैं',                         newest: 'नवीनतम' },
-        pt: { off: 'Os comentários estão desativados',    newest: 'mais recentes' },
-        de: { off: 'Kommentare sind deaktiviert',         newest: 'neueste' },
-        fr: { off: 'Les commentaires sont désactivés',    newest: 'les plus récents' },
-        it: { off: 'I commenti sono disattivati',         newest: 'più recenti' },
-        nl: { off: 'Reacties zijn uitgeschakeld',         newest: 'nieuwste' },
-        pl: { off: 'Komentarze są wyłączone',             newest: 'najnowsze' },
-        he: { off: 'התגובות מושבתות',                    newest: 'החדשות ביותר' },
-        ja: { off: 'コメントはオフになっています',           newest: '新しい順' },
-        ko: { off: '댓글이 사용 중지되었습니다',               newest: '최신' },
-        zh: { off: '评论已关闭',                           newest: '最新' },
-        id: { off: 'Komentar dimatikan',                  newest: 'terbaru' },
-        sv: { off: 'Kommentarer är inaktiverade',         newest: 'nyaste' },
-        no: { off: 'Kommentarer er slått av',             newest: 'nyeste' },
-        da: { off: 'Kommentarer er slået fra',            newest: 'nyeste' },
-        fi: { off: 'Kommentit ovat pois päältä',          newest: 'uusimmat' },
-        cs: { off: 'Komentáře jsou vypnuty',              newest: 'nejnovější' },
-        el: { off: 'Τα σχόλια είναι απενεργοποιημένα',   newest: 'νεότερα' },
+        en: { off: 'Comments are turned off', newest: 'newest' },
+        es: { off: 'Los comentarios están desactivados', newest: 'más recientes' },
+        hi: { off: 'टिप्पणियाँ बंद हैं', newest: 'नवीनतम' },
+        pt: { off: 'Os comentários estão desativados', newest: 'mais recentes' },
+        de: { off: 'Kommentare sind deaktiviert', newest: 'neueste' },
+        fr: { off: 'Les commentaires sont désactivés', newest: 'les plus récents' },
+        it: { off: 'I commenti sono disattivati', newest: 'più recenti' },
+        nl: { off: 'Reacties zijn uitgeschakeld', newest: 'nieuwste' },
+        pl: { off: 'Komentarze są wyłączone', newest: 'najnowsze' },
+        he: { off: 'התגובות מושבתות', newest: 'החדשות ביותר' },
+        ja: { off: 'コメントはオフになっています', newest: '新しい順' },
+        ko: { off: '댓글이 사용 중지되었습니다', newest: '최신' },
+        zh: { off: '评论已关闭', newest: '最新' },
+        id: { off: 'Komentar dimatikan', newest: 'terbaru' },
+        sv: { off: 'Kommentarer är inaktiverade', newest: 'nyaste' },
+        no: { off: 'Kommentarer er slått av', newest: 'nyeste' },
+        da: { off: 'Kommentarer er slået fra', newest: 'nyeste' },
+        fi: { off: 'Kommentit ovat pois päältä', newest: 'uusimmat' },
+        cs: { off: 'Komentáře jsou vypnuty', newest: 'nejnovější' },
+        el: { off: 'Τα σχόλια είναι απενεργοποιημένα', newest: 'νεότερα' },
         hu: { off: 'A hozzászólások ki vannak kapcsolva', newest: 'legújabb' },
-        ro: { off: 'Comentariile sunt dezactivate',       newest: 'cele mai noi' },
-        uk: { off: 'Коментарі вимкнено',                  newest: 'найновіші' }
+        ro: { off: 'Comentariile sunt dezactivate', newest: 'cele mai noi' },
+        uk: { off: 'Коментарі вимкнено', newest: 'найновіші' }
     };
 
     //  ┌───────────────────────────────────────────────────────────────────┐
@@ -9510,7 +9515,7 @@
 
     // initiate the script
     async function initializeAlchemy() {
-        if (USER_CONFIG.preventBackgroundExecution) {await chromeUserWait();}
+        if (USER_CONFIG.preventBackgroundExecution) { await chromeUserWait(); }
         updateCachedElements();
         buttonsLeftHeader();
 
@@ -9523,7 +9528,7 @@
             chapterPanelCheck();
             playlistPanelCheck();
             transcriptPanelCheck();
-            if (USER_CONFIG.defaultQuality!=='auto') runSetVideoQuality();
+            if (USER_CONFIG.defaultQuality !== 'auto') runSetVideoQuality();
             if (USER_CONFIG.autoTheaterMode && !isTheaterMode) toggleTheaterMode();
             if (USER_CONFIG.playbackSpeed) videoPlaybackSpeed();
             if (USER_CONFIG.progressBar && !isLiveVideo && !isLiveStream) keepProgressBarVisible();
@@ -9535,7 +9540,7 @@
             if (USER_CONFIG.expandVideoDescription && !USER_CONFIG.videoTabView) clickDescriptionBtn();
             if (USER_CONFIG.autoOpenChapters && !USER_CONFIG.videoTabView && hasChapterPanel) openChapters();
             if (USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel) openTranscript();
-            if (USER_CONFIG.defaultAudioLanguage!=='auto' || USER_CONFIG.defaultSubtitleLanguage!=='auto') setLanguage();
+            if (USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto') setLanguage();
             if (!USER_CONFIG.videoTabView && ((USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel))) scrollToTop();
             if (USER_CONFIG.videoTabView) tabView();
 
@@ -9585,8 +9590,8 @@
             isChannelPage = /^\/@[a-zA-Z0-9._-]+/.test(urlObj.pathname);
             isChannelHome = /^(\/@[a-zA-Z0-9._-]+|\/channel\/[a-zA-Z0-9_\-=.]+)$/.test(urlObj.pathname);
             uiLanguage = (docElement.lang || navigator.language || 'en').split('-')[0];
-            if (USER_CONFIG.channelReindirizzare && isChannelHome) {channelRedirect();return;}
-            if (USER_CONFIG.redirectShorts && isShortPage) {redirectShortsToVideoPage();return;}
+            if (USER_CONFIG.channelReindirizzare && isChannelHome) { channelRedirect(); return; }
+            if (USER_CONFIG.redirectShorts && isShortPage) { redirectShortsToVideoPage(); return; }
             if (USER_CONFIG.videosHideWatchedGlobalJS !== 0 && !USER_CONFIG.videosHideWatchedGlobal) markWatchedVideos();
 
             if (isVideoPage || isLiveStream || isShortPage) {
@@ -9594,25 +9599,25 @@
                 videoID = urlObj.searchParams.get('v');
 
                 if (isShortPage) videoID = urlObj.pathname.split('/').pop();
-                if (USER_CONFIG.hideEndCards) docElement.style.setProperty('--video-url',`url("https://i.ytimg.com/vi/${videoID}/maxresdefault.jpg")`);
+                if (USER_CONFIG.hideEndCards) docElement.style.setProperty('--video-url', `url("https://i.ytimg.com/vi/${videoID}/maxresdefault.jpg")`);
                 if (USER_CONFIG.closeChatWindow) docElement.classList.add('CentAnni-close-live-chat');
             }
 
             // wait for targets
-            const tar = (isVideoPage || isLiveStream) ? videoTargets:browseTargets;
-            const sel = (isVideoPage || isLiveStream) ? videoContainer:browseContainer;
+            const tar = (isVideoPage || isLiveStream) ? videoTargets : browseTargets;
+            const sel = (isVideoPage || isLiveStream) ? videoContainer : browseContainer;
             const ctn = document.querySelector(sel); if (!ctn) return;
-            const init = () => { if (pageObserver){pageObserver.disconnect();pageObserver=null;}requestIdleCallback(initializeAlchemy,{timeout:2500});};
-            const t = setTimeout(init,2500);
+            const init = () => { if (pageObserver) { pageObserver.disconnect(); pageObserver = null; } requestIdleCallback(initializeAlchemy, { timeout: 2500 }); };
+            const t = setTimeout(init, 2500);
 
             let remaining = new Set();
             for (const s of tar) if (!ctn.querySelector(s)) remaining.add(s);
-            if (!remaining.size) {clearTimeout(t);init();return;}
+            if (!remaining.size) { clearTimeout(t); init(); return; }
             pageObserver = new MutationObserver(() => {
                 for (const s of remaining) if (ctn.querySelector(s)) remaining.delete(s);
-                if (!remaining.size) {clearTimeout(t);init();}
+                if (!remaining.size) { clearTimeout(t); init(); }
             });
-            pageObserver.observe(ctn,{childList:true,subtree:true});
+            pageObserver.observe(ctn, { childList: true, subtree: true });
         }
     }
 
@@ -9638,5 +9643,5 @@
     if (USER_CONFIG.playbackSpeed) document.addEventListener('yt-player-updated', initialSpeed); // set playback speed
     if (USER_CONFIG.playbackSpeed) document.addEventListener('fullscreenchange', fullscreenCheck); // fullscreen change
     if (USER_CONFIG.preventAutoplay) document.addEventListener('yt-player-updated', pauseYouTubeVideo); // prevent autoplay
-    if (USER_CONFIG.chronologicalNotifications) {document.addEventListener('yt-update-unseen-notification-count', () => setTimeout( () => requestIdleCallback(chronoNotifications, {timeout:250}),100));} // sort notifications chronologically
+    if (USER_CONFIG.chronologicalNotifications) { document.addEventListener('yt-update-unseen-notification-count', () => setTimeout(() => requestIdleCallback(chronoNotifications, { timeout: 250 }), 100)); } // sort notifications chronologically
 })();
