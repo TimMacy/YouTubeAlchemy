@@ -372,7 +372,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## ⚖️ License
-The code in `YouTubeAlchemy.js` is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See the [LICENSE](https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE) file for details. The `README.md` and all images are Copyright © 2025 Tim Macy. All rights reserved.
+The code in `YouTubeAlchemy.js` is licensed under the GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later). See the [LICENSE](https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE) file for details. Not licensed under the AGPL are the `README.md`, the "YouTube Alchemy" logo, and all images. Copyright © 2025 Tim Macy. All rights reserved.
 
 <br><br>
 
