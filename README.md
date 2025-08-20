@@ -31,12 +31,12 @@ YouTube Alchemy operates completely client-side with no external dependencies. T
   - **Features & CSS Panel**: Access key features like **tab view**, **playback speed**, **remove 'Important' section and sort all notifications chronologically**, **video quality**, **direction buttons for playlists**, prevent autoplay, hide Shorts, **set default audio, subtitle, and transcript languages**, **disable play on hover**, **square design**, **auto-theater mode**, auto-close chat windows, number of videos per row, modify or hide various UI elements, and much more.
   - **Color Code Videos Panel**: Apply customizable borders to videos on the Home page, reflecting their age and status, and highlight the last uploaded video on the Subscriptions page with optional auto-scroll.
 
-<p align="center"><img width="100%" alt="YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/f2df120a-973b-4634-9b41-cd5e0870b502" /></p>
+<p align="center"><img width="100%" alt="YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/a94da93a-2014-45c0-96b7-4e70b623a4d5" /></p>
 <p align="center">
-  <img width="49.5%" alt="YouTube Alchemy Tab View" title="YouTube Alchemy Tab View" src="https://github.com/user-attachments/assets/fadcc498-8028-4fbf-9020-c7be35b38f82" /><img width="1%" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" /><img width="49.5%" alt="Read Aloud Speedster by Tim Macy" title="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/ac496cf1-f07c-4299-a85d-af0ffe655f5e" />
+  <img width="49.5%" alt="YouTube Alchemy Tab View" title="YouTube Alchemy Tab View" src="https://github.com/user-attachments/assets/e2991d15-93f4-4ee7-9122-1cacd935b1af" /><img width="1%" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" /><img width="49.5%" alt="Read Aloud Speedster by Tim Macy" title="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/ac496cf1-f07c-4299-a85d-af0ffe655f5e" />
 </p>
 <p align="center">
-  <img width="49.5%" alt="YouTube Default" title="YouTube Default" src="https://github.com/user-attachments/assets/2a7eaf1e-2e9d-46a5-8c23-411f4e9c1eb7" /><img width="1%" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" /><img width="49.5%" alt="YouTube Alchemy by Tim Macy" title="YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/c58af4b5-3859-4cf0-b80c-b2037ae53e96" />
+  <img width="49.5%" alt="YouTube Default" title="YouTube Default" src="https://github.com/user-attachments/assets/dea955f2-6479-4de8-a06e-4327b69d25c0" /><img width="1%" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" /><img width="49.5%" alt="YouTube Alchemy by Tim Macy YouTube Home" title="YouTube Alchemy by Tim Macy YouTube Home" src="https://github.com/user-attachments/assets/24904622-9071-4748-8e73-7e24d29f8e9a" />
 </p>
 
 <br>
