@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.15
+// @version      7.17
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.15 - YouTube Alchemy                    *
+*                    Version: 7.17 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2141,7 +2141,7 @@
             }
 
             ytd-watch-flexy #columns #below > ytd-watch-metadata #title > ytd-badge-supported-renderer:not([hidden]) {
-                bottom: 8px;
+                top: 79px;
                 left: calc(50% - 20px);
                 position: absolute;
                 cursor: default;
@@ -2560,7 +2560,10 @@
         }
 
         .CentAnni-style-hide-queue-btn {
+            yt-list-item-view-model:has(path[d^="M21 16h-7v"]),
+            ytd-thumbnail-overlay-toggle-button-renderer:has(path[d^="M21 16h-7v"]),
             ytd-thumbnail-overlay-toggle-button-renderer[aria-label="Add to queue"],
+            .ytThumbnailHoverOverlayToggleActionsViewModelButton:has(path[d^="M21 16h-7v"]),
             .ytThumbnailHoverOverlayToggleActionsViewModelButton:has(button[aria-label="Add to queue"]) {
                 display: none;
             }
@@ -2823,9 +2826,11 @@
             ytd-menu-popup-renderer,
             ytd-guide-entry-renderer,
             tp-yt-paper-dialog[modern],
+            .ytSheetViewModelContextual,
             yt-chip-cloud-chip-renderer,
             ytd-multi-page-menu-renderer,
             #description.ytd-watch-metadata,
+            .yt-badge-shape--thumbnail-badge,
             .badge-shape-wiz--thumbnail-badge,
             .yt-spec-button-shape-next--size-s,
             .yt-spec-button-shape-next--size-m,
@@ -2833,6 +2838,7 @@
             .yt-sheet-view-model-wiz--contextual,
             .ytAnimatedActionBackgroundContainer,
             .ytVideoMetadataCarouselViewModelHost,
+            .ytdTalkToRecsFlowRendererFlowContent,
             yt-interaction.ytd-guide-entry-renderer,
             .ytSuggestionComponentRoundedSuggestion,
             .dropdown-content.tp-yt-paper-menu-button,
@@ -2845,10 +2851,14 @@
             #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:hover,
             #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:focus,
             #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer:active,
+            .yt-spec-touch-feedback-shape--down .yt-spec-touch-feedback-shape__fill,
+            .yt-spec-touch-feedback-shape--down .yt-spec-touch-feedback-shape__stroke,
             ytd-channel-video-player-renderer[rounded] #player.ytd-channel-video-player-renderer,
             ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]),
-            .page-header-view-model-wiz--display-as-sidebar .page-header-view-model-wiz__page-header-background {
-                border-radius: 2px;
+            .page-header-view-model-wiz--display-as-sidebar .page-header-view-model-wiz__page-header-background,
+            ytd-menu-service-item-renderer[use-list-item-styles] tp-yt-paper-item.ytd-menu-service-item-renderer,
+            ytd-menu-service-item-renderer[use-list-item-styles] tp-yt-paper-item.ytd-menu-service-item-renderer:focus {
+                border-radius: 2px !important;
             }
 
             #masthead-container yt-interaction.circular .fill.yt-interaction,
@@ -3112,6 +3122,7 @@
                     --ytd-rich-grid-item-margin: .5% !important;
                 }
 
+                .yt-lockup-metadata-view-model__avatar,
                 .yt-lockup-metadata-view-model-wiz__avatar {
                     margin: 0 7px 0 5px;
                 }
@@ -3375,6 +3386,16 @@
             ytd-watch-flexy #comments #header ytd-comments-header-renderer {
                 margin: 12px 0 24px 0;
             }
+
+            ytd-watch-flexy ytd-macro-markers-list-item-renderer:not([carousel-type="MACRO_MARKERS_LIST_ITEM_RENDERER_CAROUSEL_TYPE_TEXT_ONLY"]):is([active],[should-show-buttons]) h4.ytd-macro-markers-list-item-renderer {
+                width: calc(100% + 70px);
+            }
+
+            ytd-watch-flexy #share-button.ytd-macro-markers-list-item-renderer, #repeat-button.ytd-macro-markers-list-item-renderer {
+                margin-top: auto;
+                transform: translateY(11px);
+                scale: .9;
+            }
         }
 
         .CentAnni-style-no-ambient {
@@ -3385,6 +3406,7 @@
         }
 
         ytd-watch-flexy #expandable-metadata #content.ytd-expandable-metadata-renderer {
+            display: block !important;
             height: calc(var(--yt-macro-marker-list-item-height) - 34px);
             visibility: visible;
             pointer-events: auto;
@@ -3692,6 +3714,12 @@
                 ytd-rich-item-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"]),
                 ytd-compact-video-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"])) {
                 display: none !important;
+            }
+        }
+
+        .CentAnni-style-hide-playables {
+            ytd-rich-section-renderer:has(a[href^="/playables"]) {
+                display: none;
             }
         }
 
@@ -4203,6 +4231,7 @@
         hideVideosSection: false,
         redirectShorts: false,
         hideAdSlots: false,
+        hidePlayables: false,
         hideProdTxt: false,
         hidePayToWatch: false,
         hideFreeWithAds: false,
@@ -4334,6 +4363,7 @@
         if (USER_CONFIG.hideJoinButton) { docElement.classList.add('CentAnni-style-hide-join-btn'); } else { docElement.classList.remove('CentAnni-style-hide-join-btn'); }
         if (USER_CONFIG.hideNewsHome) { docElement.classList.add('CentAnni-style-hide-news-home'); } else { docElement.classList.remove('CentAnni-style-hide-news-home'); }
         if (USER_CONFIG.hideEndCards) { docElement.classList.add('CentAnni-style-hide-end-cards'); } else { docElement.classList.remove('CentAnni-style-hide-end-cards'); }
+        if (USER_CONFIG.hidePlayables) { docElement.classList.add('CentAnni-style-hide-playables'); } else { docElement.classList.remove('CentAnni-style-hide-playables'); }
         if (USER_CONFIG.squareAvatars) { docElement.classList.add('CentAnni-style-square-avatars'); } else { docElement.classList.remove('CentAnni-style-square-avatars'); }
         if (USER_CONFIG.compactLayout) { docElement.classList.add('CentAnni-style-compact-layout'); } else { docElement.classList.remove('CentAnni-style-compact-layout'); }
         if (USER_CONFIG.hideEndscreen) { docElement.classList.add('CentAnni-style-hide-endscreen'); } else { docElement.classList.remove('CentAnni-style-hide-endscreen'); }
@@ -5094,6 +5124,10 @@
             const hideAdSlots = createCheckboxField('Hide Ad Slots on the Home Page (default: no)', 'hideAdSlots', USER_CONFIG.hideAdSlots);
             form.appendChild(hideAdSlots);
 
+            // hide playables
+            const hidePlayables = createCheckboxField('Hide YouTube Playables on the Home Page (default: no)', 'hidePlayables', USER_CONFIG.hidePlayables);
+            form.appendChild(hidePlayables);
+
             // hide product span
             const hideProdTxt = createCheckboxField('Hide "X products" Text Under Videos (default: no)', 'hideProdTxt', USER_CONFIG.hideProdTxt);
             form.appendChild(hideProdTxt);
@@ -5264,7 +5298,7 @@
             form.appendChild(hideMiniPlayer);
 
             // hide queue button
-            const hideQueueBtn = createCheckboxField('Hide "Add to queue" Button on Hover (default: no)', 'hideQueueBtn', USER_CONFIG.hideQueueBtn);
+            const hideQueueBtn = createCheckboxField('Hide "Add to queue" Button (default: no)', 'hideQueueBtn', USER_CONFIG.hideQueueBtn);
             form.appendChild(hideQueueBtn);
 
             // hide right sidebar search
@@ -5970,6 +6004,7 @@
             USER_CONFIG.hideShorts = subPanelCustomCSS.elements.hideShorts.checked;
             USER_CONFIG.redirectShorts = subPanelCustomCSS.elements.redirectShorts.checked;
             USER_CONFIG.hideAdSlots = subPanelCustomCSS.elements.hideAdSlots.checked;
+            USER_CONFIG.hidePlayables = subPanelCustomCSS.elements.hidePlayables.checked;
             USER_CONFIG.hideProdTxt = subPanelCustomCSS.elements.hideProdTxt.checked;
             USER_CONFIG.hidePayToWatch = subPanelCustomCSS.elements.hidePayToWatch.checked;
             USER_CONFIG.hideFreeWithAds = subPanelCustomCSS.elements.hideFreeWithAds.checked;
