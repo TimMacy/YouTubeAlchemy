@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.17.1
+// @version      7.18
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.17.1 - YouTube Alchemy                  *
+*                    Version: 7.18 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1459,11 +1459,9 @@
 
         /* video tab view css */
         .CentAnni-video-tabView {
-            #secondary { min-height: 0; }
             .CentAnni-tabView {
                 position: relative;
                 display: flex;
-                min-height: 0;
                 flex-direction: column;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 min-width: var(--ytd-watch-flexy-sidebar-min-width);
@@ -1548,6 +1546,7 @@
                 padding: 0;
                 margin: 0;
                 display: none;
+                overscroll-behavior: contain;
                 max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
             }
 
@@ -1570,7 +1569,6 @@
             ytd-watch-flexy ytd-playlist-panel-renderer[hidden] {
                 display: none !important;
             }
-
 
             .CentAnni-tabView-content-nascosta {
                 opacity: 0;
@@ -2141,9 +2139,9 @@
             }
 
             ytd-watch-flexy #columns #below > ytd-watch-metadata #title > ytd-badge-supported-renderer:not([hidden]) {
-                top: 79px;
-                left: calc(50% - 20px);
                 position: absolute;
+                left: calc(50% - 22px);
+                transform: translateY(54px);
                 cursor: default;
             }
 
@@ -2641,6 +2639,12 @@
             }
         }
 
+        .CentAnni-style-hide-posts-home {
+            ytd-rich-section-renderer:has(ytd-post-renderer) {
+                display: none !important;
+            }
+        }
+
         .CentAnni-style-hide-miniplayer {
             ytd-miniplayer {
                 display: none !important;
@@ -3086,6 +3090,7 @@
 
             .ytd-page-manager[page-subtype="home"] {
                 ytd-menu-renderer.ytd-rich-grid-media,
+                .yt-lockup-metadata-view-model__menu-button,
                 .yt-lockup-metadata-view-model-wiz__menu-button {
                     position: absolute;
                     height: 36px;
@@ -3127,8 +3132,9 @@
                     margin: 0 7px 0 5px;
                 }
 
+                .yt-lockup-metadata-view-model__menu-button,
                 .yt-lockup-metadata-view-model-wiz__menu-button {
-                    top: 43px;
+                    top: 41px;
                 }
 
                 .ytLockupAttachmentsViewModelAttachment {
@@ -3140,7 +3146,7 @@
                 }
 
                 .yt-spec-button-shape-next--mono.yt-spec-button-shape-next--text:hover {
-                    border-radius: 50%;
+                    border-radius: 50% !important;
                 }
 
                 #content.ytd-rich-item-renderer > .lockup.ytd-rich-item-renderer {
@@ -3171,6 +3177,10 @@
                 ytd-tabbed-page-header.grid-5-columns #page-header.ytd-tabbed-page-header,
                 ytd-tabbed-page-header.grid-5-columns[has-inset-banner] #page-header-banner.ytd-tabbed-page-header {
                     padding: 0 !important;
+                }
+
+                .yt-page-header-view-model__page-header-headline-image {
+                    margin-left: calc(50% - 615px);
                 }
 
                 ytd-two-column-browse-results-renderer.grid-5-columns,
@@ -4255,6 +4265,7 @@
         disablePlayOnHover: false,
         chronologicalNotifications: true,
         hideFundraiser: false,
+        hideLatestPostsHome: false,
         hideMiniPlayer: false,
         hideQueueBtn: false,
         closeChatWindow: false,
@@ -4390,6 +4401,7 @@
         if (USER_CONFIG.lnbHideMoreBtn) { docElement.classList.add('CentAnni-style-lnb-hide-more-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-more-btn'); }
         if (USER_CONFIG.lnbHideHomeBtn) { docElement.classList.add('CentAnni-style-lnb-hide-home-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-home-btn'); }
         if (USER_CONFIG.lnbHideHelpBtn) { docElement.classList.add('CentAnni-style-lnb-hide-help-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-help-btn'); }
+        if (USER_CONFIG.hideLatestPostsHome) { docElement.classList.add('CentAnni-style-hide-posts-home'); } else { docElement.classList.remove('CentAnni-style-hide-posts-home'); }
         if (USER_CONFIG.hideAirplayButton) { docElement.classList.add('CentAnni-style-hide-airplay-btn'); } else { docElement.classList.remove('CentAnni-style-hide-airplay-btn'); }
         if (USER_CONFIG.hideMembersOnly) { docElement.classList.add('CentAnni-style-hide-members-only'); } else { docElement.classList.remove('CentAnni-style-hide-members-only'); }
         if (USER_CONFIG.hideLatestPosts) { docElement.classList.add('CentAnni-style-hide-latest-posts'); } else { docElement.classList.remove('CentAnni-style-hide-latest-posts'); }
@@ -5124,10 +5136,6 @@
             const hideAdSlots = createCheckboxField('Hide Ad Slots on the Home Page (default: no)', 'hideAdSlots', USER_CONFIG.hideAdSlots);
             form.appendChild(hideAdSlots);
 
-            // hide playables
-            const hidePlayables = createCheckboxField('Hide YouTube Playables on the Home Page (default: no)', 'hidePlayables', USER_CONFIG.hidePlayables);
-            form.appendChild(hidePlayables);
-
             // hide product span
             const hideProdTxt = createCheckboxField('Hide "X products" Text Under Videos (default: no)', 'hideProdTxt', USER_CONFIG.hideProdTxt);
             form.appendChild(hideProdTxt);
@@ -5281,13 +5289,21 @@
             const hideReplyButton = createCheckboxField('Hide Comment "Reply" Button (default: no)', 'hideReplyButton', USER_CONFIG.hideReplyButton);
             form.appendChild(hideReplyButton);
 
+            // hide playables
+            const hidePlayables = createCheckboxField('Hide "YouTube Playables" on the Home Page (default: no)', 'hidePlayables', USER_CONFIG.hidePlayables);
+            form.appendChild(hidePlayables);
+
             // hide news on home
-            const hideNewsHome = createCheckboxField('Hide Breaking News on Home (default: no)', 'hideNewsHome', USER_CONFIG.hideNewsHome);
+            const hideNewsHome = createCheckboxField('Hide "Breaking News" on the Home Page (default: no)', 'hideNewsHome', USER_CONFIG.hideNewsHome);
             form.appendChild(hideNewsHome);
 
             // hide playlists on home
-            const hidePlaylistsHome = createCheckboxField('Hide Playlists on Home (default: no)', 'hidePlaylistsHome', USER_CONFIG.hidePlaylistsHome);
+            const hidePlaylistsHome = createCheckboxField('Hide Playlists on the Home Page (default: no)', 'hidePlaylistsHome', USER_CONFIG.hidePlaylistsHome);
             form.appendChild(hidePlaylistsHome);
+
+            // hide latest posts on home
+            const hideLatestPostsHome = createCheckboxField('Hide "Latest YouTube posts" on the Home Page (default: no)', 'hideLatestPostsHome', USER_CONFIG.hideLatestPostsHome);
+            form.appendChild(hideLatestPostsHome);
 
             // hide fundraiser
             const hideFundraiser = createCheckboxField('Hide Fundraiser Icons and Panels (default: no)', 'hideFundraiser', USER_CONFIG.hideFundraiser);
@@ -6067,6 +6083,7 @@
             USER_CONFIG.plWLBtn = subPanelCustomCSS.elements.plWLBtn.checked;
             USER_CONFIG.commentsNewFirst = subPanelCustomCSS.elements.commentsNewFirst.checked;
             USER_CONFIG.hideFundraiser = subPanelCustomCSS.elements.hideFundraiser.checked;
+            USER_CONFIG.hideLatestPostsHome = subPanelCustomCSS.elements.hideLatestPostsHome.checked;
             USER_CONFIG.hideMiniPlayer = subPanelCustomCSS.elements.hideMiniPlayer.checked;
             USER_CONFIG.hideQueueBtn = subPanelCustomCSS.elements.hideQueueBtn.checked;
             USER_CONFIG.closeChatWindow = subPanelCustomCSS.elements.closeChatWindow.checked;
