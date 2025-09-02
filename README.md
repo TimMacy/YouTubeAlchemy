@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.17-white.svg" alt="Version: 7.17"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.18-white.svg" alt="Version: 7.18"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization.
@@ -236,8 +236,10 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide Blue Info Panels
   - Hide "Add Comment" Textfield
   - Hide Comment "Reply" Button
-  - Hide Breaking News on Home
-  - Hide Playlists on Home
+  - Hide "YouTube Playables" on the Home Page
+  - Hide "Breaking News" on the Home Page
+  - Hide "YouTube Playlists" on the Home Page
+  - Hide "Latest YouTube posts" on the Home Page
   - Hide Fundraiser Icons and Panels
   - Hide Mini Player
   - Hide "Add to queue" Button on Hover
@@ -328,7 +330,8 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
-- **7.17**: adjustments for the latest YouTube changes; new feature: Hide YouTube Playables on the Home Page
+- **7.18**: adjustments for the latest YouTube changes; new feature: Hide "Latest YouTube posts" on the Home Page
+- **7.17**: adjustments for the latest YouTube changes; new feature: Hide "YouTube Playables" on the Home Page
 - **7.15**: fixed persistent progress bar crash when chapters were auto-generated; adjustments for the latest YouTube changes
 - **7.12.1**: adjustments for the latest YouTube changes (fixed playback speed display)
 - **7.12**: bug fixes and improvements
