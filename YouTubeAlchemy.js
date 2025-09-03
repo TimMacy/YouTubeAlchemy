@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.18
+// @version      7.19
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.18 - YouTube Alchemy                    *
+*                    Version: 7.19 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -3137,6 +3137,10 @@
                     top: 41px;
                 }
 
+                .yt-lockup-metadata-view-model {
+                    margin-bottom: 5px;
+                }
+
                 .ytLockupAttachmentsViewModelAttachment {
                     margin-top: 23px;
                 }
@@ -3170,6 +3174,16 @@
                     padding: 0;
                     margin: 8px;
                     transform: translate(2px, -2px);
+                }
+
+                .yt-content-metadata-view-model__badge {
+                    margin: 0;
+                }
+
+                .yt-content-metadata-view-model__metadata-row--metadata-row-wrap {
+                    margin: 0;
+                    justify-content: end;
+                    transform: translate(-8px, -4px);
                 }
             }
 
@@ -3470,6 +3484,7 @@
             .CentAnni-style-old-video { opacity: var(--oldVideo); }
 
             #metadata-line > span.inline-metadata-item:has(+ span.CentAnni-style-streamed-span),
+            yt-content-metadata-view-model .yt-content-metadata-view-model__metadata-row > .yt-content-metadata-view-model__metadata-text:has(+ .CentAnni-style-streamed-span),
             yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-row > .yt-content-metadata-view-model-wiz__metadata-text:has(+ .CentAnni-style-streamed-span) {
                 display: none !important;
             }
@@ -8017,7 +8032,7 @@
                 }
             }
 
-            const spanElements = videoContainer.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text:not(:has(a)):last-of-type,span.ytd-video-meta-block');
+            const spanElements = videoContainer.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text:not(:has(a)):last-of-type,yt-content-metadata-view-model .yt-content-metadata-view-model__metadata-text:not(:has(a)):last-of-type,span.ytd-video-meta-block');
             spanElements.forEach(el => {
                 const text = el.textContent;
                 const textLower = text.toLowerCase();
@@ -8029,7 +8044,7 @@
                     const nextEl = el.nextElementSibling;
                     if (!nextEl || !nextEl.classList.contains('CentAnni-style-streamed-span')) {
                         const cloneSpan = document.createElement('span');
-                        cloneSpan.className = 'yt-content-metadata-view-model-wiz__metadata-text CentAnni-style-streamed-span';
+                        cloneSpan.className = el.className + ' CentAnni-style-streamed-span';
 
                         const streamedWordSpan = document.createElement('span');
                         streamedWordSpan.className = 'CentAnni-style-streamed-text';
@@ -8039,7 +8054,7 @@
 
                         cloneSpan.appendChild(streamedWordSpan);
                         cloneSpan.appendChild(restText);
-                        const metadataRow = el.closest('yt-content-metadata-view-model > .yt-content-metadata-view-model-wiz__metadata-row:nth-of-type(2)') || metaBlock;
+                        const metadataRow = el.closest('yt-content-metadata-view-model > .yt-content-metadata-view-model-wiz__metadata-row:nth-of-type(2),yt-content-metadata-view-model > .yt-content-metadata-view-model__metadata-row:nth-of-type(2)') || metaBlock;
                         metadataRow?.insertBefore(cloneSpan, el.nextSibling);
                     }
                 }
