@@ -333,7 +333,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 - **7.19**: adjustments for the latest YouTube changes
 - **7.18**: adjustments for the latest YouTube changes; new feature: Hide "Latest YouTube posts" on the Home Page
 - **7.17**: adjustments for the latest YouTube changes; new feature: Hide "YouTube Playables" on the Home Page
-- **7.15**: fixed persistent progress bar crash when chapters were auto-generated; adjustments for the latest YouTube changes
+- **7.15**: adjustments for the latest YouTube changes; fixed persistent progress bar crash when chapters were auto-generated
 - **7.12.1**: adjustments for the latest YouTube changes (fixed playback speed display)
 - **7.12**: bug fixes and improvements
 - **7.11**: bug fixes and adjustments for the latest YouTube changes. new feature: hide watched videos based on watch percentage on selected pages
