@@ -1,13 +1,13 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-7.19-white.svg" alt="Version: 7.19"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-8.0-white.svg" alt="Version: 8.0"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
-This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization.
+This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. It's available as a userscript or a browser extension.
 <br clear="left"/>
 
 <details>
 <summary><strong>Table&nbsp;of&nbsp;Contents</strong></summary>
 
-- [🔒 Privacy & Security](#-privacy--security)
+- [🔒 Privacy Policy](#-privacy-policy)
 - [✨ Overview](#-overview)
 - [📝 Transcript Exporter](#-transcript-exporter)
 - [🔗 Links in Header](#-links-in-header)
@@ -22,8 +22,8 @@ This toolkit enhances YouTube by customizing the layout and adding more than 130
 
 </details>
 
-#### 🔒 Privacy & Security
-YouTube Alchemy operates completely client-side with no external dependencies. The script doesn't send any data to remote servers or pull resources from third-party sources beyond the standard userscript metadata for update checks (@updateURL, @downloadURL) and icon display (@icon). It leverages browser’s built-in Intl APIs while storing all settings and preferences locally via GM storage or browser localStorage.
+#### 🔒 Privacy Policy
+YouTube Alchemy operates completely client-side with no external dependencies. It doesn't send data to remote servers or pull resources from third parties. It leverages the browser's built-in Intl APIs, stores settings locally (via GM storage/storage.local plus browser localStorage), and reads YouTube's DOM to apply enabled features as well as layout changes. The userscript version utilizes standard metadata for updates (@updateURL, @downloadURL) and icon display (@icon). Required permissions: GM.getValue and GM.setValue for the userscript; storage and scripting for the extension; both are limited to https://*.youtube.com/*.
 
 ### ✨ Overview
 - **Main Settings Panel**: Manage the Transcript Exporter and export, import, or reset settings to their defaults.
@@ -49,7 +49,8 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
     - **Button Two | Blue** 💬 Copies the transcript with a prompt for summarizing and opens ChatGPT.
     - **Button Three | Orange** Copies Transcript to Clipboard.
     - **Button Four | Red** ↓ Downloads the transcript as a text file.
-    - **Button Five | White** ⋮ Opens the main settings panel.
+    - **Button Five | Yellow** 📜 Click to Load the Transcript Manually.
+    - **Button Six | White** ⋮ Opens the main settings panel.
   - **Transcript Formatting**: Includes timestamps, chapter headers, video title, channel name, upload date, and URL.
   - **Text File Naming Format**
     - Title - Channel.txt (default)
@@ -330,6 +331,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **8.0**: browser extension release. bug fixes and improvements. new feature: move settings button into the YouTube guide, load transcript manually, dark and light mode support for Color Code Videos
 - **7.19**: adjustments for the latest YouTube changes
 - **7.18**: adjustments for the latest YouTube changes; new feature: Hide "Latest YouTube posts" on the Home Page
 - **7.17**: adjustments for the latest YouTube changes; new feature: Hide "YouTube Playables" on the Home Page
