@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         YouTube Alchemy
-// @description  Toolkit for YouTube with 130+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
+// @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.19
+// @version      7.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.19 - YouTube Alchemy                    *
+*                    Version: 7.2 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -253,7 +253,7 @@
         .icons-container {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .container-button {
@@ -349,7 +349,7 @@
 
         .file-naming-container {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .select-file-naming {
@@ -529,6 +529,7 @@
             border: 1px solid hsl(0, 0%, 18.82%);
             border-radius: 1px;
             box-sizing: border-box;
+            overscroll-behavior: contain;
         }
 
         .chatgpt-prompt-textarea:focus {
@@ -1935,11 +1936,11 @@
                 top: 24px;
                 position: absolute;
                 width: var(--ytd-watch-flexy-sidebar-width);
-                min-width: var(--ytd-watch-flexy-sidebar-min-width);
             }
 
 
-            ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]) {
+            ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
+            ytd-watch-flexy:not([fixed-panels]):not([squeezeback]) #chat.ytd-watch-flexy:not([collapsed]) {
                 height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) + 1px) !important;
                 border: 1px solid rgb(51, 51, 51);
             }
@@ -2179,6 +2180,10 @@
             #ghost-comment-section.ytd-continuation-item-renderer {
                 display: none;
             }
+
+            ytd-app[is-watch-page]:not([scrolling]):has(ytd-watch-flexy:not([is-two-columns_]):not([theater])) {
+                overflow: unset;
+            }
         }
 
         .CentAnni-video-tabView:fullscreen ytd-watch-flexy #playlist,
@@ -2361,16 +2366,18 @@
 
         #video-title,
         h1.ytd-watch-metadata,
-        html #above-the-fold h1 {
+        html #above-the-fold h1,
+        .yt-lockup-metadata-view-model__title {
             text-transform: var(--textTransform) !important;
         }
 
         .CentAnni-style-full-title {
-            #video-title.ytd-rich-grid-media {
-                white-space: normal;
-                text-overflow: unset;
-                overflow: unset;
-                display: inline-block;
+            #video-title.ytd-rich-grid-media,
+            .yt-lockup-metadata-view-model__title {
+                white-space: normal !important;
+                text-overflow: unset !important;
+                overflow: unset !important;
+                display: inline-block !important;
             }
 
             #video-title {
@@ -2559,6 +2566,7 @@
 
         .CentAnni-style-hide-queue-btn {
             yt-list-item-view-model:has(path[d^="M21 16h-7v"]),
+            ytd-menu-service-item-renderer:has(path[d^="M21 16h-7v"]),
             ytd-thumbnail-overlay-toggle-button-renderer:has(path[d^="M21 16h-7v"]),
             ytd-thumbnail-overlay-toggle-button-renderer[aria-label="Add to queue"],
             .ytThumbnailHoverOverlayToggleActionsViewModelButton:has(path[d^="M21 16h-7v"]),
@@ -2770,6 +2778,7 @@
             ytd-expandable-metadata-renderer,
             .yt-thumbnail-view-model--medium,
             ytd-author-comment-badge-renderer,
+            .ytCollectionsStackCollectionStack2,
             .badge.ytd-badge-supported-renderer,
             .yt-spec-button-shape-next--size-xs,
             ytd-thumbnail[size="large"]::before,
@@ -2780,6 +2789,7 @@
             .ytp-player-minimized .html5-main-video,
             .ytProgressBarLineProgressBarLineRounded,
             .ytp-tooltip.ytp-text-detail.ytp-preview,
+            .ytCollectionsStackCollectionStack1Medium,
             .collections-stack-wiz__collection-stack2,
             ytd-donation-shelf-renderer[modern-panels],
             ytd-thumbnail[size="large"] a.ytd-thumbnail,
@@ -3070,7 +3080,8 @@
                     margin: 0 !important;
                 }
 
-                #meta.ytd-rich-grid-media {
+                #meta.ytd-rich-grid-media,
+                .yt-lockup-metadata-view-model__title {
                     overflow-x: hidden;
                     padding-right: 6px;
                 }
@@ -3161,21 +3172,6 @@
                     margin-bottom: 3px;
                 }
 
-                .yt-spec-button-shape-next--overlay-dark.yt-spec-button-shape-next--tonal {
-                    background: rgba(0, 0, 0, .6)
-                }
-
-                .yt-spec-button-shape-next--overlay-dark.yt-spec-button-shape-next--tonal:hover {
-                    background: rgba(0, 0, 0, .8)
-                }
-
-                .ytThumbnailHoverOverlayToggleActionsViewModelButton {
-                    scale: .9;
-                    padding: 0;
-                    margin: 8px;
-                    transform: translate(2px, -2px);
-                }
-
                 .yt-content-metadata-view-model__badge {
                     margin: 0;
                 }
@@ -3193,8 +3189,13 @@
                     padding: 0 !important;
                 }
 
-                .yt-page-header-view-model__page-header-headline-image {
-                    margin-left: calc(50% - 615px);
+                ytd-tabbed-page-header[has-banner] #page-header.ytd-tabbed-page-header {
+                    padding-top: 0;
+                    padding-bottom: 0;
+                }
+
+                .yt-page-header-view-model__page-header-headline {
+                    margin: 4px 0 0 24px;
                 }
 
                 ytd-two-column-browse-results-renderer.grid-5-columns,
@@ -3268,6 +3269,10 @@
 
                 #items.ytd-grid-renderer {
                     justify-content: center;
+                }
+
+                .yt-tab-shape__tab-bar {
+                    bottom: 12px;
                 }
             }
 
@@ -3419,6 +3424,30 @@
                 margin-top: auto;
                 transform: translateY(11px);
                 scale: .9;
+            }
+
+            ytd-thumbnail-overlay-toggle-button-renderer,
+            .yt-spec-button-shape-next--overlay-dark.yt-spec-button-shape-next--tonal {
+                --paper-tooltip-background: rgba(0, 0, 0, 0.8);
+                position: absolute;
+                top: 0;
+                right: 0;
+                cursor: pointer;
+                color: rgb(255, 255, 255);
+                outline: none;
+                background-color: rgba(0, 0, 0, 0.8);
+                transition: opacity .3s;
+                width: 28px;
+                height: 28px;
+                margin: 8px;
+                border-radius: 2px;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .yt-spec-button-shape-next--overlay-dark.yt-spec-button-shape-next--tonal:hover {
+                background: black;
             }
         }
 
