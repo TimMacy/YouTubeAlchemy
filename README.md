@@ -26,7 +26,7 @@ This toolkit enhances YouTube by customizing the layout and adding more than 130
 </details>
 
 #### 🔒 Privacy Policy
-YouTube Alchemy operates completely client-side with no external dependencies. It doesn't send data to remote servers or pull resources from third parties. It leverages the browser's built-in Intl APIs, stores settings locally (via GM storage/storage.local plus browser localStorage), and reads YouTube's DOM to apply enabled features as well as layout changes. The userscript version utilizes standard metadata for updates (@updateURL, @downloadURL) and icon display (@icon). Required permissions: GM.getValue and GM.setValue for the userscript; storage and scripting for the extension; both are limited to https://*.youtube.com/*.
+YouTube Alchemy operates completely client-side with no external dependencies. It doesn't send data to remote servers or pull resources from third parties. It leverages the browser's built-in Intl APIs, stores settings locally (via GM storage/storage.local plus browser localStorage), and reads YouTube's DOM to apply enabled features as well as layout changes. The userscript version utilizes standard metadata for updates (@updateURL, @downloadURL) and icon display (@icon). Required permissions: GM.getValue and GM.setValue for the userscript; storage and scripting for the extension; both are limited to https://\*.youtube.com/\*.
 
 ### ✨ Overview
 - **Main Settings Panel**: Manage the Transcript Exporter and export, import, or reset settings to their defaults.
