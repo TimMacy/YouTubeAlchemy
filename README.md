@@ -3,6 +3,9 @@
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="70px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 130 seamless, native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements and event listeners while using timeouts and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. It's available as a userscript or a browser extension.
 <br clear="left"/>
+<p align="right">
+<a href="https://chromewebstore.google.com/detail/youtube-alchemy/midnnobjjobpnnblnckmnkhegbnlmgkn"><img width="20%" alt="Chrome Browser Extension" src="https://github.com/user-attachments/assets/a8b8a280-baba-484f-b1c2-190d6f6cc6d9"></a>
+</p>
 
 <details>
 <summary><strong>Table&nbsp;of&nbsp;Contents</strong></summary>
