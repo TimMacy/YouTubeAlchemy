@@ -335,6 +335,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 
 ## 📜 Changelog
 - **8.0**: browser extension release. bug fixes and improvements. new feature: move settings button into the YouTube guide, load transcript manually, dark and light mode support for Color Code Videos
+- **7.2**: adjustments for the latest YouTube changes
 - **7.19**: adjustments for the latest YouTube changes
 - **7.18**: adjustments for the latest YouTube changes; new feature: Hide "Latest YouTube posts" on the Home Page
 - **7.17**: adjustments for the latest YouTube changes; new feature: Hide "YouTube Playables" on the Home Page
