@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.2
+// @version      7.7
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.2 - YouTube Alchemy                     *
+*                    Version: 7.7 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -4156,6 +4156,90 @@
 
         .ytSearchboxComponentInputBoxHasFocus {
             border-color: var(--lightSelectionColor) !important;
+        }
+
+        #CentAnni-exNot {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            width: 630px;
+            border: 1px solid slategray;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(140deg,
+                    hsl(357 79.5% 50.2%),
+                    hsl(356 79.5% 43.9%),
+                    hsl(356 79.3% 37.8%),
+                    hsl(356 79% 31.8%),
+                    hsl(355 78.6% 25.7%));
+            color: ghostwhite;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .18);
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .CentAnni-exNot-title {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .CentAnni-exNot-note {
+            font-size: 14px;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .CentAnni-exNot-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 10px 0;
+        }
+
+        .CentAnni-exNot-btn {
+            background: rgb(26, 26, 26);
+            color: ghostwhite;
+            border: 1px solid rgba(255, 255, 255, .2);
+            padding: 6px 10px;
+            border-radius: 2px;
+            cursor: pointer;
+            height: 32px;
+            font-family: 'Roboto', 'Arial', sans-serif;
+            font-size: 1.4rem;
+            line-height: 2rem;
+            font-weight: 500;
+            transition: background .25s ease-in-out, color .25s ease-in-out, border-color .25s ease-in-out;
+        }
+
+        .CentAnni-exNot-btn:hover {
+            background: rgb(51, 51, 51);
+            border-color: transparent;
+        }
+
+        .CentAnni-exNot-dismiss-row {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .CentAnni-exNot-btn.dismiss {
+            background: transparent;
+            color: ghostwhite;
+            border: 1px solid rgba(255, 255, 255, .2);
+            margin: 12px 0 10px;
+        }
+
+        .CentAnni-exNot-btn.dismiss:hover {
+            background: rgba(255, 255, 255, .2);
+            border-color: transparent;
         }
     `;
 
@@ -9862,6 +9946,7 @@
         buttonsLeftHeader();
 
         if (isVideoPage || isLiveStream) {
+            removeBanner();
             languageCheck();
             liveVideoCheck();
             musicVideoCheck();
@@ -9894,6 +9979,7 @@
                 if (transcriptLoaded) addButton();
             } else addSettingsButton();
         } else {
+            notification();
             addSettingsButton();
             if (isShortPage) shortsPlaybackControl();
             if (USER_CONFIG.channelRSSBtn && isChannelPage) addRSSFeedButton();
@@ -9975,6 +10061,57 @@
             };
             document.addEventListener('visibilitychange', onVisibility);
         });
+    }
+
+    // notification for browser extension
+    function removeBanner() { const b = document.getElementById("CentAnni-exNot"); if (b) b.remove(); }
+    function notification() {
+        const KEY = "CentAnni_extension";
+        if (localStorage.getItem(KEY) !== "1" && !document.getElementById("CentAnni-exNot")) {
+            const chromeURL = "https://chromewebstore.google.com/detail/youtube-alchemy/midnnobjjobpnnblnckmnkhegbnlmgkn";
+            const firefoxURL = "https://addons.mozilla.org/en-US/firefox/addon/youtube-alchemy/";
+
+            const banner = document.createElement("div");
+            banner.id = "CentAnni-exNot";
+
+            const title = document.createElement("strong");
+            title.className = "CentAnni-exNot-title";
+            title.textContent = "YouTube Alchemy Is Now Available as a Browser Extension 🎉";
+            banner.appendChild(title);
+
+            const note = document.createElement("span");
+            note.className = "CentAnni-exNot-note";
+            note.textContent = "Hi there! I'm Tim, the developer of YouTube Alchemy. I'm thrilled to announce that YouTube Alchemy is now available as a browser extension! If you're interested in making the switch, please remember to back up your settings. You can either stick with the userscript or switch anytime.";
+            banner.appendChild(note);
+
+            const rowButtons = document.createElement("div");
+            rowButtons.className = "CentAnni-exNot-buttons";
+
+            function makeButton(label, handler, extraClass = "") {
+                const btn = document.createElement("button");
+                btn.className = "CentAnni-exNot-btn " + extraClass;
+                btn.textContent = label;
+                btn.onclick = handler;
+                return btn;
+            }
+
+            rowButtons.appendChild(makeButton("Back Up Settings", () => { if (typeof exportSettings === "function") exportSettings(); }));
+            rowButtons.appendChild(makeButton("Install for Chrome", () => window.open(chromeURL, "_blank")));
+            rowButtons.appendChild(makeButton("Install for Firefox", () => window.open(firefoxURL, "_blank")));
+            banner.appendChild(rowButtons);
+
+            const row2 = document.createElement("div");
+            row2.className = "CentAnni-exNot-dismiss-row";
+
+            const btnDismiss = document.createElement("button");
+            btnDismiss.className = "CentAnni-exNot-btn dismiss";
+            btnDismiss.textContent = "Close and don't show again";
+            btnDismiss.onclick = () => { localStorage.setItem(KEY, "1"); removeBanner(); };
+            row2.appendChild(btnDismiss);
+
+            banner.appendChild(row2);
+            document.body.appendChild(banner);
+        }
     }
 
     // event listeners
