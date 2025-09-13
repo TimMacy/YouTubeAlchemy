@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.7.1
+// @version      7.7.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.7.1 - YouTube Alchemy                   *
+*                    Version: 7.7.2 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1450,7 +1450,20 @@
             }
 
             ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata {
-                width: 10%;
+                width: 36px;
+            }
+
+            ytd-watch-metadata[action-buttons-update-owner-width] #owner.ytd-watch-metadata {
+                margin-right: 0;
+            }
+
+            ytd-watch-metadata[actions-on-separate-line] #top-row.ytd-watch-metadata {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            ytd-watch-metadata[action-buttons-update-owner-width] #actions.ytd-watch-metadata {
+                min-width: calc(50% - 6px);
             }
 
             .ytp-menuitem:has(path[d^="M10,8v8l6-4L10"]) {
@@ -2273,6 +2286,10 @@
                 font-size: 18px;
                 white-space: nowrap;
                 word-wrap: normal;
+            }
+
+            .ytp-fullscreen .ytp-progress-bar-container {
+                bottom: 49px;
             }
 
             .ytp-autohide .ytp-chrome-bottom .CentAnni-chapter-title {
@@ -3165,7 +3182,7 @@
                 }
 
                 .ytLockupAttachmentsViewModelAttachment {
-                    margin-top: 23px;
+                    margin-top: 0;
                 }
 
                 .yt-lockup-view-model-wiz--vertical.yt-lockup-view-model-wiz--rich-grid-legacy-margin .yt-lockup-view-model-wiz__content-image {
@@ -8141,6 +8158,7 @@
         const streamedRegex = new RegExp(`(?:${categories.streamed.join('|')})`, 'i');
         const homePage = document.querySelector('ytd-browse[page-subtype="home"]:not([hidden])');
         const targetContainer = homePage?.querySelector('ytd-rich-grid-renderer > #contents') || homePage;
+        const liveSelectors = 'badge-shape.yt-badge-shape--thumbnail-live';
         if (!homePage) return;
 
         // process each individual video
@@ -8156,6 +8174,10 @@
                     break;
                 }
             }
+
+            const liveBadge = videoContainer.querySelector(liveSelectors);
+            if (liveBadge && !videoContainer.classList.contains('CentAnni-style-live-video'))
+                videoContainer.classList.add('CentAnni-style-live-video');
 
             const spanElements = videoContainer.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text:not(:has(a)):last-of-type,yt-content-metadata-view-model .yt-content-metadata-view-model__metadata-text:not(:has(a)):last-of-type,span.ytd-video-meta-block');
             spanElements.forEach(el => {
@@ -8247,14 +8269,16 @@
                 const textContent = metaBlock.textContent.trim().toLowerCase();
                 let expectedCategory = null;
 
-                for (const [className, ages] of Object.entries(categories)) {
-                    if (ages.some(age => textContent.includes(age))) {
-                        expectedCategory = className;
-                        break;
+                if (video.querySelector(liveSelectors)) expectedCategory = 'live';
+                else {
+                    for (const [className, ages] of Object.entries(categories)) {
+                        if (ages.some(age => textContent.includes(age))) {
+                            expectedCategory = className;
+                            break;
+                        }
                     }
+                    if (expectedCategory === null) if ([...video.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text,span.ytd-video-meta-block')].some(el => /Scheduled for/i.test(el.textContent))) expectedCategory = 'upcoming';
                 }
-
-                if (expectedCategory === null) if ([...video.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text,span.ytd-video-meta-block')].some(el => /Scheduled for/i.test(el.textContent))) expectedCategory = 'upcoming';
 
                 const expectedClassName = expectedCategory ? `CentAnni-style-${expectedCategory}-video` : null;
 
@@ -9948,7 +9972,7 @@
     const vidPSel = '.html5-video-player';
     const videoTargets = [infoSel, menuSel, cmtsSel, vidPSel, chapSel, prBaSel, fsCnSel, prBeSel];
     const browseTargets = ['#contents img, #reel-video-renderer .action-container > #actions'];
-    const videoContainer = 'ytd-app #page-manager > ytd-watch-flexy:not([hidden])';
+    const videoPageContainer = 'ytd-app #page-manager > ytd-watch-flexy:not([hidden])';
     const browseContainer = 'ytd-app #page-manager > ytd-browse:not([hidden]),ytd-app #page-manager > ytd-search:not([hidden]),ytd-app #page-manager > ytd-shorts:not([hidden])';
 
     // initiate the script
@@ -10045,7 +10069,7 @@
 
             // wait for targets
             const tar = (isVideoPage || isLiveStream) ? videoTargets : browseTargets;
-            const sel = (isVideoPage || isLiveStream) ? videoContainer : browseContainer;
+            const sel = (isVideoPage || isLiveStream) ? videoPageContainer : browseContainer;
             const ctn = document.querySelector(sel); if (!ctn) return;
             const init = () => { if (pageObserver) { pageObserver.disconnect(); pageObserver = null; } requestIdleCallback(initializeAlchemy, { timeout: 2500 }); };
             const t = setTimeout(init, 2500);
