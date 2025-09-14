@@ -336,7 +336,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 
 ## 📜 Changelog
 - **8.0.2**: adjustments for the latest YouTube changes (fixed missing date in tab view)
-- **8.0.1**: adjustments for the latest YouTube changes
+- **8.0.1**: adjustments for the latest YouTube changes (fixed font size of remaining time and chapters in fullscreen)
 - **8.0**: browser extension release. bug fixes and improvements. new feature: move settings button into the YouTube guide, load transcript manually, dark and light mode support for Color Code Videos
 - **7.2**: adjustments for the latest YouTube changes
 - **7.19**: adjustments for the latest YouTube changes
