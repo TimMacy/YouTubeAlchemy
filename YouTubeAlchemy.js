@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.7.3
+// @version      7.7.4
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.7.3 - YouTube Alchemy                   *
+*                    Version: 7.7.4 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2814,6 +2814,7 @@
             ytd-post-renderer[rounded-container],
             #related.style-scope.ytd-watch-flexy,
             ytd-thumbnail[size="medium"]::before,
+            .ytNotificationMultiActionRendererHost,
             .animated-action__background-container,
             .ytp-player-minimized .html5-main-video,
             .ytProgressBarLineProgressBarLineRounded,
@@ -2821,6 +2822,7 @@
             .ytCollectionsStackCollectionStack1Medium,
             .collections-stack-wiz__collection-stack2,
             ytd-donation-shelf-renderer[modern-panels],
+            yt-img-shadow.ytd-backstage-image-renderer,
             ytd-thumbnail[size="large"] a.ytd-thumbnail,
             .ytp-player-minimized .ytp-miniplayer-scrim,
             ytd-thumbnail[size="medium"] a.ytd-thumbnail,
@@ -3126,6 +3128,10 @@
                 .yt-spec-avatar-shape--cairo-refresh.yt-spec-avatar-shape--live-ring::after {
                     inset: -2px;
                 }
+
+                .yt-spec-button-shape-next--mono.yt-spec-button-shape-next--text:hover {
+                    border-radius: 50% !important;
+                }
             }
 
             .ytd-page-manager[page-subtype="home"] {
@@ -3267,6 +3273,17 @@
                     border-radius: 50%;
                 }
 
+                ytd-expandable-tab-renderer button:hover,
+                ytd-menu-renderer.ytd-rich-grid-media button:hover {
+                    background-color: rgba(255, 255, 255, .1);
+                    border-radius: 50%;
+                }
+
+                ytd-expandable-tab-renderer yt-interaction .fill.yt-interaction,
+                ytd-expandable-tab-renderer yt-interaction .stroke.yt-interaction {
+                    border-radius: 50% !important;
+                }
+
                 .yt-tab-group-shape-wiz__slider,
                 .yt-tab-shape-wiz__tab-bar {
                     display: none;
@@ -3327,7 +3344,8 @@
             }
 
             .ytd-page-manager[page-subtype="subscriptions"] {
-                ytd-menu-renderer.ytd-rich-grid-media {
+                ytd-menu-renderer.ytd-rich-grid-media,
+                .yt-lockup-metadata-view-model__menu-button {
                     position: absolute;
                     height: 36px;
                     width: 36px;
@@ -3337,6 +3355,14 @@
                     align-items: center;
                     background-color: rgba(255, 255, 255, .1);
                     border-radius: 50%;
+                }
+
+                .yt-lockup-metadata-view-model__menu-button {
+                    top: 41px;
+                }
+
+                .yt-lockup-metadata-view-model__avatar {
+                    margin: 0 9px 0 3px;
                 }
 
                 .title-badge.ytd-rich-grid-media,
@@ -8360,10 +8386,8 @@
     // mark last seen video on subscription page
     function markLastSeenVideo() {
         const subscriptionPage = document.querySelector('ytd-browse[page-subtype="subscriptions"]:not([hidden])');
-        if (!subscriptionPage) return;
-
-        const videoContainers = subscriptionPage.querySelectorAll('ytd-rich-item-renderer');
-        if (!videoContainers.length) return;
+        const videoContainers = subscriptionPage?.querySelectorAll('ytd-rich-item-renderer');
+        if (!subscriptionPage || !videoContainers.length) return;
 
         const previousLastSeen = subscriptionPage.querySelector('.CentAnni-style-last-seen');
         if (previousLastSeen) previousLastSeen.classList.remove('CentAnni-style-last-seen');
@@ -8383,7 +8407,7 @@
 
         // helper function to extract video ID
         const extractVideoID = (container) => {
-            const mainThumbnail = container.querySelector('ytd-thumbnail a#thumbnail[href*="/watch?v="]');
+            const mainThumbnail = container.querySelector('a.yt-lockup-view-model__content-image[href*="/watch?v="], ytd-thumbnail a#thumbnail[href*="/watch?v="]');
             if (!mainThumbnail || !mainThumbnail.href || !mainThumbnail.href.includes('/watch?v=')) return null;
             return new URL(mainThumbnail.href, location.origin).searchParams.get('v');
         };
