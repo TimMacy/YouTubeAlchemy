@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.7.4
+// @version      7.7.4.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.7.4 - YouTube Alchemy                   *
+*                    Version: 7.7.4.1 - YouTube Alchemy                 *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -8394,11 +8394,11 @@
 
         // helper function to check if a video is live or upcoming
         const isSpecialVideo = (container) => {
-            if (container.querySelector('.badge-style-type-live-now-alternate') !== null) return true;
-            if (container.querySelector('ytd-thumbnail-overlay-time-status-renderer[overlay-style="UPCOMING"]') !== null) return true;
+            if (container.querySelector('.yt-badge-shape--thumbnail-live, .badge-style-type-live-now-alternate') !== null) return true;
+            if (container.querySelector('.ytLockupAttachmentsViewModelHost, ytd-thumbnail-overlay-time-status-renderer[overlay-style="UPCOMING"]') !== null) return true;
 
             // backup checks
-            const metadataItems = container.querySelectorAll('.inline-metadata-item');
+            const metadataItems = container.querySelectorAll('.yt-content-metadata-view-model__metadata-row span[role="text"], .inline-metadata-item');
             for (const item of metadataItems) {
                 if (item.textContent.includes('Scheduled for') || item.textContent.includes('watching')) return true;
             }
