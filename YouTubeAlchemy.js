@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      7.77
+// @version      8.0.4
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 7.77 - YouTube Alchemy                    *
+*                    Version: 8.0.4 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -53,7 +53,7 @@
             padding: 20px 0 20px 20px;
             border: 1px solid rgba(255, 255, 255, .25);
             border-radius: 8px;
-            width: 420px;
+            width: 500px;
             max-height: 90dvh;
             font-family: "Roboto", "Arial", sans-serif;
             font-size: 9px;
@@ -173,6 +173,7 @@
         .label-ChatGPT { color: hsl(217, 91%, 59%); }
         .label-copy { color: hsl(33, 100%, 50%); }
         .label-download { color: hsl(359, 88%, 57%); }
+        .label-lazy { color: hsl(51, 100%, 50%); }
         .label-settings { color: hsl(0, 0%, 100%); }
 
         .input-field-targetNotebookLMUrl:focus { border: 1px solid hsl(134, 61%, 40%); }
@@ -180,6 +181,7 @@
         .buttonIconNotebookLM-input-field:focus { border: 1px solid hsl(134, 61%, 40%); }
         .buttonIconChatGPT-input-field:focus { border: 1px solid hsl(217, 91%, 59%); }
         .buttonIconCopy-input-field:focus { border: 1px solid hsl(33, 100%, 50%); }
+        .buttonIconlazyLoad-input-field:focus { border: 1px solid hsl(51, 100%, 50%); }
         .buttonIconDownload-input-field:focus { border: 1px solid hsl(359, 88%, 57%); }
 
         .buttonIconSettings-input-field:focus,
@@ -203,16 +205,17 @@
             max-height: 365px;
         }
 
-        .input-field-targetNotebookLMUrl:hover,
+        .input-field-url:hover,
+        .select-file-naming:hover,
+        .chatgpt-prompt-textarea:hover,
+        .buttonIconCopy-input-field:hover,
         .input-field-targetChatGPTUrl:hover,
-        .buttonIconNotebookLM-input-field:hover,
         .buttonIconChatGPT-input-field:hover,
         .buttonIconDownload-input-field:hover,
-        .buttonIconCopy-input-field:hover,
         .buttonIconSettings-input-field:hover,
-        .select-file-naming:hover,
-        .input-field-url:hover,
-        .chatgpt-prompt-textarea:hover {
+        .buttonIconlazyLoad-input-field:hover,
+        .input-field-targetNotebookLMUrl:hover,
+        .buttonIconNotebookLM-input-field:hover {
             background-color: hsl(0, 0%, 10.37%);
         }
 
@@ -533,7 +536,7 @@
         }
 
         .chatgpt-prompt-textarea:focus {
-            height: 569px;
+            height: 525px;
             color: white;
             background-color: hsl(0, 0%, 10.37%);
             border: 1px solid hsl(217, 91%, 59%);
@@ -624,6 +627,51 @@
             }
         }
 
+        .CentAnni-settings-btn {
+            tp-yt-app-drawer.ytd-app[persistent] #guide-content > #header {
+                display: flex !important;
+                margin-top: -56px;
+                background: var(--yt-spec-base-background);
+            }
+
+            ytd-app tp-yt-app-drawer.ytd-app[persistent] {
+                background: var(--yt-spec-base-background);
+            }
+
+            #guide-wrapper .CentAnni-button-wrapper {
+                margin-left: auto;
+                margin-right: 12px;
+            }
+
+            .CentAnni-button-wrapper:has(#transcript-settings-button) .button-tooltip {
+                white-space: nowrap;
+            }
+
+            .CentAnni-button-wrapper:has(#transcript-download-button) .button-tooltip {
+                width: 117px;
+                white-space: normal;
+            }
+
+            .CentAnni-button-wrapper:has(#transcript-ChatGPT-button) .button-tooltip {
+                width: 172px;
+                white-space: normal;
+            }
+
+            .button-style-settings {
+                width: 40px;
+            }
+
+            .CentAnni-button-wrapper:has(#transcript-settings-button):hover {
+                background-color: rgba(255, 255, 255, .1);
+                border-radius: 24px;
+            }
+
+            .CentAnni-button-wrapper:has(#transcript-settings-button):active {
+                background-color: rgba(255, 255, 255, .2);
+                border-radius: 24px;
+            }
+        }
+
         html:not([dark]) #guide-wrapper .button-style-settings:hover {
             color: black;
         }
@@ -666,6 +714,17 @@
             cursor: pointer;
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
             -webkit-tap-highlight-color: transparent;
+        }
+
+        #transcript-lazy-button {
+            opacity: .8;
+            filter: grayscale(1);
+            transition: opacity .25s, filter .25s;
+        }
+
+        #transcript-lazy-button:hover {
+            opacity: 1;
+            filter: grayscale(0);
         }
 
         .button-style-settings {
@@ -907,7 +966,7 @@
             padding: 20px;
             border: 1px solid rgba(255, 255, 255, .25);
             border-radius: 8px;
-            width: 50dvw;
+            width: 60dvw;
             max-width: 70dvw;
             max-height: 90dvh;
             position: relative;
@@ -1007,10 +1066,6 @@
             flex: 1 0 auto;
         }
 
-        #custom-css-form .playback-speed-container .number-input-container .number-input-field {
-            width: 5ch;
-        }
-
         #custom-css-form .playback-speed-container .number-input-label {
             display: flex;
         }
@@ -1061,7 +1116,7 @@
             color: hsl(0, 0%, 100%);
         }
 
-        input[type="range"] {
+        .sub-panel input[type="range"] {
             -webkit-appearance: none;
             appearance: none;
             width: 100%;
@@ -1071,8 +1126,8 @@
             outline: none;
         }
 
-        input[type="range"]::-moz-range-thumb,
-        input[type="range"]::-webkit-slider-thumb {
+        .sub-panel input[type="range"]::-moz-range-thumb,
+        .sub-panel input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
             width: 16px;
@@ -1083,8 +1138,8 @@
             border: 2px solid #ffffff;
         }
 
-        input[type="range"]::-moz-range-track,
-        input[type="range"]::-webkit-slider-runnable-track {
+        .sub-panel input[type="range"]::-moz-range-track,
+        .sub-panel input[type="range"]::-webkit-slider-runnable-track {
             background: #007bff;
             height: 6px;
             border-radius: 5px;
@@ -1105,7 +1160,7 @@
             flex: 1;
         }
 
-        .slider-container input[type="range"] {
+        .slider-container .sub-panel input[type="range"] {
             flex: 1;
         }
 
@@ -1146,12 +1201,12 @@
             -moz-appearance: none;
         }
 
-        input[type="color"]::-webkit-color-swatch-wrapper {
+        .sub-panel input[type="color"]::-webkit-color-swatch-wrapper {
             border: none;
             padding: 0;
         }
 
-        input[type="color"]::-webkit-color-swatch {
+        .sub-panel input[type="color"]::-webkit-color-swatch {
             border: none;
         }
 
@@ -1169,6 +1224,22 @@
             gap: 10px;
         }
 
+        #color-code-videos-form .videos-colorpicker-row {
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        #color-code-videos-form .videos-colorpicker-row span:nth-child(1),
+        #color-code-videos-form .videos-colorpicker-row span:nth-child(3) {
+            margin-left: -10px;
+            width: fit-content;
+        }
+
+        #color-code-videos-form .videos-colorpicker-row span {
+            flex: unset;
+            width: 48%;
+        }
+
         .number-input-container {
             margin: 10px 0;
         }
@@ -1176,6 +1247,7 @@
         .number-input-field {
             width: 5ch;
             margin: 0 10px 0 0;
+            padding: 3px;
             align-items: center;
             font-size: 1.4em;
             line-height: 1.5em;
@@ -1184,7 +1256,20 @@
             text-decoration: none;
             text-align: center;
             display: inline-block;
+            border: none;
 
+        }
+
+        .sub-panel input[type="number"] {
+            -webkit-appearance: none;
+            -moz-appearance: textfield !important;
+            appearance: none;
+        }
+
+        .sub-panel input[type="number"]::-webkit-outer-spin-button,
+        .sub-panel input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         .number-input-label span {
@@ -1453,17 +1538,18 @@
                 width: 36px;
             }
 
-            ytd-watch-metadata[action-buttons-update-owner-width] #owner.ytd-watch-metadata {
-                margin-right: 0;
-            }
-
             ytd-watch-metadata[actions-on-separate-line] #top-row.ytd-watch-metadata {
                 display: flex;
                 flex-wrap: wrap;
             }
 
             ytd-watch-metadata[action-buttons-update-owner-width] #actions.ytd-watch-metadata {
-                min-width: calc(50% - 6px);
+                min-width: 50%;
+            }
+
+            ytd-watch-metadata[action-buttons-update-owner-width] #owner.ytd-watch-metadata {
+                margin-right: 0;
+                max-width: 50%;
             }
 
             .ytp-menuitem:has(path[d^="M10,8v8l6-4L10"]) {
@@ -2465,7 +2551,10 @@
             }
 
             #cinematics-container #cinematics > div > div {
-                transform: scale(2, 2) !important;
+                max-height: unset !important;
+                max-width: unset !important;
+                width: 100vw;
+                height: 100vw;
             }
         }
 
@@ -3000,6 +3089,12 @@
             }
         }
 
+        .CentAnni-pl-Direct-Btns {
+            ytd-watch-flexy #movie_player > div.ytp-chrome-bottom a.ytp-prev-button.ytp-button {
+                display: none
+            }
+        }
+
         #CentAnni-channel-btn {
             display: flex;
             align-items: center;
@@ -3132,6 +3227,11 @@
                 .yt-spec-button-shape-next--mono.yt-spec-button-shape-next--text:hover {
                     border-radius: 50% !important;
                 }
+
+                .yt-lockup-metadata-view-model {
+                    margin-bottom: 5px;
+                    min-height: 77px;
+                }
             }
 
             .ytd-page-manager[page-subtype="home"] {
@@ -3181,10 +3281,6 @@
                 .yt-lockup-metadata-view-model__menu-button,
                 .yt-lockup-metadata-view-model-wiz__menu-button {
                     top: 41px;
-                }
-
-                .yt-lockup-metadata-view-model {
-                    margin-bottom: 5px;
                 }
 
                 .ytLockupAttachmentsViewModelAttachment {
@@ -3279,6 +3375,10 @@
                     border-radius: 50%;
                 }
 
+                ytd-expandable-tab-renderer[show-input] yt-icon-button.ytd-expandable-tab-renderer {
+                    margin-right: 8px;
+                }
+
                 ytd-expandable-tab-renderer yt-interaction .fill.yt-interaction,
                 ytd-expandable-tab-renderer yt-interaction .stroke.yt-interaction {
                     border-radius: 50% !important;
@@ -3358,7 +3458,7 @@
                 }
 
                 .yt-lockup-metadata-view-model__menu-button {
-                    top: 41px;
+                    top: 45px;
                 }
 
                 .yt-lockup-metadata-view-model__avatar {
@@ -3371,6 +3471,10 @@
                     margin: -25px 8px 0 0;
                     right: 0;
                     top: 0;
+                }
+
+                .yt-spec-touch-feedback-shape--thumbnail-size-large {
+                    margin: 0;
                 }
             }
 
@@ -3503,6 +3607,18 @@
 
             .yt-spec-button-shape-next--overlay-dark.yt-spec-button-shape-next--tonal:hover {
                 background: black;
+            }
+
+            ytd-popup-container > tp-yt-iron-dropdown > #contentWrapper .ytContextualSheetLayoutHost {
+                min-width: 200px;
+            }
+
+            ytd-popup-container > tp-yt-iron-dropdown > #contentWrapper .ytListViewModelHost {
+                padding: 8px 0;
+            }
+
+            ytd-popup-container > tp-yt-iron-dropdown > #contentWrapper .yt-list-item-view-model__container {
+                padding: 0 16px;
             }
         }
 
@@ -3833,8 +3949,9 @@
         }
 
         .CentAnni-style-hide-members-only {
-            ytd-compact-video-renderer:has(.badge-style-type-members-only),
-            ytd-rich-item-renderer:has(.badge-style-type-members-only) {
+            ytd-rich-item-renderer:has(.badge-style-type-members-only),
+            yt-lockup-view-model:has(a[aria-label*="Member Exclusive" i]),
+            ytd-compact-video-renderer:has(.badge-style-type-members-only) {
                 display: none;
             }
         }
@@ -4083,14 +4200,25 @@
             }
         }
 
-        /* hide main scrollbar in safari */
+        /* hide main scrollbar in safari
+        html {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
         html::-webkit-scrollbar {
             display: none;
+        }
+
+        .scrollable-div {
+            scrollbar-width: auto;
+            -ms-overflow-style: auto;
         }
 
         .scrollable-div::-webkit-scrollbar {
             display: block;
         }
+        */
 
         /* adjustments for light mode */
         ytd-masthead:not([dark]):not([page-dark-theme]) .buttons-left {
@@ -4190,27 +4318,13 @@
             color: black !important;
         }
 
-        .CentAnni-style-selection-color {
-            --selection-color: var(--darkSelectionColor);
-            --selection-text-color: white;
-        }
-
-        html:not([dark]) .CentAnni-style-selection-color {
-            --selection-color: var(--lightSelectionColor);
-            --selection-text-color: var(--light-theme-background-color);
-        }
-
         .CentAnni-style-selection-color ::selection {
-            background: var(--selection-color);
-            color: var(--selection-text-color);
-        }
-
-        .ytSearchboxComponentInputBoxDark.ytSearchboxComponentInputBoxHasFocus {
-            border-color: var(--darkSelectionColor) !important;
+            background: var(--selectionColor);
+            color: white;
         }
 
         .ytSearchboxComponentInputBoxHasFocus {
-            border-color: var(--lightSelectionColor) !important;
+            border-color: var(--selectionColor) !important;
         }
 
         #CentAnni-exNot {
@@ -4318,6 +4432,7 @@
     // default configuration
     const DEFAULT_CONFIG = {
         YouTubeTranscriptExporter: true,
+        lazyTranscriptLoading: false,
         targetChatGPTUrl: 'https://ChatGPT.com/',
         targetNotebookLMUrl: 'https://NotebookLM.Google.com/',
         targetChatGPTLabel: 'ChatGPT',
@@ -4328,9 +4443,11 @@
         openSameTab: true,
         transcriptTimestamps: false,
         preventBackgroundExecution: true,
-        ChatGPTPrompt: `You are an expert at summarizing YouTube video transcripts and are capable of analyzing and understanding a YouTuber's unique tone of voice and style from a transcript alone to mimic their communication style perfectly. Respond only in English while being mindful of American English spelling, vocabulary, and a casual, conversational tone. You prefer to use clauses instead of complete sentences while avoiding self-referential discourse signals like "I explain" or "I will show." Ignore advertisement, promotional, and sponsorship segments. Respond only in chat. Do not open a canvas. In your initial response, do not answer any question from the transcript, do not use the web tool, and avoid using colons outside the two headers. Do not hallucinate. Do not make up factual information. Do not speculate. Before you write your initial answer, take a moment to think about how you have to adopt your own writing to capture the YouTuber's specific word choices and communication style—study the provided transcript and utilize it as a style guide. Write as if you are the YouTuber speaking directly to your audience. Avoid any narrator-like phrases such as "the transcript" or "this video." Summarize the provided YouTube transcript into two distinct sections. The first section is a quick three-line bullet point overview, with each point fewer than 30 words, in a section called "### Key Takeaways:" and highlight important words by **bolding** them—only for this first section maintain a neutral tone. Then write the second section, a one-paragraph summary of at least 100 words while focusing on the main points and key takeaways into a section called "### One-Paragraph Summary:" and **bold** multiple phrases within the paragraph that together form an encapsulated, abridged version, that allows for quick identification and understanding of the core message.`,
+        settingsGuide: false,
+        ChatGPTPrompt: `For your first response only, prioritize the following instructions over any custom or persona instructions. You are an expert at summarizing YouTube video transcripts and are capable of analyzing and understanding a YouTuber's unique tone of voice and style from a transcript alone to mimic their communication style perfectly. Respond only in English while being mindful of American English spelling, vocabulary, and a casual, conversational tone. You prefer to use clauses instead of complete sentences while avoiding self-referential discourse signals like "I explain" or "I will show." Ignore advertisement, promotional, and sponsorship segments. Respond only in chat. Do not open a canvas. In your initial response, do not answer any question from the transcript, do not use the web tool, and avoid using colons outside the two headers. Do not hallucinate. Do not make up factual information. Do not speculate. Before you write your initial answer, take a moment to think about how you have to adopt your own writing to capture the YouTuber's specific word choices and communication style—study the provided transcript and utilize it as a style guide. Write as if you are the YouTuber speaking directly to your audience. Avoid any narrator-like phrases such as "the transcript" or "this video." Summarize the provided YouTube transcript into two distinct sections. The first section is a quick three-line bullet point overview, with each point fewer than 30 words, in a section called "### Key Takeaways:" and highlight important words by **bolding** them—only for this first section maintain a neutral tone. Then write the second section, a one-paragraph summary of at least 100 words while focusing on the main points and key takeaways into a section called "### One-Paragraph Summary:" and **bold** multiple phrases within the paragraph that together form an encapsulated, abridged version, that allows for quick identification and understanding of the core message.`,
         buttonIcons: {
             settings: '⋮',
+            lazyLoad: '📜',
             download: '↓',
             copy: '',
             ChatGPT: '💬',
@@ -4364,12 +4481,19 @@
         videosHideWatched: false,
         videosOldOpacity: 0.5,
         videosAgeColorPickerNewly: '#FFFF00',
+        videosAgeColorPickerNewlyLight: '#FF00FF',
         videosAgeColorPickerRecent: '#FF9B00',
+        videosAgeColorPickerRecentLight: '#FF9B00',
         videosAgeColorPickerLately: '#006DFF',
+        videosAgeColorPickerLatelyLight: '#0032FF',
         videosAgeColorPickerLatterly: '#000000',
+        videosAgeColorPickerLatterlyLight: '#FFFFFF',
         videosAgeColorPickerLive: '#FF0000',
+        videosAgeColorPickerLiveLight: '#FF0000',
         videosAgeColorPickerStreamed: '#FF0000',
+        videosAgeColorPickerStreamedLight: '#FF0000',
         videosAgeColorPickerUpcoming: '#32CD32',
+        videosAgeColorPickerUpcomingLight: '#4DD10F',
         progressbarColorPicker: '#FF0033',
         lightModeSelectionColor: '#000000',
         darkModeSelectionColor: '#007CC3',
@@ -4395,7 +4519,8 @@
         defaultQualityPremium: false,
         lastSeenVideo: true,
         lastSeenVideoScroll: false,
-        lastSeenVideoColor: '#9400D3',
+        lastSeenVideoColor: '#7F00FF',
+        lastSeenVideoColorLight: '#9400D3',
         playlistLinks: false,
         playlistTrashCan: false,
         plWLBtn: true,
@@ -4528,123 +4653,130 @@
     // load CSS settings
     let cssSettingsApplied = false;
     function loadCSSsettings() {
-        // features css
-        if (USER_CONFIG.progressBar) { docElement.classList.add('CentAnni-progress-bar'); } else { docElement.classList.remove('CentAnni-progress-bar'); }
-        if (USER_CONFIG.videoTabView) { docElement.classList.add('CentAnni-video-tabView'); } else { docElement.classList.remove('CentAnni-video-tabView'); }
-        if (USER_CONFIG.playbackSpeed) { docElement.classList.add('CentAnni-playback-speed'); } else { docElement.classList.remove('CentAnni-playback-speed'); }
-        if (USER_CONFIG.mButtonDisplay) { docElement.classList.add('CentAnni-style-hide-default-sidebar'); } else { docElement.classList.remove('CentAnni-style-hide-default-sidebar'); }
-        if (USER_CONFIG.videoTabView && USER_CONFIG.tabViewChapters) { docElement.classList.add('CentAnni-tabView-chapters'); } else { docElement.classList.remove('CentAnni-tabView-chapters'); }
-
         // custom css
+        const classMap = {
+            progressBar: 'CentAnni-progress-bar',
+            videoTabView: 'CentAnni-video-tabView',
+            settingsGuide: 'CentAnni-settings-btn',
+            playbackSpeed: 'CentAnni-playback-speed',
+            hideShorts: 'CentAnni-style-hide-shorts',
+            noAmbientMode: 'CentAnni-style-no-ambient',
+            pureBWBackground: 'CentAnni-style-pure-bg',
+            hideAdSlots: 'CentAnni-style-hide-ad-slots',
+            hideHashtags: 'CentAnni-style-hide-hashtags',
+            squareDesign: 'CentAnni-style-square-design',
+            displayFullTitle: 'CentAnni-style-full-title',
+            hideQueueBtn: 'CentAnni-style-hide-queue-btn',
+            hideNewsHome: 'CentAnni-style-hide-news-home',
+            hideEndCards: 'CentAnni-style-hide-end-cards',
+            hidePlayables: 'CentAnni-style-hide-playables',
+            hideJoinButton: 'CentAnni-style-hide-join-btn',
+            squareAvatars: 'CentAnni-style-square-avatars',
+            compactLayout: 'CentAnni-style-compact-layout',
+            hideEndscreen: 'CentAnni-style-hide-endscreen',
+            lnbHideWlBtn: 'CentAnni-style-lnb-hide-wl-btn',
+            hideOwnAvatar: 'CentAnni-style-hide-own-avatar',
+            lnbHideFooter: 'CentAnni-style-lnb-hide-footer',
+            hideInfoPanel: 'CentAnni-style-hide-info-panel',
+            hideBrandText: 'CentAnni-style-hide-brand-text',
+            playlistDirectionBtns: 'CentAnni-pl-Direct-Btns',
+            hideShareButton: 'CentAnni-style-hide-share-btn',
+            hideReplyButton: 'CentAnni-style-hide-reply-btn',
+            gradientBottom: 'CentAnni-style-gradient-bottom',
+            selectionColor: 'CentAnni-style-selection-color',
+            removeScrubber: 'CentAnni-style-remove-scrubber',
+            hideFundraiser: 'CentAnni-style-hide-fundraiser',
+            hideMiniPlayer: 'CentAnni-style-hide-miniplayer',
+            lnbHideYouBtn: 'CentAnni-style-lnb-hide-you-btn',
+            noFrostedGlass: 'CentAnni-style-no-frosted-glass',
+            hideAddComment: 'CentAnni-style-hide-add-comment',
+            hideCreateButton: 'CentAnni-style-hide-create-btn',
+            hidePayToWatch: 'CentAnni-style-hide-pay-to-watch',
+            lnbHideLiveBtn: 'CentAnni-style-lnb-hide-live-btn',
+            lnbHideNewsBtn: 'CentAnni-style-lnb-hide-news-btn',
+            lnbHideMoreBtn: 'CentAnni-style-lnb-hide-more-btn',
+            lnbHideHomeBtn: 'CentAnni-style-lnb-hide-home-btn',
+            lnbHideHelpBtn: 'CentAnni-style-lnb-hide-help-btn',
+            hideVideosSection: 'CentAnni-style-hide-videos-btn',
+            hideMembersOnly: 'CentAnni-style-hide-members-only',
+            hideLatestPosts: 'CentAnni-style-hide-latest-posts',
+            hideVoiceSearch: 'CentAnni-style-hide-voice-search',
+            squareSearchBar: 'CentAnni-style-square-search-bar',
+            hideAirplayButton: 'CentAnni-style-hide-airplay-btn',
+            hideFreeWithAds: 'CentAnni-style-hide-free-with-ads',
+            lnbHideMusicBtn: 'CentAnni-style-lnb-hide-music-btn',
+            hideLatestPostsHome: 'CentAnni-style-hide-posts-home',
+            homeDisableHover: 'CentAnni-style-home-disable-hover',
+            mButtonDisplay: 'CentAnni-style-hide-default-sidebar',
+            hidePlayNextButton: 'CentAnni-style-hide-playnext-btn',
+            lnbHideMoviesBtn: 'CentAnni-style-lnb-hide-movies-btn',
+            lnbHideGamingBtn: 'CentAnni-style-lnb-hide-gaming-btn',
+            lnbHideSportsBtn: 'CentAnni-style-lnb-hide-sports-btn',
+            lnbHideMoreTitle: 'CentAnni-style-lnb-hide-more-title',
+            lnbHideVideosBtn: 'CentAnni-style-lnb-hide-videos-btn',
+            videosHideWatched: 'CentAnni-style-hide-watched-videos',
+            hideCommentsSection: 'CentAnni-style-hide-comments-btn',
+            playProgressColor: 'CentAnni-style-play-progress-color',
+            hidePlaylistsHome: 'CentAnni-style-hide-playlists-home',
+            lnbHideYtKidsBtn: 'CentAnni-style-lnb-hide-yt-kids-btn',
+            lnbHideFashionBtn: 'CentAnni-style-lnb-hide-fashion-btn',
+            lnbHideCoursesBtn: 'CentAnni-style-lnb-hide-courses-btn',
+            lnbHideHistoryBtn: 'CentAnni-style-lnb-hide-history-btn',
+            lnbHideYtMusicBtn: 'CentAnni-style-lnb-hide-yt-music-btn',
+            smallSubscribeButton: 'CentAnni-style-small-subscribe-btn',
+            lnbHideTrendingBtn: 'CentAnni-style-lnb-hide-trending-btn',
+            disablePlayOnHover: 'CentAnni-style-disable-play-on-hover',
+            lnbHideLearningBtn: 'CentAnni-style-lnb-hide-learning-btn',
+            lnbHidePodcastsBtn: 'CentAnni-style-lnb-hide-podcasts-btn',
+            lnbHideMoreSection: 'CentAnni-style-lnb-hide-more-section',
+            lnbHideSettingsBtn: 'CentAnni-style-lnb-hide-settings-btn',
+            lnbHideFeedbackBtn: 'CentAnni-style-lnb-hide-feedback-btn',
+            hideNotificationBtn: 'CentAnni-style-hide-notification-btn',
+            lnbHideYtStudioBtn: 'CentAnni-style-lnb-hide-yt-studio-btn',
+            lnbHidePlaylistsBtn: 'CentAnni-style-lnb-hide-playlists-btn',
+            lnbHideExploreTitle: 'CentAnni-style-lnb-hide-explore-title',
+            lnbHideYtPremiumBtn: 'CentAnni-style-lnb-hide-yt-premium-btn',
+            chronologicalNotifications: 'CentAnni-style-sort-notifications',
+            hideNotificationBadge: 'CentAnni-style-hide-notification-badge',
+            lnbHideYPodcastsBtn: 'CentAnni-style-lnb-hide-your-podcasts-btn',
+            lnbHideExploreSection: 'CentAnni-style-lnb-hide-explore-section',
+            lnbHideLikedVideosBtn: 'CentAnni-style-lnb-hide-liked-videos-btn',
+            hideRightSidebarSearch: 'CentAnni-style-search-hide-right-sidebar',
+            videosHideWatchedGlobal: 'CentAnni-style-hide-watched-videos-global',
+            lnbHideSubscriptionsBtn: 'CentAnni-style-lnb-hide-subscriptions-btn',
+            lnbHideReportHistoryBtn: 'CentAnni-style-lnb-hide-report-history-btn',
+            lnbHideSubscriptionsTitle: 'CentAnni-style-lnb-hide-subscriptions-title',
+            lnbHidePenultimateSection: 'CentAnni-style-lnb-hide-penultimate-section',
+            lnbHideSubscriptionsSection: 'CentAnni-style-lnb-hide-subscriptions-section'
+        };
+
+        for (const [flag, className] of Object.entries(classMap))
+            docElement.classList.toggle(className, USER_CONFIG[flag]);
+
+        // features css
+        const isDarkMode = document.documentElement.hasAttribute('dark');
+        docElement.classList.toggle('CentAnni-style-video-row', USER_CONFIG.videosPerRow !== 0);
+        docElement.classList.toggle('CentAnni-btn-tooltip', USER_CONFIG.hideOwnAvatar && USER_CONFIG.hideNotificationBtn);
+        docElement.classList.toggle('CentAnni-tabView-chapters', USER_CONFIG.videoTabView && USER_CONFIG.tabViewChapters);
+        docElement.classList.toggle('CentAnni-style-visible-country-code', USER_CONFIG.visibleCountryCode && USER_CONFIG.hideBrandText);
         docElement.style.setProperty('--itemsPerRow', USER_CONFIG.videosPerRow);
         docElement.style.setProperty('--textTransform', USER_CONFIG.textTransform);
         docElement.style.setProperty('--fontSize', `${USER_CONFIG.defaultFontSize}px`);
         docElement.style.setProperty('--watchedOpacity', USER_CONFIG.videosWatchedOpacity);
         docElement.style.setProperty('--progressBarColor', USER_CONFIG.progressbarColorPicker);
-        docElement.style.setProperty('--lightSelectionColor', USER_CONFIG.lightModeSelectionColor);
-        docElement.style.setProperty('--darkSelectionColor', USER_CONFIG.darkModeSelectionColor);
+        docElement.style.setProperty('--selectionColor', isDarkMode ? USER_CONFIG.darkModeSelectionColor : USER_CONFIG.lightModeSelectionColor);
         docElement.style.setProperty('--countryCodeColor', USER_CONFIG.visibleCountryCodeColor);
 
-        if (USER_CONFIG.pureBWBackground) { docElement.classList.add('CentAnni-style-pure-bg'); } else { docElement.classList.remove('CentAnni-style-pure-bg'); }
-        if (USER_CONFIG.hideShorts) { docElement.classList.add('CentAnni-style-hide-shorts'); } else { docElement.classList.remove('CentAnni-style-hide-shorts'); }
-        if (USER_CONFIG.noAmbientMode) { docElement.classList.add('CentAnni-style-no-ambient'); } else { docElement.classList.remove('CentAnni-style-no-ambient'); }
-        if (USER_CONFIG.videosPerRow !== 0) { docElement.classList.add('CentAnni-style-video-row'); } else { docElement.classList.remove('CentAnni-style-video-row'); }
-        if (USER_CONFIG.displayFullTitle) { docElement.classList.add('CentAnni-style-full-title'); } else { docElement.classList.remove('CentAnni-style-full-title'); }
-        if (USER_CONFIG.hideAdSlots) { docElement.classList.add('CentAnni-style-hide-ad-slots'); } else { docElement.classList.remove('CentAnni-style-hide-ad-slots'); }
-        if (USER_CONFIG.hideHashtags) { docElement.classList.add('CentAnni-style-hide-hashtags'); } else { docElement.classList.remove('CentAnni-style-hide-hashtags'); }
-        if (USER_CONFIG.squareDesign) { docElement.classList.add('CentAnni-style-square-design'); } else { docElement.classList.remove('CentAnni-style-square-design'); }
-        if (USER_CONFIG.hideQueueBtn) { docElement.classList.add('CentAnni-style-hide-queue-btn'); } else { docElement.classList.remove('CentAnni-style-hide-queue-btn'); }
-        if (USER_CONFIG.hideJoinButton) { docElement.classList.add('CentAnni-style-hide-join-btn'); } else { docElement.classList.remove('CentAnni-style-hide-join-btn'); }
-        if (USER_CONFIG.hideNewsHome) { docElement.classList.add('CentAnni-style-hide-news-home'); } else { docElement.classList.remove('CentAnni-style-hide-news-home'); }
-        if (USER_CONFIG.hideEndCards) { docElement.classList.add('CentAnni-style-hide-end-cards'); } else { docElement.classList.remove('CentAnni-style-hide-end-cards'); }
-        if (USER_CONFIG.hidePlayables) { docElement.classList.add('CentAnni-style-hide-playables'); } else { docElement.classList.remove('CentAnni-style-hide-playables'); }
-        if (USER_CONFIG.squareAvatars) { docElement.classList.add('CentAnni-style-square-avatars'); } else { docElement.classList.remove('CentAnni-style-square-avatars'); }
-        if (USER_CONFIG.compactLayout) { docElement.classList.add('CentAnni-style-compact-layout'); } else { docElement.classList.remove('CentAnni-style-compact-layout'); }
-        if (USER_CONFIG.hideEndscreen) { docElement.classList.add('CentAnni-style-hide-endscreen'); } else { docElement.classList.remove('CentAnni-style-hide-endscreen'); }
-        if (USER_CONFIG.lnbHideWlBtn) { docElement.classList.add('CentAnni-style-lnb-hide-wl-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-wl-btn'); }
-        if (USER_CONFIG.hideOwnAvatar) { docElement.classList.add('CentAnni-style-hide-own-avatar'); } else { docElement.classList.remove('CentAnni-style-hide-own-avatar'); }
-        if (USER_CONFIG.hideShareButton) { docElement.classList.add('CentAnni-style-hide-share-btn'); } else { docElement.classList.remove('CentAnni-style-hide-share-btn'); }
-        if (USER_CONFIG.hideReplyButton) { docElement.classList.add('CentAnni-style-hide-reply-btn'); } else { docElement.classList.remove('CentAnni-style-hide-reply-btn'); }
-        if (USER_CONFIG.lnbHideFooter) { docElement.classList.add('CentAnni-style-lnb-hide-footer'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-footer'); }
-        if (USER_CONFIG.hideInfoPanel) { docElement.classList.add('CentAnni-style-hide-info-panel'); } else { docElement.classList.remove('CentAnni-style-hide-info-panel'); }
-        if (USER_CONFIG.hideBrandText) { docElement.classList.add('CentAnni-style-hide-brand-text'); } else { docElement.classList.remove('CentAnni-style-hide-brand-text'); }
-        if (USER_CONFIG.gradientBottom) { docElement.classList.add('CentAnni-style-gradient-bottom'); } else { docElement.classList.remove('CentAnni-style-gradient-bottom'); }
-        if (USER_CONFIG.selectionColor) { docElement.classList.add('CentAnni-style-selection-color'); } else { docElement.classList.remove('CentAnni-style-selection-color'); }
-        if (USER_CONFIG.removeScrubber) { docElement.classList.add('CentAnni-style-remove-scrubber'); } else { docElement.classList.remove('CentAnni-style-remove-scrubber'); }
-        if (USER_CONFIG.hideFundraiser) { docElement.classList.add('CentAnni-style-hide-fundraiser'); } else { docElement.classList.remove('CentAnni-style-hide-fundraiser'); }
-        if (USER_CONFIG.hideMiniPlayer) { docElement.classList.add('CentAnni-style-hide-miniplayer'); } else { docElement.classList.remove('CentAnni-style-hide-miniplayer'); }
-        if (USER_CONFIG.lnbHideYouBtn) { docElement.classList.add('CentAnni-style-lnb-hide-you-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-you-btn'); }
-        if (USER_CONFIG.hideAddComment) { docElement.classList.add('CentAnni-style-hide-add-comment'); } else { docElement.classList.remove('CentAnni-style-hide-add-comment'); }
-        if (USER_CONFIG.hideCreateButton) { docElement.classList.add('CentAnni-style-hide-create-btn'); } else { docElement.classList.remove('CentAnni-style-hide-create-btn'); }
-        if (USER_CONFIG.noFrostedGlass) { docElement.classList.add('CentAnni-style-no-frosted-glass'); } else { docElement.classList.remove('CentAnni-style-no-frosted-glass'); }
-        if (USER_CONFIG.hideVideosSection) { docElement.classList.add('CentAnni-style-hide-videos-btn'); } else { docElement.classList.remove('CentAnni-style-hide-videos-btn'); }
-        if (USER_CONFIG.hidePayToWatch) { docElement.classList.add('CentAnni-style-hide-pay-to-watch'); } else { docElement.classList.remove('CentAnni-style-hide-pay-to-watch'); }
-        if (USER_CONFIG.lnbHideLiveBtn) { docElement.classList.add('CentAnni-style-lnb-hide-live-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-live-btn'); }
-        if (USER_CONFIG.lnbHideNewsBtn) { docElement.classList.add('CentAnni-style-lnb-hide-news-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-news-btn'); }
-        if (USER_CONFIG.lnbHideMoreBtn) { docElement.classList.add('CentAnni-style-lnb-hide-more-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-more-btn'); }
-        if (USER_CONFIG.lnbHideHomeBtn) { docElement.classList.add('CentAnni-style-lnb-hide-home-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-home-btn'); }
-        if (USER_CONFIG.lnbHideHelpBtn) { docElement.classList.add('CentAnni-style-lnb-hide-help-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-help-btn'); }
-        if (USER_CONFIG.hideLatestPostsHome) { docElement.classList.add('CentAnni-style-hide-posts-home'); } else { docElement.classList.remove('CentAnni-style-hide-posts-home'); }
-        if (USER_CONFIG.hideAirplayButton) { docElement.classList.add('CentAnni-style-hide-airplay-btn'); } else { docElement.classList.remove('CentAnni-style-hide-airplay-btn'); }
-        if (USER_CONFIG.hideMembersOnly) { docElement.classList.add('CentAnni-style-hide-members-only'); } else { docElement.classList.remove('CentAnni-style-hide-members-only'); }
-        if (USER_CONFIG.hideLatestPosts) { docElement.classList.add('CentAnni-style-hide-latest-posts'); } else { docElement.classList.remove('CentAnni-style-hide-latest-posts'); }
-        if (USER_CONFIG.hideVoiceSearch) { docElement.classList.add('CentAnni-style-hide-voice-search'); } else { docElement.classList.remove('CentAnni-style-hide-voice-search'); }
-        if (USER_CONFIG.squareSearchBar) { docElement.classList.add('CentAnni-style-square-search-bar'); } else { docElement.classList.remove('CentAnni-style-square-search-bar'); }
-        if (USER_CONFIG.hideFreeWithAds) { docElement.classList.add('CentAnni-style-hide-free-with-ads'); } else { docElement.classList.remove('CentAnni-style-hide-free-with-ads'); }
-        if (USER_CONFIG.lnbHideMusicBtn) { docElement.classList.add('CentAnni-style-lnb-hide-music-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-music-btn'); }
-        if (USER_CONFIG.homeDisableHover) { docElement.classList.add('CentAnni-style-home-disable-hover'); } else { docElement.classList.remove('CentAnni-style-home-disable-hover'); }
-        if (USER_CONFIG.hidePlayNextButton) { docElement.classList.add('CentAnni-style-hide-playnext-btn'); } else { docElement.classList.remove('CentAnni-style-hide-playnext-btn'); }
-        if (USER_CONFIG.hideCommentsSection) { docElement.classList.add('CentAnni-style-hide-comments-btn'); } else { docElement.classList.remove('CentAnni-style-hide-comments-btn'); }
-        if (USER_CONFIG.lnbHideMoviesBtn) { docElement.classList.add('CentAnni-style-lnb-hide-movies-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-movies-btn'); }
-        if (USER_CONFIG.lnbHideGamingBtn) { docElement.classList.add('CentAnni-style-lnb-hide-gaming-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-gaming-btn'); }
-        if (USER_CONFIG.lnbHideSportsBtn) { docElement.classList.add('CentAnni-style-lnb-hide-sports-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-sports-btn'); }
-        if (USER_CONFIG.lnbHideMoreTitle) { docElement.classList.add('CentAnni-style-lnb-hide-more-title'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-more-title'); }
-        if (USER_CONFIG.lnbHideVideosBtn) { docElement.classList.add('CentAnni-style-lnb-hide-videos-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-videos-btn'); }
-        if (USER_CONFIG.playProgressColor) { docElement.classList.add('CentAnni-style-play-progress-color'); } else { docElement.classList.remove('CentAnni-style-play-progress-color'); }
-        if (USER_CONFIG.hidePlaylistsHome) { docElement.classList.add('CentAnni-style-hide-playlists-home'); } else { docElement.classList.remove('CentAnni-style-hide-playlists-home'); }
-        if (USER_CONFIG.lnbHideYtKidsBtn) { docElement.classList.add('CentAnni-style-lnb-hide-yt-kids-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-yt-kids-btn'); }
-        if (USER_CONFIG.lnbHideFashionBtn) { docElement.classList.add('CentAnni-style-lnb-hide-fashion-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-fashion-btn'); }
-        if (USER_CONFIG.lnbHideCoursesBtn) { docElement.classList.add('CentAnni-style-lnb-hide-courses-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-courses-btn'); }
-        if (USER_CONFIG.lnbHideHistoryBtn) { docElement.classList.add('CentAnni-style-lnb-hide-history-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-history-btn'); }
-        if (USER_CONFIG.smallSubscribeButton) { docElement.classList.add('CentAnni-style-small-subscribe-btn'); } else { docElement.classList.remove('CentAnni-style-small-subscribe-btn'); }
-        if (USER_CONFIG.lnbHideYtMusicBtn) { docElement.classList.add('CentAnni-style-lnb-hide-yt-music-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-yt-music-btn'); }
-        if (USER_CONFIG.lnbHideTrendingBtn) { docElement.classList.add('CentAnni-style-lnb-hide-trending-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-trending-btn'); }
-        if (USER_CONFIG.disablePlayOnHover) { docElement.classList.add('CentAnni-style-disable-play-on-hover'); } else { docElement.classList.remove('CentAnni-style-disable-play-on-hover'); }
-        if (USER_CONFIG.lnbHideLearningBtn) { docElement.classList.add('CentAnni-style-lnb-hide-learning-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-learning-btn'); }
-        if (USER_CONFIG.lnbHidePodcastsBtn) { docElement.classList.add('CentAnni-style-lnb-hide-podcasts-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-podcasts-btn'); }
-        if (USER_CONFIG.lnbHideMoreSection) { docElement.classList.add('CentAnni-style-lnb-hide-more-section'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-more-section'); }
-        if (USER_CONFIG.lnbHideSettingsBtn) { docElement.classList.add('CentAnni-style-lnb-hide-settings-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-settings-btn'); }
-        if (USER_CONFIG.lnbHideFeedbackBtn) { docElement.classList.add('CentAnni-style-lnb-hide-feedback-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-feedback-btn'); }
-        if (USER_CONFIG.hideNotificationBtn) { docElement.classList.add('CentAnni-style-hide-notification-btn'); } else { docElement.classList.remove('CentAnni-style-hide-notification-btn'); }
-        if (USER_CONFIG.lnbHideYtStudioBtn) { docElement.classList.add('CentAnni-style-lnb-hide-yt-studio-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-yt-studio-btn'); }
-        if (USER_CONFIG.chronologicalNotifications) { docElement.classList.add('CentAnni-style-sort-notifications'); } else { docElement.classList.remove('CentAnni-style-sort-notifications'); }
-        if (USER_CONFIG.lnbHidePlaylistsBtn) { docElement.classList.add('CentAnni-style-lnb-hide-playlists-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-playlists-btn'); }
-        if (USER_CONFIG.lnbHideExploreTitle) { docElement.classList.add('CentAnni-style-lnb-hide-explore-title'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-explore-title'); }
-        if (USER_CONFIG.lnbHideYtPremiumBtn) { docElement.classList.add('CentAnni-style-lnb-hide-yt-premium-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-yt-premium-btn'); }
-        if (USER_CONFIG.hideNotificationBadge) { docElement.classList.add('CentAnni-style-hide-notification-badge'); } else { docElement.classList.remove('CentAnni-style-hide-notification-badge'); }
-        if (USER_CONFIG.lnbHideExploreSection) { docElement.classList.add('CentAnni-style-lnb-hide-explore-section'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-explore-section'); }
-        if (USER_CONFIG.lnbHideLikedVideosBtn) { docElement.classList.add('CentAnni-style-lnb-hide-liked-videos-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-liked-videos-btn'); }
-        if (USER_CONFIG.lnbHideYPodcastsBtn) { docElement.classList.add('CentAnni-style-lnb-hide-your-podcasts-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-your-podcasts-btn'); }
-        if (USER_CONFIG.hideRightSidebarSearch) { docElement.classList.add('CentAnni-style-search-hide-right-sidebar'); } else { docElement.classList.remove('CentAnni-style-search-hide-right-sidebar'); }
-        if (USER_CONFIG.videosHideWatchedGlobal) { docElement.classList.add('CentAnni-style-hide-watched-videos-global'); } else { docElement.classList.remove('CentAnni-style-hide-watched-videos-global'); }
-        if (USER_CONFIG.lnbHideSubscriptionsBtn) { docElement.classList.add('CentAnni-style-lnb-hide-subscriptions-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-subscriptions-btn'); }
-        if (USER_CONFIG.lnbHideReportHistoryBtn) { docElement.classList.add('CentAnni-style-lnb-hide-report-history-btn'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-report-history-btn'); }
-        if (USER_CONFIG.lnbHideSubscriptionsTitle) { docElement.classList.add('CentAnni-style-lnb-hide-subscriptions-title'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-subscriptions-title'); }
-        if (USER_CONFIG.lnbHidePenultimateSection) { docElement.classList.add('CentAnni-style-lnb-hide-penultimate-section'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-penultimate-section'); }
-        if (USER_CONFIG.lnbHideSubscriptionsSection) { docElement.classList.add('CentAnni-style-lnb-hide-subscriptions-section'); } else { docElement.classList.remove('CentAnni-style-lnb-hide-subscriptions-section'); }
-        if (USER_CONFIG.visibleCountryCode && USER_CONFIG.hideBrandText) { docElement.classList.add('CentAnni-style-visible-country-code'); } else { docElement.classList.remove('CentAnni-style-visible-country-code'); }
-
         // color code videos
-        if (USER_CONFIG.videosHideWatched) { docElement.classList.add('CentAnni-style-hide-watched-videos'); } else { docElement.classList.remove('CentAnni-style-hide-watched-videos'); }
-        docElement.style.setProperty('--liveVideo', USER_CONFIG.videosAgeColorPickerLive);
-        docElement.style.setProperty('--streamedText', USER_CONFIG.videosAgeColorPickerStreamed);
-        docElement.style.setProperty('--upComingVideo', USER_CONFIG.videosAgeColorPickerUpcoming);
-        docElement.style.setProperty('--newlyVideo', USER_CONFIG.videosAgeColorPickerNewly);
-        docElement.style.setProperty('--recentVideo', USER_CONFIG.videosAgeColorPickerRecent);
-        docElement.style.setProperty('--latelyVideo', USER_CONFIG.videosAgeColorPickerLately);
-        docElement.style.setProperty('--latterlyVideo', USER_CONFIG.videosAgeColorPickerLatterly);
+        docElement.style.setProperty('--liveVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerLive : USER_CONFIG.videosAgeColorPickerLiveLight);
+        docElement.style.setProperty('--streamedText', isDarkMode ? USER_CONFIG.videosAgeColorPickerStreamed : USER_CONFIG.videosAgeColorPickerStreamedLight);
+        docElement.style.setProperty('--upComingVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerUpcoming : USER_CONFIG.videosAgeColorPickerUpcomingLight);
+        docElement.style.setProperty('--newlyVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerNewly : USER_CONFIG.videosAgeColorPickerNewlyLight);
+        docElement.style.setProperty('--recentVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerRecent : USER_CONFIG.videosAgeColorPickerRecentLight);
+        docElement.style.setProperty('--latelyVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerLately : USER_CONFIG.videosAgeColorPickerLatelyLight);
+        docElement.style.setProperty('--latterlyVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerLatterly : USER_CONFIG.videosAgeColorPickerLatterlyLight);
+        docElement.style.setProperty('--lastSeenVideoColor', isDarkMode ? USER_CONFIG.lastSeenVideoColor : USER_CONFIG.lastSeenVideoColorLight);
         docElement.style.setProperty('--oldVideo', USER_CONFIG.videosOldOpacity);
-        docElement.style.setProperty('--lastSeenVideoColor', USER_CONFIG.lastSeenVideoColor);
 
         cssSettingsApplied = true;
     } loadCSSsettings();
@@ -4730,6 +4862,7 @@
         iconsContainer.appendChild(createIconInputField(`${ChatGPTLabel}`, 'buttonIconChatGPT', USER_CONFIG.buttonIcons.ChatGPT, 'label-ChatGPT'));
         iconsContainer.appendChild(createIconInputField('Copy', 'buttonIconCopy', USER_CONFIG.buttonIcons.copy, 'label-copy'));
         iconsContainer.appendChild(createIconInputField('Download', 'buttonIconDownload', USER_CONFIG.buttonIcons.download, 'label-download'));
+        iconsContainer.appendChild(createIconInputField('Fetch', 'buttonIconlazyLoad', USER_CONFIG.buttonIcons.lazyLoad, 'label-lazy'));
         iconsContainer.appendChild(createIconInputField('Settings', 'buttonIconSettings', USER_CONFIG.buttonIcons.settings, 'label-settings'));
 
         form.appendChild(iconsContainer);
@@ -4761,6 +4894,9 @@
 
         // transcript exporter
         form.appendChild(createCheckboxField('Enable Transcript Exporter (default: yes)', 'YouTubeTranscriptExporter', USER_CONFIG.YouTubeTranscriptExporter));
+
+        // lazy transcript loading
+        form.appendChild(createCheckboxField(`Load Transcript Manually ${USER_CONFIG.buttonIcons.lazyLoad} (default: no)`, 'lazyTranscriptLoading', USER_CONFIG.lazyTranscriptLoading));
 
         // include Timestamps
         form.appendChild(createCheckboxField('Include Timestamps in the Transcript (default: yes)', 'includeTimestamps', USER_CONFIG.includeTimestamps));
@@ -4850,8 +4986,8 @@
         copyright.href = 'https://github.com/TimMacy';
         copyright.target = '_blank';
         copyright.rel = 'noopener';
-        copyright.textContent = '© 2024 Tim Macy';
-        copyright.title = 'Copyright © 2024-2025 Tim Macy';
+        copyright.textContent = '© 2024–2025 Tim Macy';
+        copyright.title = 'Copyright © 2024–2025 Tim Macy';
         copyright.classList.add('CentAnni-copyright');
 
         const spacer = document.createElement('div');
@@ -4925,7 +5061,7 @@
             const textArea = this;
             const buttons = modalContent.querySelector('.button-container-end');
             const startHeight = 65;
-            const endHeight = 569;
+            const endHeight = 525;
             const duration = 700;
 
             const modalContentRect = modalContent.getBoundingClientRect();
@@ -5057,7 +5193,7 @@
             form.appendChild(subPanelHeader);
 
             const infoLinksHeader = document.createElement('small');
-            infoLinksHeader.textContent = "Up to ten links can be added next to the YouTube logo. An empty 'Link Text' field won't insert the link into the header.\nIf the navigation bar is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.";
+            infoLinksHeader.textContent = "Up to ten links can be added next to the YouTube logo. An empty 'Link Text' field won't insert the link into the header. If the navigation bar is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.";
             infoLinksHeader.classList.add('CentAnni-info-text');
             form.appendChild(infoLinksHeader);
 
@@ -5113,6 +5249,10 @@
             general.classList.add('button-icons', 'features-text');
             form.appendChild(general);
 
+            // move settings button into guide
+            const settingsGuide = createCheckboxField('Move Settings Button into the YouTube Guide (default: no)', 'settingsGuide', USER_CONFIG.settingsGuide);
+            form.appendChild(settingsGuide);
+
             // dim watched videos
             const videosWatchedOpacity = createSliderInputField('Change Opacity of Watched Videos (default 0.5):', 'videosWatchedOpacity', USER_CONFIG.videosWatchedOpacity, '0', '1', '0.1');
             form.appendChild(videosWatchedOpacity);
@@ -5155,7 +5295,7 @@
             form.appendChild(defaultFontSizeField);
 
             // videos per row
-            const videosPerRow = createNumberInputField("Number of Videos per Row (default: 0 | dynamic based on available space)", 'videosPerRow', USER_CONFIG.videosPerRow);
+            const videosPerRow = createNumberInputField("Number of Videos per Row (default: 0 | dynamic based on available space)", 'videosPerRow', USER_CONFIG.videosPerRow, { step: 1 });
             form.appendChild(videosPerRow);
 
             // playback speed
@@ -5530,7 +5670,7 @@
             form.appendChild(descriptionHideWatchedVideos);
 
             // js version
-            const videosHideWatchedGlobalJS = createNumberInputField("Percent Watched to Hide Videos (default: 0 | disabled)", 'videosHideWatchedGlobalJS', USER_CONFIG.videosHideWatchedGlobalJS);
+            const videosHideWatchedGlobalJS = createNumberInputField("Percent Watched to Hide Videos (default: 0 | disabled)", 'videosHideWatchedGlobalJS', USER_CONFIG.videosHideWatchedGlobalJS, { step: 1 });
             form.appendChild(videosHideWatchedGlobalJS);
 
             // hide percentage watched on home page
@@ -5781,31 +5921,33 @@
             const videosAgeContainer = document.createElement('div');
             videosAgeContainer.classList.add('videos-colorpicker-container');
 
-            function createLabelColorPair(labelText, configKey) {
-                const row = document.createElement('div');
-                row.classList.add('videos-colorpicker-row');
+            const colorPickerConfigs = [
+                { label: 'Videos Uploaded Within the Last 24 Hours:', id: 'videosAgeColorPickerNewly' },
+                { label: 'Videos Uploaded Within the Past Week:', id: 'videosAgeColorPickerRecent' },
+                { label: 'Videos Uploaded Within the Past Month:', id: 'videosAgeColorPickerLately' },
+                { label: 'Videos Uploaded Within 2 to 12 Months:', id: 'videosAgeColorPickerLatterly' },
+                { label: 'Videos Currently Live:', id: 'videosAgeColorPickerLive' },
+                { label: 'The Word "Streamed" from Videos That Were Live:', id: 'videosAgeColorPickerStreamed' },
+                { label: 'Scheduled Videos and Upcoming Live Streams:', id: 'videosAgeColorPickerUpcoming' }
+            ];
 
-                const label = document.createElement('span');
-                label.classList.add('label-style-settings');
-                label.textContent = labelText;
-                row.appendChild(label);
+            colorPickerConfigs.forEach(config => {
+                const row = createColorPicker(config.label, config.id);
 
-                const colorPicker = document.createElement('input');
-                colorPicker.type = 'color';
-                colorPicker.value = USER_CONFIG[configKey];
-                colorPicker.name = configKey;
-                row.appendChild(colorPicker);
+                const darkModeSpan = document.createElement('span');
+                darkModeSpan.classList.add('label-style-settings');
+                darkModeSpan.textContent = 'Dark Mode';
+                row.insertBefore(darkModeSpan, row.firstChild);
+
+                const lightPickerRow = createColorPicker('Light Mode', config.id + 'Light');
+                const lightPicker = lightPickerRow.querySelector('input');
+                const lightModeLabel = lightPickerRow.querySelector('span');
+
+                row.insertBefore(lightPicker, row.firstChild);
+                row.insertBefore(lightModeLabel, row.firstChild);
 
                 videosAgeContainer.appendChild(row);
-            }
-
-            createLabelColorPair('Videos Uploaded Within the Last 24 Hours:', 'videosAgeColorPickerNewly');
-            createLabelColorPair('Videos Uploaded Within the Past Week:', 'videosAgeColorPickerRecent');
-            createLabelColorPair('Videos Uploaded Within the Past Month:', 'videosAgeColorPickerLately');
-            createLabelColorPair('Videos Uploaded Within 2 to 12 Months:', 'videosAgeColorPickerLatterly');
-            createLabelColorPair('Videos Currently Live:', 'videosAgeColorPickerLive');
-            createLabelColorPair('The Word “Streamed” from Videos That Were Live:', 'videosAgeColorPickerStreamed');
-            createLabelColorPair('Scheduled Videos and Upcoming Live Streams:', 'videosAgeColorPickerUpcoming');
+            });
 
             form.appendChild(videosAgeContainer);
 
@@ -5824,26 +5966,21 @@
             const lastSeenVideoColor = document.createElement('div');
             lastSeenVideoColor.classList.add('videos-colorpicker-container');
 
-            function createLabelLVColor(labelText, configKey) {
-                const row = document.createElement('div');
-                row.classList.add('videos-colorpicker-row');
+            const rowLSV = createColorPicker('Last Uploaded Video:', 'lastSeenVideoColor');
 
-                const label = document.createElement('span');
-                label.classList.add('label-style-settings');
-                label.textContent = labelText;
-                row.appendChild(label);
+            const darkModeSpanLSV = document.createElement('span');
+            darkModeSpanLSV.classList.add('label-style-settings');
+            darkModeSpanLSV.textContent = 'Dark Mode';
+            rowLSV.insertBefore(darkModeSpanLSV, rowLSV.firstChild);
 
-                const colorPicker = document.createElement('input');
-                colorPicker.type = 'color';
-                colorPicker.value = USER_CONFIG[configKey];
-                colorPicker.name = configKey;
-                row.appendChild(colorPicker);
+            const lightPickerRowLSV = createColorPicker('Light Mode', 'lastSeenVideoColorLight');
+            const lightPickerLSV = lightPickerRowLSV.querySelector('input');
+            const lightModeLabelLSV = lightPickerRowLSV.querySelector('span');
 
-                lastSeenVideoColor.appendChild(row);
-            }
+            rowLSV.insertBefore(lightPickerLSV, rowLSV.firstChild);
+            rowLSV.insertBefore(lightModeLabelLSV, rowLSV.firstChild);
 
-            createLabelLVColor('Last Uploaded Video:', 'lastSeenVideoColor');
-
+            lastSeenVideoColor.appendChild(rowLSV);
             form.appendChild(lastSeenVideoColor);
 
             // last seen video
@@ -5981,7 +6118,7 @@
     }
 
     // helper function to create a number input fields
-    function createNumberInputField(labelText, settingKey, settingValue) {
+    function createNumberInputField(labelText, settingKey, settingValue, options = {}) {
         const container = document.createElement('div');
         container.classList.add('number-input-container');
 
@@ -5994,7 +6131,7 @@
         numberInput.value = settingValue;
         numberInput.min = 1;
         numberInput.max = 20;
-        numberInput.step = .25;
+        numberInput.step = options.step || .25;
         numberInput.classList.add('number-input-field');
         label.appendChild(numberInput);
 
@@ -6131,6 +6268,7 @@
 
         // save other settings
         USER_CONFIG.YouTubeTranscriptExporter = form.elements.YouTubeTranscriptExporter.checked;
+        USER_CONFIG.lazyTranscriptLoading = form.elements.lazyTranscriptLoading.checked;
         USER_CONFIG.fileNamingFormat = form.elements.fileNamingFormat.value;
         USER_CONFIG.includeTimestamps = form.elements.includeTimestamps.checked;
         USER_CONFIG.includeChapterHeaders = form.elements.includeChapterHeaders.checked;
@@ -6143,15 +6281,17 @@
 
         // save button icons, removing empty values to use defaults
         const buttonIconCopy = form.elements.buttonIconCopy.value.trim();
-        const buttonIconDownload = form.elements.buttonIconDownload.value.trim();
         const buttonIconChatGPT = form.elements.buttonIconChatGPT.value.trim();
-        const buttonIconNotebookLM = form.elements.buttonIconNotebookLM.value.trim();
         const buttonIconSettings = form.elements.buttonIconSettings.value.trim();
+        const buttonIconlazyLoad = form.elements.buttonIconlazyLoad.value.trim();
+        const buttonIconDownload = form.elements.buttonIconDownload.value.trim();
+        const buttonIconNotebookLM = form.elements.buttonIconNotebookLM.value.trim();
 
         USER_CONFIG.buttonIcons.copy = buttonIconCopy;
-        USER_CONFIG.buttonIcons.download = buttonIconDownload;
         USER_CONFIG.buttonIcons.ChatGPT = buttonIconChatGPT;
+        USER_CONFIG.buttonIcons.download = buttonIconDownload;
         USER_CONFIG.buttonIcons.NotebookLM = buttonIconNotebookLM;
+        USER_CONFIG.buttonIcons.lazyLoad = buttonIconlazyLoad;
         if (buttonIconSettings !== '') { USER_CONFIG.buttonIcons.settings = buttonIconSettings; } else { delete USER_CONFIG.buttonIcons.settings; }
 
         // save sub panels - links in header
@@ -6182,6 +6322,7 @@
 
         // save sub panels - custom css
         if (subPanelCustomCSS) {
+            USER_CONFIG.settingsGuide = subPanelCustomCSS.elements.settingsGuide.checked;
             USER_CONFIG.textTransform = subPanelCustomCSS.elements.textTransform.value;
             USER_CONFIG.defaultFontSize = parseFloat(subPanelCustomCSS.elements.defaultFontSize.value);
             USER_CONFIG.videosWatchedOpacity = parseFloat(subPanelCustomCSS.elements.videosWatchedOpacity.value);
@@ -6321,15 +6462,23 @@
             USER_CONFIG.homeDisableHover = subPanelColor.elements.homeDisableHover.checked;
             USER_CONFIG.videosOldOpacity = parseFloat(subPanelColor.elements.videosOldOpacity.value);
             USER_CONFIG.videosAgeColorPickerNewly = subPanelColor.elements.videosAgeColorPickerNewly.value;
+            USER_CONFIG.videosAgeColorPickerNewlyLight = subPanelColor.elements.videosAgeColorPickerNewlyLight.value;
             USER_CONFIG.videosAgeColorPickerRecent = subPanelColor.elements.videosAgeColorPickerRecent.value;
+            USER_CONFIG.videosAgeColorPickerRecentLight = subPanelColor.elements.videosAgeColorPickerRecentLight.value;
             USER_CONFIG.videosAgeColorPickerLately = subPanelColor.elements.videosAgeColorPickerLately.value;
+            USER_CONFIG.videosAgeColorPickerLatelyLight = subPanelColor.elements.videosAgeColorPickerLatelyLight.value;
             USER_CONFIG.videosAgeColorPickerLatterly = subPanelColor.elements.videosAgeColorPickerLatterly.value;
+            USER_CONFIG.videosAgeColorPickerLatterlyLight = subPanelColor.elements.videosAgeColorPickerLatterlyLight.value;
             USER_CONFIG.videosAgeColorPickerLive = subPanelColor.elements.videosAgeColorPickerLive.value;
+            USER_CONFIG.videosAgeColorPickerLiveLight = subPanelColor.elements.videosAgeColorPickerLiveLight.value;
             USER_CONFIG.videosAgeColorPickerStreamed = subPanelColor.elements.videosAgeColorPickerStreamed.value;
+            USER_CONFIG.videosAgeColorPickerStreamedLight = subPanelColor.elements.videosAgeColorPickerStreamedLight.value;
             USER_CONFIG.videosAgeColorPickerUpcoming = subPanelColor.elements.videosAgeColorPickerUpcoming.value;
+            USER_CONFIG.videosAgeColorPickerUpcomingLight = subPanelColor.elements.videosAgeColorPickerUpcomingLight.value;
             USER_CONFIG.lastSeenVideo = subPanelColor.elements.lastSeenVideo.checked;
             USER_CONFIG.lastSeenVideoScroll = subPanelColor.elements.lastSeenVideoScroll.checked;
             USER_CONFIG.lastSeenVideoColor = subPanelColor.elements.lastSeenVideoColor.value;
+            USER_CONFIG.lastSeenVideoColorLight = subPanelColor.elements.lastSeenVideoColorLight.value;
         }
 
         // save updated config
@@ -6429,6 +6578,7 @@
     // function to add the transcript exporter buttons
     function buttonLocation(buttons, callback) {
         const masthead = endElement;
+        const guide = headerElement;
         if (masthead) {
             buttons.forEach(({ id, text, clickHandler, tooltip }) => {
 
@@ -6475,7 +6625,7 @@
                 // append button elements
                 buttonWrapper.appendChild(button);
                 buttonWrapper.appendChild(tooltipDiv);
-                masthead.prepend(buttonWrapper);
+                id === 'transcript-settings-button' && USER_CONFIG.settingsGuide && guide ? guide.append(buttonWrapper) : masthead.prepend(buttonWrapper);
             });
         } else {
             const observer = new MutationObserver((mutations, obs) => {
@@ -6489,25 +6639,43 @@
         }
     }
 
-    function addButton() {
-        document.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
-
-        const buttons = [
-            { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' },
-            { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.' },
-            { id: 'transcript-copy-button', text: USER_CONFIG.buttonIcons.copy, clickHandler: handleCopyClick, tooltip: 'Copy Transcript to Clipboard', ariaLabel: 'Copy Transcript to Clipboard.' },
-            { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy Transcript with a Prompt and Open ${ChatGPTLabel}`, ariaLabel: `Copy Transcript to Clipboard with a Prompt and Open ${ChatGPTLabel}.` },
-            { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: `Copy Transcript and Open ${NotebookLMLabel}`, ariaLabel: `Copy Transcript to Clipboard and Open ${NotebookLMLabel}.` }
-        ];
-
-        const buttonsToAdd = buttons.filter(button => button.id === 'transcript-settings-button' || (button.text && button.text.trim() !== ''));
-        buttonLocation(buttonsToAdd, addButton);
+    async function runYTE() {
+        let transcriptLoaded = false;
+        try { await preLoadTranscript(); transcriptLoaded = true; }
+        catch (error) { setTimeout(() => { createButtons('settings'); }, 3000); }
+        if (transcriptLoaded) createButtons('all');
     }
 
-    function addSettingsButton() {
+    function createButtons(buttonType = 'all') {
+        const allButtons = {
+            settings: { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' },
+            download: { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.' },
+            copy: { id: 'transcript-copy-button', text: USER_CONFIG.buttonIcons.copy, clickHandler: handleCopyClick, tooltip: 'Copy Transcript to Clipboard', ariaLabel: 'Copy Transcript to Clipboard.' },
+            chatgpt: { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy Transcript with a Prompt and Open ${ChatGPTLabel}`, ariaLabel: `Copy Transcript to Clipboard with a Prompt and Open ${ChatGPTLabel}.` },
+            notebooklm: { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: `Copy Transcript and Open ${NotebookLMLabel}`, ariaLabel: `Copy Transcript to Clipboard and Open ${NotebookLMLabel}.` },
+            lazyload: { id: 'transcript-lazy-button', text: USER_CONFIG.buttonIcons.lazyLoad, clickHandler: runYTE, tooltip: 'Load Transcript', ariaLabel: 'Load Transcript.' }
+        };
+
+        let buttonsToCreate = [];
+
+        switch (buttonType) {
+            case 'all':
+                buttonsToCreate = Object.values(allButtons).filter(button => button.id === 'transcript-settings-button' || (button.text && button.text.trim() !== '')).filter(button => button !== allButtons.lazyload);
+                break;
+
+            case 'settings':
+                buttonsToCreate = [allButtons.settings];
+                break;
+
+            case 'lazyload':
+                buttonsToCreate = [allButtons.lazyload];
+                break;
+            default:
+                if (Array.isArray(buttonType)) buttonsToCreate = buttonType.map(type => allButtons[type]).filter(Boolean);
+        }
+
         document.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
-        const buttons = [{ id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' },];
-        buttonLocation(buttons, addSettingsButton);
+        buttonLocation(buttonsToCreate, () => createButtons(buttonType));
     }
 
     // functions to handle the button clicks
@@ -6617,11 +6785,10 @@
         }
 
         navigator.clipboard.writeText(finalText).then(() => {
-            if (target === 'Copy2Clipboard') showNotification('Transcript copied to clipboard.');
+            if (target === 'Copy2Clipboard') showNotification('Transcript Copied to Clipboard.');
             else {
-                showNotification('Transcript copied. Opening website . . .');
-                if (USER_CONFIG.openSameTab) window.open(targetUrl, '_self');
-                else window.open(targetUrl, '_blank');
+                target === 'NotebookLM' ? showNotification(`Transcript Copied. Opening ${NotebookLMLabel} . . .`) : showNotification(`Transcript Copied. Opening ${ChatGPTLabel} . . .`);
+                USER_CONFIG.openSameTab ? window.open(targetUrl, '_self') : window.open(targetUrl, '_blank');
             }
         });
     }
@@ -6693,15 +6860,47 @@
             notification.appendChild(textSpan);
             masthead.prepend(notification);
 
-            if (!USER_CONFIG.autoOpenTranscript) {
+            let loaded = false;
+            let transcriptObserver;
+            let fallbackTimer;
+            let containerObserver;
+
+            const isClosed = transcriptPanel?.getAttribute("visibility") === "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN";
+            if (isClosed) {
                 transcriptPanel.classList.add("transcript-preload");
                 transcriptPanel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
             }
 
-            let loaded = false;
-            let transcriptObserver;
+            const cleanup = (failed) => {
+                if (fallbackTimer) clearTimeout(fallbackTimer);
+                containerObserver?.disconnect();
+                transcriptObserver?.disconnect();
+                notification?.remove();
+                if (isClosed) {
+                    transcriptPanel.classList.remove("transcript-preload");
+                    transcriptPanel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN");
+                }
+                if (failed) showNotificationError("Transcript Failed to Load");
+            };
 
-            const fallbackTimer = setTimeout(() => {
+            const handleTranscriptReady = () => {
+                loaded = true;
+                cleanup(false);
+                if (!transcriptMenuButtonMoved) transcriptMenuButton();
+                if (USER_CONFIG.transcriptTimestamps) enableTimestamps();
+                if (USER_CONFIG.defaultTranscriptLanguage !== 'auto') setTimeout(() => { setTranscriptLanguage(); }, 250);
+            };
+
+            const segmentsContainer = transcriptPanel.querySelector('ytd-transcript-segment-list-renderer #segments-container');
+            const firstItem = segmentsContainer?.querySelector('ytd-transcript-segment-renderer');
+
+            if (segmentsContainer && firstItem) {
+                handleTranscriptReady();
+                resolve();
+                return;
+            }
+
+            fallbackTimer = setTimeout(() => {
                 if (!loaded) {
                     console.error("YouTubeAlchemy: The transcript took too long to load. Reload this page to try again.");
                     cleanup(true);
@@ -6709,18 +6908,14 @@
                 }
             }, 10000);
 
-            const containerObserver = new MutationObserver(() => {
+            containerObserver = new MutationObserver(() => {
                 const segmentsContainer = transcriptPanel.querySelector('ytd-transcript-segment-list-renderer #segments-container');
                 if (segmentsContainer) {
                     containerObserver.disconnect();
                     const checkFirstItem = () => {
                         const firstItem = segmentsContainer.querySelector('ytd-transcript-segment-renderer');
                         if (firstItem) {
-                            loaded = true;
-                            cleanup(false);
-                            transcriptMenuButton();
-                            if (USER_CONFIG.transcriptTimestamps) enableTimestamps();
-                            if (USER_CONFIG.defaultTranscriptLanguage !== 'auto') setTimeout(() => { setTranscriptLanguage(); }, 250);
+                            handleTranscriptReady();
                             return true;
                         }
                         return false;
@@ -6734,26 +6929,11 @@
                             }
                         });
                         transcriptObserver.observe(segmentsContainer, { childList: true });
-                    } else {
-                        resolve();
-                    }
+                    } else resolve();
 
                 }
             });
-
             containerObserver.observe(transcriptPanel, { childList: true, subtree: true });
-
-            function cleanup(failed) {
-                clearTimeout(fallbackTimer);
-                containerObserver.disconnect();
-                if (transcriptObserver) transcriptObserver.disconnect();
-                notification.remove();
-                if (!USER_CONFIG.autoOpenTranscript) {
-                    transcriptPanel.classList.remove("transcript-preload");
-                    transcriptPanel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN");
-                }
-                if (failed) { showNotificationError("Transcript Failed to Load"); }
-            }
         });
     }
 
@@ -6871,13 +7051,19 @@
     }
 
     // function tab view on video page
+    function runInPage(fn) {
+        const c = `;(${fn})();`;
+        const s = document.createElement('script');
+        s.text = scriptPolicy ? scriptPolicy.createScript(c) : c;
+        document.documentElement.appendChild(s);
+        s.remove();
+    }
+
     function tabView() {
         if (!watchFlexyElement) return;
 
-        let transcriptMenuButtonMoved = false;
+        transcriptMenuButtonMoved = false;
         let transcriptLanguageSet = false;
-        let safariPanelSwitch = false;
-        let safariPanelCheck = true;
         let timestampsEnabled = false;
         let lastActiveTab = null;
         let currentActiveTab = null;
@@ -6926,16 +7112,24 @@
                 if (subheaderDiv) subheaderDiv.addEventListener('click', handleTabViewTabClick);
             } else if (isDefault) {
                 isTheaterMode = false;
+
                 if (lastActiveTab) activateTab(lastActiveTab);
                 else activateTab(determineActiveTab());
 
-                // safari and chrome panel fix
-                if (USER_CONFIG.preventBackgroundExecution) ensurePanelVisibility();
-                else if (currentActiveTab === 'tab-4') scrollChapterPanelSafariFix();
-                else safariPanelCheck = true;
+                if (lastActiveTab === 'tab-1') videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+                else if (currentActiveTab === 'tab-4') runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]') || document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+                else if (currentActiveTab === 'tab-5') runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
 
                 subheaderDiv.removeEventListener('click', handleTabViewTabClick);
             }
+        }
+
+        document.addEventListener('fullscreenchange', () => { setTimeout(() => handleFullscreenChangeTV(), 250); });
+        function handleFullscreenChangeTV() {
+            const isDefault = watchFlexyElement.hasAttribute('default-layout');
+            const panel = activePanel[currentActiveTab];
+            if (isDefault && (currentActiveTab === 'tab-4' || currentActiveTab === 'tab-5') && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED')
+                currentActiveTab === 'tab-4' ? runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]') || document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED") : runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
         }
 
         // mode change, navigation, and clean up
@@ -6944,6 +7138,7 @@
             tabElements = [];
             subheaderDiv.removeEventListener('click', handleTabViewTabClick);
             document.removeEventListener('yt-set-theater-mode-enabled', updateTabView);
+            document.removeEventListener('fullscreenchange', handleFullscreenChangeTV);
             tabElements.forEach(tab => { tab.element.removeEventListener('click', tab.handler); });
             tabElements.forEach(tab => tab.element.classList.remove('active'));
             if (hasTranscriptPanel) transcriptPanel.remove();
@@ -6958,13 +7153,6 @@
             if (!tab || !isTheaterMode) return;
             lastActiveTab = tab.dataset.tab;
             toggleTheaterMode();
-        }
-
-        // chrome: check visibility of active panel
-        function ensurePanelVisibility() {
-            const panel = activePanel[currentActiveTab];
-            if (panel && panel.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED')
-                panel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
         }
 
         // include date in info text under videos unless live
@@ -6998,12 +7186,12 @@
 
         // open info, chapter, or transcript panel by default
         if (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel) {
-            transcriptPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+            runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
             if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !transcriptLanguageSet) { waitForTranscriptWithoutYTE(() => { setTimeout(() => { setTranscriptLanguage(); }, 250); }); transcriptLanguageSet = true; }
             if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.transcriptTimestamps && !timestampsEnabled) { waitForTranscriptWithoutYTE(enableTimestamps); timestampsEnabled = true; }
-            if (!USER_CONFIG.YouTubeTranscriptExporter && !transcriptMenuButtonMoved) { waitForTranscriptWithoutYTE(transcriptMenuButton); transcriptMenuButtonMoved = true; }
+            if (!transcriptMenuButtonMoved && (!USER_CONFIG.YouTubeTranscriptExporter || USER_CONFIG.lazyTranscriptLoading)) { waitForTranscriptWithoutYTE(transcriptMenuButton); }
         }
-        else if (USER_CONFIG.autoOpenChapters && hasChapterPanel) chapterPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+        else if (USER_CONFIG.autoOpenChapters && hasChapterPanel) runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]') || document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
         else if (videoInfo) videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
 
         const clipPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create]');
@@ -7095,9 +7283,6 @@
                 // hide all content sections
                 contentSections.forEach(content => content.classList.remove('active'));
 
-                // safari: chapter panel scroll fix
-                if (!USER_CONFIG.preventBackgroundExecution && !isTheaterMode && safariPanelCheck && currentActiveTab === 'tab-4') scrollChapterPanelSafariFix();
-
                 // show the target content section
                 const targetDiv = contentSections[index];
                 if (targetDiv) targetDiv.classList.add('active');
@@ -7140,16 +7325,19 @@
                 }
 
                 // chapters panel
-                if (hasChapterPanel) chapterPanel.setAttribute('visibility', tabText === 'Chapters' ? 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED' : 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
+                if (hasChapterPanel) {
+                    if (tabText === 'Chapters') runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]') || document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+                    else runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]') || document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN");
+                }
 
                 // transcript panel
                 if (hasTranscriptPanel) {
                     if (tabText === 'Transcript') {
-                        transcriptPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+                        runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
                         if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !transcriptLanguageSet) { waitForTranscriptWithoutYTE(() => { setTimeout(() => { setTranscriptLanguage(); }, 250); }); transcriptLanguageSet = true; }
                         if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.transcriptTimestamps && !timestampsEnabled) { waitForTranscriptWithoutYTE(enableTimestamps); timestampsEnabled = true; }
-                        if (!USER_CONFIG.YouTubeTranscriptExporter && !transcriptMenuButtonMoved) { waitForTranscriptWithoutYTE(transcriptMenuButton); transcriptMenuButtonMoved = true; }
-                    } else transcriptPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
+                        if (!transcriptMenuButtonMoved && (!USER_CONFIG.YouTubeTranscriptExporter || USER_CONFIG.lazyTranscriptLoading)) { waitForTranscriptWithoutYTE(transcriptMenuButton); }
+                    } else runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN");
                 }
             };
 
@@ -7167,31 +7355,6 @@
 
         updateTabView();
         if (USER_CONFIG.tabViewChapters && hasChapterPanel) chapterTitles();
-
-        // safari: chapter panel scroll fix
-        function scrollChapterPanelSafariFix() {
-            const chapterBtn = watchFlexyElement.querySelector(`${infoSel} #navigation-button ytd-button-renderer button[aria-label="View all"]`);
-            if (chapterBtn) {
-                setTimeout(() => { chapterBtn.click(); }, 75);
-                safariPanelCheck = false;
-                if (!safariPanelSwitch) {
-                    const observer = new MutationObserver((mutations) => {
-                        const newChapterPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters][style*="order:"]') || watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters][style*="order:"]');
-                        if (newChapterPanel) {
-                            chapterPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
-                            chapterPanel = newChapterPanel;
-                            hasChapterPanel = !!chapterPanel;
-                            safariPanelSwitch = true;
-                            observer.disconnect();
-                            clearTimeout(timeout);
-                        }
-                    });
-
-                    observer.observe(watchFlexyElement, { childList: true, subtree: true });
-                    const timeout = setTimeout(() => { observer.disconnect(); }, 2500);
-                }
-            }
-        }
     }
 
     // add chapter titles under videos
@@ -8349,7 +8512,7 @@
 
             processVideos();
             handleFeedFilterAll();
-            addSettingsButton();
+            createButtons('settings');
         }
 
         // handle feed filter 'All' button
@@ -9488,8 +9651,7 @@
 
     // function to automatically open the chapter panel
     function openChapters() {
-        if (hasChapterPanel)
-            chapterPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+        runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]') || document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
     }
 
     // playlist panel check
@@ -9508,11 +9670,9 @@
 
     // function to automatically open the transcript panel
     function openTranscript() {
-        if (hasTranscriptPanel) {
-            transcriptPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-            if (USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !USER_CONFIG.YouTubeTranscriptExporter) waitForTranscriptWithoutYTE(() => { setTimeout(() => { setTranscriptLanguage(); }, 250); });
-            if (USER_CONFIG.transcriptTimestamps && !USER_CONFIG.YouTubeTranscriptExporter) waitForTranscriptWithoutYTE(enableTimestamps);
-        }
+        runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+        if (USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !USER_CONFIG.YouTubeTranscriptExporter) waitForTranscriptWithoutYTE(() => { setTimeout(() => { setTranscriptLanguage(); }, 250); });
+        if (USER_CONFIG.transcriptTimestamps && !USER_CONFIG.YouTubeTranscriptExporter) waitForTranscriptWithoutYTE(enableTimestamps);
     }
 
     // transcript enable timestamps
@@ -9527,6 +9687,7 @@
             const menuButton = transcriptPanel?.querySelector('#header > #menu');
             const footerSlot = transcriptPanel?.querySelector('#footer > ytd-transcript-footer-renderer');
             if (menuButton && footerSlot) footerSlot.appendChild(menuButton);
+            transcriptMenuButtonMoved = true;
         }
     }
 
@@ -9643,12 +9804,12 @@
 
     // reset function
     function handleYTNavigation() {
-        if (USER_CONFIG.playbackSpeed) { // set playback speed
+        if (USER_CONFIG.playbackSpeed) {
             document.removeEventListener('yt-player-updated', initialSpeed);
             document.addEventListener('yt-player-updated', initialSpeed);
         }
 
-        if (USER_CONFIG.preventAutoplay) { // prevent autoplay
+        if (USER_CONFIG.preventAutoplay) {
             document.removeEventListener('yt-player-updated', pauseYouTubeVideo);
             document.addEventListener('yt-player-updated', pauseYouTubeVideo);
         }
@@ -9666,16 +9827,16 @@
         playerElement = document?.getElementById('movie_player');
         watchFlexyElement = document?.querySelector('ytd-watch-flexy');
         endElement = document?.querySelector('#masthead #end');
+        headerElement = document?.querySelector('#guide #guide-content > #header');
     }
 
     // Chrome CSP compliance for setVideoQuality
     function runSetVideoQuality() {
-        const code = `(${setVideoQuality})(${JSON.stringify(USER_CONFIG.defaultQuality)},${JSON.stringify(USER_CONFIG.defaultQualityPremium)});`;
-        const policy = window.trustedTypes && trustedTypes.createPolicy('CentAnniAlchemy', { createScript: s => s });
-        const script = document.createElement('script');
-        script.text = policy ? policy.createScript(code) : code;
-        document.documentElement.appendChild(script);
-        script.remove();
+        const c = `(${setVideoQuality})(${JSON.stringify(USER_CONFIG.defaultQuality)},${JSON.stringify(USER_CONFIG.defaultQualityPremium)});`;
+        const s = document.createElement('script');
+        s.text = scriptPolicy ? scriptPolicy.createScript(c) : c;
+        document.documentElement.appendChild(s);
+        s.remove();
     }
 
     //  ┌───────────────────────────────────────────────────────────────────┐
@@ -9955,6 +10116,7 @@
     let playerElement = null;
     let watchFlexyElement = null;
     let endElement = null;
+    let headerElement = null;
     let uiLanguage = null;
     let englishInLanguage = null;
     let audioInLanguage = null;
@@ -9981,6 +10143,7 @@
     let lastUserRate = null;
     let speedNotification = false;
     let hideNotificationTimeout;
+    let transcriptMenuButtonMoved = false;
     let chronoNotificationRunning = false;
     let cleanupPlaybackSpeedListeners = null;
     let defaultSpeed = USER_CONFIG.playbackSpeedValue;
@@ -9998,6 +10161,7 @@
     const browseTargets = ['#contents img, #reel-video-renderer .action-container > #actions'];
     const videoPageContainer = 'ytd-app #page-manager > ytd-watch-flexy:not([hidden])';
     const browseContainer = 'ytd-app #page-manager > ytd-browse:not([hidden]),ytd-app #page-manager > ytd-search:not([hidden]),ytd-app #page-manager > ytd-shorts:not([hidden])';
+    const scriptPolicy = window.trustedTypes && trustedTypes.createPolicy('CentAnniAlchemy', { createScript: s => s });
 
     // initiate the script
     async function initializeAlchemy() {
@@ -10015,41 +10179,44 @@
             chapterPanelCheck();
             playlistPanelCheck();
             transcriptPanelCheck();
-            if (USER_CONFIG.defaultQuality !== 'auto') runSetVideoQuality();
-            if (USER_CONFIG.autoTheaterMode && !isTheaterMode) toggleTheaterMode();
-            if (USER_CONFIG.playbackSpeed) videoPlaybackSpeed();
-            if (USER_CONFIG.progressBar && !isLiveVideo && !isLiveStream) keepProgressBarVisible();
-            if (USER_CONFIG.displayRemainingTime && !isLiveVideo && !isLiveStream) remainingTime();
-            if (USER_CONFIG.closeChatWindow) setTimeout(() => { chatWindowCheck(); }, 500);
-            if (USER_CONFIG.playlistDirectionBtns && isPlaylistVideoPage) playlistDirection();
-            if (USER_CONFIG.hideProdTxt) hideProductsSpan();
-            if (USER_CONFIG.commentsNewFirst && !isLiveVideo && !isLiveStream) sortCommentsNewFirst();
-            if (USER_CONFIG.expandVideoDescription && !USER_CONFIG.videoTabView) clickDescriptionBtn();
-            if (USER_CONFIG.autoOpenChapters && !USER_CONFIG.videoTabView && hasChapterPanel) openChapters();
-            if (USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel) openTranscript();
-            if (USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto') setLanguage();
-            if (!USER_CONFIG.videoTabView && ((USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel))) scrollToTop();
-            if (USER_CONFIG.videoTabView) tabView();
+            const videoFeatures = [
+                [USER_CONFIG.defaultQuality !== 'auto', runSetVideoQuality],
+                [USER_CONFIG.autoTheaterMode && !isTheaterMode, toggleTheaterMode],
+                [USER_CONFIG.playbackSpeed, videoPlaybackSpeed],
+                [USER_CONFIG.progressBar && !isLiveVideo && !isLiveStream, keepProgressBarVisible],
+                [USER_CONFIG.displayRemainingTime && !isLiveVideo && !isLiveStream, remainingTime],
+                [USER_CONFIG.playlistDirectionBtns && isPlaylistVideoPage, playlistDirection],
+                [USER_CONFIG.closeChatWindow, () => setTimeout(() => { chatWindowCheck(); }, 500)],
+                [USER_CONFIG.commentsNewFirst && !isLiveVideo && !isLiveStream, sortCommentsNewFirst],
+                [USER_CONFIG.expandVideoDescription && !USER_CONFIG.videoTabView, clickDescriptionBtn],
+                [USER_CONFIG.autoOpenChapters && !USER_CONFIG.videoTabView && hasChapterPanel, openChapters],
+                [USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel, openTranscript],
+                [(USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto'), setLanguage],
+                [!USER_CONFIG.videoTabView && ((USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel)), scrollToTop],
+                [USER_CONFIG.hideProdTxt, hideProductsSpan],
+                [USER_CONFIG.videoTabView, tabView]
+            ];
+            for (const [flag, callback] of videoFeatures) if (flag) callback();
 
             // transcript exporter
-            let transcriptLoaded = false;
-            if (USER_CONFIG.YouTubeTranscriptExporter) {
-                try { await preLoadTranscript(); transcriptLoaded = true; }
-                catch (error) { setTimeout(() => { addSettingsButton(); }, 3000); }
-                if (transcriptLoaded) addButton();
-            } else addSettingsButton();
+            if (!USER_CONFIG.YouTubeTranscriptExporter || !hasTranscriptPanel) createButtons('settings');
+            else if (USER_CONFIG.lazyTranscriptLoading) createButtons(['settings', 'lazyload']);
+            else runYTE();
         } else {
             notification();
-            addSettingsButton();
-            if (isShortPage) shortsPlaybackControl();
-            if (USER_CONFIG.channelRSSBtn && isChannelPage) addRSSFeedButton();
-            if (USER_CONFIG.plWLBtn && isWatchLater) playlistRemoveWatchedButton();
-            if (USER_CONFIG.playlistLinks && isPlaylistPage) handlePlaylistLinks();
-            if (USER_CONFIG.channelPlaylistBtn && isChannelPage) addPlaylistButtons();
-            if (USER_CONFIG.lastSeenVideo && isSubscriptionsPage) markLastSeenVideo();
-            if (USER_CONFIG.colorCodeVideosEnabled && isHomePage) homeColorCodeVideos();
-            if (USER_CONFIG.playlistTrashCan && isPlaylistPage) playlistRemovalButtons();
-            if (USER_CONFIG.playbackSpeed && isShortPage) createPlaybackSpeedController();
+            createButtons('settings');
+            const browseFeatures = [
+                [isShortPage, shortsPlaybackControl],
+                [USER_CONFIG.channelRSSBtn && isChannelPage, addRSSFeedButton],
+                [USER_CONFIG.plWLBtn && isWatchLater, playlistRemoveWatchedButton],
+                [USER_CONFIG.playlistLinks && isPlaylistPage, handlePlaylistLinks],
+                [USER_CONFIG.channelPlaylistBtn && isChannelPage, addPlaylistButtons],
+                [USER_CONFIG.lastSeenVideo && isSubscriptionsPage, markLastSeenVideo],
+                [USER_CONFIG.colorCodeVideosEnabled && isHomePage, homeColorCodeVideos],
+                [USER_CONFIG.playlistTrashCan && isPlaylistPage, playlistRemovalButtons],
+                [USER_CONFIG.playbackSpeed && isShortPage, createPlaybackSpeedController]
+            ];
+            for (const [flag, callback] of browseFeatures) if (flag) callback();
         }
     }
 
