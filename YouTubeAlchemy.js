@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      8.0.4
+// @version      8.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 8.0.4 - YouTube Alchemy                   *
+*                    Version: 8.1 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2616,6 +2616,8 @@
             ytd-rich-item-renderer a#thumbnail div#mouseover-overlay,
             ytd-thumbnail-overlay-loading-preview-renderer,
             ytd-moving-thumbnail-renderer img#thumbnail,
+            .ytAnimatedThumbnailOverlayViewModelHost,
+            animated-thumbnail-overlay-view-model,
             ytd-moving-thumbnail-renderer yt-icon,
             ytd-moving-thumbnail-renderer span,
             ytd-moving-thumbnail-renderer img,
@@ -4325,90 +4327,6 @@
 
         .ytSearchboxComponentInputBoxHasFocus {
             border-color: var(--selectionColor) !important;
-        }
-
-        #CentAnni-exNot {
-            position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            width: 630px;
-            border: 1px solid slategray;
-            border-top: none;
-            border-radius: 0 0 10px 10px;
-            padding: 10px 20px;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(140deg,
-                    hsl(357 79.5% 50.2%),
-                    hsl(356 79.5% 43.9%),
-                    hsl(356 79.3% 37.8%),
-                    hsl(356 79% 31.8%),
-                    hsl(355 78.6% 25.7%));
-            color: ghostwhite;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, .18);
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .CentAnni-exNot-title {
-            display: block;
-            font-size: 18px;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 6px;
-        }
-
-        .CentAnni-exNot-note {
-            font-size: 14px;
-            text-align: center;
-            padding: 5px;
-        }
-
-        .CentAnni-exNot-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin: 10px 0;
-        }
-
-        .CentAnni-exNot-btn {
-            background: rgb(26, 26, 26);
-            color: ghostwhite;
-            border: 1px solid rgba(255, 255, 255, .2);
-            padding: 6px 10px;
-            border-radius: 2px;
-            cursor: pointer;
-            height: 32px;
-            font-family: 'Roboto', 'Arial', sans-serif;
-            font-size: 1.4rem;
-            line-height: 2rem;
-            font-weight: 500;
-            transition: background .25s ease-in-out, color .25s ease-in-out, border-color .25s ease-in-out;
-        }
-
-        .CentAnni-exNot-btn:hover {
-            background: rgb(51, 51, 51);
-            border-color: transparent;
-        }
-
-        .CentAnni-exNot-dismiss-row {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .CentAnni-exNot-btn.dismiss {
-            background: transparent;
-            color: ghostwhite;
-            border: 1px solid rgba(255, 255, 255, .2);
-            margin: 12px 0 10px;
-        }
-
-        .CentAnni-exNot-btn.dismiss:hover {
-            background: rgba(255, 255, 255, .2);
-            border-color: transparent;
         }
     `;
 
@@ -7720,7 +7638,6 @@
             let cachedSegments = null;
             let cachedMergedSegments = null;
             let lastRawSegments = null;
-            let lastVideoTime = -1;
             let lastDuration = -1;
 
             // retrieves and validates video duration
@@ -7820,42 +7737,37 @@
             }
 
             // debounce the update to prevent excessive updates
-            let animationFrameId = null;
             video.ontimeupdate = () => {
-                if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                if (video.frameCallback) return;
+                video.frameCallback = true;
 
-                animationFrameId = requestAnimationFrame(() => {
+                const update = (_timestamp, meta) => {
                     ensureBaseEffectiveIsValid();
-                    if (isNaN(baseEffective)) return;
 
-                    const rawDuration = video.duration;
-                    const currentTime = video.currentTime;
+                    if (!isNaN(baseEffective)) {
+                        const rawDuration = video.duration;
+                        const currentTime = meta.mediaTime;
+                        const playbackRate = video.playbackRate;
+                        const segments = getMergedSegments(rawDuration);
+                        const addedTime = computeAddedTime(segments, currentTime);
+                        const effectiveTotal = baseEffective + addedTime;
+                        const remaining = (effectiveTotal - currentTime) / playbackRate;
+                        const watchedPercent = rawDuration ? Math.round((currentTime / rawDuration) * 100) + '%' : '0%';
+                        const totalFormatted = formatTime(baseEffective);
+                        const rawTotalFormatted = formatTime(rawDuration);
+                        const totalDisplay = Math.round(rawDuration) !== Math.round(baseEffective) ? `${rawTotalFormatted} (${totalFormatted})` : rawTotalFormatted;
+                        const elapsedFormatted = formatTime(currentTime);
+                        const remainingFormatted = formatTime(remaining);
 
-                    if (Math.abs(currentTime - lastVideoTime) < 0.2) {
-                        animationFrameId = null;
-                        return;
+                        textNode.data = `total: ${totalDisplay} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
                     }
 
-                    lastVideoTime = currentTime;
-
-                    const playbackRate = video.playbackRate;
-                    const segments = getMergedSegments(rawDuration);
-                    const addedTime = computeAddedTime(segments, currentTime);
-                    const effectiveTotal = baseEffective + addedTime;
-                    const remaining = (effectiveTotal - currentTime) / playbackRate;
-                    const watchedPercent = rawDuration ? Math.round((currentTime / rawDuration) * 100) + '%' : '0%';
-                    const totalFormatted = formatTime(baseEffective);
-                    const rawTotalFormatted = formatTime(rawDuration);
-                    const totalDisplay = Math.round(rawDuration) !== Math.round(baseEffective) ? `${rawTotalFormatted} (${totalFormatted})` : rawTotalFormatted;
-                    const elapsedFormatted = formatTime(currentTime);
-                    const remainingFormatted = formatTime(remaining);
-
-                    textNode.data = `total: ${totalDisplay} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
-
-                    animationFrameId = null;
-                });
+                    if (!video.paused && !video.ended) video.requestVideoFrameCallback(update);
+                    else video.frameCallback = false;
+                };
+                video.requestVideoFrameCallback(update);
             };
-        }
+        };
     }
 
     // helper function to convert a time string into seconds
@@ -7902,15 +7814,16 @@
         endDiv.classList.add('active');
 
         let animationFrameId;
-        const animateProgress = () => {
+        const animateProgress = (_timestamp, meta) => {
             if (video.duration > 0) {
-                const fraction = video.currentTime / video.duration;
+                const fraction = meta.mediaTime / video.duration;
                 progress.style.transform = `scaleX(${fraction})`;
             }
-            animationFrameId = requestAnimationFrame(animateProgress);
+            animationFrameId = video.requestVideoFrameCallback(animateProgress);
         };
 
         const renderBuffer = () => {
+            if (!video.duration) return;
             for (let i = video.buffered.length - 1; i >= 0; i--) {
                 if (video.currentTime < video.buffered.start(i)) continue;
                 buffer.style.transform = `scaleX(${video.buffered.end(i) / video.duration})`;
@@ -7918,8 +7831,17 @@
             }
         };
 
+        const handleEnded = () => {
+            if (animationFrameId != null) {
+                video.cancelVideoFrameCallback(animationFrameId); animationFrameId = null;
+            }
+            progress.style.transform = 'scaleX(1)';
+        };
+
         video.addEventListener('progress', renderBuffer);
         video.addEventListener('seeking', renderBuffer);
+        video.addEventListener('ended', handleEnded);
+        video.addEventListener('loadedmetadata', () => { updateLayout(); renderBuffer(); }, { once: true });
 
         // chapters container
         let previousChaptersLength = 0;
@@ -8020,17 +7942,17 @@
         };
 
         // handle animation frame
-        const handlePlay = () => { if (!animationFrameId) animateProgress(); };
-        const handlePause = () => { if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; } };
+        const handlePlay = () => { if (!animationFrameId) animationFrameId = video.requestVideoFrameCallback(animateProgress); };
+        const handlePause = () => { if (animationFrameId) { video.cancelVideoFrameCallback(animationFrameId); animationFrameId = null; } };
         video.addEventListener('play', handlePlay);
         video.addEventListener('pause', handlePause);
         if (!video.paused) handlePlay();
 
         // handle layout changes
-        const handleTheaterMode = () => { updateLayout(); };
         const handleResize = () => { updateLayout(); };
-        document.addEventListener('yt-set-theater-mode-enabled', handleTheaterMode);
         window.addEventListener('resize', handleResize);
+        const handleTheaterMode = () => { updateLayout(); };
+        document.addEventListener('yt-set-theater-mode-enabled', handleTheaterMode);
 
         // handle cleanup
         const cleanupProgressBar = () => {
@@ -8038,13 +7960,13 @@
             video.removeEventListener('progress', renderBuffer);
             video.removeEventListener('seeking', renderBuffer);
             window.removeEventListener('resize', handleResize);
+            video.removeEventListener('ended', handleEnded);
             video.removeEventListener('pause', handlePause);
             video.removeEventListener('play', handlePlay);
-            window.cancelAnimationFrame(animationFrameId);
+            video.cancelVideoFrameCallback(animationFrameId); animationFrameId = null;
             resizeObserver?.disconnect();
             cleanupWidthObserver();
         };
-
         document.addEventListener('yt-navigate-start', cleanupProgressBar, { once: true });
 
         // initialization
@@ -10170,7 +10092,6 @@
         buttonsLeftHeader();
 
         if (isVideoPage || isLiveStream) {
-            removeBanner();
             languageCheck();
             liveVideoCheck();
             musicVideoCheck();
@@ -10203,7 +10124,6 @@
             else if (USER_CONFIG.lazyTranscriptLoading) createButtons(['settings', 'lazyload']);
             else runYTE();
         } else {
-            notification();
             createButtons('settings');
             const browseFeatures = [
                 [isShortPage, shortsPlaybackControl],
@@ -10288,57 +10208,6 @@
             };
             document.addEventListener('visibilitychange', onVisibility);
         });
-    }
-
-    // notification for browser extension
-    function removeBanner() { const b = document.getElementById("CentAnni-exNot"); if (b) b.remove(); }
-    function notification() {
-        const KEY = "CentAnni_extension";
-        if (localStorage.getItem(KEY) !== "1" && !document.getElementById("CentAnni-exNot")) {
-            const chromeURL = "https://chromewebstore.google.com/detail/youtube-alchemy/midnnobjjobpnnblnckmnkhegbnlmgkn";
-            const firefoxURL = "https://addons.mozilla.org/en-US/firefox/addon/youtube-alchemy/";
-
-            const banner = document.createElement("div");
-            banner.id = "CentAnni-exNot";
-
-            const title = document.createElement("strong");
-            title.className = "CentAnni-exNot-title";
-            title.textContent = "YouTube Alchemy Is Now Available as a Browser Extension 🎉";
-            banner.appendChild(title);
-
-            const note = document.createElement("span");
-            note.className = "CentAnni-exNot-note";
-            note.textContent = "Hi there! I'm Tim, the developer of YouTube Alchemy. I'm thrilled to announce that YouTube Alchemy is now available as a browser extension! If you're interested in making the switch, please remember to back up your settings. You can either stick with the userscript or switch anytime.";
-            banner.appendChild(note);
-
-            const rowButtons = document.createElement("div");
-            rowButtons.className = "CentAnni-exNot-buttons";
-
-            function makeButton(label, handler, extraClass = "") {
-                const btn = document.createElement("button");
-                btn.className = "CentAnni-exNot-btn " + extraClass;
-                btn.textContent = label;
-                btn.onclick = handler;
-                return btn;
-            }
-
-            rowButtons.appendChild(makeButton("Back Up Settings", () => { if (typeof exportSettings === "function") exportSettings(); }));
-            rowButtons.appendChild(makeButton("Install for Chrome", () => window.open(chromeURL, "_blank")));
-            rowButtons.appendChild(makeButton("Install for Firefox", () => window.open(firefoxURL, "_blank")));
-            banner.appendChild(rowButtons);
-
-            const row2 = document.createElement("div");
-            row2.className = "CentAnni-exNot-dismiss-row";
-
-            const btnDismiss = document.createElement("button");
-            btnDismiss.className = "CentAnni-exNot-btn dismiss";
-            btnDismiss.textContent = "Close and don't show again";
-            btnDismiss.onclick = () => { localStorage.setItem(KEY, "1"); removeBanner(); };
-            row2.appendChild(btnDismiss);
-
-            banner.appendChild(row2);
-            document.body.appendChild(banner);
-        }
     }
 
     // event listeners
