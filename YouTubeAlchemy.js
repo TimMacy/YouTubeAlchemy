@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      8.1
+// @version      8.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 8.1 - YouTube Alchemy                     *
+*                    Version: 8.2 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2518,7 +2518,8 @@
         }
 
         .ytd-page-manager[page-subtype="history"] {
-            ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer) {
+            ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer),
+            yt-thumbnail-view-model:has(yt-thumbnail-overlay-progress-bar-view-model) {
                 opacity: 1;
             }
 
@@ -2668,6 +2669,10 @@
         .CentAnni-style-video-row {
             ytd-rich-grid-renderer {
                 --ytd-rich-grid-items-per-row: var(--itemsPerRow) !important;
+            }
+
+            ytd-rich-item-renderer[rendered-from-rich-grid][is-in-first-column] {
+                margin-left: calc(var(--ytd-rich-grid-item-margin)/2);
             }
         }
 
@@ -2941,6 +2946,7 @@
             .html5-video-player:not(.ytp-touch-mode) ::-webkit-scrollbar-thumb,
             .CentAnni-tabView:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]),
             ytd-author-comment-badge-renderer[enable-modern-comment-badges][creator],
+            ytd-engagement-panel-section-list-renderer:not([live-chat-engagement-panel]),
             ytd-watch-flexy[rounded-player-large][default-layout] #ytd-player.ytd-watch-flexy,
             ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]),
             ytd-macro-markers-list-item-renderer[rounded] #thumbnail.ytd-macro-markers-list-item-renderer,
@@ -4034,6 +4040,12 @@
             }
         }
 
+        .CentAnni-style-lnb-hide-dl--btn {
+            #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[href^="/feed/downloads"]) {
+                display: none;
+            }
+        }
+
         .CentAnni-style-lnb-hide-you-btn {
             #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[title="You"]) {
                 display: none;
@@ -4328,6 +4340,10 @@
         .ytSearchboxComponentInputBoxHasFocus {
             border-color: var(--selectionColor) !important;
         }
+
+        ytd-watch-flexy [target-id="engagement-panel-searchable-transcript"] span.bold.style-scope.yt-formatted-string {
+            color: rgb(253, 1, 48);
+        }
     `;
 
     // append css
@@ -4490,6 +4506,7 @@
         removeScrubber: false,
         disablePlayOnHover: false,
         chronologicalNotifications: true,
+        feedFilterChips: false,
         hideFundraiser: false,
         hideLatestPostsHome: false,
         hideMiniPlayer: false,
@@ -4511,6 +4528,7 @@
         lnbHideYPodcastsBtn: false,
         lnbHideWlBtn: false,
         lnbHideLikedVideosBtn: false,
+        lnbHideDLBtn: false,
         lnbHideYouBtn: false,
         lnbHideSubscriptionsSection: false,
         lnbHideSubscriptionsTitle: false,
@@ -4593,6 +4611,7 @@
             compactLayout: 'CentAnni-style-compact-layout',
             hideEndscreen: 'CentAnni-style-hide-endscreen',
             lnbHideWlBtn: 'CentAnni-style-lnb-hide-wl-btn',
+            lnbHideDLBtn: 'CentAnni-style-lnb-hide-dl--btn',
             hideOwnAvatar: 'CentAnni-style-hide-own-avatar',
             lnbHideFooter: 'CentAnni-style-lnb-hide-footer',
             hideInfoPanel: 'CentAnni-style-hide-info-panel',
@@ -5253,6 +5272,10 @@
             const chronologicalNotifications = createCheckboxField('Sort Notifications Chronologically (default: yes)', 'chronologicalNotifications', USER_CONFIG.chronologicalNotifications);
             form.appendChild(chronologicalNotifications);
 
+            // restore feed filter chip on the homepage
+            const feedFilterChips = createCheckboxField('Restore Homepage Filter Selection (default: no)', 'feedFilterChips', USER_CONFIG.feedFilterChips);
+            form.appendChild(feedFilterChips);
+
             // close chat window
             const closeChatWindow = createCheckboxField('Auto Close Initial Chat Windows (default: no)', 'closeChatWindow', USER_CONFIG.closeChatWindow);
             form.appendChild(closeChatWindow);
@@ -5665,6 +5688,10 @@
             // hide liked videos button
             const lnbHideLikedVideosBtn = createCheckboxField('Hide "Liked Videos" Button (default: no)', 'lnbHideLikedVideosBtn', USER_CONFIG.lnbHideLikedVideosBtn);
             form.appendChild(lnbHideLikedVideosBtn);
+
+            // hide downloads button
+            const lnbHideDLBtn = createCheckboxField('Hide "Downloads" Button (default: no)', 'lnbHideDLBtn', USER_CONFIG.lnbHideDLBtn);
+            form.appendChild(lnbHideDLBtn);
 
             // Spacer-5
             const spacer5Subscriptions = document.createElement('div');
@@ -6290,6 +6317,7 @@
             USER_CONFIG.visibleCountryCodeColor = subPanelCustomCSS.elements.visibleCountryCodeColor.value;
             USER_CONFIG.disablePlayOnHover = subPanelCustomCSS.elements.disablePlayOnHover.checked;
             USER_CONFIG.chronologicalNotifications = subPanelCustomCSS.elements.chronologicalNotifications.checked;
+            USER_CONFIG.feedFilterChips = subPanelCustomCSS.elements.feedFilterChips.checked;
             USER_CONFIG.preventAutoplay = subPanelCustomCSS.elements.preventAutoplay.checked;
             USER_CONFIG.VerifiedArtist = subPanelCustomCSS.elements.VerifiedArtist.checked;
             USER_CONFIG.defaultQualityPremium = subPanelCustomCSS.elements.defaultQualityPremium.checked;
@@ -6338,6 +6366,7 @@
             USER_CONFIG.lnbHideYPodcastsBtn = subPanelCustomCSS.elements.lnbHideYPodcastsBtn.checked;
             USER_CONFIG.lnbHideWlBtn = subPanelCustomCSS.elements.lnbHideWlBtn.checked;
             USER_CONFIG.lnbHideLikedVideosBtn = subPanelCustomCSS.elements.lnbHideLikedVideosBtn.checked;
+            USER_CONFIG.lnbHideDLBtn = subPanelCustomCSS.elements.lnbHideDLBtn.checked;
             USER_CONFIG.lnbHideYouBtn = subPanelCustomCSS.elements.lnbHideYouBtn.checked;
             USER_CONFIG.lnbHideSubscriptionsSection = subPanelCustomCSS.elements.lnbHideSubscriptionsSection.checked;
             USER_CONFIG.lnbHideSubscriptionsTitle = subPanelCustomCSS.elements.lnbHideSubscriptionsTitle.checked;
@@ -9724,6 +9753,55 @@
         document.addEventListener('yt-navigate-start', () => { markWatchedVideosObserver?.disconnect(); }, { once: true });
     }
 
+    // restore feed filter chip on the homepage
+    function restoreLastSelectedChip() {
+        const homePage = document.querySelector('ytd-browse[page-subtype="home"]:not([hidden])');
+        const feedFilterContainer = homePage?.querySelector('#header #chips');
+        if (!homePage || !feedFilterContainer) return;
+        let chipObserver;
+
+        const lastSelectedChip = localStorage.getItem("CentAnni_lastSelectedIronChip");
+        const ironSelector = 'yt-chip-cloud-chip-renderer.ytd-feed-filter-chip-bar-renderer';
+        const ironSelected = ironSelector + '.iron-selected';
+
+        const checkChips = () => {
+            const selectedChip = feedFilterContainer.querySelector(ironSelected);
+            if (selectedChip) {
+                const chipText = selectedChip.querySelector('.ytChipShapeChip')?.textContent?.trim();
+                if (chipText) localStorage.setItem("CentAnni_lastSelectedIronChip", chipText);
+            }
+        };
+
+        if (lastSelectedChip) {
+            const ironChips = feedFilterContainer.querySelectorAll(ironSelector);
+            for (const chip of ironChips) {
+                const chipText = chip.querySelector('.ytChipShapeChip')?.textContent?.trim();
+                if (chipText === lastSelectedChip) {
+                    const button = chip.querySelector('button[role="tab"]');
+                    button?.click();
+                    break;
+                }
+            }
+        }
+
+        const cleanUp = () => {
+            chipObserver?.disconnect();
+            document.removeEventListener('yt-navigate-start', cleanUp);
+            document.removeEventListener('yt-service-request-completed', checkChips);
+        };
+
+        document.addEventListener('yt-navigate-start', cleanUp);
+        document.addEventListener('yt-service-request-completed', checkChips);
+
+        chipObserver?.disconnect();
+        const allChip = feedFilterContainer.querySelector(ironSelector);
+        chipObserver = new MutationObserver(() => {
+            if (allChip.hasAttribute('selected'))
+                localStorage.removeItem("CentAnni_lastSelectedIronChip");
+        });
+        chipObserver.observe(allChip, { attributes: true, attributeFilter: ['selected'] });
+    }
+
     // reset function
     function handleYTNavigation() {
         if (USER_CONFIG.playbackSpeed) {
@@ -10130,6 +10208,7 @@
                 [USER_CONFIG.channelRSSBtn && isChannelPage, addRSSFeedButton],
                 [USER_CONFIG.plWLBtn && isWatchLater, playlistRemoveWatchedButton],
                 [USER_CONFIG.playlistLinks && isPlaylistPage, handlePlaylistLinks],
+                [USER_CONFIG.feedFilterChips && isHomePage, restoreLastSelectedChip],
                 [USER_CONFIG.channelPlaylistBtn && isChannelPage, addPlaylistButtons],
                 [USER_CONFIG.lastSeenVideo && isSubscriptionsPage, markLastSeenVideo],
                 [USER_CONFIG.colorCodeVideosEnabled && isHomePage, homeColorCodeVideos],
