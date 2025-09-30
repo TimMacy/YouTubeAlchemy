@@ -168,6 +168,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Prevent Autoplay
   - Disable Play on Hover
   - Sort Notifications Chronologically
+  - Restore Homepage Filter Selection
   - Auto Close Initial Chat Windows
   - "Videos" Tab as Default on Channel Page
   - Add RSS Feed Button to Channel Pages
@@ -262,6 +263,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide "Your Podcasts" Button
   - Hide "Watch Later" Button
   - Hide "Liked Videos" Button
+  - Hide "Downloads" Button
   - Hide "Subscriptions" Section
   - Hide "Subscriptions" Title
   - Hide "Show More" Button
