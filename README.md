@@ -6,6 +6,7 @@ This toolkit enhances YouTube by customizing the layout and adding more than 190
 <p align="right">
 <a href="https://chromewebstore.google.com/detail/youtube-alchemy/midnnobjjobpnnblnckmnkhegbnlmgkn"><img width="22%" alt="Chrome Browser Extension for YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/d5abfdaa-ca15-4820-b533-85af1332ce4e"></a>
 <a href="https://addons.mozilla.org/en-US/firefox/addon/youtube-alchemy/"><img width="22%" alt="Firefox Browser Extension for YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/025b7be1-c945-4bde-8ad3-35c8f6c6a07f"></a>
+<a href="https://microsoftedge.microsoft.com/addons/detail/youtube-alchemy/mbjafaicjkndopmhdapofpcemhkflmob"><img width="22%" alt="Microsoft Edge Add-ons Store Browser Extension for YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/4b711841-869d-4cb4-a64e-f8ccc6dee2ea"></a>
 </p>
 
 <details>
