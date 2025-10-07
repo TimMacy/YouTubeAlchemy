@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      8.2
+// @version      8.3
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 8.2 - YouTube Alchemy                     *
+*                    Version: 8.3 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2633,7 +2633,8 @@
         }
 
         .CentAnni-style-hide-end-cards {
-            .ytp-ce-element {
+            .ytp-ce-element,
+            .ytp-ce-hide-button-container.ytp-ce-element-show {
                 display: none !important;
             }
         }
@@ -2929,6 +2930,7 @@
             yt-interaction.circular .stroke.yt-interaction,
             ytd-watch-flexy[theater] .CentAnni-tabView-tab,
             .thumbnail-container.ytd-notification-renderer,
+            .ytContentPreviewImageViewModelLargeRoundedImage,
             .collections-stack-wiz__collection-stack1--large,
             tp-yt-paper-toast.yt-notification-action-renderer,
             .collections-stack-wiz__collection-stack1--medium,
@@ -2997,6 +2999,7 @@
             .yt-spec-touch-feedback-shape--down .yt-spec-touch-feedback-shape__stroke,
             ytd-channel-video-player-renderer[rounded] #player.ytd-channel-video-player-renderer,
             ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]),
+            .yt-page-header-view-model--display-as-sidebar .yt-page-header-view-model__page-header-background,
             .page-header-view-model-wiz--display-as-sidebar .page-header-view-model-wiz__page-header-background,
             ytd-menu-service-item-renderer[use-list-item-styles] tp-yt-paper-item.ytd-menu-service-item-renderer,
             ytd-menu-service-item-renderer[use-list-item-styles] tp-yt-paper-item.ytd-menu-service-item-renderer:focus {
@@ -3316,9 +3319,8 @@
                 }
 
                 .yt-content-metadata-view-model__metadata-row--metadata-row-wrap {
-                    margin: 0;
+                    margin: 0 5px 0 0;
                     justify-content: end;
-                    transform: translate(-8px, -4px);
                 }
             }
 
@@ -7766,9 +7768,9 @@
             }
 
             // debounce the update to prevent excessive updates
+            let animationFrameId;
             video.ontimeupdate = () => {
-                if (video.frameCallback) return;
-                video.frameCallback = true;
+                if (animationFrameId) return;
 
                 const update = (_timestamp, meta) => {
                     ensureBaseEffectiveIsValid();
@@ -7791,12 +7793,22 @@
                         textNode.data = `total: ${totalDisplay} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
                     }
 
-                    if (!video.paused && !video.ended) video.requestVideoFrameCallback(update);
-                    else video.frameCallback = false;
+                    if (!video.paused && !video.ended) animationFrameId = video.requestVideoFrameCallback(update);
+                    else animationFrameId = null;
                 };
-                video.requestVideoFrameCallback(update);
+                animationFrameId = video.requestVideoFrameCallback(update);
+
             };
         };
+
+        // handle cleanup
+        const cleanupProgressBar = () => {
+            document.removeEventListener('yt-navigate-start', cleanupProgressBar);
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            video.removeEventListener('playing', remainingTimeMinusSponsorBlockSegments);
+            video.cancelVideoFrameCallback(animationFrameId); animationFrameId = null;
+        };
+        document.addEventListener('yt-navigate-start', cleanupProgressBar, { once: true });
     }
 
     // helper function to convert a time string into seconds
@@ -7986,6 +7998,7 @@
         // handle cleanup
         const cleanupProgressBar = () => {
             document.removeEventListener('yt-set-theater-mode-enabled', handleTheaterMode);
+            document.removeEventListener('yt-navigate-start', cleanupProgressBar);
             video.removeEventListener('progress', renderBuffer);
             video.removeEventListener('seeking', renderBuffer);
             window.removeEventListener('resize', handleResize);
