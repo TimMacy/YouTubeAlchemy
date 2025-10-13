@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      8.7.1
+// @version      8.7.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 8.7.1 - YouTube Alchemy                   *
+*                    Version: 8.7.2 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1729,7 +1729,9 @@
                 margin: 0 12px;
             }
 
-            ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]) {
+            ytd-engagement-panel-section-list-renderer:not([live-chat-engagement-panel]),
+            ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]),
+            ytd-playlist-panel-renderer[modern-panels]:not([within-miniplayer]) #container.ytd-playlist-panel-renderer {
                 border-radius: 0 0 12px 12px;
             }
 
@@ -2156,10 +2158,6 @@
                 margin-bottom: 0;
             }
 
-            ytd-playlist-panel-renderer[modern-panels]:not([within-miniplayer]) #container.ytd-playlist-panel-renderer {
-                border-radius: 0 0 12px 12px;
-            }
-
             ytd-watch-flexy[default-layout] #playlist,
             ytd-watch-flexy[default-layout] #secondary,
             ytd-watch-flexy[default-layout] #container.ytd-playlist-panel-renderer {
@@ -2287,7 +2285,8 @@
             ytd-watch-flexy[default-layout] #primary #below {
                 overflow-y: auto;
                 overflow-x: hidden;
-                height: calc(100dvh - (((100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)) / 16 * 9) + var(--ytd-masthead-height, var(--ytd-toolbar-height)) + var(--ytd-margin-6x)));
+                min-height: 107px;
+                height: calc(100dvh - (((100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)) / 16 * 9) + var(--ytd-masthead-height, var(--ytd-toolbar-height)) + var(--ytd-margin-6x)));
             }
         }
 
@@ -3657,11 +3656,11 @@
             ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
-                top: calc(52px + var(--ytd-margin-6x)) !important;
+                top: 52px !important;
             }
 
             #columns > #secondary > #secondary-inner > #chat-container {
-                top: var(--ytd-margin-6x) !important;
+                top: 0 !important;
             }
 
             ytd-watch-flexy[default-layout] #below {
@@ -3671,12 +3670,41 @@
             ytd-item-section-renderer[page-subtype="playlist"][has-header][exp-fix-playlist-header] #contents.ytd-item-section-renderer {
                 margin-top: 0;
             }
+
+            ytd-watch-flexy[default-layout]:not([no-top-margin]):not([reduced-top-margin]) #primary.ytd-watch-flexy,
+            ytd-watch-flexy[default-layout]:not([no-top-margin]):not([reduced-top-margin]) #secondary.ytd-watch-flexy {
+                padding-top: 0;
+            }
+
+            .CentAnni-tabView-content,
+            #related.style-scope.ytd-watch-flexy,
+            ytd-watch-flexy[default-layout] #playlist,
+            ytd-watch-flexy[default-layout] #secondary,
+            ytd-watch-flexy[default-layout] #container.ytd-playlist-panel-renderer,
+            #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy,
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
+            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
+                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - 52px) !important;
+            }
         }
 
         .CentAnni-style-max-video-size {
             ytd-watch-flexy[default-layout] {
-                --ytd-watch-flexy-max-player-width: calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)) !important;
-                --ytd-watch-flexy-max-player-width-wide-screen: calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)) !important;
+                --ytd-watch-flexy-max-player-width: min(calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
+                        calc((100dvh - var(--ytd-margin-6x) - var(--ytd-toolbar-height)) * 16 / 9));
+                --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
+                        calc((100dvh - var(--ytd-margin-6x) - var(--ytd-toolbar-height)) * 16 / 9));
+            }
+        }
+
+        html.CentAnni-style-compact-layout.CentAnni-style-max-video-size:has(ytd-watch-flexy[default-layout]) {
+            ytd-watch-flexy[default-layout] {
+                --ytd-watch-flexy-max-player-width: min(calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
+                        calc((100dvh - var(--ytd-toolbar-height)) * 16 / 9)) !important;
+                --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
+                        calc((100dvh - var(--ytd-toolbar-height)) * 16 / 9)) !important;
             }
         }
 
@@ -4794,17 +4822,30 @@
 
     // set max video size in default view
     function maxVideoSize() {
+        const HTML = document?.documentElement;
         const watchFlexy = document?.querySelector('ytd-watch-flexy');
         const video = watchFlexy?.querySelector('video.html5-main-video');
-        if (!watchFlexy || !video) return;
+        if (!HTML || !watchFlexy || !video) return;
 
         const styleWF = getComputedStyle(watchFlexy);
+        const styleHTML = getComputedStyle(HTML);
         const aspectRatio = (video.videoWidth && video.videoHeight) ? video.videoWidth / video.videoHeight : 16 / 9;
-        const sidebarWidth = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-sidebar-width'));
+        const sidebarWidth = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-sidebar-width')) || 402;
+        const mastheadHeight = parseFloat(styleHTML.getPropertyValue('--ytd-toolbar-height')) || 56;
+        const marginTop = USER_CONFIG.compactLayout ? 0 : 24;
         const margin = USER_CONFIG.compactLayout ? 5 : 24;
         const calculate = () => {
-            const width = window.innerWidth - (margin * 3) - sidebarWidth;
-            const height = width / aspectRatio;
+            const maxWidth = window.innerWidth - sidebarWidth - margin * 3;
+            const maxHeight = window.innerHeight - marginTop - mastheadHeight;
+
+            let width = maxWidth;
+            let height = width / aspectRatio;
+
+            if (height > maxHeight) {
+                height = maxHeight;
+                width = height * aspectRatio;
+            }
+
             return { width, height };
         };
 
