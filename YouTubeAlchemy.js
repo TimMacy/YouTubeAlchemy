@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      8.8
+// @version      8.8.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 8.8 - YouTube Alchemy                     *
+*                    Version: 8.8.1 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -3697,23 +3697,23 @@
 
         .CentAnni-style-max-video-size:not(.CentAnni-style-compact-layout) ytd-watch-flexy[default-layout] {
             --ytd-watch-flexy-max-player-width: min(calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - var(--ytd-margin-6x) - var(--ytd-toolbar-height)) * 16 / 9));
+                    calc((100dvh - var(--ytd-margin-6x) - var(--ytd-toolbar-height)) * var(--videoAspectRatio)));
             --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - var(--ytd-margin-6x) - var(--ytd-toolbar-height)) * 16 / 9));
+                    calc((100dvh - var(--ytd-margin-6x) - var(--ytd-toolbar-height)) * var(--videoAspectRatio)));
         }
 
         .CentAnni-style-compact-layout:not(.CentAnni-style-max-video-size) ytd-watch-flexy[default-layout] {
             --ytd-watch-flexy-max-player-width: min(calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - 110px - var(--ytd-toolbar-height)) * 16 / 9));
+                    calc((100dvh - 110px - var(--ytd-toolbar-height)) * var(--videoAspectRatio)));
             --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - 110px - var(--ytd-toolbar-height)) * 16 / 9));
+                    calc((100dvh - 110px - var(--ytd-toolbar-height)) * var(--videoAspectRatio)));
         }
 
         .CentAnni-style-max-video-size.CentAnni-style-compact-layout ytd-watch-flexy[default-layout] {
             --ytd-watch-flexy-max-player-width: min(calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - var(--ytd-toolbar-height)) * 16 / 9));
+                    calc((100dvh - var(--ytd-toolbar-height)) * var(--videoAspectRatio)));
             --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100vw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - var(--ytd-toolbar-height)) * 16 / 9));
+                    calc((100dvh - var(--ytd-toolbar-height)) * var(--videoAspectRatio)));
         }
 
         .CentAnni-style-no-ambient {
@@ -4868,6 +4868,7 @@
         watchFlexy.calculateNormalPlayerSize_ = maxSize;
         watchFlexy.calculateCurrentPlayerSize_ = maxSize;
 
+        docElement.style.setProperty('--videoAspectRatio', aspectRatio);
         window.dispatchEvent(new Event('resize'));
     }
 
