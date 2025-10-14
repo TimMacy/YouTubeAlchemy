@@ -173,6 +173,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Disable Play on Hover
   - Sort Notifications Chronologically
   - Restore Homepage Filter Selection
+  - Restore Suggested Videos Filter Selection
   - Auto Close Initial Chat Windows
   - "Videos" Tab as Default on Channel Page
   - Add RSS Feed Button to Channel Pages
