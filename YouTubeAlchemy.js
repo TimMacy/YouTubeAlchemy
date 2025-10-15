@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      8.8.1
+// @version      8.9
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 8.8.1 - YouTube Alchemy                   *
+*                    Version: 8.9 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -4567,6 +4567,7 @@
         defaultSubtitleLanguage: 'auto',
         autoOpenChapters: true,
         autoOpenTranscript: false,
+        autoOpenComments: false,
         displayRemainingTime: true,
         preventAutoplay: false,
         hideVoiceSearch: false,
@@ -5489,6 +5490,10 @@
             // auto open transcript panel
             const autoOpenTranscript = createCheckboxField('Automatically Open Transcript Panels (default: no)', 'autoOpenTranscript', USER_CONFIG.autoOpenTranscript);
             form.appendChild(autoOpenTranscript);
+
+            // auto open comments
+            const autoOpenComments = createCheckboxField('Automatically Open Comments | Only Works with Tab View Enabled! (default: no)', 'autoOpenComments', USER_CONFIG.autoOpenComments);
+            form.appendChild(autoOpenComments);
 
             // enable transcript timestamps
             const transcriptTimestamps = createCheckboxField('Automatically Enable Timestamps in Transcript Panels (default: no)', 'transcriptTimestamps', USER_CONFIG.transcriptTimestamps);
@@ -6463,6 +6468,7 @@
             USER_CONFIG.videosHideWatchedSearch = subPanelCustomCSS.elements.videosHideWatchedSearch.checked;
             USER_CONFIG.autoOpenChapters = subPanelCustomCSS.elements.autoOpenChapters.checked;
             USER_CONFIG.autoOpenTranscript = subPanelCustomCSS.elements.autoOpenTranscript.checked;
+            USER_CONFIG.autoOpenComments = subPanelCustomCSS.elements.autoOpenComments.checked;
             USER_CONFIG.transcriptTimestamps = subPanelCustomCSS.elements.transcriptTimestamps.checked;
             USER_CONFIG.displayRemainingTime = subPanelCustomCSS.elements.displayRemainingTime.checked;
             USER_CONFIG.progressBar = subPanelCustomCSS.elements.progressBar.checked;
@@ -7203,11 +7209,12 @@
         let subheaderDiv;
 
         // helper function to determine the default tab
-        // priority: transcript > chapters > info
+        // priority: transcript > chapters > comments > info
         function determineActiveTab() {
             let activeTabId = 'tab-1';
             if (USER_CONFIG.autoOpenTranscript) { const tab5 = watchFlexyElement.querySelector('[data-tab="tab-5"]'); if (tab5) return 'tab-5'; }
             if (USER_CONFIG.autoOpenChapters) { const tab4 = watchFlexyElement.querySelector('[data-tab="tab-4"]'); if (tab4) return 'tab-4'; }
+            if (USER_CONFIG.autoOpenComments) { const tab2 = watchFlexyElement.querySelector('[data-tab="tab-2"]'); if (tab2) return 'tab-2'; }
             return activeTabId;
         }
 
@@ -7315,7 +7322,7 @@
         const donationShelf = watchFlexyElement.querySelector('#donation-shelf');
         const videoMore = watchFlexyElement.querySelector('#related.style-scope.ytd-watch-flexy');
 
-        // open info, chapter, or transcript panel by default
+        // open info, chapter, transcript panel or comments by default
         if (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel) {
             runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
             if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !transcriptLanguageSet) { waitForTranscriptWithoutYTE(() => { setTimeout(() => { setTranscriptLanguage(); }, 250); }); transcriptLanguageSet = true; }
@@ -7323,7 +7330,7 @@
             if (!transcriptMenuButtonMoved && (!USER_CONFIG.YouTubeTranscriptExporter || USER_CONFIG.lazyTranscriptLoading)) { waitForTranscriptWithoutYTE(transcriptMenuButton); }
         }
         else if (USER_CONFIG.autoOpenChapters && hasChapterPanel) runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]') || document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
-        else if (videoInfo) videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+        else if (!USER_CONFIG.autoOpenComments && videoInfo) videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
 
         const clipPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create]');
         if (clipPanel && clipPanel.getAttribute('visibility') === 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED')
@@ -7386,6 +7393,11 @@
         // populate the comments sections
         const videoComments = watchFlexyElement.querySelector(cmtsSel);
         if (videoComments && contentSections[1]) contentSections[1].appendChild(videoComments);
+        if (USER_CONFIG.autoOpenComments) {
+            const commentsTab = watchFlexyElement.querySelector('[data-tab="tab-2"]');
+            if (commentsTab) commentsTab.classList.add('active');
+            contentSections[1]?.classList.add('active');
+        }
 
         // create each tab link and add click behavior
         tabs.forEach((tabText, index) => {
