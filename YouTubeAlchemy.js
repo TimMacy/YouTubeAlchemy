@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      8.9.1
+// @version      8.9.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 8.9.1 - YouTube Alchemy                   *
+*                    Version: 8.9.2 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -9964,11 +9964,12 @@
         document.addEventListener('yt-navigate-start', () => { markWatchedVideosObserver?.disconnect(); }, { once: true });
     }
 
-    // restore feed filter chip on the homepage
+    // restore feed filter chip on the homepage and suggested videos
     function restoreLastSelectedChip() {
         const homePage = document.querySelector('ytd-browse[page-subtype="home"]:not([hidden])');
         const feedFilterContainer = isHomePage ? homePage?.querySelector('#header #chips') : watchFlexyElement?.querySelector('#related #chips');
         if (!feedFilterContainer) return;
+        let firstRun = true;
         let chipObserver;
 
         const ironChipStorage = isHomePage ? "CentAnni_lastSelectedIronChip" : "CentAnni_lastSelectedIronChipWatch";
@@ -9977,10 +9978,11 @@
         const ironSelected = ironSelector + '.iron-selected';
 
         const checkChips = () => {
-            const selectedChip = feedFilterContainer.querySelector(ironSelected);
+            const selectedChip = feedFilterContainer.querySelector(ironSelected + ':not(:first-child)');
             if (selectedChip) {
                 const chipText = selectedChip.querySelector('.ytChipShapeChip')?.textContent?.trim();
                 if (chipText) localStorage.setItem(ironChipStorage, chipText);
+                if (firstRun) setUpObserver();
             }
         };
 
@@ -10006,12 +10008,15 @@
         document.addEventListener('yt-service-request-completed', checkChips);
 
         chipObserver?.disconnect();
-        const allChip = feedFilterContainer.querySelector(ironSelector);
-        chipObserver = new MutationObserver(() => {
-            if (allChip.hasAttribute('selected'))
-                localStorage.removeItem(ironChipStorage);
-        });
-        chipObserver.observe(allChip, { attributes: true, attributeFilter: ['selected'] });
+        const setUpObserver = () => {
+            firstRun = false;
+            const allChip = feedFilterContainer.querySelector(ironSelector + ':first-child');
+            chipObserver = new MutationObserver(() => {
+                if (allChip.hasAttribute('selected'))
+                    localStorage.removeItem(ironChipStorage);
+            });
+            chipObserver.observe(allChip, { attributes: true, attributeFilter: ['selected'] });
+        };
     }
 
     // reset function
