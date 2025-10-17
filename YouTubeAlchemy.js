@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         YouTube Alchemy
-// @description  Toolkit for YouTube with 190+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
+// @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      8.9.3
+// @version      8.10
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 8.9.3 - YouTube Alchemy                   *
+*                    Version: 8.10 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1549,6 +1549,54 @@
             }
         }
 
+        .CentAnni-playback-speed-btns {
+            ytd-watch-flexy[theater][is-two-columns_][full-bleed-player] #secondary.ytd-watch-flexy {
+                margin-top: unset !important;
+                flex-direction: column-reverse;
+            }
+
+            #CentAnni-speed-buttons {
+                position: relative;
+                display: flex;
+                height: fit-content;
+                width: var(--ytd-watch-flexy-sidebar-width);
+                min-width: var(--ytd-watch-flexy-sidebar-min-width);
+                padding-bottom: 12px;
+                box-sizing: border-box;
+                overflow: auto hidden;
+                gap: 12px;
+            }
+
+            .CentAnni-speed-preset-button {
+                padding: 0 10px !important;
+                min-width: fit-content !important;
+            }
+
+            .CentAnni-speed-preset-button.active {
+                background: rgb(253, 1, 48) !important;
+            }
+
+            ytd-watch-flexy[default-layout] #CentAnni-speed-buttons {
+                margin-top: 24px;
+                width: calc(100% - 12px);
+                min-width: unset;
+                justify-content: center;
+            }
+        }
+
+        html:not(.CentAnni-video-tabView) ytd-watch-flexy[theater] #CentAnni-speed-buttons {
+            position: absolute;
+            top: 12px;
+        }
+
+        html:not(.CentAnni-video-tabView):has(#CentAnni-speed-buttons) ytd-watch-flexy[theater][is-two-columns_][full-bleed-player] #secondary.ytd-watch-flexy {
+            padding-top: 50px;
+        }
+
+        html:not(.CentAnni-video-tabView):has(#CentAnni-speed-buttons) ytd-watch-flexy[theater] :where(#chat.ytd-watch-flexy, #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy, #donation-shelf.ytd-watch-flexy ytd-donation-unavailable-renderer.ytd-watch-flexy, #playlist.ytd-watch-flexy, #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy, ytd-watch-flexy[persistent-panel-visible] #persistent-panel-container.ytd-watch-flexy) {
+            margin-top: 10px;
+        }
+
         /* video tab view css */
         .CentAnni-video-tabView {
             .CentAnni-tabView {
@@ -2089,7 +2137,7 @@
             }
 
             ytd-watch-flexy[theater][is-two-columns_][full-bleed-player] #secondary.ytd-watch-flexy {
-                margin-top: 34.5px !important;
+                margin-top: 34.5px;
                 display: flex;
                 justify-content: center;
                 align-items: flex-start;
@@ -2278,7 +2326,7 @@
                 overflow-y: auto;
                 overflow-x: hidden;
                 min-height: 110px;
-                height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - (var(--ytd-watch-flexy-max-player-width) * var(--ytd-watch-flexy-height-ratio)/var(--ytd-watch-flexy-width-ratio)));
+                height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - (calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)) * var(--ytd-watch-flexy-height-ratio) / var(--ytd-watch-flexy-width-ratio)));
             }
         }
 
@@ -4550,6 +4598,7 @@
         tabViewChapters: true,
         progressBar: true,
         playbackSpeed: true,
+        playbackSpeedBtns: false,
         playbackSpeedValue: 1,
         VerifiedArtist: false,
         defaultQuality: 'auto',
@@ -4733,6 +4782,7 @@
             hideFundraiser: 'CentAnni-style-hide-fundraiser',
             hideMiniPlayer: 'CentAnni-style-hide-miniplayer',
             lnbHideYouBtn: 'CentAnni-style-lnb-hide-you-btn',
+            playbackSpeedBtns: 'CentAnni-playback-speed-btns',
             noFrostedGlass: 'CentAnni-style-no-frosted-glass',
             hideAddComment: 'CentAnni-style-hide-add-comment',
             hideCreateButton: 'CentAnni-style-hide-create-btn',
@@ -5421,6 +5471,10 @@
             // max video size
             const maxVidSize = createCheckboxField('Max Video Size in Default Layout (default: no)', 'maxVidSize', USER_CONFIG.maxVidSize);
             form.appendChild(maxVidSize);
+
+            // playback speed buttons
+            const playbackSpeedBtns = createCheckboxField('Add Additional Playback Speed Buttons (default: no)', 'playbackSpeedBtns', USER_CONFIG.playbackSpeedBtns);
+            form.appendChild(playbackSpeedBtns);
 
             // expand video description
             const expandVideoDescription = createCheckboxField('Auto Expand Video Description (default: no)', 'expandVideoDescription', USER_CONFIG.expandVideoDescription);
@@ -6486,6 +6540,7 @@
             USER_CONFIG.hideCommentsSection = subPanelCustomCSS.elements.hideCommentsSection.checked;
             USER_CONFIG.hideVideosSection = subPanelCustomCSS.elements.hideVideosSection.checked;
             USER_CONFIG.playbackSpeed = subPanelCustomCSS.elements.playbackSpeed.checked;
+            USER_CONFIG.playbackSpeedBtns = subPanelCustomCSS.elements.playbackSpeedBtns.checked;
             USER_CONFIG.playbackSpeedValue = parseFloat(subPanelCustomCSS.elements.playbackSpeedValue.value);
             USER_CONFIG.defaultQuality = subPanelCustomCSS.elements.defaultQuality.value;
             USER_CONFIG.defaultTranscriptLanguage = subPanelCustomCSS.elements.defaultTranscriptLanguage.value;
@@ -7652,6 +7707,7 @@
             updateSpeedDisplay();
             lastUserRate = video.playbackRate;
             if (speedNotification) showSpeedNotification(video.playbackRate);
+            if (USER_CONFIG.playbackSpeedBtns) updateActiveSpeedButton(video);
         }
 
         // initial speed setting
@@ -7664,6 +7720,7 @@
             video.addEventListener('ratechange', updateSpeedDisplay);
             setSpeed();
             speedNotification = true;
+            if (USER_CONFIG.playbackSpeedBtns) playbackSpeedButtons(video, setSpeed);
         }
 
         // handle rate change events
@@ -7806,6 +7863,76 @@
 
         if (hideNotificationTimeout) clearTimeout(hideNotificationTimeout);
         hideNotificationTimeout = setTimeout(() => { notification.classList.remove('active'); }, 900);
+    }
+
+    // playback speed buttons
+    function playbackSpeedButtons(video, setSpeed) {
+        const containerTheater = document.querySelector('#columns #secondary');
+        const containerDefault = document.querySelector('#bottom-row');
+        if (!containerDefault && !containerTheater && !video && !setSpeed) return;
+
+        let isTheater;
+        const speeds = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4];
+
+        // create button container
+        const buttonContainer = document.createElement('div');
+        buttonContainer.id = 'CentAnni-speed-buttons';
+
+        // create buttons
+        speeds.forEach(speed => {
+            const button = document.createElement('button');
+            button.textContent = `${speed}x`;
+            button.classList.add(
+                "CentAnni-speed-preset-button",
+                "yt-spec-button-shape-next",
+                "yt-spec-button-shape-next--tonal",
+                "yt-spec-button-shape-next--mono",
+                "yt-spec-button-shape-next--size-m",
+                "yt-spec-button-shape-next--icon-button"
+            );
+            button.dataset.speed = speed;
+
+            button.addEventListener('click', () => {
+                video.playbackRate = speed;
+                setSpeed();
+            });
+
+            buttonContainer.appendChild(button);
+        });
+
+        isTheater = watchFlexyElement.hasAttribute('theater');
+        document.getElementById('CentAnni-speed-buttons')?.remove();
+        isTheater ? containerTheater.appendChild(buttonContainer) : containerDefault.appendChild(buttonContainer);
+        updateActiveSpeedButton(video);
+
+        const updatePosition = () => {
+            isTheater = watchFlexyElement.hasAttribute('theater');
+            const currentContainer = buttonContainer.parentElement;
+            const targetContainer = isTheater ? containerTheater : containerDefault;
+
+            if (currentContainer !== targetContainer) {
+                isTheater ? targetContainer.appendChild(buttonContainer) : targetContainer.appendChild(buttonContainer);
+                updateActiveSpeedButton(video);
+            }
+        };
+        const cleanupProgressBar = () => { document.removeEventListener('yt-set-theater-mode-enabled', updatePosition); };
+        document.addEventListener('yt-navigate-start', cleanupProgressBar, { once: true });
+        document.addEventListener('yt-set-theater-mode-enabled', updatePosition);
+    }
+
+    function updateActiveSpeedButton(video) {
+        if (!video) return;
+        const buttons = document.querySelectorAll('.CentAnni-speed-preset-button');
+        const currentSpeed = video.playbackRate;
+
+        buttons.forEach(button => {
+            const buttonSpeed = parseFloat(button.dataset.speed);
+            if (Math.abs(currentSpeed - buttonSpeed) < 0.01) {
+                button.classList.add('active');
+                button.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+            }
+            else button.classList.remove('active');
+        });
     }
 
     // function to display the remaining time based on playback speed minus SponsorBlock segments
