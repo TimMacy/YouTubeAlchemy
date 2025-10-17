@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-8.9.2-white.svg" alt="Version: 8.9.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-8.9.3-white.svg" alt="Version: 8.9.3"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 190 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -345,6 +345,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **8.9.3**: improvements for Max Video Size in Default Layout (aspect ratio of videos other than 16:9, video position, and persistent progress bar)
 - **8.9.2**: improvements for Restore Suggested Videos Filter Selection
 - **8.9.1**: bug fixes
 - **8.9**: new feature: Automatically Open Comments, Only Works with Tab View Enabled
