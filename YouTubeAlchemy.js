@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      8.10
+// @version      8.10.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 8.10 - YouTube Alchemy                    *
+*                    Version: 8.10.1 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1582,6 +1582,10 @@
                 min-width: unset;
                 justify-content: center;
             }
+
+            ytd-watch-flexy #bottom-row.ytd-watch-metadata {
+                height: fit-content !important;
+            }
         }
 
         html:not(.CentAnni-video-tabView) ytd-watch-flexy[theater] #CentAnni-speed-buttons {
@@ -1595,6 +1599,10 @@
 
         html:not(.CentAnni-video-tabView):has(#CentAnni-speed-buttons) ytd-watch-flexy[theater] :where(#chat.ytd-watch-flexy, #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy, #donation-shelf.ytd-watch-flexy ytd-donation-unavailable-renderer.ytd-watch-flexy, #playlist.ytd-watch-flexy, #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy, ytd-watch-flexy[persistent-panel-visible] #persistent-panel-container.ytd-watch-flexy) {
             margin-top: 10px;
+        }
+
+        html.CentAnni-video-tabView.CentAnni-playback-speed-btns ytd-watch-flexy[default-layout] .ytVideoMetadataCarouselViewModelHost {
+            margin-bottom: -10px;
         }
 
         /* video tab view css */
@@ -2611,8 +2619,8 @@
         }
 
         html:not([dark]).CentAnni-style-no-frosted-glass #frosted-glass.ytd-app,
-        html:not([dark]).CentAnni-style-no-frosted-glass #background.ytd-masthead,
-        html:not([dark]).CentAnni-style-no-frosted-glass #frosted-glass.with-chipbar.ytd-app {
+        html:not([dark]).CentAnni-style-no-frosted-glass #frosted-glass.with-chipbar.ytd-app,
+        html:not([dark]):has(ytd-watch-flexy[default-layout]).CentAnni-style-no-frosted-glass #background.ytd-masthead {
             background: white !important;
         }
 
@@ -7732,7 +7740,6 @@
         // keyboard control handler
         function playbackSpeedKeyListener(event) {
             const key = event.key?.toLowerCase?.();
-            // cent'anni
             const defaultKeys = ['a', 's', 'd'];
             const youtubeKeys = ['<', '>'];
             const isValidKey = [...defaultKeys, ...youtubeKeys].includes(key);
