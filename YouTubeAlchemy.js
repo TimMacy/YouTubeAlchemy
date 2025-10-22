@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      8.10.2
+// @version      9.0
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 8.10.2 - YouTube Alchemy                  *
+*                    Version: 9.0 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -491,6 +491,49 @@
             cursor: pointer;
         }
 
+        .playback-speed-keys {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-template-rows: auto auto;
+        }
+
+        .playback-speed-labels {
+            grid-column: 1;
+            grid-row: 1/3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .playback-speed-labels > div {
+            height: 45px;
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+            font-size: 1em;
+        }
+
+        .key-button-container, .set-speed-container {
+            display: flex;
+            grid-column: 2;
+        }
+
+        .key-button-container {
+            grid-row: 1;
+        }
+
+        .set-speed-container {
+            grid-row: 2;
+        }
+
+        .set-speed-container > .label-style-settings {
+            display: flex;
+            width: 50px;
+            margin-right: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
         .CentAnni-info-text {
             color: rgba(175, 175, 175, .9);
             font-family: "Roboto", "Arial", sans-serif;
@@ -803,12 +846,11 @@
             z-index: 2053;
             bottom: 0;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, 35px);
             font-weight: 800 !important;
             font-size: 17px;
             vertical-align: top;
             white-space: nowrap;
-            line-height: 38px;
             color: ghostwhite;
             text-shadow: black 0 0 3px !important;
         }
@@ -1432,6 +1474,31 @@
             ytd-shorts #scrubber .ytPlayerProgressBarHostHidden {
                 opacity: 1;
             }
+
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom,
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom .ytp-chrome-controls {
+                opacity: 1 !important;
+            }
+
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom .ytp-progress-bar-container {
+                bottom: var(--yt-delhi-bottom-controls-height, 72px) !important;
+                height: 6px !important;
+            }
+
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) #CentAnni-progress-bar-start.active,
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) #CentAnni-progress-bar-bar.active,
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) #CentAnni-progress-bar-end.active {
+                opacity: 0 !important;
+            }
+
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom .ytp-load-progress,
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom .ytp-play-progress {
+                display: block !important;
+            }
+
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom .ytp-progress-list {
+                background: rgba(40, 40, 40, .6) !important;
+            }
         }
 
         /* playback speed css */
@@ -1544,6 +1611,7 @@
                 max-width: 50%;
             }
 
+            .ytp-menuitem:has(path[d^="M12 1c1.4"]),
             .ytp-menuitem:has(path[d^="M10,8v8l6-4L10"]) {
                 display: none;
             }
@@ -1846,6 +1914,10 @@
                 border: 1px solid rgba(255, 255, 255, .2);
                 border-top: none;
                 box-sizing: border-box;
+            }
+
+            ytd-engagement-panel-section-list-renderer[match-content-theme] #content.ytd-engagement-panel-section-list-renderer {
+                background-color: transparent;
             }
 
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id^="shopping_panel_for_entry_point_"] {
@@ -2333,7 +2405,7 @@
             ytd-watch-flexy[default-layout] #primary #below {
                 overflow-y: auto;
                 overflow-x: hidden;
-                min-height: 110px;
+                min-height: var(--spaceBelow);
                 height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - (calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)) * var(--ytd-watch-flexy-height-ratio) / var(--ytd-watch-flexy-width-ratio)));
             }
         }
@@ -2357,6 +2429,19 @@
                 padding: 0;
                 font-size: inherit;
                 line-height: inherit;
+                max-width: unset !important;
+            }
+
+            #movie_player .ytp-chapter-container {
+                transform: translateY(-14px);
+            }
+
+            #movie_player .ytp-chapter-title.ytp-button {
+                backdrop-filter: unset;
+                background: unset;
+                text-shadow: unset;
+                border-radius: unset;
+                padding: unset;
             }
 
             ytd-watch-flexy .sponsorChapterText,
@@ -2380,7 +2465,8 @@
                 z-index: 2017;
                 top: 0;
                 right: 0;
-                max-width: calc(50% - 26px);
+                max-width: 60%;
+                width: calc(50% - 26px);
                 font-family: -apple-system, "Roboto", "Arial", sans-serif;
                 font-size: 1.4rem;
                 line-height: 2rem;
@@ -2406,11 +2492,11 @@
                 z-index: 2053;
                 bottom: 0;
                 left: 50%;
+                transform: translateY(35px);
                 font-weight: 500 !important;
                 font-size: 17px;
                 vertical-align: top;
                 white-space: nowrap;
-                line-height: 45px;
                 color: ghostwhite !important;
                 text-shadow: black 0 0 3px !important;
             }
@@ -2425,10 +2511,6 @@
                 font-size: 18px;
                 white-space: nowrap;
                 word-wrap: normal;
-            }
-
-            .ytp-fullscreen .ytp-progress-bar-container {
-                bottom: 49px;
             }
 
             .ytp-autohide .ytp-chrome-bottom .CentAnni-chapter-title {
@@ -2610,6 +2692,14 @@
                 width: 100dvw;
                 height: 100dvw;
             }
+
+            .ytp-delhi-modern .ytp-popup,
+            .ytp-delhi-modern .ytp-chrome-controls .ytp-right-controls,
+            .ytp-delhi-modern .ytp-time-wrapper:not(.ytp-miniplayer-ui *),
+            .ytp-delhi-modern.ytp-delhi-horizontal-volume-controls .ytp-volume-area,
+            .ytp-delhi-modern.ytp-delhi-modern-compact-controls .ytp-chrome-controls .ytp-play-button {
+                background: rgba(28, 28, 28, .9);
+            }
         }
 
         html[dark].CentAnni-style-no-frosted-glass #frosted-glass.ytd-app,
@@ -2694,7 +2784,9 @@
         }
 
         .CentAnni-style-hide-endscreen {
-            ytd-watch-flexy .html5-video-player .html5-endscreen.videowall-endscreen {
+            .ytp-delhi-modern.ytp-fullscreen-grid-active .ytp-gradient-bottom,
+            ytd-watch-flexy .html5-video-player .html5-endscreen.videowall-endscreen,
+            .ytp-fullscreen-grid:has(a.ytp-modern-videowall-still.ytp-suggestion-set) {
                 display: none !important;
             }
 
@@ -2972,6 +3064,8 @@
             ytd-expandable-metadata-renderer,
             .yt-thumbnail-view-model--medium,
             ytd-author-comment-badge-renderer,
+            .ytp-modern-videowall-still-image,
+            .ytp-modern-videowall-still:hover,
             .yt-list-item-view-model__container,
             .ytCollectionsStackCollectionStack2,
             .badge.ytd-badge-supported-renderer,
@@ -2983,6 +3077,7 @@
             .ytNotificationMultiActionRendererHost,
             .animated-action__background-container,
             .ytp-player-minimized .html5-main-video,
+            .ytp-popup.ytp-delhi-modern-contextmenu,
             .ytCollectionsStackCollectionStack1Large,
             .ytProgressBarLineProgressBarLineRounded,
             .ytCollectionsStackCollectionStack1Small,
@@ -2997,6 +3092,7 @@
             .reel-video-in-sequence-thumbnail.ytd-shorts,
             yt-interaction.circular .fill.yt-interaction,
             .ytSuggestionComponentVisualSuggestThumbnail,
+            .ytp-progress-bar-start.ytp-progress-bar-end,
             .yt-spec-button-shape-next--icon-only-default,
             yt-interaction.circular .stroke.yt-interaction,
             ytd-watch-flexy[theater] .CentAnni-tabView-tab,
@@ -3152,6 +3248,34 @@
 
             .snackbarViewModelHost {
                 border-radius: 0px 4px 4px 0px;
+            }
+
+            .ytp-delhi-modern .ytp-right-controls-left > .ytp-button,
+            .ytp-delhi-modern .ytp-right-controls-right > .ytp-button {
+                border-radius: 0 !important;
+                overflow: hidden;
+            }
+            .ytp-delhi-modern .ytp-right-controls-left > .ytp-button::before,
+            .ytp-delhi-modern .ytp-right-controls-right > .ytp-button::before {
+                border-radius: 0 !important;
+            }
+
+            .ytp-delhi-modern .ytp-right-controls-left > .ytp-button:first-of-type,
+            .ytp-delhi-modern .ytp-right-controls-left > .ytp-button:first-of-type::before {
+                border-top-left-radius: 40px !important;
+                border-bottom-left-radius: 40px !important;
+            }
+
+            .ytp-delhi-modern .ytp-right-controls-left > .ytp-expand-right-bottom-section-button + .ytp-button,
+            .ytp-delhi-modern .ytp-right-controls-left > .ytp-expand-right-bottom-section-button + .ytp-button::before {
+                border-top-left-radius: 40px !important;
+                border-bottom-left-radius: 40px !important;
+            }
+
+            .ytp-delhi-modern .ytp-right-controls-right > .ytp-button:last-of-type,
+            .ytp-delhi-modern .ytp-right-controls-right > .ytp-button:last-of-type::before {
+                border-top-right-radius: 40px !important;
+                border-bottom-right-radius: 40px !important;
             }
         }
 
@@ -3616,7 +3740,7 @@
 
             #container.ytd-search ytd-video-renderer[use-bigger-thumbs] ytd-thumbnail.ytd-video-renderer,
             #container.ytd-search ytd-video-renderer[use-bigger-thumbs][bigger-thumbs-style="BIG"] ytd-thumbnail.ytd-video-renderer {
-                max-width: calc(100dvh / 1.92 - 64px);
+                max-width: calc(100dvh / 2.33 - 64px);
                 min-width: 250px;
             }
 
@@ -3748,6 +3872,21 @@
             .ytListViewModelCollectionThumbnailClass {
                 max-width: fit-content;
             }
+
+            .ytp-popup.ytp-settings-menu,
+            .yt-list-item-view-model__accessory,
+            .guide-icon.ytd-guide-entry-renderer,
+            ytd-transcript-footer-renderer button#button,
+            .yt-spec-button-shape-next--size-m .yt-spec-button-shape-next__icon,
+            ytd-menu-service-item-renderer[system-icons] yt-icon.ytd-menu-service-item-renderer,
+            ytd-menu-service-item-renderer[system-icons] .ytIconWrapperHost.ytd-menu-service-item-renderer,
+            #icon.ytd-notification-topbar-button-renderer {
+                scale: .85;
+            }
+
+            .ytp-popup.ytp-settings-menu {
+                transform: translateY(40px);
+            }
         }
 
         .CentAnni-style-max-video-size:not(.CentAnni-style-compact-layout) ytd-watch-flexy[default-layout] {
@@ -3759,9 +3898,9 @@
 
         .CentAnni-style-compact-layout:not(.CentAnni-style-max-video-size) ytd-watch-flexy[default-layout] {
             --ytd-watch-flexy-max-player-width: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - 110px - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio)));
+                    calc((100dvh - var(--spaceBelow) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio)));
             --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - 110px - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio)));
+                    calc((100dvh - var(--spaceBelow) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio)));
         }
 
         .CentAnni-style-max-video-size.CentAnni-style-compact-layout ytd-watch-flexy[default-layout] {
@@ -3985,8 +4124,11 @@
         }
 
         .CentAnni-style-hide-share-btn-global {
+            yt-button-view-model:has(path[d^="M10 3"]),
+            yt-list-item-view-model:has(path[d^="M10 3"]),
             yt-button-view-model:has(path[d^="M15 5.63"]),
             yt-list-item-view-model:has(path[d^="M15 5.63"]),
+            ytd-menu-service-item-renderer:has(path[d^="M10 3"]),
             yt-button-view-model:has(button[aria-label="Share"]),
             yt-list-item-view-model:has(button[aria-label="Share"]) {
                 display: none;
@@ -4003,6 +4145,7 @@
             }
 
             .CentAnni-chapter-title {
+                width: calc(50% - 26px);
                 max-width: 60% !important;
             }
 
@@ -4604,6 +4747,7 @@
         videosPerRow: 0,
         sidebarWidth: 0,
         searchPosition: 0,
+        spaceBelowPlayer: 110,
         playProgressColor: false,
         videoTabView: true,
         toggleTheaterModeBtn: true,
@@ -4612,6 +4756,25 @@
         playbackSpeed: true,
         playbackSpeedBtns: false,
         playbackSpeedValue: 1,
+        playbackSpeedKey1: '',
+        playbackSpeedKey1s: '',
+        playbackSpeedKey2: '',
+        playbackSpeedKey2s: '',
+        playbackSpeedKey3: '',
+        playbackSpeedKey3s: '',
+        playbackSpeedKey4: '',
+        playbackSpeedKey4s: '',
+        playbackSpeedKey5: '',
+        playbackSpeedKey5s: '',
+        playbackSpeedKey6: '',
+        playbackSpeedKey6s: '',
+        playbackSpeedKey7: '',
+        playbackSpeedKey7s: '',
+        playbackSpeedKey8: '',
+        playbackSpeedKey8s: '',
+        playbackSpeedToggle: 's',
+        playbackSpeedDecrease: 'a',
+        playbackSpeedIncrease: 'd',
         VerifiedArtist: false,
         defaultQuality: 'auto',
         defaultQualityPremium: false,
@@ -4873,6 +5036,7 @@
         docElement.style.setProperty('--textTransform', USER_CONFIG.textTransform);
         docElement.style.setProperty('--fontSize', `${USER_CONFIG.defaultFontSize}px`);
         docElement.style.setProperty('--sidebarWidth', `${USER_CONFIG.sidebarWidth}px`);
+        docElement.style.setProperty('--spaceBelow', `${USER_CONFIG.spaceBelowPlayer}px`);
         docElement.style.setProperty('--watchedOpacity', USER_CONFIG.videosWatchedOpacity);
         docElement.style.setProperty('--searchbarPosition', `${USER_CONFIG.searchPosition}px`);
         docElement.style.setProperty('--progressBarColor', USER_CONFIG.progressbarColorPicker);
@@ -4905,9 +5069,10 @@
         const aspectRatio = (video.videoWidth && video.videoHeight) ? video.videoWidth / video.videoHeight : 16 / 9;
         const sidebarWidth = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-sidebar-width')) || 402;
         const mastheadHeight = parseFloat(styleHTML.getPropertyValue('--ytd-toolbar-height')) || 56;
+        const space = USER_CONFIG.spaceBelowPlayer;
         const marginTop = USER_CONFIG.compactLayout ? 0 : 24;
         const margin = USER_CONFIG.compactLayout ? 5 : 24;
-        const marginBelow = USER_CONFIG.maxVidSize ? 0 : 110;
+        const marginBelow = USER_CONFIG.maxVidSize ? 0 : space;
         const calculate = () => {
             const maxWidth = window.innerWidth - sidebarWidth - margin * 3;
             const maxHeight = window.innerHeight - mastheadHeight - marginTop - marginBelow;
@@ -4932,6 +5097,24 @@
         watchFlexy.calculateCurrentPlayerSize_ = maxSize;
 
         window.dispatchEvent(new Event('resize'));
+    }
+
+    // builds key mappings for playback speed controls
+    function speedKeyMap() {
+        const lower = i => (i == null ? '' : String(i).toLowerCase());
+        toggleKey = lower(USER_CONFIG.playbackSpeedToggle);
+        increaseKey = lower(USER_CONFIG.playbackSpeedIncrease);
+        decreaseKey = lower(USER_CONFIG.playbackSpeedDecrease);
+
+        const youtubeKeys = ['<', '>'];
+        defaultKeys = new Set([toggleKey, increaseKey, decreaseKey, ...youtubeKeys]);
+
+        specialKeys = Object.create(null);
+        for (let i = 1; i <= 8; i++) {
+            const key = lower(USER_CONFIG[`playbackSpeedKey${i}`]);
+            const speed = USER_CONFIG[`playbackSpeedKey${i}s`];
+            if (key && speed != null) specialKeys[key] = speed;
+        }
     }
 
     // create and show the settings modal
@@ -5459,6 +5642,16 @@
             const searchPosition = createNumberInputField("Search Bar Position (default: 0 | a negative value moves it left)", 'searchPosition', USER_CONFIG.searchPosition, { min: -9999, max: 9999, step: 1 });
             form.appendChild(searchPosition);
 
+            // tab view below player min space
+            const spaceBelowPlayer = createNumberInputField("Minimum Space Below Player in Default Layout When Tab View and Compact Layout Are Enabled (default: 110px)", 'spaceBelowPlayer', USER_CONFIG.spaceBelowPlayer, { min: 100, max: 1000, step: 1 });
+            form.appendChild(spaceBelowPlayer);
+
+            // playback speed
+            const playSpeed = document.createElement('label');
+            playSpeed.textContent = 'Playback Speed';
+            playSpeed.classList.add('button-icons', 'features-text');
+            form.appendChild(playSpeed);
+
             // playback speed
             const playbackSpeedContainer = document.createElement('div');
             playbackSpeedContainer.className = 'playback-speed-container';
@@ -5469,6 +5662,61 @@
             playbackSpeedContainer.appendChild(playbackSpeedValue);
             playbackSpeedContainer.appendChild(playbackSpeed);
             form.appendChild(playbackSpeedContainer);
+
+            // playback speed custom keys
+            const keysRow = document.createElement('div');
+            keysRow.classList.add('playback-speed-keys');
+
+            // labels
+            const labelDiv = document.createElement('div');
+            labelDiv.classList.add('playback-speed-labels', 'label-style-settings');
+            const keyLabel = document.createElement('div');
+            keyLabel.textContent = 'Key';
+            const speedLabel = document.createElement('div');
+            speedLabel.textContent = 'Speed';
+            labelDiv.appendChild(keyLabel);
+            labelDiv.appendChild(speedLabel);
+            keysRow.appendChild(labelDiv);
+
+            // keys
+            const keyButtonContainer = document.createElement('div');
+            keyButtonContainer.classList.add('key-button-container');
+
+            // speed
+            const setSpeedContainer = document.createElement('div');
+            setSpeedContainer.classList.add('set-speed-container');
+            for (let i = 1; i <= 8; i++) {
+                const keyField = createNumberInputField('', `playbackSpeedKey${i}`, USER_CONFIG[`playbackSpeedKey${i}`], { type: 'text' });
+                keyButtonContainer.appendChild(keyField);
+
+                const speedField = createNumberInputField('', `playbackSpeedKey${i}s`, USER_CONFIG[`playbackSpeedKey${i}s`]);
+                setSpeedContainer.appendChild(speedField);
+            }
+
+            // ASD
+            const defaultKeyConfigs = [
+                { label: 'Decrease', id: 'playbackSpeedDecrease' },
+                { label: 'Toggle', id: 'playbackSpeedToggle' },
+                { label: 'Increase', id: 'playbackSpeedIncrease' }
+            ];
+
+            defaultKeyConfigs.forEach(config => {
+                const keyField = createNumberInputField('', config.id, USER_CONFIG[config.id], { type: 'text' });
+                keyButtonContainer.appendChild(keyField);
+
+                const labelDiv = document.createElement('div');
+                labelDiv.classList.add('label-style-settings');
+                labelDiv.textContent = config.label;
+                setSpeedContainer.appendChild(labelDiv);
+            });
+
+            keysRow.appendChild(keyButtonContainer);
+            keysRow.appendChild(setSpeedContainer);
+            form.appendChild(keysRow);
+
+            // playback speed buttons
+            const playbackSpeedBtns = createCheckboxField('Add Additional Playback Speed Buttons (default: no)', 'playbackSpeedBtns', USER_CONFIG.playbackSpeedBtns);
+            form.appendChild(playbackSpeedBtns);
 
             // features
             const features = document.createElement('label');
@@ -5483,10 +5731,6 @@
             // max video size
             const maxVidSize = createCheckboxField('Max Video Size in Default Layout (default: no)', 'maxVidSize', USER_CONFIG.maxVidSize);
             form.appendChild(maxVidSize);
-
-            // playback speed buttons
-            const playbackSpeedBtns = createCheckboxField('Add Additional Playback Speed Buttons (default: no)', 'playbackSpeedBtns', USER_CONFIG.playbackSpeedBtns);
-            form.appendChild(playbackSpeedBtns);
 
             // expand video description
             const expandVideoDescription = createCheckboxField('Auto Expand Video Description (default: no)', 'expandVideoDescription', USER_CONFIG.expandVideoDescription);
@@ -6319,12 +6563,14 @@
         label.classList.add('number-input-label');
 
         const numberInput = document.createElement('input');
-        numberInput.type = 'number';
+        numberInput.type = options.type || 'number';
         numberInput.name = settingKey;
         numberInput.value = settingValue;
-        numberInput.min = options.min || 1;
-        numberInput.max = options.max || 20;
-        numberInput.step = options.step || .25;
+        if (numberInput.type === 'number') {
+            numberInput.min = options.min || 1;
+            numberInput.max = options.max || 20;
+            numberInput.step = options.step || .25;
+        }
         numberInput.classList.add('number-input-field');
         label.appendChild(numberInput);
 
@@ -6524,6 +6770,7 @@
             USER_CONFIG.videosPerRow = parseInt(subPanelCustomCSS.elements.videosPerRow.value);
             USER_CONFIG.sidebarWidth = parseFloat(subPanelCustomCSS.elements.sidebarWidth.value);
             USER_CONFIG.searchPosition = parseFloat(subPanelCustomCSS.elements.searchPosition.value);
+            USER_CONFIG.spaceBelowPlayer = parseInt(subPanelCustomCSS.elements.spaceBelowPlayer.value) || 110;
             USER_CONFIG.videosHideWatchedGlobalJS = parseInt(subPanelCustomCSS.elements.videosHideWatchedGlobalJS.value);
             USER_CONFIG.videosHideWatchedHome = subPanelCustomCSS.elements.videosHideWatchedHome.checked;
             USER_CONFIG.videosHideWatchedSubscriptions = subPanelCustomCSS.elements.videosHideWatchedSubscriptions.checked;
@@ -6554,6 +6801,25 @@
             USER_CONFIG.playbackSpeed = subPanelCustomCSS.elements.playbackSpeed.checked;
             USER_CONFIG.playbackSpeedBtns = subPanelCustomCSS.elements.playbackSpeedBtns.checked;
             USER_CONFIG.playbackSpeedValue = parseFloat(subPanelCustomCSS.elements.playbackSpeedValue.value);
+            USER_CONFIG.playbackSpeedKey1 = subPanelCustomCSS.elements.playbackSpeedKey1.value.trim();
+            USER_CONFIG.playbackSpeedKey1s = subPanelCustomCSS.elements.playbackSpeedKey1s.value.trim() === '' ? '' : parseFloat(subPanelCustomCSS.elements.playbackSpeedKey1s.value);
+            USER_CONFIG.playbackSpeedKey2 = subPanelCustomCSS.elements.playbackSpeedKey2.value.trim();
+            USER_CONFIG.playbackSpeedKey2s = subPanelCustomCSS.elements.playbackSpeedKey2s.value.trim() === '' ? '' : parseFloat(subPanelCustomCSS.elements.playbackSpeedKey2s.value);
+            USER_CONFIG.playbackSpeedKey3 = subPanelCustomCSS.elements.playbackSpeedKey3.value.trim();
+            USER_CONFIG.playbackSpeedKey3s = subPanelCustomCSS.elements.playbackSpeedKey3s.value.trim() === '' ? '' : parseFloat(subPanelCustomCSS.elements.playbackSpeedKey3s.value);
+            USER_CONFIG.playbackSpeedKey4 = subPanelCustomCSS.elements.playbackSpeedKey4.value.trim();
+            USER_CONFIG.playbackSpeedKey4s = subPanelCustomCSS.elements.playbackSpeedKey4s.value.trim() === '' ? '' : parseFloat(subPanelCustomCSS.elements.playbackSpeedKey4s.value);
+            USER_CONFIG.playbackSpeedKey5 = subPanelCustomCSS.elements.playbackSpeedKey5.value.trim();
+            USER_CONFIG.playbackSpeedKey5s = subPanelCustomCSS.elements.playbackSpeedKey5s.value.trim() === '' ? '' : parseFloat(subPanelCustomCSS.elements.playbackSpeedKey5s.value);
+            USER_CONFIG.playbackSpeedKey6 = subPanelCustomCSS.elements.playbackSpeedKey6.value.trim();
+            USER_CONFIG.playbackSpeedKey6s = subPanelCustomCSS.elements.playbackSpeedKey6s.value.trim() === '' ? '' : parseFloat(subPanelCustomCSS.elements.playbackSpeedKey6s.value);
+            USER_CONFIG.playbackSpeedKey7 = subPanelCustomCSS.elements.playbackSpeedKey7.value.trim();
+            USER_CONFIG.playbackSpeedKey7s = subPanelCustomCSS.elements.playbackSpeedKey7s.value.trim() === '' ? '' : parseFloat(subPanelCustomCSS.elements.playbackSpeedKey7s.value);
+            USER_CONFIG.playbackSpeedKey8 = subPanelCustomCSS.elements.playbackSpeedKey8.value.trim();
+            USER_CONFIG.playbackSpeedKey8s = subPanelCustomCSS.elements.playbackSpeedKey8s.value.trim() === '' ? '' : parseFloat(subPanelCustomCSS.elements.playbackSpeedKey8s.value);
+            USER_CONFIG.playbackSpeedToggle = subPanelCustomCSS.elements.playbackSpeedToggle.value.trim() || 's';
+            USER_CONFIG.playbackSpeedDecrease = subPanelCustomCSS.elements.playbackSpeedDecrease.value.trim() || 'a';
+            USER_CONFIG.playbackSpeedIncrease = subPanelCustomCSS.elements.playbackSpeedIncrease.value.trim() || 'd';
             USER_CONFIG.defaultQuality = subPanelCustomCSS.elements.defaultQuality.value;
             USER_CONFIG.defaultTranscriptLanguage = subPanelCustomCSS.elements.defaultTranscriptLanguage.value;
             USER_CONFIG.defaultAudioLanguage = subPanelCustomCSS.elements.defaultAudioLanguage.value;
@@ -7743,33 +8009,36 @@
 
         // keyboard control handler
         function playbackSpeedKeyListener(event) {
-            const key = event.key?.toLowerCase?.();
-            const defaultKeys = ['a', 's', 'd'];
-            const youtubeKeys = ['<', '>'];
-            const isValidKey = [...defaultKeys, ...youtubeKeys].includes(key);
+            const key = (event.key || '').toLowerCase();
+            const tagName = (event.target?.tagName || '').toLowerCase();
+            const isTextInput = tagName === 'input' || tagName === 'textarea' || tagName === 'select' || event.target?.isContentEditable;
+            const isValidKey = defaultKeys.has(key);
+            const matched = specialKeys[key];
 
-            const tagName = event.target?.tagName?.toLowerCase?.() || '';
-            const isTextInput = ['input', 'textarea', 'select', 'contenteditable'].includes(tagName) || event.target?.isContentEditable;
-
-            if (!video || !isValidKey || isTextInput) return;
+            if (!video || isTextInput || (!isValidKey && matched == null)) return;
             event.preventDefault();
             event.stopPropagation();
 
             switch (key) {
-                case 's':
+                case toggleKey:
                     video.playbackRate = (video.playbackRate !== 1 ? 1 : defaultSpeed);
                     setSpeed();
                     break;
-                case 'a':
+                case decreaseKey:
                 case '<':
                     video.playbackRate = video.playbackRate - STEP_SIZE;
                     setSpeed();
                     break;
-                case 'd':
+                case increaseKey:
                 case '>':
                     video.playbackRate = video.playbackRate + STEP_SIZE;
                     setSpeed();
                     break;
+                default:
+                    if (matched != null) {
+                        video.playbackRate = matched;
+                        setSpeed();
+                    }
             }
         }
 
@@ -7808,6 +8077,7 @@
 
     // playback speed regular videos
     async function videoPlaybackSpeed() {
+        speedKeyMap();
         let menuRenderer = watchFlexyElement.querySelector(menuSel);
         if (!menuRenderer) return;
 
@@ -9004,7 +9274,7 @@
 
                         for (const item of menuItems) {
                             const formattedString = item.querySelector('yt-formatted-string');
-                            if (formattedString && formattedString.textContent.includes('Remove from')) {
+                            if ((formattedString && formattedString.textContent.includes('Remove from')) || item.querySelector('svg path[d^="M19 3h-4V2a1"]')) {
                                 removeOption = item;
                                 break;
                             }
@@ -9077,7 +9347,9 @@
             docElement.classList.add('CentAnni-playlist-remove-btn-hide-menus');
             menuButton.click();
 
-            waitForElement('ytd-popup-container > tp-yt-iron-dropdown a:has(svg path[d^="M12"])', (removeLink) => {
+            const dPaths = ['M12 1C5', 'M12 3c'];
+            const selector = dPaths.map(d => `ytd-popup-container > tp-yt-iron-dropdown a:has(svg path[d^="${d}"])`).join(',');
+            waitForElement(selector, (removeLink) => {
                 removeLink.click();
                 waitForElement('#confirm-button > yt-button-shape > button', (confirmButton) => {
                     confirmButton.click();
@@ -10506,6 +10778,9 @@
     let lastUserRate = null;
     let speedNotification = false;
     let hideNotificationTimeout;
+    let toggleKey = '', increaseKey = '', decreaseKey = '';
+    let defaultKeys = new Set();
+    let specialKeys = Object.create(null);
     let transcriptMenuButtonMoved = false;
     let chronoNotificationRunning = false;
     let cleanupPlaybackSpeedListeners = null;
@@ -10547,7 +10822,6 @@
                 [USER_CONFIG.playbackSpeed, videoPlaybackSpeed],
                 [USER_CONFIG.progressBar && !isLiveVideo && !isLiveStream, keepProgressBarVisible],
                 [USER_CONFIG.displayRemainingTime && !isLiveVideo && !isLiveStream, remainingTime],
-                [USER_CONFIG.maxVidSize || USER_CONFIG.compactLayout, maxVideoSize],
                 [USER_CONFIG.playlistDirectionBtns && isPlaylistVideoPage, playlistDirection],
                 [USER_CONFIG.closeChatWindow, () => setTimeout(() => { chatWindowCheck(); }, 500)],
                 [USER_CONFIG.commentsNewFirst && !isLiveVideo && !isLiveStream, sortCommentsNewFirst],
@@ -10556,6 +10830,7 @@
                 [USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel, openTranscript],
                 [(USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto'), setLanguage],
                 [!USER_CONFIG.videoTabView && ((USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel)), scrollToTop],
+                [USER_CONFIG.maxVidSize || USER_CONFIG.compactLayout, maxVideoSize],
                 [USER_CONFIG.feedFilterChipsWatch, restoreLastSelectedChip],
                 [USER_CONFIG.hideProdTxt, hideProductsSpan],
                 [USER_CONFIG.videoTabView, tabView]
