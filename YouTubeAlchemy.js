@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.0
+// @version      9.0.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.0 - YouTube Alchemy                     *
+*                    Version: 9.0.1 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1475,29 +1475,35 @@
                 opacity: 1;
             }
 
-            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom,
-            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom .ytp-chrome-controls {
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) .ytp-chrome-bottom,
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) .ytp-chrome-bottom .ytp-chrome-controls {
                 opacity: 1 !important;
             }
 
-            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom .ytp-progress-bar-container {
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) .ytp-chrome-bottom .ytp-progress-bar-container {
                 bottom: var(--yt-delhi-bottom-controls-height, 72px) !important;
                 height: 6px !important;
             }
 
-            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) #CentAnni-progress-bar-start.active,
-            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) #CentAnni-progress-bar-bar.active,
-            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) #CentAnni-progress-bar-end.active {
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) #CentAnni-progress-bar-start.active,
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) #CentAnni-progress-bar-bar.active,
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) #CentAnni-progress-bar-end.active {
                 opacity: 0 !important;
             }
 
-            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom .ytp-load-progress,
-            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom .ytp-play-progress {
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) .ytp-chrome-bottom .ytp-load-progress,
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) .ytp-chrome-bottom .ytp-play-progress {
                 display: block !important;
             }
 
-            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode.ytp-fit-cover-video) .ytp-chrome-bottom .ytp-progress-list {
+            ytd-watch-flexy:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) .ytp-chrome-bottom .ytp-progress-list {
                 background: rgba(40, 40, 40, .6) !important;
+            }
+
+            #ytd-player .html5-video-player.ended-mode #CentAnni-progress-bar-start,
+            #ytd-player .html5-video-player.ended-mode #CentAnni-progress-bar-bar,
+            #ytd-player .html5-video-player.ended-mode #CentAnni-progress-bar-end {
+                opacity: 0 !important;
             }
         }
 
@@ -2465,8 +2471,7 @@
                 z-index: 2017;
                 top: 0;
                 right: 0;
-                max-width: 60%;
-                width: calc(50% - 26px);
+                width: calc(60% - 26px);
                 font-family: -apple-system, "Roboto", "Arial", sans-serif;
                 font-size: 1.4rem;
                 line-height: 2rem;
@@ -2528,7 +2533,7 @@
             :is( :has(ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters]),
                 :has(ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters])) {
                 & ytd-watch-flexy #description > #description-inner {
-                    width: calc(50% - 26px);
+                    width: calc(40% - 26px);
                 }
 
                 & ytd-watch-flexy #description > #description-inner #info-container {
@@ -2611,6 +2616,14 @@
             ytd-rich-item-renderer[rich-grid-hover-highlight] {
                 background-color: unset !important;
                 box-shadow: unset !important;
+            }
+
+            .yt-spec-touch-feedback-shape {
+                display: none;
+            }
+
+            .yt-lockup-metadata-view-model__metadata {
+                color: #aaa !important;
             }
         }
 
@@ -3119,6 +3132,7 @@
             ytd-author-comment-badge-renderer[enable-modern-comment-badges][creator],
             ytd-engagement-panel-section-list-renderer:not([live-chat-engagement-panel]),
             ytd-watch-flexy[rounded-player-large][default-layout] #ytd-player.ytd-watch-flexy,
+            .yt-video-attribute-view-model--image-small .yt-video-attribute-view-model__hero-section,
             ytd-engagement-panel-section-list-renderer[modern-panels]:not([live-chat-engagement-panel]),
             ytd-macro-markers-list-item-renderer[rounded] #thumbnail.ytd-macro-markers-list-item-renderer,
             ytd-expandable-metadata-renderer:not([is-expanded]) #header.ytd-expandable-metadata-renderer:hover,
@@ -3744,6 +3758,10 @@
                 min-width: 250px;
             }
 
+            ytd-search #expandable-metadata.ytd-video-renderer:not(:empty) {
+                margin: 0;
+            }
+
             ytd-watch-flexy .ryd-tooltip-new-design .ryd-tooltip-bar-container {
                 padding: 0;
                 margin-top: -2px;
@@ -3867,6 +3885,11 @@
             ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
                 max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - 52px) !important;
+            }
+
+            ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
+            ytd-watch-flexy:not([fixed-panels]):not([squeezeback]) #chat.ytd-watch-flexy:not([collapsed]) {
+                height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x)) !important;
             }
 
             .ytListViewModelCollectionThumbnailClass {
@@ -4145,8 +4168,7 @@
             }
 
             .CentAnni-chapter-title {
-                width: calc(50% - 26px);
-                max-width: 60% !important;
+                width: calc(60% - 26px);
             }
 
             & ytd-watch-flexy #bottom-row.ytd-watch-metadata {
