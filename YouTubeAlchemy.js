@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.1
+// @version      9.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.1 - YouTube Alchemy                     *
+*                    Version: 9.2 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1505,7 +1505,8 @@
 
             #ytd-player .html5-video-player.ended-mode #CentAnni-progress-bar-start,
             #ytd-player .html5-video-player.ended-mode #CentAnni-progress-bar-bar,
-            #ytd-player .html5-video-player.ended-mode #CentAnni-progress-bar-end {
+            #ytd-player .html5-video-player.ended-mode #CentAnni-progress-bar-end,
+            #ytd-player .html5-video-player.ended-mode.ytp-autohide .ytp-chrome-bottom .previewbar {
                 opacity: 0 !important;
             }
 
@@ -2635,10 +2636,22 @@
             .yt-spec-touch-feedback-shape {
                 display: none;
             }
+        }
 
-            .yt-lockup-metadata-view-model__metadata {
-                color: #aaa !important;
-            }
+        HTML.CentAnni-style-home-disable-hover:not[dark] .yt-lockup-metadata-view-model__title {
+            color: #0f0f0f !important;
+        }
+
+        HTML.CentAnni-style-home-disable-hover:not[dark] .yt-lockup-metadata-view-model__metadata {
+            color: #606060 !important;
+        }
+
+        HTML.CentAnni-style-home-disable-hover[dark] .yt-lockup-metadata-view-model__title {
+            color: #f1f1f1 !important;
+        }
+
+        HTML.CentAnni-style-home-disable-hover[dark] .yt-lockup-metadata-view-model__metadata {
+            color: #aaa !important;
         }
 
         #video-title,
@@ -7026,17 +7039,22 @@
         try {
             const scriptVersion = GM.info.script.version;
             const settingsString = JSON.stringify(USER_CONFIG, null, 2);
+            const filename = `YouTube-Alchemy_v${scriptVersion}_Backup_${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
             const blob = new Blob([settingsString], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
+            const file = new File([blob], filename, { type: 'application/json' });
 
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `YouTube-Alchemy_v${scriptVersion}_Backup_${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
-            docBody.appendChild(a);
-            a.click();
-            docBody.removeChild(a);
-            URL.revokeObjectURL(url);
-
+            if ((navigator.maxTouchPoints > 0 || /iPhone|iPad|Android/i.test(navigator.userAgent)) && navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({ files: [file] });
+            } else {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                docBody.appendChild(a);
+                a.click();
+                docBody.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
             showNotification('Settings have been exported.');
         } catch (error) {
             showNotification("Error exporting settings!");
@@ -7045,7 +7063,7 @@
     }
 
     let fileInputSettings;
-    async function importSettings() {
+    function importSettings() {
         const handleFile = (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -7070,22 +7088,24 @@
             reader.readAsText(file);
         };
 
-        const createOrResetFileInput = () => {
-            if (!fileInputSettings) {
-                fileInputSettings = document.createElement('input');
-                fileInputSettings.type = 'file';
-                fileInputSettings.accept = 'application/json';
-                fileInputSettings.id = 'fileInputSettings';
-                fileInputSettings.style.display = 'none';
-                fileInputSettings.addEventListener('change', handleFile);
-                docBody.appendChild(fileInputSettings);
-            } else {
-                fileInputSettings.value = '';
-            }
-        };
+        if (!fileInputSettings) {
+            fileInputSettings = document.createElement('input');
+            fileInputSettings.type = 'file';
+            fileInputSettings.accept = 'application/json';
+            fileInputSettings.id = 'fileInputSettings';
 
-        createOrResetFileInput();
-        fileInputSettings.click();
+            fileInputSettings.style.position = 'fixed';
+            fileInputSettings.style.left = '-9999px';
+            fileInputSettings.style.top = '0';
+            fileInputSettings.style.width = '1px';
+            fileInputSettings.style.height = '1px';
+            fileInputSettings.style.opacity = '0';
+
+            fileInputSettings.addEventListener('change', handleFile);
+            docBody.appendChild(fileInputSettings);
+        } else fileInputSettings.value = '';
+
+        typeof fileInputSettings.showPicker === 'function' ? fileInputSettings.showPicker() : fileInputSettings.click();
     }
 
     // function to display a notification for settings change or reset
@@ -7590,6 +7610,8 @@
     function tabView() {
         if (!watchFlexyElement) return;
 
+        let liveChat = !!document.querySelector('ytd-watch-flexy[should-stamp-chat]');
+        let singleColumn = !!document.querySelector('ytd-watch-flexy[is-single-column]');
         transcriptMenuButtonMoved = false;
         let transcriptLanguageSet = false;
         let timestampsEnabled = false;
@@ -7660,6 +7682,7 @@
             const panel = activePanel[currentActiveTab];
             if (isDefault && (currentActiveTab === 'tab-4' || currentActiveTab === 'tab-5') && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED')
                 currentActiveTab === 'tab-4' ? runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]') || document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED") : runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+            if (liveChat && singleColumn) toggleYouTubeColumns();
         }
 
         // mode change, navigation, and clean up
@@ -7890,6 +7913,7 @@
 
         updateTabView();
         if (USER_CONFIG.tabViewChapters && hasChapterPanel) chapterTitles();
+        if (liveChat && singleColumn) toggleYouTubeColumns();
     }
 
     // add chapter titles under videos
@@ -10535,6 +10559,17 @@
         document.documentElement.appendChild(s);
         s.remove();
     }
+
+    // force 2 columns for live chat videos when viewport width is 1000+
+    const toggleYouTubeColumns = () => {
+        const flexy = document.querySelector('ytd-watch-flexy[is-single-column]');
+        const videos = document.querySelector('ytd-item-section-renderer[is-grid-view-enabled]');
+        if (flexy && videos && window.innerWidth >= 1000) {
+            flexy.removeAttribute('is-single-column');
+            flexy.setAttribute('is-two-columns_', '');
+            videos.removeAttribute('is-grid-view-enabled');
+        }
+    };
 
     //  ┌───────────────────────────────────────────────────────────────────┐
     //  │                         language support                          │
