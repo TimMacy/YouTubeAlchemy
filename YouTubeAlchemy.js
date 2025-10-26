@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.0.2
+// @version      9.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.0.2 - YouTube Alchemy                   *
+*                    Version: 9.1 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -837,7 +837,10 @@
         #movie_player .CentAnni-remaining-time-container.live {
             display: none;
             pointer-events: none;
-            cursor: default;
+        }
+
+        :root:has(#ytd-player .html5-video-player.ended-mode) .CentAnni-remaining-time-container {
+            opacity: 0;
         }
 
         #movie_player .CentAnni-remaining-time-container {
@@ -1504,6 +1507,10 @@
             #ytd-player .html5-video-player.ended-mode #CentAnni-progress-bar-bar,
             #ytd-player .html5-video-player.ended-mode #CentAnni-progress-bar-end {
                 opacity: 0 !important;
+            }
+
+            .ytp-autohide.ytp-delhi-modern:not(.playing-mode, .ended-mode) .caption-window.ytp-caption-window-bottom {
+                margin-bottom: calc(var(--yt-delhi-bottom-controls-height, 72px) + 14px);
             }
         }
 
@@ -2804,6 +2811,7 @@
         }
 
         .CentAnni-style-hide-endscreen {
+            ytd-watch-flexy[fullscreen] .ytp-gradient-bottom,
             .ytp-delhi-modern.ytp-fullscreen-grid-active .ytp-gradient-bottom,
             ytd-watch-flexy .html5-video-player .html5-endscreen.videowall-endscreen,
             .ytp-fullscreen-grid:has(a.ytp-modern-videowall-still.ytp-suggestion-set) {
@@ -2822,6 +2830,20 @@
             ytd-watch-flexy .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) .ytp-cued-thumbnail-overlay-image {
                 display: block !important;
                 background-image: var(--video-url) !important;
+            }
+
+            .ytp-delhi-modern.ytp-full-bleed-player.ytp-fullscreen-grid-active:not(.html5-video-player.ended-mode) .ytp-chrome-bottom {
+                bottom: 0 !important;
+                opacity: 1 !important;
+            }
+
+            .ytp-fullscreen-grid-active .ytp-overlays-container {
+                display: flex !important;
+                opacity: 1 !important;
+            }
+
+            ytd-watch-flexy[fullscreen] div#movie_player {
+                --ytp-grid-scroll-percentage: 0 !important;
             }
         }
 
@@ -4825,6 +4847,7 @@
         autoOpenTranscript: false,
         autoOpenComments: false,
         displayRemainingTime: true,
+        showRemainingCompact: false,
         preventAutoplay: false,
         hideVoiceSearch: false,
         selectionColor: true,
@@ -5856,6 +5879,9 @@
             const displayRemainingTime = createCheckboxField('Display Remaining Time Under Videos Adjusted for Playback Speed (default: yes)', 'displayRemainingTime', USER_CONFIG.displayRemainingTime);
             form.appendChild(displayRemainingTime);
 
+            const showRemainingCompact = createCheckboxField('Compact Version for Remaining Time (default: no)', 'showRemainingCompact', USER_CONFIG.showRemainingCompact);
+            form.appendChild(showRemainingCompact);
+
             // info for remaining time minus segments
             const descriptionRemainingTime = document.createElement('small');
             descriptionRemainingTime.textContent = 'To also include skipped SponsorBlock segments, ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."';
@@ -6815,6 +6841,7 @@
             USER_CONFIG.autoOpenComments = subPanelCustomCSS.elements.autoOpenComments.checked;
             USER_CONFIG.transcriptTimestamps = subPanelCustomCSS.elements.transcriptTimestamps.checked;
             USER_CONFIG.displayRemainingTime = subPanelCustomCSS.elements.displayRemainingTime.checked;
+            USER_CONFIG.showRemainingCompact = subPanelCustomCSS.elements.showRemainingCompact.checked;
             USER_CONFIG.progressBar = subPanelCustomCSS.elements.progressBar.checked;
             USER_CONFIG.hideShorts = subPanelCustomCSS.elements.hideShorts.checked;
             USER_CONFIG.redirectShorts = subPanelCustomCSS.elements.redirectShorts.checked;
@@ -7626,7 +7653,8 @@
             }
         }
 
-        document.addEventListener('fullscreenchange', () => { setTimeout(() => handleFullscreenChangeTV(), 250); });
+        const fullscreenListener = () => { setTimeout(() => handleFullscreenChangeTV(), 250); };
+        document.addEventListener('fullscreenchange', fullscreenListener);
         function handleFullscreenChangeTV() {
             const isDefault = watchFlexyElement.hasAttribute('default-layout');
             const panel = activePanel[currentActiveTab];
@@ -7640,7 +7668,7 @@
             tabElements = [];
             subheaderDiv.removeEventListener('click', handleTabViewTabClick);
             document.removeEventListener('yt-set-theater-mode-enabled', updateTabView);
-            document.removeEventListener('fullscreenchange', handleFullscreenChangeTV);
+            document.removeEventListener('fullscreenchange', fullscreenListener);
             tabElements.forEach(tab => { tab.element.removeEventListener('click', tab.handler); });
             tabElements.forEach(tab => tab.element.classList.remove('active'));
             if (hasTranscriptPanel) transcriptPanel.remove();
@@ -8279,11 +8307,13 @@
         if (isLiveVideo) element.classList.add('live');
         else element.classList.remove('live');
 
+        let fullscreen;
         const updateContainer = () => {
             const currentContainer = watchFlexyElement.querySelector('.CentAnni-remaining-time-container');
             const targetContainer = playerElement?.classList.contains('ytp-fullscreen')
                 ? fullscreenContainer
                 : normalContainer;
+            fullscreen = targetContainer === fullscreenContainer;
 
             if (currentContainer && currentContainer.parentNode !== targetContainer) {
                 if (targetContainer === fullscreenContainer) {
@@ -8424,6 +8454,7 @@
                         const rawDuration = video.duration;
                         const currentTime = meta.mediaTime;
                         const playbackRate = video.playbackRate;
+                        const playbackDisplay = showPlaybackSpeed ? (fullscreen ? ` (${playbackRate}x)` : '') : ` (${playbackRate}x)`;
                         const segments = getMergedSegments(rawDuration);
                         const addedTime = computeAddedTime(segments, currentTime);
                         const effectiveTotal = baseEffective + addedTime;
@@ -8435,14 +8466,13 @@
                         const elapsedFormatted = formatTime(currentTime);
                         const remainingFormatted = formatTime(remaining);
 
-                        textNode.data = `total: ${totalDisplay} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
+                        compactModeSpeed ? textNode.data = `${elapsedFormatted} / ${totalDisplay} | -${remainingFormatted} ${playbackDisplay}` : textNode.data = `total: ${totalDisplay} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
                     }
 
                     if (!video.paused && !video.ended) animationFrameId = video.requestVideoFrameCallback(update);
                     else animationFrameId = null;
                 };
                 animationFrameId = video.requestVideoFrameCallback(update);
-
             };
         };
 
@@ -10817,6 +10847,8 @@
     let chronoNotificationRunning = false;
     let cleanupPlaybackSpeedListeners = null;
     let defaultSpeed = USER_CONFIG.playbackSpeedValue;
+    const showPlaybackSpeed = USER_CONFIG.playbackSpeed;
+    const compactModeSpeed = USER_CONFIG.showRemainingCompact;
     const ChatGPTLabel = USER_CONFIG.targetChatGPTLabel;
     const NotebookLMLabel = USER_CONFIG.targetNotebookLMLabel;
     const infoSel = 'ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description]';
