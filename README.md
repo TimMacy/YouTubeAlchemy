@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-9.0.2-white.svg" alt="Version: 9.0.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-9.1-white.svg" alt="Version: 9.1"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -194,6 +194,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Use Enhanced Bitrate for 1080p Videos, Premium Required
   - Persistent Progress Bar with Chapter Markers and SponsorBlock Support—Even in Fullscreen
   - Display Remaining Time Under Videos Adjusted for Playback Speed—Even in Fullscreen
+  - Compact Version for Remaining Time
     - To also include skipped SponsorBlock segments, ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."
 
 **Layout Changes**
@@ -348,6 +349,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **9.1**: bug fixes and improvements. when "Hide End Screens" is enabled, the new suggested videos are hidden in fullscreen, and scrolling is disabled as well. new feature: Compact Version for Remaining Time ("Elapsed / Total | Remaining" plus playback speed if the playback speed controls are disabled or when in fullscreen.)
 - **9.0.2**: bug fixes
 - **9.0.1**: bug fixes
 - **9.0**: adjustments for the latest YouTube changes (Liquid Glass | ytp-delhi-modern), bug fixes, and improvements. new features: Minimum Space Below Player in Default Layout When Tab View and Compact Layout Are Enabled, Choose Playback Speed Buttons
