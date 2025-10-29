@@ -349,7 +349,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
-- **9.9.2**: bug fixes and improvements
+- **9.2.2**: bug fixes and improvements
 - **9.2**: improvements; change to import/export functions (support for touch input. untested on android)
 - **9.1**: bug fixes and improvements. when "Hide End Screens" is enabled, the new suggested videos are hidden in fullscreen, and scrolling is disabled as well. new feature: Compact Version for Remaining Time ("Elapsed / Total | Remaining" plus playback speed if the playback speed controls are disabled or when in fullscreen.)
 - **9.0.2**: bug fixes
