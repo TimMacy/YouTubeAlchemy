@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.2.2
+// @version      9.2.3
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.2.2 - YouTube Alchemy                   *
+*                    Version: 9.2.3 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1722,10 +1722,6 @@
                 border-radius: 12px;
             }
 
-            .CentAnni-tabView:not(:has(.CentAnni-tabView-tab[data-tab="tab-2"])) ytd-comments#comments {
-                display: none;
-            }
-
             .CentAnni-tabView-header {
                 display: flex;
                 position: relative;
@@ -1827,10 +1823,6 @@
                 display: block !important;
             }
 
-            .CentAnni-tabView-content-none {
-                display: none;
-            }
-
             #tab-2 {
                 border-top: 1px solid rgba(255, 255, 255, .2);
             }
@@ -1881,10 +1873,6 @@
                 top: 30px;
             }
 
-            ytd-watch-flexy #header.style-scope.ytd-engagement-panel-section-list-renderer {
-                display: none;
-            }
-
             ytd-engagement-panel-section-list-renderer {
                 box-sizing: content-box;
                 display: flexbox;
@@ -1917,14 +1905,6 @@
                 margin-bottom: 0;
             }
 
-            ytd-watch-flexy ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
-                display: none;
-            }
-
-            ytd-engagement-panel-section-list-renderer ytd-merch-shelf-renderer {
-                display: none;
-            }
-
             ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description] {
                 position: absolute;
                 max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
@@ -1946,10 +1926,6 @@
                 background-color: transparent;
             }
 
-            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id^="shopping_panel_for_entry_point_"] {
-                display: none;
-            }
-
             ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript] {
                 position: absolute;
                 top: 0;
@@ -1967,10 +1943,6 @@
 
             ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript] #footer #menu.ytd-engagement-panel-title-header-renderer {
                 margin-left: auto;
-            }
-
-            #body.ytd-transcript-renderer {
-                display: none;
             }
 
             ytd-transcript-renderer {
@@ -2002,12 +1974,6 @@
             #items > yt-video-attributes-section-view-model > div > div.yt-video-attributes-section-view-model__video-attributes.yt-video-attributes-section-view-model__scroll-container > div > yt-video-attribute-view-model > div:hover,
             #media-lockups > ytd-structured-description-playlist-lockup-renderer > #lockup-container:hover {
                 filter: brightness(1.1);
-            }
-
-            ytd-text-inline-expander,
-            #navigation-button.ytd-rich-list-header-renderer,
-            ytd-expandable-video-description-body-renderer > ytd-expander > tp-yt-paper-button#more.ytd-expander {
-                display: none;
             }
 
             ytd-expandable-video-description-body-renderer[engagement-panel]:not([shorts-panel]) ytd-expander.ytd-expandable-video-description-body-renderer {
@@ -2085,14 +2051,6 @@
 
             ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a:hover {
                 color: var(--yt-spec-call-to-action);
-            }
-
-            #description > #description-inner > #ytd-watch-info-text > tp-yt-paper-tooltip {
-                display: none;
-            }
-
-            #description > #description-interaction {
-                display: none;
             }
 
             .yt-animated-icon.lottie-player.style-scope {
@@ -2175,10 +2133,6 @@
             }
 
             /* live chat adjustments */
-            ytd-live-chat-frame[modern-buttons][collapsed] {
-                display: none;
-            }
-
             #columns > #secondary > #secondary-inner > #chat-container {
                 top: 24px;
                 position: absolute;
@@ -2220,14 +2174,6 @@
                 visibility: hidden;
                 z-index: -1;
                 pointer-events: none;
-            }
-
-            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
-                display: none;
-            }
-
-            ytd-watch-flexy[theater] #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create] {
-                display: none;
             }
 
             ytd-watch-flexy[theater] #donation-shelf {
@@ -2286,10 +2232,6 @@
                 border-top: none;
             }
 
-            #collapse-controls-section {
-                display: none;
-            }
-
             ytd-watch-flexy #playlist {
                 position: absolute;
                 margin: 0;
@@ -2317,10 +2259,6 @@
             ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer {
                 padding: 12px 0 0 25px;
                 margin-right: 0;
-            }
-
-            #trailing-button.ytd-playlist-panel-renderer {
-                display: none;
             }
 
             .playlist-items.ytd-playlist-panel-renderer {
@@ -2357,11 +2295,6 @@
                 width: 90dvw;
             }
 
-            ytd-watch-flexy:not([is-two-columns_])[theater] #panels,
-            ytd-watch-flexy:not([is-two-columns_])[theater] #related {
-                display: none;
-            }
-
             ytd-watch-flexy:not([is-two-columns_]) #primary #playlist,
             ytd-watch-flexy:not([is-two-columns_]) #related.style-scope.ytd-watch-flexy,
             ytd-watch-flexy:not([is-two-columns_]) #panels ytd-engagement-panel-section-list-renderer {
@@ -2387,10 +2320,6 @@
                 left: calc(50% - 22px);
                 transform: translateY(54px);
                 cursor: default;
-            }
-
-            ytd-watch-flexy:not([is-two-columns_]):not([theater]) #expandable-metadata.ytd-watch-flexy {
-                display: none;
             }
 
             ytd-watch-flexy:not([is-two-columns_]):not([theater])[show-expandable-metadata] ytd-watch-metadata {
@@ -2419,11 +2348,6 @@
                 display: flex;
             }
 
-            #ghost-cards.ytd-continuation-item-renderer,
-            #ghost-comment-section.ytd-continuation-item-renderer {
-                display: none;
-            }
-
             ytd-app[is-watch-page]:not([scrolling]):has(ytd-watch-flexy:not([is-two-columns_]):not([theater])) {
                 overflow: unset;
             }
@@ -2433,6 +2357,38 @@
                 overflow-x: hidden;
                 min-height: var(--spaceBelow);
                 height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - (calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)) * var(--ytd-watch-flexy-height-ratio) / var(--ytd-watch-flexy-width-ratio)));
+            }
+
+            @media (min-width:1200px) {
+                ytd-item-section-renderer[lockup-container-type="2"][is-grid-view-enabled] #contents.ytd-item-section-renderer {
+                    grid-template-columns: 1fr 1fr !important;
+                }
+            }
+
+            ytd-text-inline-expander,
+            #collapse-controls-section,
+            #body.ytd-transcript-renderer,
+            .CentAnni-tabView-content-none,
+            #description > #description-interaction,
+            #ghost-cards.ytd-continuation-item-renderer,
+            #trailing-button.ytd-playlist-panel-renderer,
+            ytd-live-chat-frame[modern-buttons][collapsed],
+            #navigation-button.ytd-rich-list-header-renderer,
+            #ghost-comment-section.ytd-continuation-item-renderer,
+            ytd-watch-flexy:not([is-two-columns_])[theater] #panels,
+            ytd-watch-flexy:not([is-two-columns_])[theater] #related,
+            ytd-engagement-panel-section-list-renderer ytd-merch-shelf-renderer,
+            ytd-watch-flexy #header.style-scope.ytd-engagement-panel-section-list-renderer,
+            #description > #description-inner > #ytd-watch-info-text > tp-yt-paper-tooltip,
+            .ytp-chapter-container:not([style*="display: none"]) .ytp-chapter-title-content,
+            ytd-watch-flexy:not([is-two-columns_]):not([theater]) #expandable-metadata.ytd-watch-flexy,
+            .CentAnni-tabView:not(:has(.CentAnni-tabView-tab[data-tab="tab-2"])) ytd-comments#comments,
+            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview],
+            ytd-expandable-video-description-body-renderer > ytd-expander > tp-yt-paper-button#more.ytd-expander,
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id^="shopping_panel_for_entry_point_"],
+            ytd-watch-flexy[theater] #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create],
+            ytd-watch-flexy ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
+                display: none;
             }
         }
 
@@ -2918,8 +2874,10 @@
         }
 
         .CentAnni-style-hide-queue-btn {
+            yt-list-item-view-model:has(path[d^="M2 2.864v6"]),
             yt-list-item-view-model:has(path[d^="M21 16h-7v"]),
             ytd-menu-service-item-renderer:has(path[d^="M21 16h-7v"]),
+            ytd-menu-service-item-renderer:has(path[d^="M2 2.864v6"]),
             ytd-thumbnail-overlay-toggle-button-renderer:has(path[d^="M21 16h-7v"]),
             ytd-thumbnail-overlay-toggle-button-renderer[aria-label="Add to queue"],
             .ytThumbnailHoverOverlayToggleActionsViewModelButton:has(path[d^="M21 16h-7v"]),
@@ -3007,10 +2965,7 @@
         }
 
         .CentAnni-style-hide-miniplayer {
-            ytd-miniplayer {
-                display: none !important;
-            }
-
+            ytd-miniplayer,
             #ytd-player .ytp-miniplayer-button {
                 display: none !important;
             }
@@ -3971,23 +3926,23 @@
 
         .CentAnni-style-max-video-size:not(.CentAnni-style-compact-layout) ytd-watch-flexy[default-layout] {
             --ytd-watch-flexy-max-player-width: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - var(--ytd-margin-6x) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio)));
+                    calc((100dvh - var(--ytd-margin-6x) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
             --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - var(--ytd-margin-6x) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio)));
+                    calc((100dvh - var(--ytd-margin-6x) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
         }
 
         .CentAnni-style-compact-layout:not(.CentAnni-style-max-video-size) ytd-watch-flexy[default-layout] {
             --ytd-watch-flexy-max-player-width: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - var(--spaceBelow) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio)));
+                    calc((100dvh - var(--spaceBelow) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
             --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - var(--spaceBelow) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio)));
+                    calc((100dvh - var(--spaceBelow) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
         }
 
         .CentAnni-style-max-video-size.CentAnni-style-compact-layout ytd-watch-flexy[default-layout] {
             --ytd-watch-flexy-max-player-width: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio)));
+                    calc((100dvh - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
             --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
-                    calc((100dvh - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio)));
+                    calc((100dvh - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
         }
 
         html:is(.CentAnni-style-compact-layout, .CentAnni-style-max-video-size) :where(.ytp-chrome-bottom, .html5-video-player .video-stream) {
