@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.2.3.1
+// @version      9.2.3.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.2.3.1 - YouTube Alchemy                 *
+*                    Version: 9.2.3.2 - YouTube Alchemy                 *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2386,6 +2386,7 @@
             ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview],
             ytd-expandable-video-description-body-renderer > ytd-expander > tp-yt-paper-button#more.ytd-expander,
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id^="shopping_panel_for_entry_point_"],
+            .ytp-chapter-container:not([style*="display: none"]) .ytp-chapter-title-content:not(.CentAnni-chapter-title *),
             ytd-watch-flexy[theater] #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create],
             ytd-watch-flexy ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
                 display: none;
