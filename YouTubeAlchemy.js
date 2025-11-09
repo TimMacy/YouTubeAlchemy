@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.2.3
+// @version      9.2.3.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.2.3 - YouTube Alchemy                   *
+*                    Version: 9.2.3.1 - YouTube Alchemy                 *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2013,6 +2013,7 @@
                 margin-bottom: 0;
             }
 
+            .ytp-chapter-container,
             #bottom-row > #description {
                 cursor: default;
                 pointer-events: none;
@@ -2380,7 +2381,6 @@
             ytd-engagement-panel-section-list-renderer ytd-merch-shelf-renderer,
             ytd-watch-flexy #header.style-scope.ytd-engagement-panel-section-list-renderer,
             #description > #description-inner > #ytd-watch-info-text > tp-yt-paper-tooltip,
-            .ytp-chapter-container:not([style*="display: none"]) .ytp-chapter-title-content,
             ytd-watch-flexy:not([is-two-columns_]):not([theater]) #expandable-metadata.ytd-watch-flexy,
             .CentAnni-tabView:not(:has(.CentAnni-tabView-tab[data-tab="tab-2"])) ytd-comments#comments,
             ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview],
