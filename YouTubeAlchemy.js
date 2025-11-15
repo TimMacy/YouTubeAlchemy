@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.2.3.2
+// @version      9.2.4
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.2.3.2 - YouTube Alchemy                 *
+*                    Version: 9.2.4 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -3121,6 +3121,7 @@
             yt-interaction.circular .stroke.yt-interaction,
             ytd-watch-flexy[theater] .CentAnni-tabView-tab,
             .thumbnail-container.ytd-notification-renderer,
+            tp-yt-paper-item.ytd-menu-service-item-renderer,
             .ytContentPreviewImageViewModelLargeRoundedImage,
             .collections-stack-wiz__collection-stack1--large,
             tp-yt-paper-toast.yt-notification-action-renderer,
@@ -4114,10 +4115,9 @@
         }
 
         .CentAnni-style-hide-join-btn {
-            button[aria-label="Join this channel"],
-            #sponsor-button.ytd-video-owner-renderer:not(:empty),
-            ytd-browse[page-subtype="channels"] ytd-recognition-shelf-renderer,
-            ytd-browse[page-subtype="channels"] yt-page-header-view-model yt-flexible-actions-view-model button-view-model {
+            #sponsor-button:has(.ytwTimedAnimationButtonRendererHost),
+            .ytFlexibleActionsViewModelAction:not(:has(a[href*="community"],yt-subscribe-button-view-model)),
+            ytd-browse[page-subtype="channels"] yt-page-header-view-model yt-flexible-actions-view-model .ytFlexibleActionsViewModelAction:has(button-view-model):not(:has(a[href*="community"])) {
                 display: none !important;
             }
         }
@@ -4294,7 +4294,9 @@
             yt-lockup-view-model:has(a[aria-label*="Member Exclusive" i]),
             ytd-compact-video-renderer:has(.badge-style-type-members-only),
             ytd-watch-flexy #info-container span[style*="color: rgb(170, 170, 170)"],
-            ytd-browse[page-subtype="channels"] ytd-section-list-renderer:not([hide-bottom-separator]):not([page-subtype=history]):not([page-subtype=memberships-and-purchases]):not([page-subtype=ypc-offers]):not([live-chat-engagement-panel]) #contents.ytd-section-list-renderer>*.ytd-section-list-renderer:not(:last-child):not(ytd-page-introduction-renderer):not([item-dismissed]):not([has-destination-shelf-renderer]):not(ytd-minor-moment-header-renderer):not([has-section-group-view-model]):has(.badge-style-type-members-only.ytd-badge-supported-renderer) {
+            ytd-browse[page-subtype="channels"] ytd-item-section-renderer:has(.badge-style-type-members-only),
+            ytd-browse[page-subtype="channels"] ytd-item-section-renderer:has(.ytd-recognition-shelf-renderer),
+            ytd-browse[page-subtype="channels"] ytd-section-list-renderer:not([hide-bottom-separator]):not([page-subtype=history]):not([page-subtype=memberships-and-purchases]):not([page-subtype=ypc-offers]):not([live-chat-engagement-panel]) #contents.ytd-section-list-renderer > *.ytd-section-list-renderer:not(:last-child):not(ytd-page-introduction-renderer):not([item-dismissed]):not([has-destination-shelf-renderer]):not(ytd-minor-moment-header-renderer):not([has-section-group-view-model]):has(.badge-style-type-members-only.ytd-badge-supported-renderer) {
                 display: none;
             }
         }
