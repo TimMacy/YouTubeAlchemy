@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.2.4
+// @version      9.2.5
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.2.4 - YouTube Alchemy                   *
+*                    Version: 9.2.5 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -840,7 +840,7 @@
         }
 
         :root:has(#ytd-player .html5-video-player.ended-mode) .CentAnni-remaining-time-container {
-            opacity: 0;
+            opacity: 0 !important;
         }
 
         #movie_player .CentAnni-remaining-time-container {
@@ -2190,10 +2190,11 @@
             }
 
             ytd-watch-flexy[theater][is-two-columns_][full-bleed-player] #secondary.ytd-watch-flexy {
-                margin-top: 34.5px;
+                margin-top: 0;
                 display: flex;
                 justify-content: center;
                 align-items: flex-start;
+                align-self: center;
             }
 
             ytd-watch-flexy[theater] .CentAnni-tabView {
@@ -2361,8 +2362,10 @@
             }
 
             @media (min-width:1200px) {
-                ytd-item-section-renderer[lockup-container-type="2"][is-grid-view-enabled] #contents.ytd-item-section-renderer {
-                    grid-template-columns: 1fr 1fr !important;
+                ytd-item-section-renderer[is-grid-view-enabled] #contents.ytd-item-section-renderer,
+                ytd-watch-next-secondary-results-renderer[is-grid-view-enabled] #items.ytd-watch-next-secondary-results-renderer {
+                    grid-template-columns: repeat(2, 50%) !important;
+                    grid-gap: 0 !important;
                 }
             }
 
@@ -10534,7 +10537,7 @@
     // force 2 columns for live chat videos when viewport width is 1000+
     const toggleYouTubeColumns = () => {
         const flexy = document.querySelector('ytd-watch-flexy[is-single-column]');
-        const videos = document.querySelector('ytd-item-section-renderer[is-grid-view-enabled]');
+        const videos = document.querySelector('ytd-item-section-renderer[is-grid-view-enabled], ytd-watch-next-secondary-results-renderer[is-grid-view-enabled]');
         if (flexy && videos && window.innerWidth >= 1000) {
             flexy.removeAttribute('is-single-column');
             flexy.setAttribute('is-two-columns_', '');
