@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.2.5
+// @version      9.3
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.2.5 - YouTube Alchemy                   *
+*                    Version: 9.3 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -3077,6 +3077,8 @@
             .ytp-settings-menu,
             #card.ytd-miniplayer,
             .smartimation__border,
+            .ytp-progress-bar-end,
+            .ytp-progress-bar-start,
             .ytp-tooltip-text-wrapper,
             .ytThumbnailViewModelSmall,
             .ytThumbnailViewModelLarge,
@@ -3115,6 +3117,7 @@
             yt-img-shadow.ytd-backstage-image-renderer,
             ytd-thumbnail[size="large"] a.ytd-thumbnail,
             .ytp-player-minimized .ytp-miniplayer-scrim,
+            .player-container-background.ytd-watch-flexy,
             ytd-thumbnail[size="medium"] a.ytd-thumbnail,
             .reel-video-in-sequence-thumbnail.ytd-shorts,
             yt-interaction.circular .fill.yt-interaction,
@@ -8527,11 +8530,36 @@
         bar.classList.add('active');
         endDiv.classList.add('active');
 
+        // convert time fraction to visual position
+        let chapterSegments = [];
+        let totalActiveWidth = 0;
+        let currentBarWidth = 0;
+
+        const getVisualProgress = (fraction) => {
+            // if no chapters, use linear time
+            if (chapterSegments.length === 0 || totalActiveWidth === 0 || currentBarWidth === 0) return fraction;
+
+            let targetActivePx = fraction * totalActiveWidth;
+            let currentActiveSum = 0;
+            for (const seg of chapterSegments) {
+                if (currentActiveSum + seg.width >= targetActivePx) {
+                    const offsetInSegment = targetActivePx - currentActiveSum;
+                    const visualPx = seg.left + offsetInSegment;
+
+                    return visualPx / currentBarWidth;
+                }
+                currentActiveSum += seg.width;
+            }
+
+            return 1;
+        };
+
         let animationFrameId;
         const animateProgress = (_timestamp, meta) => {
             if (video.duration > 0) {
-                const fraction = meta.mediaTime / video.duration;
-                progress.style.transform = `scaleX(${fraction})`;
+                const timeFraction = meta.mediaTime / video.duration;
+                const visualFraction = getVisualProgress(timeFraction);
+                progress.style.transform = `scaleX(${visualFraction})`;
             }
             animationFrameId = video.requestVideoFrameCallback(animateProgress);
         };
@@ -8540,7 +8568,11 @@
             if (!video.duration) return;
             for (let i = video.buffered.length - 1; i >= 0; i--) {
                 if (video.currentTime < video.buffered.start(i)) continue;
-                buffer.style.transform = `scaleX(${video.buffered.end(i) / video.duration})`;
+
+                const timeFraction = video.buffered.end(i) / video.duration;
+                const visualFraction = getVisualProgress(timeFraction);
+
+                buffer.style.transform = `scaleX(${visualFraction})`;
                 break;
             }
         };
@@ -8558,10 +8590,12 @@
         video.addEventListener('loadedmetadata', () => { updateLayout(); renderBuffer(); }, { once: true });
 
         // chapters container
+        let previousProgressBarWidth = 0;
         let previousChaptersLength = 0;
         let cachedMaskImage = null;
         let resizeObserver;
         let widthObserver;
+
         const cleanupWidthObserver = () => {
             if (widthObserver) {
                 widthObserver.disconnect();
@@ -8571,9 +8605,10 @@
         };
 
         const updateLayout = () => {
-            const playerRect = player.getBoundingClientRect();
             const progressBarRect = progressBarContainer.getBoundingClientRect();
             const progressBarWidth = progressBarRect.width;
+            currentBarWidth = progressBarWidth;
+
             if (!progressBarWidth) {
                 cachedMaskImage = null;
                 if (!widthObserver) {
@@ -8590,42 +8625,55 @@
             }
             if (widthObserver) { cleanupWidthObserver(); }
 
+            // calculate position relative to the player container
+            const playerRect = player.getBoundingClientRect();
             bar.style.position = 'absolute';
             bar.style.left = (progressBarRect.left - playerRect.left) + 'px';
             bar.style.width = progressBarWidth + 'px';
             docElement.style.setProperty('--progressBarMargin', bar.style.left);
 
+            // reset math arrays
+            chapterSegments = [];
+            totalActiveWidth = 0;
+
             if (chaptersContainer) {
                 const chapters = chaptersContainer.querySelectorAll('.ytp-chapter-hover-container');
 
-                // only regenerate SVG if chapters changed
-                if (chapters.length !== previousChaptersLength || !cachedMaskImage) {
+                // find container with the real segments
+                let sourceCC = chaptersContainer;
+                let maxSegs = chapters.length;
+
+                player.querySelectorAll('.ytp-chapters-container').forEach(cc => {
+                    const segs = cc.querySelectorAll('.ytp-chapter-hover-container').length;
+                    if (segs > maxSegs) { sourceCC = cc; maxSegs = segs; }
+                });
+                const segs = sourceCC.querySelectorAll('.ytp-chapter-hover-container');
+
+                // calculate segments
+                if (segs.length >= 2 && progressBarWidth > 0) {
+                    segs.forEach(el => {
+                        const segRect = el.getBoundingClientRect();
+                        const relX = segRect.left - progressBarRect.left;
+                        const relW = segRect.width;
+
+                        chapterSegments.push({ left: relX, width: relW });
+                        totalActiveWidth += relW;
+                    });
+                }
+
+                // only regenerate SVG if width or chapters changed
+                if (chapters.length !== previousChaptersLength || Math.abs(progressBarWidth - previousProgressBarWidth) > 1 || !cachedMaskImage) {
                     previousChaptersLength = chapters.length;
+                    previousProgressBarWidth = progressBarWidth;
 
                     const svgWidth = 100, svgHeight = 10;
                     let rects = "";
 
-                    // find container with the real segments
-                    let sourceCC = chaptersContainer;
-                    let maxSegs = chapters.length;
-                    player.querySelectorAll('.ytp-chapters-container').forEach(cc => {
-                        const segs = cc.querySelectorAll('.ytp-chapter-hover-container').length;
-                        if (segs > maxSegs) { sourceCC = cc; maxSegs = segs; }
-                    });
-
-                    // build mask by stacking widths of chapters
-                    const segs = sourceCC.querySelectorAll('.ytp-chapter-hover-container');
-                    if (segs.length >= 2 && progressBarWidth > 0) {
-                        let xPx = 0;
-                        segs.forEach(el => {
-                            const wPx = parseFloat(el.style.width) || parseFloat(getComputedStyle(el).width) || 0;
-                            const mrPx = parseFloat(el.style.marginRight) || parseFloat(getComputedStyle(el).marginRight) || 0;
-                            if (wPx > 0) {
-                                const x = (xPx / progressBarWidth) * svgWidth;
-                                const w = (wPx / progressBarWidth) * svgWidth;
-                                rects += `<rect x="${x}" y="0" width="${w}" height="${svgHeight}" fill="white"/>`;
-                            }
-                            xPx += wPx + mrPx;
+                    if (chapterSegments.length >= 2 && progressBarWidth > 0) {
+                        chapterSegments.forEach(seg => {
+                            const x = (seg.left / progressBarWidth) * svgWidth;
+                            const w = (seg.width / progressBarWidth) * svgWidth;
+                            if (w > 0) rects += `<rect x="${x}" y="0" width="${w}" height="${svgHeight}" fill="white"/>`;
                         });
                     }
 
@@ -8663,19 +8711,11 @@
         video.addEventListener('pause', handlePause);
         if (!video.paused) handlePlay();
 
-        // handle layout changes
-        const handleResize = () => { updateLayout(); };
-        window.addEventListener('resize', handleResize);
-        const handleTheaterMode = () => { updateLayout(); };
-        document.addEventListener('yt-set-theater-mode-enabled', handleTheaterMode);
-
         // handle cleanup
         const cleanupProgressBar = () => {
-            document.removeEventListener('yt-set-theater-mode-enabled', handleTheaterMode);
             document.removeEventListener('yt-navigate-start', cleanupProgressBar);
             video.removeEventListener('progress', renderBuffer);
             video.removeEventListener('seeking', renderBuffer);
-            window.removeEventListener('resize', handleResize);
             video.removeEventListener('ended', handleEnded);
             video.removeEventListener('pause', handlePause);
             video.removeEventListener('play', handlePlay);
@@ -8688,6 +8728,8 @@
         // initialization
         renderBuffer();
         updateLayout();
+
+        // handle layout changes
         resizeObserver = new ResizeObserver(updateLayout);
         resizeObserver.observe(progressBarContainer);
     }
