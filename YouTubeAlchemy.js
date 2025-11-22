@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.4
+// @version      9.4.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.4 - YouTube Alchemy                     *
+*                    Version: 9.4.1 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -4125,7 +4125,7 @@
 
         .CentAnni-style-hide-join-btn {
             #sponsor-button:has(.ytwTimedAnimationButtonRendererHost),
-            .ytFlexibleActionsViewModelAction:not(:has(a[href*="community"],yt-subscribe-button-view-model)),
+            ytd-browse:not([page-subtype=playlist]) .ytFlexibleActionsViewModelAction:not(:has(a[href*="community"], yt-subscribe-button-view-model)),
             ytd-browse[page-subtype="channels"] yt-page-header-view-model yt-flexible-actions-view-model .ytFlexibleActionsViewModelAction:has(button-view-model):not(:has(a[href*="community"])) {
                 display: none !important;
             }
