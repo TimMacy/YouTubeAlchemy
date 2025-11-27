@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.4.1
+// @version      9.4.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.4.1 - YouTube Alchemy                   *
+*                    Version: 9.4.2 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -3533,6 +3533,11 @@
                     top: 41px;
                 }
 
+                yt-lockup-metadata-view-model:has(a[href*="/playlist?list="]) .yt-lockup-metadata-view-model__menu-button,
+                yt-lockup-metadata-view-model:has(a[href*="/playlist?list="]) .yt-lockup-metadata-view-model-wiz__menu-button {
+                    top: 70px;
+                }
+
                 .ytLockupAttachmentsViewModelAttachment {
                     margin-top: 0;
                 }
@@ -4344,6 +4349,25 @@
             }
         }
 
+        .CentAnni-style-lnb-restore-order {
+            #guide-content #sections {
+                display: flex;
+                flex-direction: column;
+            }
+
+            #guide-content #sections ytd-guide-section-renderer:has(a[href="/"]) {
+                order: -3;
+            }
+
+            #guide-content #sections ytd-guide-section-renderer:has(a[href^="/feed/you"]) {
+                order: -2;
+            }
+
+            #guide-content #sections ytd-guide-section-renderer:has(a[href^="/feed/subscriptions"]) {
+                order: -1;
+            }
+        }
+
         .CentAnni-style-lnb-hide-history-btn {
             #sections ytd-guide-section-renderer ytd-guide-entry-renderer:has(a[href^="/feed/history"]) {
                 display: none;
@@ -4399,7 +4423,7 @@
         }
 
         .CentAnni-style-lnb-hide-subscriptions-section {
-            #sections ytd-guide-section-renderer:has(#expander-item) {
+            #sections ytd-guide-section-renderer:has(a[href^="/feed/subscriptions"]) {
                 display: none;
             }
         }
@@ -4900,6 +4924,7 @@
         playlistDirectionBtns: true,
         lnbHideHomeBtn: false,
         lnbHideSubscriptionsBtn: false,
+        lnbRestoreOrder: false,
         lnbHideHistoryBtn: false,
         lnbHidePlaylistsBtn: false,
         lnbHideVideosBtn: false,
@@ -5015,6 +5040,7 @@
             lnbHideMoreBtn: 'CentAnni-style-lnb-hide-more-btn',
             lnbHideHomeBtn: 'CentAnni-style-lnb-hide-home-btn',
             lnbHideHelpBtn: 'CentAnni-style-lnb-hide-help-btn',
+            lnbRestoreOrder: 'CentAnni-style-lnb-restore-order',
             hideVideosSection: 'CentAnni-style-hide-videos-btn',
             hideMembersOnly: 'CentAnni-style-hide-members-only',
             hideLatestPosts: 'CentAnni-style-hide-latest-posts',
@@ -6195,6 +6221,10 @@
             const lnbHideSubscriptionsBtn = createCheckboxField('Hide "Subscriptions" Button (default: no)', 'lnbHideSubscriptionsBtn', USER_CONFIG.lnbHideSubscriptionsBtn);
             form.appendChild(lnbHideSubscriptionsBtn);
 
+            // restore order: home > you > subs
+            const lnbRestoreOrder = createCheckboxField('Restore Order: Home > You > Subscriptions (default: no)', 'lnbRestoreOrder', USER_CONFIG.lnbRestoreOrder);
+            form.appendChild(lnbRestoreOrder);
+
             // Spacer-5
             const spacer5Home = document.createElement('div');
             spacer5Home.classList.add('spacer-5');
@@ -6933,6 +6963,7 @@
             USER_CONFIG.closeChatWindow = subPanelCustomCSS.elements.closeChatWindow.checked;
             USER_CONFIG.lnbHideHomeBtn = subPanelCustomCSS.elements.lnbHideHomeBtn.checked;
             USER_CONFIG.lnbHideSubscriptionsBtn = subPanelCustomCSS.elements.lnbHideSubscriptionsBtn.checked;
+            USER_CONFIG.lnbRestoreOrder = subPanelCustomCSS.elements.lnbRestoreOrder.checked;
             USER_CONFIG.lnbHideHistoryBtn = subPanelCustomCSS.elements.lnbHideHistoryBtn.checked;
             USER_CONFIG.lnbHidePlaylistsBtn = subPanelCustomCSS.elements.lnbHidePlaylistsBtn.checked;
             USER_CONFIG.lnbHideVideosBtn = subPanelCustomCSS.elements.lnbHideVideosBtn.checked;
@@ -8001,7 +8032,7 @@
         if (!video) return;
 
         if (USER_CONFIG.VerifiedArtist) {
-            const isMusicVideoMeta = !!(docElement.querySelector('meta[itemprop="genre"][content="Music"]') && docElement.querySelector('ytd-watch-flexy #below ytd-badge-supported-renderer .badge-style-type-verified-artist'));
+            const isMusicVideoMeta = !!(docElement.querySelector('meta[itemprop="genre"][content="Music"]') && docElement.querySelector('ytd-watch-flexy #below ytd-badge-supported-renderer .badge-style-type-verified-artist, ytd-watch-flexy .badge-shape.badge-shape-style-type-verified-artist.ytd-badge-supported-renderer'));
             if (isMusicVideoMeta) { video.playbackRate = 1; return; }
         }
 
@@ -10320,7 +10351,7 @@
     }
 
     function musicVideoCheck() {
-        isMusicVideo = !!(docElement.querySelector('meta[itemprop="genre"][content="Music"]') && docElement.querySelector('ytd-watch-flexy #below ytd-badge-supported-renderer .badge-style-type-verified-artist'));
+        isMusicVideo = !!(docElement.querySelector('meta[itemprop="genre"][content="Music"]') && docElement.querySelector('ytd-watch-flexy #below ytd-badge-supported-renderer .badge-style-type-verified-artist, ytd-watch-flexy .badge-shape.badge-shape-style-type-verified-artist.ytd-badge-supported-renderer'));
     }
 
     // live stream check
