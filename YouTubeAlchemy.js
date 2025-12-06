@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.4.2
+// @version      9.6
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.4.2 - YouTube Alchemy                   *
+*                    Version: 9.6 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1827,6 +1827,10 @@
                 border-top: 1px solid rgba(255, 255, 255, .2);
             }
 
+            ytd-watch-flexy #related yt-chip-cloud-renderer:not([no-top-margin]) yt-chip-cloud-chip-renderer.yt-chip-cloud-renderer {
+                margin: 0 8px 8px 0;
+            }
+
             #related.style-scope.ytd-watch-flexy {
                 position: absolute;
                 max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - 2 * var(--ytd-margin-6x) - 52px) !important;
@@ -2369,6 +2373,10 @@
                 }
             }
 
+            ytd-watch-flexy ytd-expandable-video-description-body-renderer yt-attributed-string#attributed-snippet-text.style-scope.ytd-text-inline-expander {
+                display: block !important;
+            }
+
             ytd-text-inline-expander,
             #collapse-controls-section,
             #body.ytd-transcript-renderer,
@@ -2713,7 +2721,8 @@
             .ytp-delhi-modern .ytp-chrome-controls .ytp-right-controls,
             .ytp-delhi-modern .ytp-time-wrapper:not(.ytp-miniplayer-ui *),
             .ytp-delhi-modern.ytp-delhi-horizontal-volume-controls .ytp-volume-area,
-            .ytp-delhi-modern.ytp-delhi-modern-compact-controls .ytp-chrome-controls .ytp-play-button {
+            .ytp-delhi-modern.ytp-delhi-modern-compact-controls .ytp-chrome-controls .ytp-play-button,
+            .ytp-delhi-modern .ytp-chrome-controls .ytp-next-button:not(.ytp-miniplayer-button-container>*) {
                 background: rgba(28, 28, 28, .9);
             }
         }
@@ -3313,6 +3322,16 @@
             .ytp-delhi-modern .ytp-right-controls-right > .ytp-button:last-of-type::before {
                 border-top-right-radius: 40px !important;
                 border-bottom-right-radius: 40px !important;
+            }
+
+            .ytp-delhi-modern .ytp-chrome-controls .ytp-next-button:not(.ytp-miniplayer-button-container>*).ytp-playlist-ui {
+                border-radius: 50%;
+                margin-left: 3px;
+                width: 40px;
+            }
+
+            .ytp-delhi-modern .ytp-chrome-controls .ytp-next-button:not(.ytp-miniplayer-button-container>*).ytp-playlist-ui > svg {
+                padding: 0 10px;
             }
         }
 
@@ -4441,13 +4460,13 @@
         }
 
         .CentAnni-style-lnb-hide-explore-section {
-            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="gaming"]) {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="channel/UC4R8DWoMoI7CAwX8_LjQHig"]) {
                 display: none;
             }
         }
 
         .CentAnni-style-lnb-hide-explore-title {
-            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="gaming"]) #guide-section-title {
+            tp-yt-app-drawer#guide[role="navigation"] #sections ytd-guide-section-renderer:has(a[href*="channel/UC4R8DWoMoI7CAwX8_LjQHig"]) #guide-section-title {
                 display: none;
             }
         }
@@ -5140,7 +5159,9 @@
 
         const styleWF = getComputedStyle(watchFlexy);
         const styleHTML = getComputedStyle(HTML);
-        const aspectRatio = (video.videoWidth && video.videoHeight) ? video.videoWidth / video.videoHeight : 16 / 9;
+        const aspectRatioWidth = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-width-ratio')) || 16;
+        const aspectRatioHeight = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-height-ratio')) || 9;
+        const aspectRatio = (video.videoWidth && video.videoHeight) ? video.videoWidth / video.videoHeight : aspectRatioWidth / aspectRatioHeight;
         const sidebarWidth = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-sidebar-width')) || 402;
         const mastheadHeight = parseFloat(styleHTML.getPropertyValue('--ytd-toolbar-height')) || 56;
         const space = USER_CONFIG.spaceBelowPlayer;
@@ -8313,14 +8334,15 @@
 
     // function to display the remaining time based on playback speed minus SponsorBlock segments
     async function remainingTime() {
-        let fullscreenContainer = watchFlexyElement.querySelector(fsCnSel);
+        let animationFrameId;
         let normalContainer = watchFlexyElement.querySelector(prBeSel);
+        let fullscreenContainer = watchFlexyElement.querySelector(fsCnSel);
         let video = watchFlexyElement.querySelector('.video-stream.html5-main-video');
         if (!fullscreenContainer || !normalContainer || !video) return;
 
         // function to format seconds into time string
         function formatTime(seconds) {
-            if (!isFinite(seconds) || seconds < 0) seconds = 0;
+            if (!Number.isFinite(seconds) || seconds < 0) seconds = 0;
             const h = Math.floor(seconds / 3600);
             const m = Math.floor((seconds % 3600) / 60);
             const s = Math.floor(seconds % 60);
@@ -8375,11 +8397,9 @@
 
         // calculates and displays remaining time while accounting for SponsorBlock segments
         function remainingTimeMinusSponsorBlockSegments() {
+            let cachedSegments = [];
             let baseEffective = NaN;
-            let cachedSegments = null;
-            let cachedMergedSegments = null;
-            let lastRawSegments = null;
-            let lastDuration = -1;
+            let lastRawDuration = -1;
 
             // retrieves and validates video duration
             function ensureBaseEffectiveIsValid() {
@@ -8393,16 +8413,15 @@
                 } else baseEffective = video.duration;
             }
 
-            // retrieves SponsorBlock segments from preview bar
-            function getSegments(rawDuration) {
-                if (rawDuration === lastDuration && cachedSegments) return cachedSegments;
+            // retrieves and merges SponsorBlock segments
+            function getMergedSegments(rawDuration) {
+                if (rawDuration === lastRawDuration && cachedSegments.length) return cachedSegments;
 
                 const segments = [];
                 const previewbar = document.getElementById('previewbar');
                 if (previewbar) {
                     const liElements = previewbar.querySelectorAll('li.previewbar');
                     liElements.forEach(li => {
-                        const category = li.getAttribute('sponsorblock-category');
                         const style = li.getAttribute('style');
                         const leftMatch = style.match(/left:\s*([\d.]+)%/);
                         const rightMatch = style.match(/right:\s*([\d.]+)%/);
@@ -8411,103 +8430,76 @@
                             const rightFraction = parseFloat(rightMatch[1]) / 100;
                             const startTime = Math.round(rawDuration * leftFraction * 1000) / 1000;
                             const endTime = Math.round(rawDuration * (1 - rightFraction) * 1000) / 1000;
-                            const segDuration = Math.round((endTime - startTime) * 1000) / 1000;
-                            if (segDuration > 0)
-                                segments.push({ category, start: startTime, duration: segDuration, end: endTime });
+                            if (endTime > startTime) segments.push({ start: startTime, end: endTime });
                         }
                     });
                 }
 
-                lastDuration = rawDuration;
-                cachedSegments = segments;
-                return segments;
-            }
-
-            // merges SponsorBlock segments that overlap
-            function mergeSegments(segments) {
-                if (!segments.length) return segments;
                 segments.sort((a, b) => a.start - b.start);
-                const merged = [segments[0]];
-                for (let i = 1; i < segments.length; i++) {
-                    const last = merged[merged.length - 1];
-                    const current = segments[i];
-                    if (current.start <= last.end + 0.001) {
-                        last.end = Math.max(last.end, current.end);
-                        last.duration = Math.round((last.end - last.start) * 1000) / 1000;
-                    } else merged.push(current);
+
+                const merged = [];
+                if (segments.length > 0) {
+                    let current = segments[0];
+                    for (let i = 1; i < segments.length; i++) {
+                        const next = segments[i];
+                        if (next.start < current.end + 0.1) current.end = Math.max(current.end, next.end);
+                        else {
+                            merged.push(current);
+                            current = next;
+                        }
+                    }
+                    merged.push(current);
                 }
+
+                lastRawDuration = rawDuration;
+                cachedSegments = merged;
                 return merged;
-            }
-
-            function getMergedSegments(rawDuration) {
-                const rawSegments = getSegments(rawDuration);
-                if (rawSegments === lastRawSegments && cachedMergedSegments)
-                    return cachedMergedSegments;
-
-                const merged = mergeSegments(rawSegments);
-                lastRawSegments = rawSegments;
-                cachedMergedSegments = merged;
-                return merged;
-            }
-
-            let addedIndex = 0;
-            let addedSum = 0;
-            let lastSegmentsRef = null;
-            let lastTimeChecked = -1;
-
-            function computeAddedTime(segments, currentTime) {
-                if (segments !== lastSegmentsRef) {
-                    lastSegmentsRef = segments;
-                    addedIndex = 0;
-                    addedSum = 0;
-                    lastTimeChecked = -1;
-                }
-
-                if (currentTime < lastTimeChecked) {
-                    addedIndex = 0;
-                    addedSum = 0;
-                }
-
-                while (addedIndex < segments.length && currentTime >= segments[addedIndex].start - 0.001) {
-                    addedSum += segments[addedIndex].duration;
-                    addedIndex++;
-                }
-
-                lastTimeChecked = currentTime;
-                return Math.round(addedSum * 1000) / 1000;
             }
 
             // debounce the update to prevent excessive updates
-            let animationFrameId;
             video.ontimeupdate = () => {
                 if (animationFrameId) return;
 
-                const update = (_timestamp, meta) => {
+                const updateLoop = (_timestamp, meta) => {
                     ensureBaseEffectiveIsValid();
 
                     if (!isNaN(baseEffective)) {
                         const rawDuration = video.duration;
+
+                        if (!rawDuration || isNaN(rawDuration)) {
+                            if (!video.paused && !video.ended) animationFrameId = video.requestVideoFrameCallback(updateLoop);
+                            else animationFrameId = null;
+                            return;
+                        }
+
                         const currentTime = meta.mediaTime;
+                        const segments = getMergedSegments(rawDuration);
+
+                        let futureSkippableTime = 0;
+                        for (const seg of segments) {
+                            if (seg.end <= currentTime) continue;
+                            if (seg.start >= currentTime) futureSkippableTime += (seg.end - seg.start);
+                            else if (seg.start < currentTime && seg.end > currentTime) futureSkippableTime += (seg.end - currentTime);
+                        }
+
                         const playbackRate = video.playbackRate;
                         const playbackDisplay = showPlaybackSpeed ? (fullscreen ? ` (${playbackRate}x)` : '') : ` (${playbackRate}x)`;
-                        const segments = getMergedSegments(rawDuration);
-                        const addedTime = computeAddedTime(segments, currentTime);
-                        const effectiveTotal = baseEffective + addedTime;
-                        const remaining = (Math.floor(effectiveTotal) - currentTime) / playbackRate;
+                        const effectiveTotal = baseEffective;
+                        const remaining = Math.max(0, (rawDuration - currentTime) - futureSkippableTime) / playbackRate;
                         const watchedPercent = rawDuration ? Math.round((currentTime / rawDuration) * 100) + '%' : '0%';
-                        const totalFormatted = formatTime(baseEffective);
+                        const totalFormatted = formatTime(effectiveTotal);
                         const rawTotalFormatted = formatTime(rawDuration);
-                        const totalDisplay = Math.round(rawDuration) !== Math.round(baseEffective) ? `${rawTotalFormatted} (${totalFormatted})` : rawTotalFormatted;
+                        const totalDisplay = Math.round(rawDuration) !== Math.round(effectiveTotal) ? `${rawTotalFormatted} (${totalFormatted})` : rawTotalFormatted;
                         const elapsedFormatted = formatTime(currentTime);
                         const remainingFormatted = formatTime(remaining);
 
                         compactModeSpeed ? textNode.data = `${elapsedFormatted} / ${totalDisplay} | -${remainingFormatted} ${playbackDisplay}` : textNode.data = `total: ${totalDisplay} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
                     }
 
-                    if (!video.paused && !video.ended) animationFrameId = video.requestVideoFrameCallback(update);
+                    if (!video.paused && !video.ended) animationFrameId = video.requestVideoFrameCallback(updateLoop);
                     else animationFrameId = null;
                 };
-                animationFrameId = video.requestVideoFrameCallback(update);
+                animationFrameId = video.requestVideoFrameCallback(updateLoop);
             };
         };
 
@@ -8531,6 +8523,7 @@
 
     // function to keep the progress bar visible with chapters container
     function keepProgressBarVisible() {
+        let animationFrameId;
         const player = watchFlexyElement?.querySelector(vidPSel);
         const video = player?.querySelector('video[src]');
         const chaptersContainer = player && player.querySelector(chapSel);
@@ -8588,7 +8581,6 @@
             return 1;
         };
 
-        let animationFrameId;
         const animateProgress = (_timestamp, meta) => {
             if (video.duration > 0) {
                 const timeFraction = meta.mediaTime / video.duration;
