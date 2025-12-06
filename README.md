@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-9.4.2-white.svg" alt="Version: 9.4.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-9.6-white.svg" alt="Version: 9.6"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -267,6 +267,7 @@ Offers various options to customize the layout and functionality of YouTube.
 **Hide UI Elements in the Left Navigation Bar**
   - Hide "Home" Button
   - Hide "Subscriptions" Button
+  - Restore Order: Home > You > Subscriptions
   - Hide "You" Button
   - Hide "History" Button
   - Hide "Playlists" Button
@@ -349,6 +350,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **9.6**: fixed `Max Video Size in Default Layout` aspect ratio handling for non-16:9 videos when tabs were opened in the background, fixed `Remaining Time` jumping for SponsorBlock segments, fixed hiding of the explore section in the left sidebar, fixed hidden description sections in tab view, as well as general bug fixes and improvements
 - **9.4.2**: adjustments for the latest YouTube DOM changes: new feature: `Restore Order: Home > You > Subscriptions (default: no)` in the left navigation bar
 - **9.4.1**: bug fix for playlist buttons
 - **9.4**: improvements for `Remaining Time`
@@ -448,6 +450,6 @@ The code in `YouTubeAlchemy.js` is licensed under the GNU Affero General Public 
 > <br>
 > <p align="center"><img width="100%" alt="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/66c28cae-0653-47e4-b614-56f1a4a3f9d8" /></p>
 <br>
- 
+
 ## 🔸 Disclaimer
 *YouTube Alchemy* is an independent, private project. It's not affiliated with, endorsed by, sponsored by, or in any way officially connected to YouTube, Google LLC, or Alphabet Inc. "YouTube" and the YouTube logo are trademarks of Google LLC; all other trademarks are the property of their respective owners.
