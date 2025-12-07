@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.6
+// @version      9.6.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.6 - YouTube Alchemy                     *
+*                    Version: 9.6.1 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2588,16 +2588,14 @@
         }
 
         .CentAnni-style-hide-default-sidebar {
-            ytd-mini-guide-renderer.ytd-app {
+            #guide-button.ytd-masthead,
+            ytd-mini-guide-renderer.ytd-app,
+            #contentContainer.tp-yt-app-drawer[swipe-open]::after {
                 display: none !important;
             }
 
             ytd-app[mini-guide-visible] ytd-page-manager.ytd-app {
                 margin-left: 0 !important;
-            }
-
-            #guide-button.ytd-masthead {
-                display: none !important;
             }
 
             #contents.ytd-rich-grid-renderer {
@@ -3581,6 +3579,17 @@
                     margin: 0 5px 0 0;
                     justify-content: end;
                 }
+
+                .yt-lockup-view-model__endorsement {
+                    top: unset;
+                    color: white;
+                    margin: 8px;
+                    padding: 5px;
+                    background: rgba(0, 0, 0, .8);
+                    backdrop-filter: blur(8px);
+                    border-radius: 2px;
+                    z-index: 2025;
+                }
             }
 
             .ytd-page-manager[page-subtype="channels"] {
@@ -3618,7 +3627,7 @@
                     margin-right: 110px;
                 }
 
-                ytd-feed-filter-chip-bar-renderer[component-style="FEED_FILTER_CHIP_BAR_STYLE_TYPE_CHANNEL_PAGE_GRID"] {
+                ytd-rich-grid-renderer ytd-feed-filter-chip-bar-renderer[component-style="FEED_FILTER_CHIP_BAR_STYLE_TYPE_CHANNEL_PAGE_GRID"] {
                     margin-bottom: -32px;
                     margin-top: 0;
                 }
@@ -3861,14 +3870,14 @@
 
             ytd-thumbnail-overlay-toggle-button-renderer,
             .yt-spec-button-shape-next--overlay-dark.yt-spec-button-shape-next--tonal {
-                --paper-tooltip-background: rgba(0, 0, 0, 0.8);
+                --paper-tooltip-background: rgba(0, 0, 0, .8);
                 position: absolute;
                 top: 0;
                 right: 0;
                 cursor: pointer;
                 color: rgb(255, 255, 255);
                 outline: none;
-                background-color: rgba(0, 0, 0, 0.8);
+                background-color: rgba(0, 0, 0, .8);
                 transition: opacity .3s;
                 width: 28px;
                 height: 28px;
@@ -3956,6 +3965,10 @@
 
             .ytp-popup.ytp-settings-menu {
                 transform: translateY(35px);
+            }
+
+            ytd-app[guide-persistent-and-visible] ytd-page-manager.ytd-app {
+                margin-left: 232px;
             }
         }
 
