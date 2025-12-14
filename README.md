@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-9.6.2-white.svg" alt="Version: 9.6.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-9.7-white.svg" alt="Version: 9.7"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -201,6 +201,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Tab View on Video Page
   - Toggle Theater Mode by Clicking the Active Tab
   - Show Chapters Under Videos, Only Works with Tab View Enabled
+  - Disable Animation When Switching Between Theater mode and Default view
   - Hide Comments Section
   - Hide Suggested Videos
   - Square and Compact Search Bar
@@ -350,10 +351,11 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **9.7**: adjustments for the latest YouTube DOM changes and improvements for the space below the player in `Tab View`. new feature: `Disable Animation When Switching Between Theater mode and Default view (default: off)`
 - **9.6.2**: improvements to `Hide Mini Player`
 - **9.6.1**: shows the "From your Watch later playlist" info on hover in `Compact Layout`, fixed filter chip bar position under Community, and removed the swipe-to-open overlay for the app drawer when `Hide Navigation Bar` is enabled
 - **9.6**: fixed `Max Video Size in Default Layout` aspect ratio handling for non-16:9 videos when tabs were opened in the background, fixed `Remaining Time` jumping for SponsorBlock segments, fixed hiding of the explore section in the left sidebar, fixed hidden description sections in tab view, as well as general bug fixes and improvements
-- **9.4.2**: adjustments for the latest YouTube DOM changes: new feature: `Restore Order: Home > You > Subscriptions (default: no)` in the left navigation bar
+- **9.4.2**: adjustments for the latest YouTube DOM changes. new feature: `Restore Order: Home > You > Subscriptions (default: off)` in the left navigation bar
 - **9.4.1**: bug fix for playlist buttons
 - **9.4**: improvements for `Remaining Time`
 - **9.3**: bug fix and improvements for `Persistent Progress Bar`
@@ -378,7 +380,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 - **8.8.1**: bug fix for Max Video Size in Default Layout (aspect ratio of videos other than 16:9)
 - **8.8**: adjustments for the latest YouTube changes, bug fixes, and improvements. new feature: Restore Suggested Videos Filter Selection
 - **8.7.2**: bug fixes for Max Video Size in Default Layout
-- **8.7.1**: adjustments for the latest YouTube changes, fixed playback speed control breaking when YouTube reloaded a video during playback, and adjustments for non-English languages in the YT Guide. new features: Max Video Size in Default Layout (default: no), Hide Share Button (default: no), Toggle Theater Mode by Clicking the Active Tab (default: yes), Search Bar Position (default: 0 | a negative value moves it left), Sidebar Width (default: 0 | equals YouTube's default of 402px)
+- **8.7.1**: adjustments for the latest YouTube changes, fixed playback speed control breaking when YouTube reloaded a video during playback, and adjustments for non-English languages in the YT Guide. new features: Max Video Size in Default Layout (default: off), Hide Share Button (default: off), Toggle Theater Mode by Clicking the Active Tab (default: on), Search Bar Position (default: 0 | a negative value moves it left), Sidebar Width (default: 0 | equals YouTube's default of 402px)
 - **8.3**: adjustments for the latest YouTube changes and fixed missing remaining time when navigating
 - **8.2**: adjustments for the latest YouTube changes, bug fixes, and improvements. new features: Restore Homepage Filter Selection; Hide "Downloads" Button in the Left Navigation Bar
 - **8.1**: improvements for persistent progress bar and display remaining time
@@ -401,13 +403,13 @@ _Support is a work in progress. Other languages may have limited functionality._
 - **7.9.9.4**: bug fixes
 - **7.9.9.3**: bug fixes
 - **7.9.9.2**: bug fixes
-- **7.9.9**: bug fixes, improvements, and re-added the option "Hide Ad Slots on the Home Page (default: no)". it should now avoid triggering the "Ad blockers violate YouTube's Terms of Service" warning by excluding the video player area
+- **7.9.9**: bug fixes, improvements, and re-added the option "Hide Ad Slots on the Home Page (default: off)". it should now avoid triggering the "Ad blockers violate YouTube's Terms of Service" warning by excluding the video player area
 - **7.9.8**: bug fixes, improvements, and resolved script execution issue on YouTube Shorts. new features: loop control, auto-scroll option, and persistent progress bar for YouTube Shorts
 - **7.9.7.1**: fixed black channel header in light mode
 - **7.9.7**: bug fixes and improvements
 - **7.9.6**: bug fixes and adjustments for the latest YouTube changes: new feature: disable hover effect for videos on the home page (can be found under 'Color Code Videos')
 - **7.9.5**: fixed a bug where captions in fullscreen overlapped the remaining time and chapter containers. improved fullscreen progress bar CSS selectors
-- **7.9.2**: removed the option "Hide Ad Slots on the Home Page (default: no)" as it now appears to trigger the "Ad blockers violate YouTube's Terms of Service" warning. in addition, added an option to hide the "X products" text under videos
+- **7.9.2**: removed the option "Hide Ad Slots on the Home Page (default: off)" as it now appears to trigger the "Ad blockers violate YouTube's Terms of Service" warning. in addition, added an option to hide the "X products" text under videos
 - **7.9.1**: adjustments for the latest YouTube changes, bug fixes, and improvements. new feature: add "Remove Watched Videos" button to watch later playlist
 - **7.8.6**: prevent YouTube's auto scrolling when "Automatically Open Transcript Panels" is enabled
 - **7.8.5**: adjustments for the latest YouTube changes, security update, bug fixes, and improvements
