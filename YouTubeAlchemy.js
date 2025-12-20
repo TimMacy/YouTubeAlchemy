@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.7.1
+// @version      9.8
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.7.1 - YouTube Alchemy                   *
+*                    Version: 9.8 - YouTube Alchemy                     *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -846,14 +846,15 @@
         #movie_player .CentAnni-remaining-time-container {
             position: absolute;
             display: inline-block;
+            height: fit-content;
             opacity: 0;
             z-index: 2053;
             bottom: 0;
             left: 50%;
-            transform: translate(-50%, 35px);
+            transform: translate(-50%, 0);
             font-weight: 800 !important;
             font-size: 17px;
-            vertical-align: top;
+            line-height: 50px;
             white-space: nowrap;
             color: ghostwhite;
             pointer-events: none;
@@ -2439,7 +2440,7 @@
             }
 
             #movie_player .ytp-chapter-container {
-                transform: translateY(-14px);
+                transform: translateY(9px);
             }
 
             #movie_player .ytp-chapter-title.ytp-button {
@@ -2499,10 +2500,9 @@
                 z-index: 2053;
                 bottom: 0;
                 left: 50%;
-                transform: translateY(35px);
                 font-weight: 500 !important;
                 font-size: 17px;
-                vertical-align: top;
+                line-height: 58px;
                 white-space: nowrap;
                 color: ghostwhite !important;
                 text-shadow: black 0 0 3px !important;
@@ -2560,12 +2560,12 @@
                 #movie_player .CentAnni-remaining-time-container {
                     left: 25% !important;
                 }
+            }
 
-                [dir="ltr"] ytd-watch-info-text:not([detailed]) #info-container.ytd-watch-info-text,
-                ytd-watch-info-text:not([detailed]) #info-container.ytd-watch-info-text[dir="ltr"] {
-                    -webkit-mask-image: unset;
-                    mask-image: unset;
-                }
+            [dir="ltr"] ytd-watch-info-text:not([detailed]) #info-container.ytd-watch-info-text,
+            ytd-watch-info-text:not([detailed]) #info-container.ytd-watch-info-text[dir="ltr"] {
+                -webkit-mask-image: unset;
+                mask-image: unset;
             }
         }
 
@@ -3174,6 +3174,7 @@
             .ytp-delhi-modern .ytp-settings-menu .ytp-menuitem > *:first-child,
             .html5-video-player:not(.ytp-touch-mode) ::-webkit-scrollbar-thumb,
             .CentAnni-tabView:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]),
+            #playlist-thumbnail.ytd-structured-description-playlist-lockup-renderer,
             ytd-author-comment-badge-renderer[enable-modern-comment-badges][creator],
             ytd-engagement-panel-section-list-renderer:not([live-chat-engagement-panel]),
             ytd-watch-flexy[rounded-player-large][default-layout] #ytd-player.ytd-watch-flexy,
@@ -4363,6 +4364,12 @@
             }
         }
 
+        .CentAnni-style-hide-explore-section {
+            ytd-rich-section-renderer:has(.ytdChipsShelfWithVideoShelfRendererHost) {
+                display: none;
+            }
+        }
+
         .CentAnni-style-hide-pay-to-watch {
             ytd-compact-video-renderer:has(.badge-style-type-ypc),
             ytd-rich-item-renderer:has(.badge-style-type-ypc),
@@ -4942,6 +4949,7 @@
         hidePayToWatch: false,
         hideFreeWithAds: false,
         hideMembersOnly: false,
+        hideExploreSection: false,
         hideLatestPosts: false,
         hideShareButton: false,
         hideShareBtnGlobal: false,
@@ -5122,6 +5130,7 @@
             lnbHideCoursesBtn: 'CentAnni-style-lnb-hide-courses-btn',
             lnbHideHistoryBtn: 'CentAnni-style-lnb-hide-history-btn',
             lnbHideYtMusicBtn: 'CentAnni-style-lnb-hide-yt-music-btn',
+            hideExploreSection: 'CentAnni-style-hide-explore-section',
             hideShareBtnGlobal: 'CentAnni-style-hide-share-btn-global',
             smallSubscribeButton: 'CentAnni-style-small-subscribe-btn',
             lnbHideTrendingBtn: 'CentAnni-style-lnb-hide-trending-btn',
@@ -6042,6 +6051,10 @@
             const hideMembersOnly = createCheckboxField('Hide Members Only Featured Videos on the Home Page (default: off)', 'hideMembersOnly', USER_CONFIG.hideMembersOnly);
             form.appendChild(hideMembersOnly);
 
+            // hide more topics section
+            const hideExploreSection = createCheckboxField('Hide "Explore more topics" on the Home Page (default: off)', 'hideExploreSection', USER_CONFIG.hideExploreSection);
+            form.appendChild(hideExploreSection);
+
             // hide latest post from . . .
             const hideLatestPosts = createCheckboxField('Hide "Latest posts from . . ." on Search Page (default: off)', 'hideLatestPosts', USER_CONFIG.hideLatestPosts);
             form.appendChild(hideLatestPosts);
@@ -6935,6 +6948,7 @@
             USER_CONFIG.hidePayToWatch = subPanelCustomCSS.elements.hidePayToWatch.checked;
             USER_CONFIG.hideFreeWithAds = subPanelCustomCSS.elements.hideFreeWithAds.checked;
             USER_CONFIG.hideMembersOnly = subPanelCustomCSS.elements.hideMembersOnly.checked;
+            USER_CONFIG.hideExploreSection = subPanelCustomCSS.elements.hideExploreSection.checked;
             USER_CONFIG.hideLatestPosts = subPanelCustomCSS.elements.hideLatestPosts.checked;
             USER_CONFIG.videoTabView = subPanelCustomCSS.elements.videoTabView.checked;
             USER_CONFIG.toggleTheaterModeBtn = subPanelCustomCSS.elements.toggleTheaterModeBtn.checked;
@@ -9355,8 +9369,8 @@
 
     // add trashcan icon to playlists to easily remove videos
     function playlistRemovalButtons() {
-        const sortButton = document.querySelector('#filter:not(:empty),#filter-menu');
-        if (!sortButton) return;
+        const savePlaylistBtn = document.querySelector('toggle-button-view-model:not(#header *)');
+        if (savePlaylistBtn) return;
 
         const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"]:not([hidden])');
         if (!playlistPage) return;
