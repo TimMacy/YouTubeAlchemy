@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.8
+// @version      9.10
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.8 - YouTube Alchemy                     *
+*                    Version: 9.10 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -839,6 +839,7 @@
             pointer-events: none;
         }
 
+        :root:has(#ytd-player .html5-video-player.ended-mode) .CentAnni-chapter-title,
         :root:has(#ytd-player .html5-video-player.ended-mode) .CentAnni-remaining-time-container {
             opacity: 0 !important;
         }
@@ -1372,7 +1373,12 @@
         html {
             font-size: var(--fontSize) !important;
             font-family: "Roboto", Arial, sans-serif;
-            --topHeaderMargin: var(--ytd-margin-6x);
+            --CentAnniTabViewHeader: 52px;
+            --topHeaderMargin: var(--ytd-margin-6x), 24px;
+        }
+
+        ytd-watch-flexy {
+            --horizontalMargin: var(--ytd-watch-flexy-horizontal-page-margin, var(--ytd-margin-6x, 24px));
         }
 
         ytd-watch-flexy[reduced-top-margin] {
@@ -1439,7 +1445,7 @@
             }
 
             .ytp-autohide .ytp-chrome-bottom .ytp-progress-bar-container {
-                bottom: 0px !important;
+                bottom: 0 !important;
                 opacity: 1 !important;
                 height: 4px !important;
                 transform: translateX(0px) !important;
@@ -1455,7 +1461,7 @@
             .ytp-autohide .ytp-chrome-bottom .previewbar {
                 height: calc(100% + 1px) !important;
                 bottom: -1px !important;
-                margin-bottom: 0px !important;
+                margin-bottom: 0 !important;
                 opacity: 1 !important;
                 border: none !important;
                 box-shadow: none !important;
@@ -1534,7 +1540,25 @@
             }
 
             .ytp-autohide.ytp-delhi-modern:not(.playing-mode, .ended-mode) .caption-window.ytp-caption-window-bottom {
+                margin-bottom: 0;
+                bottom: 2%;
+            }
+
+            .ytp-delhi-modern.ytp-fullscreen-grid-peeking .caption-window.ytp-caption-window-bottom {
+                margin-bottom: 40px;
+            }
+
+            ytd-watch-flexy:not([fullscreen]) .ytp-delhi-modern:not(.playing-mode, .ended-mode) .caption-window.ytp-caption-window-bottom {
                 margin-bottom: calc(var(--yt-delhi-bottom-controls-height, 72px) + 14px);
+            }
+
+            .caption-window.ytp-caption-window-bottom {
+                -webkit-transition: unset !important;
+                transition: unset !important;
+            }
+
+            ytd-watch-flexy[fullscreen] .ytp-delhi-modern .ytp-progress-bar-container {
+                margin-bottom: -4px;
             }
         }
 
@@ -1796,7 +1820,7 @@
                 margin: 0;
                 display: none;
                 overscroll-behavior: contain;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
             }
 
             .CentAnni-tabView-content.active {
@@ -1844,7 +1868,7 @@
 
             #related.style-scope.ytd-watch-flexy {
                 position: absolute;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: calc(52px + var(--topHeaderMargin));
                 left: 0;
@@ -1898,7 +1922,7 @@
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
                 position: absolute;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: calc(52px + var(--topHeaderMargin));
                 left: 0;
@@ -1922,7 +1946,7 @@
 
             ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description] {
                 position: absolute;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: calc(52px + var(--topHeaderMargin));
                 left: 0;
@@ -1945,7 +1969,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: calc(52px + var(--topHeaderMargin));
                 margin: 0;
@@ -1976,6 +2000,10 @@
                 border-radius: 0;
                 background: transparent;
                 padding-right: 10px;
+            }
+
+            .ytwHowThisWasMadeSectionViewModelHost {
+                padding: 16px 10px 16px 0;
             }
 
             ytd-expandable-video-description-body-renderer > ytd-text-inline-expander > #snippet {
@@ -2236,7 +2264,7 @@
 
             #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy {
                 margin-bottom: 0;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
                 overflow-y: auto;
             }
 
@@ -2265,7 +2293,7 @@
             ytd-watch-flexy[default-layout] #playlist,
             ytd-watch-flexy[default-layout] #secondary,
             ytd-watch-flexy[default-layout] #container.ytd-playlist-panel-renderer {
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
             }
 
             #container.ytd-playlist-panel-renderer {
@@ -2836,11 +2864,6 @@
 
             ytd-watch-flexy .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) button {
                 display: none;
-            }
-
-            ytd-watch-flexy .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) .ytp-cued-thumbnail-overlay-image {
-                display: block !important;
-                background-image: var(--video-url) !important;
             }
 
             .ytp-delhi-modern.ytp-full-bleed-player.ytp-fullscreen-grid-active:not(.html5-video-player.ended-mode) .ytp-chrome-bottom {
@@ -3934,7 +3957,8 @@
             }
 
             ytd-watch-flexy[default-layout] #below {
-                padding: 0 10px;
+                margin-left: var(--ytd-watch-flexy-horizontal-page-margin);
+                padding-right: var(--ytd-watch-flexy-horizontal-page-margin);
             }
 
             ytd-item-section-renderer[page-subtype="playlist"][has-header][exp-fix-playlist-header] #contents.ytd-item-section-renderer {
@@ -3956,7 +3980,7 @@
             ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
             ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - 52px) !important;
+                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
             }
 
             ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
@@ -3986,26 +4010,35 @@
             ytd-app[guide-persistent-and-visible] ytd-page-manager.ytd-app {
                 margin-left: 232px;
             }
+
+            .CentAnni-tabView,
+            #related.style-scope.ytd-watch-flexy,
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
+            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
+                border-right: none;
+            }
         }
 
         .CentAnni-style-max-video-size:not(.CentAnni-style-compact-layout) ytd-watch-flexy[default-layout] {
-            --ytd-watch-flexy-max-player-width: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
+            --ytd-watch-flexy-max-player-width: min(calc(100dvw - (var(--horizontalMargin) * 3) - var(--ytd-watch-flexy-sidebar-width)),
                     calc((100dvh - var(--topHeaderMargin) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
-            --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
+            --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - (var(--horizontalMargin) * 3) - var(--ytd-watch-flexy-sidebar-width)),
                     calc((100dvh - var(--topHeaderMargin) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
         }
 
         .CentAnni-style-compact-layout:not(.CentAnni-style-max-video-size) ytd-watch-flexy[default-layout] {
-            --ytd-watch-flexy-max-player-width: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
+            --ytd-watch-flexy-max-player-width: min(calc(100dvw - var(--ytd-watch-flexy-sidebar-width)),
                     calc((100dvh - var(--spaceBelow) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
-            --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
+            --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - var(--ytd-watch-flexy-sidebar-width)),
                     calc((100dvh - var(--spaceBelow) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
         }
 
         .CentAnni-style-max-video-size.CentAnni-style-compact-layout ytd-watch-flexy[default-layout] {
-            --ytd-watch-flexy-max-player-width: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
+            --ytd-watch-flexy-max-player-width: min(calc(100dvw - var(--ytd-watch-flexy-sidebar-width)),
                     calc((100dvh - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
-            --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - (var(--ytd-margin-6x) * 3) - var(--ytd-watch-flexy-sidebar-width)),
+            --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - var(--ytd-watch-flexy-sidebar-width)),
                     calc((100dvh - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
         }
 
@@ -4342,6 +4375,12 @@
                 ytd-rich-item-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"]),
                 ytd-compact-video-renderer:has(.badge-style-type-simple[aria-label="YouTube featured"])) {
                 display: none !important;
+            }
+        }
+
+        .CentAnni-style-hide-prod-sug {
+            #below > #shopping-timely-shelf {
+                display: none;
             }
         }
 
@@ -4771,12 +4810,15 @@
         }
 
         html.CentAnni-style-compact-layout:has(ytd-watch-flexy[default-layout]) {
-            --ytd-margin-3x: 0 !important;
-            --ytd-margin-6x: 5px !important;
+            --ytd-margin-3x: 0px !important;
+            --ytd-margin-6x: 0px !important;
+            --CentAnniTabViewHeader: 51px;
         }
 
-        html.CentAnni-style-compact-layout ytd-watch-flexy[default-layout] {
-            --ytd-watch-flexy-horizontal-page-margin: 5px !important;
+        html.CentAnni-style-compact-layout ytd-watch-flexy[default-layout] #primary,
+        html.CentAnni-style-compact-layout ytd-watch-flexy[default-layout] #secondary {
+            margin: 0;
+            padding: 0;
         }
     `;
 
@@ -4946,6 +4988,7 @@
         hideAdSlots: false,
         hidePlayables: false,
         hideProdTxt: false,
+        hideProdSug: false,
         hidePayToWatch: false,
         hideFreeWithAds: false,
         hideMembersOnly: false,
@@ -5065,6 +5108,7 @@
             noAmbientMode: 'CentAnni-style-no-ambient',
             pureBWBackground: 'CentAnni-style-pure-bg',
             hideAdSlots: 'CentAnni-style-hide-ad-slots',
+            hideProdSug: 'CentAnni-style-hide-prod-sug',
             maxVidSize: 'CentAnni-style-max-video-size',
             hideHashtags: 'CentAnni-style-hide-hashtags',
             squareDesign: 'CentAnni-style-square-design',
@@ -5210,9 +5254,11 @@
         const sidebarWidth = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-sidebar-width')) || 402;
         const mastheadHeight = parseFloat(styleHTML.getPropertyValue('--ytd-toolbar-height')) || 56;
         const marginTop = USER_CONFIG.compactLayout ? 0 : watchFlexy.hasAttribute('reduced-top-margin') ? 12 : 24;
+        const horizontalPageMargin = parseFloat(watchFlexy.style.getPropertyValue('--ytd-watch-flexy-horizontal-page-margin')) || 24;
+        const margin = USER_CONFIG.compactLayout ? 0 : horizontalPageMargin;
         const space = USER_CONFIG.spaceBelowPlayer;
-        const margin = USER_CONFIG.compactLayout ? 5 : 24;
         const marginBelow = USER_CONFIG.maxVidSize ? 0 : space;
+
         const calculate = () => {
             const maxWidth = window.innerWidth - sidebarWidth - margin * 3;
             const maxHeight = window.innerHeight - mastheadHeight - marginTop - marginBelow;
@@ -6038,6 +6084,10 @@
             // hide product span
             const hideProdTxt = createCheckboxField('Hide "X products" Text Under Videos (default: off)', 'hideProdTxt', USER_CONFIG.hideProdTxt);
             form.appendChild(hideProdTxt);
+
+            // hide product suggestion under videos
+            const hideProdSug = createCheckboxField('Hide Product Suggestion Under Videos (default: off)', 'hideProdSug', USER_CONFIG.hideProdSug);
+            form.appendChild(hideProdSug);
 
             // hide pay to watch
             const hidePayToWatch = createCheckboxField('Hide "Pay to Watch" Featured Videos on the Home Page (default: off)', 'hidePayToWatch', USER_CONFIG.hidePayToWatch);
@@ -6945,6 +6995,7 @@
             USER_CONFIG.hideAdSlots = subPanelCustomCSS.elements.hideAdSlots.checked;
             USER_CONFIG.hidePlayables = subPanelCustomCSS.elements.hidePlayables.checked;
             USER_CONFIG.hideProdTxt = subPanelCustomCSS.elements.hideProdTxt.checked;
+            USER_CONFIG.hideProdSug = subPanelCustomCSS.elements.hideProdSug.checked;
             USER_CONFIG.hidePayToWatch = subPanelCustomCSS.elements.hidePayToWatch.checked;
             USER_CONFIG.hideFreeWithAds = subPanelCustomCSS.elements.hideFreeWithAds.checked;
             USER_CONFIG.hideMembersOnly = subPanelCustomCSS.elements.hideMembersOnly.checked;
@@ -7769,6 +7820,7 @@
             const panel = activePanel[currentActiveTab];
             if (isDefault && (currentActiveTab === 'tab-4' || currentActiveTab === 'tab-5') && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED')
                 currentActiveTab === 'tab-4' ? runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]') || document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED") : runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+            else if (USER_CONFIG.preventBackgroundExecution && isDefault && currentActiveTab === 'tab-1' && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED') videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
             if (liveChat && singleColumn) toggleYouTubeColumns();
         }
 
@@ -9369,7 +9421,7 @@
 
     // add trashcan icon to playlists to easily remove videos
     function playlistRemovalButtons() {
-        const savePlaylistBtn = document.querySelector('toggle-button-view-model:not(#header *)');
+        const savePlaylistBtn = document.querySelector('toggle-button-view-model:not(#header *),ytd-playlist-header-renderer ytd-toggle-button-renderer:not([button-next]):not([hidden])');
         if (savePlaylistBtn) return;
 
         const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"]:not([hidden])');
@@ -11090,7 +11142,6 @@
                 videoID = urlObj.searchParams.get('v');
 
                 if (isShortPage) videoID = urlObj.pathname.split('/').pop();
-                if (USER_CONFIG.hideEndCards) docElement.style.setProperty('--video-url', `url("https://i.ytimg.com/vi/${videoID}/maxresdefault.jpg")`);
                 if (USER_CONFIG.closeChatWindow) docElement.classList.add('CentAnni-close-live-chat');
             }
 
