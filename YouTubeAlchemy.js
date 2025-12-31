@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.10
+// @version      9.12
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.10 - YouTube Alchemy                    *
+*                    Version: 9.12 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -815,6 +815,11 @@
             z-index: -1;
         }
 
+        HTML.CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen .CentAnni-chapter-title,
+        HTML.CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen .CentAnni-remaining-time-container {
+            display: none;
+        }
+
         .CentAnni-remaining-time-container {
             position: relative;
             display: block;
@@ -866,12 +871,12 @@
             opacity: 1 !important;
         }
 
-        HTML:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container) {
+        HTML:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container, .CentAnni-chapter-title) {
             opacity: 1 !important;
         }
 
-        HTML:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container) .ytp-chrome-controls,
-        HTML:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container) .ytp-progress-bar-container:not(.active) {
+        HTML:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container, .CentAnni-chapter-title) .ytp-chrome-controls,
+        HTML:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container, .CentAnni-chapter-title) .ytp-progress-bar-container:not(.active) {
             opacity: 0 !important;
         }
 
@@ -1458,7 +1463,8 @@
                 box-shadow: none !important;
             }
 
-            .ytp-autohide .ytp-chrome-bottom .previewbar {
+            ytd-watch-flexy[fullscreen] .ytp-autohide .ytp-chrome-bottom .previewbar,
+            ytd-watch-flexy:not([fullscreen]) .html5-video-player.ytp-autohide:not(.paused-mode) .ytp-chrome-bottom .previewbar {
                 height: calc(100% + 1px) !important;
                 bottom: -1px !important;
                 margin-bottom: 0 !important;
@@ -1559,6 +1565,10 @@
 
             ytd-watch-flexy[fullscreen] .ytp-delhi-modern .ytp-progress-bar-container {
                 margin-bottom: -4px;
+            }
+
+            ytd-watch-flexy[fullscreen] .ytp-autohide #previewbar {
+                bottom: 4px;
             }
         }
 
@@ -2866,6 +2876,11 @@
                 display: none;
             }
 
+            ytd-watch-flexy .ended-mode .ytp-cued-thumbnail-overlay:not([aria-hidden="true"]) .ytp-cued-thumbnail-overlay-image {
+                display: block !important;
+                background-image: var(--video-url) !important;
+            }
+
             .ytp-delhi-modern.ytp-full-bleed-player.ytp-fullscreen-grid-active:not(.html5-video-player.ended-mode) .ytp-chrome-bottom {
                 bottom: 0 !important;
                 opacity: 1 !important;
@@ -4011,12 +4026,12 @@
                 margin-left: 232px;
             }
 
-            .CentAnni-tabView,
-            #related.style-scope.ytd-watch-flexy,
-            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
+            ytd-watch-flexy[default-layout]:not([is-vertical-video_]) .CentAnni-tabView,
+            ytd-watch-flexy[default-layout]:not([is-vertical-video_]) #related.style-scope.ytd-watch-flexy,
+            ytd-watch-flexy[default-layout]:not([is-vertical-video_]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+            ytd-watch-flexy[default-layout]:not([is-vertical-video_]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
+            ytd-watch-flexy[default-layout]:not([is-vertical-video_]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
+            ytd-watch-flexy[default-layout]:not([is-vertical-video_]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
                 border-right: none;
             }
         }
@@ -4968,6 +4983,7 @@
         autoOpenComments: false,
         displayRemainingTime: true,
         showRemainingCompact: false,
+        fsRemainingTime: false,
         preventAutoplay: false,
         hideVoiceSearch: false,
         selectionColor: true,
@@ -5113,6 +5129,7 @@
             hideHashtags: 'CentAnni-style-hide-hashtags',
             squareDesign: 'CentAnni-style-square-design',
             displayFullTitle: 'CentAnni-style-full-title',
+            fsRemainingTime: 'CentAnni-remaining-time-fs',
             hideQueueBtn: 'CentAnni-style-hide-queue-btn',
             hideNewsHome: 'CentAnni-style-hide-news-home',
             hideEndCards: 'CentAnni-style-hide-end-cards',
@@ -5283,6 +5300,26 @@
         watchFlexy.calculateCurrentPlayerSize_ = maxSize;
 
         window.dispatchEvent(new Event('resize'));
+    }
+
+    // get correct thumbnail
+    function getThumbnailUrl(videoID, callback) {
+        const baseUrl = `https://i.ytimg.com/vi/${videoID}/`;
+
+        const jsonCheck = document.querySelector('ytd-watch-flexy script[type="application/ld+json"]');
+        if (jsonCheck) {
+            const data = JSON.parse(jsonCheck.textContent);
+            if (data.thumbnailUrl && data.thumbnailUrl[0]) {
+                const quality = data.thumbnailUrl[0].includes('maxresdefault.jpg') ? 'maxresdefault.jpg' : 'hqdefault.jpg';
+                callback(baseUrl + quality);
+                return;
+            }
+        }
+
+        const img = new Image();
+        img.onload = () => callback(baseUrl + (img.width > 250 ? 'maxresdefault.jpg' : 'hqdefault.jpg'));
+        img.onerror = () => callback(baseUrl + 'hqdefault.jpg');
+        img.src = baseUrl + 'maxresdefault.jpg';
     }
 
     // builds key mappings for playback speed controls
@@ -6012,6 +6049,9 @@
 
             const showRemainingCompact = createCheckboxField('Compact Version for Remaining Time (default: off)', 'showRemainingCompact', USER_CONFIG.showRemainingCompact);
             form.appendChild(showRemainingCompact);
+
+            const fsRemainingTime = createCheckboxField('Hide Remaining Time and Chapters in Fullscreen (default: off)', 'fsRemainingTime', USER_CONFIG.fsRemainingTime);
+            form.appendChild(fsRemainingTime);
 
             // info for remaining time minus segments
             const descriptionRemainingTime = document.createElement('small');
@@ -6989,6 +7029,7 @@
             USER_CONFIG.transcriptTimestamps = subPanelCustomCSS.elements.transcriptTimestamps.checked;
             USER_CONFIG.displayRemainingTime = subPanelCustomCSS.elements.displayRemainingTime.checked;
             USER_CONFIG.showRemainingCompact = subPanelCustomCSS.elements.showRemainingCompact.checked;
+            USER_CONFIG.fsRemainingTime = subPanelCustomCSS.elements.fsRemainingTime.checked;
             USER_CONFIG.progressBar = subPanelCustomCSS.elements.progressBar.checked;
             USER_CONFIG.hideShorts = subPanelCustomCSS.elements.hideShorts.checked;
             USER_CONFIG.redirectShorts = subPanelCustomCSS.elements.redirectShorts.checked;
@@ -7813,7 +7854,7 @@
             }
         }
 
-        const fullscreenListener = () => { setTimeout(() => handleFullscreenChangeTV(), 250); };
+        const fullscreenListener = () => { requestAnimationFrame(() => { requestAnimationFrame(() => handleFullscreenChangeTV()); }); };
         document.addEventListener('fullscreenchange', fullscreenListener);
         function handleFullscreenChangeTV() {
             const isDefault = watchFlexyElement.hasAttribute('default-layout');
@@ -8053,6 +8094,7 @@
         updateTabView();
         if (USER_CONFIG.tabViewChapters && hasChapterPanel) chapterTitles();
         if (liveChat && singleColumn) toggleYouTubeColumns();
+        if (USER_CONFIG.preventBackgroundExecution && !USER_CONFIG.autoTheaterMode) setTimeout(handleFullscreenChangeTV, 250);
     }
 
     // add chapter titles under videos
@@ -8079,22 +8121,25 @@
 
         const updateContainer = () => {
             const currentContainer = watchFlexyElement.querySelector('.CentAnni-chapter-title');
-            const targetContainer = playerElement?.classList.contains('ytp-fullscreen')
-                ? fullscreenContainer
-                : normalContainer;
+            const isFullscreen = playerElement?.classList.contains('ytp-fullscreen');
+            const targetContainer = isFullscreen ? fullscreenContainer : normalContainer;
 
-            if (currentContainer) targetContainer.appendChild(currentContainer);
-            else targetContainer.appendChild(containerChapterTitle);
+            const moveElement = () => {
+                if (currentContainer) targetContainer.appendChild(currentContainer);
+                else targetContainer.appendChild(containerChapterTitle);
+            };
+
+            if (isFullscreen) setTimeout(moveElement, 2750);
+            else moveElement();
         };
 
-        function handleFullscreenChangeCT() { updateContainer(); }
+        function handleFullscreenChangeCT() { requestAnimationFrame(() => { requestAnimationFrame(() => updateContainer()); }); }
         document.removeEventListener('fullscreenchange', handleFullscreenChangeCT);
         document.addEventListener('fullscreenchange', handleFullscreenChangeCT);
         document.addEventListener('yt-navigate-start', moveChapterTitleBack, { once: true });
         function moveChapterTitleBack() {
             document.removeEventListener('fullscreenchange', handleFullscreenChangeCT);
-            if (parent && titleElement)
-                parent.appendChild(titleElement);
+            if (parent && titleElement) parent.appendChild(titleElement);
         }
     }
 
@@ -8492,7 +8537,7 @@
         };
 
         updateContainer();
-        function handleFullscreenChange() { updateContainer(); }
+        const handleFullscreenChange = () => { requestAnimationFrame(() => { requestAnimationFrame(() => updateContainer()); }); };
         document.removeEventListener('fullscreenchange', handleFullscreenChange);
         document.addEventListener('fullscreenchange', handleFullscreenChange);
 
@@ -11078,6 +11123,7 @@
                 [USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel, openTranscript],
                 [(USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto'), setLanguage],
                 [!USER_CONFIG.videoTabView && ((USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel)), scrollToTop],
+                [USER_CONFIG.hideEndscreen, () => setTimeout(() => { getThumbnailUrl(videoID, (url) => { docElement.style.setProperty('--video-url', `url("${url}")`); }); }, 1000)],
                 [USER_CONFIG.maxVidSize || USER_CONFIG.compactLayout, maxVideoSize],
                 [USER_CONFIG.feedFilterChipsWatch, restoreLastSelectedChip],
                 [USER_CONFIG.hideProdTxt, hideProductsSpan],
