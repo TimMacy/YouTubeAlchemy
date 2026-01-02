@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.12
+// @version      9.12.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.12 - YouTube Alchemy                    *
+*                    Version: 9.12.2 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -841,7 +841,6 @@
         .CentAnni-remaining-time-container.live,
         #movie_player .CentAnni-remaining-time-container.live {
             display: none;
-            pointer-events: none;
         }
 
         :root:has(#ytd-player .html5-video-player.ended-mode) .CentAnni-chapter-title,
@@ -864,7 +863,7 @@
             white-space: nowrap;
             color: ghostwhite;
             pointer-events: none;
-            text-shadow: black 0 0 3px !important;
+            text-shadow: 0 0 2px #000;
         }
 
         .ytp-autohide .ytp-chrome-bottom .CentAnni-remaining-time-container {
@@ -2543,7 +2542,7 @@
                 line-height: 58px;
                 white-space: nowrap;
                 color: ghostwhite !important;
-                text-shadow: black 0 0 3px !important;
+                text-shadow: 0 0 2px #000;
             }
 
             .ytp-time-display {
@@ -4811,12 +4810,12 @@
             color: black !important;
         }
 
-        .CentAnni-style-selection-color ::selection {
+        html.CentAnni-style-selection-color ::selection {
             background: var(--selectionColor);
             color: white;
         }
 
-        .ytSearchboxComponentInputBoxHasFocus {
+        html.CentAnni-style-selection-color .ytSearchboxComponentInputBoxHasFocus {
             border-color: var(--selectionColor) !important;
         }
 
@@ -4986,7 +4985,7 @@
         fsRemainingTime: false,
         preventAutoplay: false,
         hideVoiceSearch: false,
-        selectionColor: true,
+        selectionColor: false,
         hideCreateButton: false,
         hideNotificationBtn: false,
         hideNotificationBadge: false,
@@ -5303,17 +5302,16 @@
     }
 
     // get correct thumbnail
-    function getThumbnailUrl(videoID, callback) {
+    function getThumbnailUrl(callback) {
         const baseUrl = `https://i.ytimg.com/vi/${videoID}/`;
 
         const jsonCheck = document.querySelector('ytd-watch-flexy script[type="application/ld+json"]');
-        if (jsonCheck) {
-            const data = JSON.parse(jsonCheck.textContent);
-            if (data.thumbnailUrl && data.thumbnailUrl[0]) {
-                const quality = data.thumbnailUrl[0].includes('maxresdefault.jpg') ? 'maxresdefault.jpg' : 'hqdefault.jpg';
-                callback(baseUrl + quality);
-                return;
-            }
+        const jsonText = jsonCheck?.textContent;
+        const videoIDcheck = jsonText?.includes(`/vi/${videoID}/`);
+        const resolutionCheck = jsonText?.includes('maxresdefault.jpg');
+        if (videoIDcheck) {
+            callback(baseUrl + (resolutionCheck ? 'maxresdefault.jpg' : 'hqdefault.jpg'));
+            return;
         }
 
         const img = new Image();
@@ -6207,7 +6205,7 @@
             const selectionColorContainer = document.createElement('div');
             selectionColorContainer.classList.add('videos-colorpicker-container', 'selection-color-container');
 
-            const selectionColor = createCheckboxField('Custom Selection Color (default: on)', 'selectionColor', USER_CONFIG.selectionColor);
+            const selectionColor = createCheckboxField('Custom Selection Color (default: off)', 'selectionColor', USER_CONFIG.selectionColor);
             selectionColorContainer.appendChild(selectionColor);
 
             const lightModeColorPicker = createColorPicker('Light Mode', 'lightModeSelectionColor');
@@ -9211,7 +9209,7 @@
         // process each individual video
         function processVideo(videoContainer) {
             videoContainer.setAttribute('data-centanni-video-processed', 'true');
-            const metaBlock = videoContainer.querySelector('yt-content-metadata-view-model,#metadata-line');
+            const metaBlock = videoContainer.querySelector('yt-content-metadata-view-model > .yt-content-metadata-view-model__metadata-row:not(:has(a)),#metadata-line');
             if (!metaBlock) return;
 
             const textContent = metaBlock.textContent.trim().toLowerCase();
@@ -9310,7 +9308,7 @@
 
             let allCorrect = true;
             for (const video of processedVideos) {
-                const metaBlock = video.querySelector('yt-content-metadata-view-model,#metadata-line');
+                const metaBlock = video.querySelector('yt-content-metadata-view-model > .yt-content-metadata-view-model__metadata-row:not(:has(a)),#metadata-line');
                 if (!metaBlock) continue;
 
                 const textContent = metaBlock.textContent.trim().toLowerCase();
@@ -11123,7 +11121,7 @@
                 [USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel, openTranscript],
                 [(USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto'), setLanguage],
                 [!USER_CONFIG.videoTabView && ((USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel)), scrollToTop],
-                [USER_CONFIG.hideEndscreen, () => setTimeout(() => { getThumbnailUrl(videoID, (url) => { docElement.style.setProperty('--video-url', `url("${url}")`); }); }, 1000)],
+                [USER_CONFIG.hideEndscreen, () => setTimeout(() => { getThumbnailUrl((url) => { docElement.style.setProperty('--video-url', `url("${url}")`); }); }, 1000)],
                 [USER_CONFIG.maxVidSize || USER_CONFIG.compactLayout, maxVideoSize],
                 [USER_CONFIG.feedFilterChipsWatch, restoreLastSelectedChip],
                 [USER_CONFIG.hideProdTxt, hideProductsSpan],
