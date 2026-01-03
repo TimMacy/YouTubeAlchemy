@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.12.2
+// @version      9.13
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.12.2 - YouTube Alchemy                  *
+*                    Version: 9.13 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -815,8 +815,8 @@
             z-index: -1;
         }
 
-        HTML.CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen .CentAnni-chapter-title,
-        HTML.CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen .CentAnni-remaining-time-container {
+        html.CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen .CentAnni-chapter-title,
+        html.CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen .CentAnni-remaining-time-container {
             display: none;
         }
 
@@ -870,12 +870,12 @@
             opacity: 1 !important;
         }
 
-        HTML:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container, .CentAnni-chapter-title) {
+        html:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container, .CentAnni-chapter-title) {
             opacity: 1 !important;
         }
 
-        HTML:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container, .CentAnni-chapter-title) .ytp-chrome-controls,
-        HTML:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container, .CentAnni-chapter-title) .ytp-progress-bar-container:not(.active) {
+        html:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container, .CentAnni-chapter-title) .ytp-chrome-controls,
+        html:not(.CentAnni-progress-bar) #ytd-player .html5-video-player.ytp-fullscreen.ytp-autohide .ytp-chrome-bottom:has(.CentAnni-remaining-time-container, .CentAnni-chapter-title) .ytp-progress-bar-container:not(.active) {
             opacity: 0 !important;
         }
 
@@ -1663,13 +1663,23 @@
                 transform: translateX(-14px);
             }
 
-            ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata {
-                width: 36px;
+            ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata ytd-menu-renderer {
+                max-width: 580px;
+                margin-left: auto;
+            }
+
+            #above-the-fold:not(:has(#CentAnni-playback-speed-control)) .ytSegmentedLikeDislikeButtonViewModelHost {
+                margin-left: 148px;
+            }
+
+            ytd-watch-metadata[actions-on-separate-line] #actions.ytd-watch-metadata ytd-menu-renderer.ytd-watch-metadata {
+                justify-content: flex-end;
             }
 
             ytd-watch-metadata[actions-on-separate-line] #top-row.ytd-watch-metadata {
                 display: flex;
                 flex-wrap: wrap;
+                justify-content: space-between;
             }
 
             ytd-watch-metadata[action-buttons-update-owner-width] #actions.ytd-watch-metadata {
@@ -2672,19 +2682,19 @@
             }
         }
 
-        HTML.CentAnni-style-home-disable-hover:not[dark] .yt-lockup-metadata-view-model__title {
+        html.CentAnni-style-home-disable-hover:not[dark] .yt-lockup-metadata-view-model__title {
             color: #0f0f0f !important;
         }
 
-        HTML.CentAnni-style-home-disable-hover:not[dark] .yt-lockup-metadata-view-model__metadata {
+        html.CentAnni-style-home-disable-hover:not[dark] .yt-lockup-metadata-view-model__metadata {
             color: #606060 !important;
         }
 
-        HTML.CentAnni-style-home-disable-hover[dark] .yt-lockup-metadata-view-model__title {
+        html.CentAnni-style-home-disable-hover[dark] .yt-lockup-metadata-view-model__title {
             color: #f1f1f1 !important;
         }
 
-        HTML.CentAnni-style-home-disable-hover[dark] .yt-lockup-metadata-view-model__metadata {
+        html.CentAnni-style-home-disable-hover[dark] .yt-lockup-metadata-view-model__metadata {
             color: #aaa !important;
         }
 
@@ -4263,7 +4273,7 @@
         }
 
         .CentAnni-style-hide-share-btn {
-            #below yt-button-view-model.ytd-menu-renderer:has(path[d^="M15 5.63"]) {
+            #below #top-level-buttons-computed yt-button-view-model {
                 display: none;
             }
         }
@@ -4277,6 +4287,16 @@
             yt-button-view-model:has(button[aria-label="Share"]),
             yt-list-item-view-model:has(button[aria-label="Share"]) {
                 display: none;
+            }
+        }
+
+        html.CentAnni-playback-speed:is(.CentAnni-style-hide-share-btn, .CentAnni-style-hide-share-btn-global):not(.CentAnni-style-move-save-btn) ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata ytd-menu-renderer {
+            max-width: 480px;
+        }
+
+        .CentAnni-style-move-save-btn {
+            ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata ytd-menu-renderer {
+                width: 36px;
             }
         }
 
@@ -4996,6 +5016,7 @@
         hideJoinButton: false,
         hidePlayNextButton: false,
         hideAirplayButton: false,
+        moveSaveBtn: true,
         hideShorts: false,
         hideCommentsSection: false,
         hideVideosSection: false,
@@ -5124,6 +5145,7 @@
             pureBWBackground: 'CentAnni-style-pure-bg',
             hideAdSlots: 'CentAnni-style-hide-ad-slots',
             hideProdSug: 'CentAnni-style-hide-prod-sug',
+            moveSaveBtn: 'CentAnni-style-move-save-btn',
             maxVidSize: 'CentAnni-style-max-video-size',
             hideHashtags: 'CentAnni-style-hide-hashtags',
             squareDesign: 'CentAnni-style-square-design',
@@ -6260,12 +6282,16 @@
             const hideAirplayButton = createCheckboxField('Hide "Airplay" Button (default: off)', 'hideAirplayButton', USER_CONFIG.hideAirplayButton);
             form.appendChild(hideAirplayButton);
 
+            // move save btn into menu
+            const moveSaveBtn = createCheckboxField('Move "Save" Button into Menu (default: on)', 'moveSaveBtn', USER_CONFIG.moveSaveBtn);
+            form.appendChild(moveSaveBtn);
+
             // hide share btn global
-            const hideShareBtnGlobal = createCheckboxField('Hide Share Button (default: off)', 'hideShareBtnGlobal', USER_CONFIG.hideShareBtnGlobal);
+            const hideShareBtnGlobal = createCheckboxField('Hide "Share" Button (default: off)', 'hideShareBtnGlobal', USER_CONFIG.hideShareBtnGlobal);
             form.appendChild(hideShareBtnGlobal);
 
             // hide share button
-            const hideShareButton = createCheckboxField('Hide Share Button Only Under Videos (default: off)', 'hideShareButton', USER_CONFIG.hideShareButton);
+            const hideShareButton = createCheckboxField('Hide "Share" Button Only Under Videos (default: off)', 'hideShareButton', USER_CONFIG.hideShareButton);
             form.appendChild(hideShareButton);
 
             // hide hashtags under video
@@ -7095,6 +7121,7 @@
             USER_CONFIG.hideJoinButton = subPanelCustomCSS.elements.hideJoinButton.checked;
             USER_CONFIG.hidePlayNextButton = subPanelCustomCSS.elements.hidePlayNextButton.checked;
             USER_CONFIG.hideAirplayButton = subPanelCustomCSS.elements.hideAirplayButton.checked;
+            USER_CONFIG.moveSaveBtn = subPanelCustomCSS.elements.moveSaveBtn.checked;
             USER_CONFIG.smallSubscribeButton = subPanelCustomCSS.elements.smallSubscribeButton.checked;
             USER_CONFIG.hideShareButton = subPanelCustomCSS.elements.hideShareButton.checked;
             USER_CONFIG.hideShareBtnGlobal = subPanelCustomCSS.elements.hideShareBtnGlobal.checked;
