@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.13
+// @version      9.13.5
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.13 - YouTube Alchemy                    *
+*                    Version: 9.13.5 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2106,7 +2106,7 @@
                 cursor: default;
             }
 
-            ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a {
+            ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a[href*="/hashtag/"] {
                 cursor: pointer;
                 pointer-events: all;
                 color: var(--yt-endpoint-visited-color);
@@ -2133,7 +2133,7 @@
             }
 
             #ytd-watch-info-text.ytd-watch-metadata {
-                height: 18px;
+                height: fit-content;
             }
 
             #middle-row.ytd-watch-metadata {
@@ -2154,11 +2154,14 @@
             }
 
             ytd-watch-info-text:not([detailed]) #info.ytd-watch-info-text {
+                display: flex;
+                flex-wrap: wrap;
                 align-content: center;
             }
 
             #bottom-row.ytd-watch-metadata {
                 flex-direction: column;
+                flex-wrap: nowrap;
             }
 
             .ytVideoMetadataCarouselViewModelHost {
@@ -2245,10 +2248,6 @@
 
             ytd-watch-flexy[theater] .CentAnni-tabView-content {
                 display: none !important;
-            }
-
-            ytd-watch-flexy[theater][cinematics-enabled] #secondary.ytd-watch-flexy {
-                align-content: center;
             }
 
             ytd-watch-flexy[theater][is-two-columns_][full-bleed-player] #secondary.ytd-watch-flexy {
@@ -2438,6 +2437,7 @@
             #collapse-controls-section,
             #body.ytd-transcript-renderer,
             .CentAnni-tabView-content-none,
+            #below ytd-merch-shelf-renderer,
             #description > #description-interaction,
             #ghost-cards.ytd-continuation-item-renderer,
             #trailing-button.ytd-playlist-panel-renderer,
@@ -2458,6 +2458,10 @@
             ytd-watch-flexy ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
                 display: none;
             }
+        }
+
+        html.CentAnni-video-tabView:not(.CentAnni-style-no-ambient) ytd-watch-flexy[cinematics-active][default-layout] .CentAnni-tabView-header {
+            background-color: transparent;
         }
 
         .CentAnni-tabView-chapters.CentAnni-video-tabView .ytp-chapter-container:not([style*="display: none"]) .ytp-chapter-title-content:not(.CentAnni-chapter-title *) {
@@ -2589,7 +2593,7 @@
                     height: fit-content;
                 }
 
-                & ytd-watch-flexy #description > #description-inner #info span.CentAnni-info-date + span::after {
+                & ytd-watch-flexy #description > #description-inner #info:has(> a[href*="/hashtag/"]) span.CentAnni-info-date + span::after {
                     content: "";
                     display: block;
                     height: 0;
@@ -3872,6 +3876,7 @@
             }
 
             #container.ytd-search ytd-video-renderer[use-bigger-thumbs] ytd-thumbnail.ytd-video-renderer,
+            #container.ytd-search .yt-lockup-view-model--horizontal .yt-lockup-view-model__content-image,
             #container.ytd-search ytd-video-renderer[use-bigger-thumbs][bigger-thumbs-style="BIG"] ytd-thumbnail.ytd-video-renderer {
                 max-width: calc(100dvh / 2.33 - 64px);
                 min-width: 250px;
@@ -4295,13 +4300,15 @@
         }
 
         .CentAnni-style-move-save-btn {
-            ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata ytd-menu-renderer {
+            ytd-watch-metadata[flex-menu-enabled]:not([actions-on-separate-line]) #actions.ytd-watch-metadata {
                 width: 36px;
+                max-width: 36px;
+                margin-left: auto;
             }
         }
 
         .CentAnni-style-hide-hashtags {
-            ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a {
+            ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a[href*="/hashtag/"] {
                 display: none !important;
             }
 
@@ -4358,7 +4365,6 @@
         }
 
         .CentAnni-style-search-hide-right-sidebar {
-            ytd-item-section-renderer[top-spacing-zero]:first-child #contents.ytd-item-section-renderer .ytd-item-section-renderer:first-child,
             #container.ytd-search ytd-secondary-search-container-renderer {
                 display: none;
             }
@@ -7770,14 +7776,14 @@
         }
 
         const categoryItem = typeof categorySelector === 'function' ? categorySelector() : panel.querySelector(categorySelector);
-        if (!categoryItem) { console.error('YouTubeAlchemy Category not found'); return; }
+        if (!categoryItem) return;
         categoryItem.click();
 
         await waitFor('.ytp-menuitem', panel);
 
         const items = [...panel.querySelectorAll('.ytp-menuitem')];
         const target = items.find(el => new RegExp(`^${languagePattern}\\b`, 'i').test(el.textContent.trim())) || items.find(el => new RegExp(`^${englishInLanguage}\\b`, 'i').test(el.textContent.trim()));
-        if (!target) { console.error('YouTubeAlchemy Language not found'); return; }
+        if (!target) return;
         target.click();
 
         if (USER_CONFIG.defaultSubtitleLanguage === 'off') {
@@ -7798,7 +7804,7 @@
 
         const itemsArray = [...transcriptPanel.querySelectorAll('tp-yt-paper-item')];
         const target = itemsArray.find(el => new RegExp(`^${transcriptInLanguage}\\b`, 'i').test(el.textContent.trim())) || itemsArray.find(el => new RegExp(`^${englishInLanguage}\\b`, 'i').test(el.textContent.trim()));
-        if (!target) { console.error('YouTubeAlchemy Language not found'); return; }
+        if (!target) return;
         target.click();
     }
 
