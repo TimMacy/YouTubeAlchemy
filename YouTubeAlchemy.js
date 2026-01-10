@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.13.5
+// @version      9.14
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.13.5 - YouTube Alchemy                  *
+*                    Version: 9.14 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2207,7 +2207,8 @@
 
 
             ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
-            ytd-watch-flexy:not([fixed-panels]):not([squeezeback]) #chat.ytd-watch-flexy:not([collapsed]) {
+            ytd-watch-flexy:not([fixed-panels]):not([squeezeback]) #chat.ytd-watch-flexy:not([collapsed]),
+            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] {
                 height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) + 1px) !important;
                 border: 1px solid rgb(51, 51, 51);
             }
@@ -2458,6 +2459,30 @@
             ytd-watch-flexy ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
                 display: none;
             }
+
+            /* adjustments for: Ask about this video */
+            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] {
+                z-index: 2026;
+                max-height: unset !important;
+                margin-top: -52px;
+            }
+
+            ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] > #header {
+                display: block !important;
+            }
+
+            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] {
+                position: fixed;
+                top: var(--ytd-masthead-height,var(--ytd-toolbar-height));
+                right: 24px;
+            }
+        }
+
+        html:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]).CentAnni-video-tabView ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] {
+            position: fixed;
+            top: calc(var(--ytd-masthead-height, var(--ytd-toolbar-height)) + 52px + var(--topHeaderMargin));
+            width: var(--ytd-watch-flexy-sidebar-width);
+            min-width: var(--ytd-watch-flexy-sidebar-min-width);
         }
 
         html.CentAnni-video-tabView:not(.CentAnni-style-no-ambient) ytd-watch-flexy[cinematics-active][default-layout] .CentAnni-tabView-header {
@@ -4000,9 +4025,7 @@
             }
 
             .CentAnni-tabView-content,
-            #related.style-scope.ytd-watch-flexy,
             ytd-watch-flexy[default-layout] #playlist,
-            ytd-watch-flexy[default-layout] #secondary,
             ytd-watch-flexy[default-layout] #container.ytd-playlist-panel-renderer,
             #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy,
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
@@ -4013,7 +4036,8 @@
             }
 
             ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
-            ytd-watch-flexy:not([fixed-panels]):not([squeezeback]) #chat.ytd-watch-flexy:not([collapsed]) {
+            ytd-watch-flexy:not([fixed-panels]):not([squeezeback]) #chat.ytd-watch-flexy:not([collapsed]),
+            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] {
                 height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x)) !important;
             }
 
@@ -4048,6 +4072,11 @@
             ytd-watch-flexy[default-layout]:not([is-vertical-video_]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
                 border-right: none;
             }
+        }
+
+        html.CentAnni-style-compact-layout.CentAnni-video-tabView #related.style-scope.ytd-watch-flexy,
+        html.CentAnni-style-compact-layout.CentAnni-video-tabView ytd-watch-flexy[default-layout] #secondary {
+            max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
         }
 
         .CentAnni-style-max-video-size:not(.CentAnni-style-compact-layout) ytd-watch-flexy[default-layout] {
@@ -4283,6 +4312,14 @@
             }
         }
 
+        .CentAnni-style-hide-ask-btn {
+            yt-button-view-model:has(path[d^="M480"]),
+            yt-button-view-model:has(button[aria-label="Ask"]),
+            ytd-menu-service-item-renderer:has(path[d^="M480"]) {
+                display: none;
+            }
+        }
+
         .CentAnni-style-hide-share-btn-global {
             yt-button-view-model:has(path[d^="M10 3"]),
             yt-list-item-view-model:has(path[d^="M10 3"]),
@@ -4300,10 +4337,10 @@
         }
 
         .CentAnni-style-move-save-btn {
-            ytd-watch-metadata[flex-menu-enabled]:not([actions-on-separate-line]) #actions.ytd-watch-metadata {
-                width: 36px;
-                max-width: 36px;
+            ytd-watch-metadata[flex-menu-enabled]:not([actions-on-separate-line]) #actions.ytd-watch-metadata,
+            ytd-watch-metadata[flex-menu-enabled]:not([actions-on-separate-line]) #actions.ytd-watch-metadata #actions-inner {
                 margin-left: auto;
+                width: 36px;
             }
         }
 
@@ -4435,7 +4472,7 @@
             ytd-rich-item-renderer:has(.badge-style-type-members-only),
             yt-lockup-view-model:has(a[aria-label*="Member Exclusive" i]),
             ytd-compact-video-renderer:has(.badge-style-type-members-only),
-            ytd-watch-flexy #info-container span[style*="color: rgb(170, 170, 170)"],
+            ytd-watch-flexy #info a[style*="color: rgb(170, 170, 170)"][href="#"],
             ytd-browse[page-subtype="channels"] ytd-item-section-renderer:has(.badge-style-type-members-only),
             ytd-browse[page-subtype="channels"] ytd-item-section-renderer:has(.ytd-recognition-shelf-renderer),
             ytd-browse[page-subtype="channels"] ytd-section-list-renderer:not([hide-bottom-separator]):not([page-subtype=history]):not([page-subtype=memberships-and-purchases]):not([page-subtype=ypc-offers]):not([live-chat-engagement-panel]) #contents.ytd-section-list-renderer > *.ytd-section-list-renderer:not(:last-child):not(ytd-page-introduction-renderer):not([item-dismissed]):not([has-destination-shelf-renderer]):not(ytd-minor-moment-header-renderer):not([has-section-group-view-model]):has(.badge-style-type-members-only.ytd-badge-supported-renderer) {
@@ -5036,6 +5073,7 @@
         hideMembersOnly: false,
         hideExploreSection: false,
         hideLatestPosts: false,
+        hideAskButton: false,
         hideShareButton: false,
         hideShareBtnGlobal: false,
         hideHashtags: false,
@@ -5153,6 +5191,7 @@
             hideProdSug: 'CentAnni-style-hide-prod-sug',
             moveSaveBtn: 'CentAnni-style-move-save-btn',
             maxVidSize: 'CentAnni-style-max-video-size',
+            hideAskButton: 'CentAnni-style-hide-ask-btn',
             hideHashtags: 'CentAnni-style-hide-hashtags',
             squareDesign: 'CentAnni-style-square-design',
             displayFullTitle: 'CentAnni-style-full-title',
@@ -6292,6 +6331,10 @@
             const moveSaveBtn = createCheckboxField('Move "Save" Button into Menu (default: on)', 'moveSaveBtn', USER_CONFIG.moveSaveBtn);
             form.appendChild(moveSaveBtn);
 
+            // hide ask btn
+            const hideAskButton = createCheckboxField('Hide "Ask" Button (default: off)', 'hideAskButton', USER_CONFIG.hideAskButton);
+            form.appendChild(hideAskButton);
+
             // hide share btn global
             const hideShareBtnGlobal = createCheckboxField('Hide "Share" Button (default: off)', 'hideShareBtnGlobal', USER_CONFIG.hideShareBtnGlobal);
             form.appendChild(hideShareBtnGlobal);
@@ -7131,6 +7174,7 @@
             USER_CONFIG.smallSubscribeButton = subPanelCustomCSS.elements.smallSubscribeButton.checked;
             USER_CONFIG.hideShareButton = subPanelCustomCSS.elements.hideShareButton.checked;
             USER_CONFIG.hideShareBtnGlobal = subPanelCustomCSS.elements.hideShareBtnGlobal.checked;
+            USER_CONFIG.hideAskButton = subPanelCustomCSS.elements.hideAskButton.checked;
             USER_CONFIG.hideHashtags = subPanelCustomCSS.elements.hideHashtags.checked;
             USER_CONFIG.hideInfoPanel = subPanelCustomCSS.elements.hideInfoPanel.checked;
             USER_CONFIG.hideAddComment = subPanelCustomCSS.elements.hideAddComment.checked;
@@ -8150,7 +8194,10 @@
         const existingContainerChapterTitle = watchFlexyElement.querySelector('.CentAnni-chapter-title');
         existingContainerChapterTitle ? existingContainerChapterTitle.replaceWith(containerChapterTitle) : normalContainer.appendChild(containerChapterTitle);
 
+        let fullscreenTimeout = null;
         const updateContainer = () => {
+            clearTimeout(fullscreenTimeout);
+
             const currentContainer = watchFlexyElement.querySelector('.CentAnni-chapter-title');
             const isFullscreen = playerElement?.classList.contains('ytp-fullscreen');
             const targetContainer = isFullscreen ? fullscreenContainer : normalContainer;
@@ -8160,7 +8207,7 @@
                 else targetContainer.appendChild(containerChapterTitle);
             };
 
-            if (isFullscreen) setTimeout(moveElement, 2750);
+            if (isFullscreen) fullscreenTimeout = setTimeout(moveElement, 3000);
             else moveElement();
         };
 
