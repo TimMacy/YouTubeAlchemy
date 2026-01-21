@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-9.15-white.svg" alt="Version: 9.15"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-9.16-white.svg" alt="Version: 9.16"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -106,6 +106,7 @@ If the left navigation bar is hidden, a replacement icon will prepend the links,
 Offers various options to customize the layout and functionality of YouTube.
 
 **General**
+  - Move Settings Button into the YouTube Guide
   - Change Opacity of Watched Videos
   - Title Case Selection:
     - uppercase
@@ -156,7 +157,7 @@ Offers various options to customize the layout and functionality of YouTube.
 - Adjust Number of Videos per Row
 - Sidebar Width
 - Search Bar Position
-- Minimum Space Below Player in Default Layout
+- Minimum Space Below Player in Default Layout When Tab View and Compact Layout Are Enabled
 - Set Playback Speed for VODs
   - from 0.25x to 17x with 0.25x increments
   - defaults to 1x for live videos
@@ -194,9 +195,9 @@ Offers various options to customize the layout and functionality of YouTube.
   - Use Enhanced Bitrate for 1080p Videos, Premium Required
   - Persistent Progress Bar with Chapter Markers and SponsorBlock Support—Even in Fullscreen
   - Display Remaining Time Under Videos Adjusted for Playback Speed—Even in Fullscreen
+    - To also include skipped SponsorBlock segments, ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."
   - Compact Version for Remaining Time
   - Hide Remaining Time and Chapters in Fullscreen
-    - To also include skipped SponsorBlock segments, ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."
 
 **Layout Changes**
   - Tab View on Video Page
@@ -220,17 +221,6 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide Members Only Featured Videos on the Home Page
   - Hide "Explore more topics" on the Home Page
   - Hide "Latest posts from . . ." on Search Page
-
-**Hide Watched Videos**
-  - Hide Watched Videos Regardless of Progress Everywhere
-  - Hide Watched Videos Regardless of Progress Only on the Home Page
-  - Pick a Percentage to Hide Videos on
-    - Home Page
-    - Subscription Page
-    - Channel Pages
-    - Playlists
-    - Video Pages
-    - Search Pages
 
 **Modify or Hide UI Elements**
   - Hide "Voice Search" Button
@@ -269,7 +259,18 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide Mini Player
   - Hide "Add to queue" Button on Hover
   - Hide Right Sidebar on Search Page
-  - Hide Watched Videos Globally
+  - Hide "Most relevant" on Subscriptions Page
+
+**Hide Watched Videos**
+  - Hide Watched Videos Regardless of Progress Everywhere
+  - Hide Watched Videos Regardless of Progress Only on the Home Page
+  - Pick a Percentage to Hide Videos on
+    - Home Page
+    - Subscription Page
+    - Channel Pages
+    - Playlists
+    - Video Pages
+    - Search Pages
 
 **Hide UI Elements in the Left Navigation Bar**
   - Hide "Home" Button
@@ -357,6 +358,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **9.16**: bug fixes and improvements. new feature: `Hide "Most relevant" on Subscriptions Page`
 - **9.15**: fixed playback speed not working on Shorts pages, improvements, and adjustments for DOM changes
 - **9.14**: bug fixes. new feature: `Hide "Ask" Button`
 - **9.13.5**: bug fixes and improvements
