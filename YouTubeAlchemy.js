@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.15
+// @version      9.16
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.15 - YouTube Alchemy                    *
+*                    Version: 9.16 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -850,16 +850,16 @@
 
         #movie_player .CentAnni-remaining-time-container {
             position: absolute;
-            display: inline-block;
-            height: fit-content;
-            opacity: 0;
+            display: flex;
             z-index: 2053;
+            height: 56px;
+            opacity: 0;
+            top: unset;
             bottom: 0;
             left: 50%;
             transform: translate(-50%, 0);
-            font-weight: 800 !important;
-            font-size: 17px;
-            line-height: 50px;
+            font-size: 2rem;
+            align-items: center;
             white-space: nowrap;
             color: ghostwhite;
             pointer-events: none;
@@ -1665,6 +1665,9 @@
 
             ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata ytd-menu-renderer {
                 max-width: 580px;
+            }
+
+            ytd-watch-metadata[flex-menu-enabled] #menu.ytd-watch-metadata {
                 margin-left: auto;
             }
 
@@ -2518,7 +2521,8 @@
             }
 
             #movie_player .ytp-chapter-container {
-                transform: translateY(9px);
+                display: inline-flex;
+                align-items: center;
             }
 
             #movie_player .ytp-chapter-title.ytp-button {
@@ -2541,6 +2545,7 @@
                 text-overflow: ellipsis;
                 text-wrap: nowrap;
                 line-height: 45px;
+                padding-right: 5px;
             }
 
             .CentAnni-chapter-title {
@@ -2571,16 +2576,17 @@
             #movie_player .CentAnni-chapter-title {
                 position: absolute;
                 display: flex;
-                opacity: 0;
                 flex-direction: row;
+                z-index: 2053;
+                height: 56px;
+                opacity: 0;
+                top: unset;
+                bottom: 0;
+                align-items: center;
                 max-width: 50dvw;
                 overflow: hidden;
-                z-index: 2053;
-                bottom: 0;
                 left: 50%;
-                font-weight: 500 !important;
-                font-size: 17px;
-                line-height: 58px;
+                font-size: 2rem;
                 white-space: nowrap;
                 color: ghostwhite !important;
                 text-shadow: 0 0 2px black, 0 0 1.75px black, 0 0 1.5px black, 0 0 1.25px black, 0 0 1px black, 0 0 1px black, 0 0 1px black;
@@ -4906,6 +4912,10 @@
             margin: 0;
             padding: 0;
         }
+
+        html.CentAnni-style-hide-Most-relevant .ytd-page-manager[page-subtype="subscriptions"] ytd-rich-section-renderer {
+            display: none;
+        }
     `;
 
     // append css
@@ -5088,6 +5098,7 @@
         hideHashtags: false,
         hideInfoPanel: false,
         hideRightSidebarSearch: false,
+        hideMostRelevant: false,
         hideAddComment: false,
         hideReplyButton: false,
         hidePlaylistsHome: false,
@@ -5247,6 +5258,7 @@
             hideAirplayButton: 'CentAnni-style-hide-airplay-btn',
             hideFreeWithAds: 'CentAnni-style-hide-free-with-ads',
             lnbHideMusicBtn: 'CentAnni-style-lnb-hide-music-btn',
+            hideMostRelevant: 'CentAnni-style-hide-Most-relevant',
             hideLatestPostsHome: 'CentAnni-style-hide-posts-home',
             homeDisableHover: 'CentAnni-style-home-disable-hover',
             mButtonDisplay: 'CentAnni-style-hide-default-sidebar',
@@ -6401,6 +6413,10 @@
             const hideRightSidebarSearch = createCheckboxField('Hide Right Sidebar on Search Page (default: off)', 'hideRightSidebarSearch', USER_CONFIG.hideRightSidebarSearch);
             form.appendChild(hideRightSidebarSearch);
 
+            // hide Most relevant on subscriptions page
+            const hideMostRelevant = createCheckboxField('Hide "Most relevant" on Subscriptions Page (default: off)', 'hideMostRelevant', USER_CONFIG.hideMostRelevant);
+            form.appendChild(hideMostRelevant);
+
             // hide watched videos globally
             const hideWatchedGlobal = document.createElement('label');
             hideWatchedGlobal.textContent = 'Hide Watched Videos';
@@ -7164,6 +7180,7 @@
             USER_CONFIG.hideNotificationBadge = subPanelCustomCSS.elements.hideNotificationBadge.checked;
             USER_CONFIG.hideOwnAvatar = subPanelCustomCSS.elements.hideOwnAvatar.checked;
             USER_CONFIG.hideRightSidebarSearch = subPanelCustomCSS.elements.hideRightSidebarSearch.checked;
+            USER_CONFIG.hideMostRelevant = subPanelCustomCSS.elements.hideMostRelevant.checked;
             USER_CONFIG.hideBrandText = subPanelCustomCSS.elements.hideBrandText.checked;
             USER_CONFIG.visibleCountryCode = subPanelCustomCSS.elements.visibleCountryCode.checked;
             USER_CONFIG.visibleCountryCodeColor = subPanelCustomCSS.elements.visibleCountryCodeColor.value;
