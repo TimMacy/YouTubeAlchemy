@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.16.2
+// @version      9.16.5
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.16.1 - YouTube Alchemy                  *
+*                    Version: 9.16.5 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -4350,6 +4350,12 @@
             max-width: 480px;
         }
 
+        .CentAnni-style-move-save-btn {
+            ytd-watch-metadata[flex-menu-enabled] #actions.ytd-watch-metadata ytd-menu-renderer.ytd-watch-metadata {
+                width: 36px;
+            }
+        }
+
         .CentAnni-style-hide-hashtags {
             ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a[href*="/hashtag/"] {
                 display: none !important;
@@ -4905,7 +4911,7 @@
             padding: 0;
         }
 
-        html.CentAnni-style-hide-Most-relevant .ytd-page-manager[page-subtype="subscriptions"] ytd-rich-section-renderer {
+        html.CentAnni-style-hide-most-relevant .ytd-page-manager[page-subtype="subscriptions"] ytd-rich-section-renderer {
             display: none;
         }
     `;
@@ -5070,7 +5076,7 @@
         hideJoinButton: false,
         hidePlayNextButton: false,
         hideAirplayButton: false,
-        moveSaveBtn: false,
+        moveSaveBtn: true,
         hideShorts: false,
         hideCommentsSection: false,
         hideVideosSection: false,
@@ -5097,7 +5103,7 @@
         hideNewsHome: false,
         hideEndCards: false,
         hideEndscreen: false,
-        gradientBottom: true,
+        gradientBottom: false,
         smallSubscribeButton: false,
         pureBWBackground: true,
         noFrostedGlass: false,
@@ -5111,7 +5117,7 @@
         hideMiniPlayer: false,
         hideQueueBtn: false,
         closeChatWindow: false,
-        displayFullTitle: true,
+        displayFullTitle: false,
         autoTheaterMode: false,
         maxVidSize: false,
         expandVideoDescription: false,
@@ -5250,7 +5256,7 @@
             hideAirplayButton: 'CentAnni-style-hide-airplay-btn',
             hideFreeWithAds: 'CentAnni-style-hide-free-with-ads',
             lnbHideMusicBtn: 'CentAnni-style-lnb-hide-music-btn',
-            hideMostRelevant: 'CentAnni-style-hide-Most-relevant',
+            hideMostRelevant: 'CentAnni-style-hide-most-relevant',
             hideLatestPostsHome: 'CentAnni-style-hide-posts-home',
             homeDisableHover: 'CentAnni-style-home-disable-hover',
             mButtonDisplay: 'CentAnni-style-hide-default-sidebar',
@@ -6279,7 +6285,7 @@
             form.appendChild(hideJoinButton);
 
             // display full title
-            const displayFullTitle = createCheckboxField('Display Full Titles (default: on)', 'displayFullTitle', USER_CONFIG.displayFullTitle);
+            const displayFullTitle = createCheckboxField('Display Full Titles (default: off)', 'displayFullTitle', USER_CONFIG.displayFullTitle);
             form.appendChild(displayFullTitle);
 
             // custom selection color - toggle | light mode | dark mode
@@ -6330,7 +6336,7 @@
             form.appendChild(hideEndscreen);
 
             // bottom gradient lower height and different bg image
-            const gradientBottom = createCheckboxField('Less Intrusive Bottom Gradient (default: on)', 'gradientBottom', USER_CONFIG.gradientBottom);
+            const gradientBottom = createCheckboxField('Less Intrusive Bottom Gradient (default: off)', 'gradientBottom', USER_CONFIG.gradientBottom);
             form.appendChild(gradientBottom);
 
             // hide play next button
@@ -8331,8 +8337,9 @@
         // call key mapping function
         if (!speedKeysMapped) speedKeyMap();
 
+        let speedDisplay = null;
         function updateSpeedDisplay() {
-            const speedDisplay = document.getElementById("CentAnni-speed-display");
+            if (!speedDisplay) speedDisplay = document.getElementById("CentAnni-speed-display");
             if (speedDisplay && video) speedDisplay.textContent = `${video.playbackRate}x`;
         }
 
@@ -8344,7 +8351,7 @@
             }
 
             ignoreRateChange = true;
-            const clamped = Math.max(MIN_SPEED, Math.min(MAX_SPEED, video.playbackRate));
+            const clamped = Math.max(MIN_SPEED, Math.min(MAX_SPEED, newUserRate));
             video.playbackRate = clamped;
             video.preservesPitch = video.mozPreservesPitch = video.webkitPreservesPitch = true;
 
@@ -8356,12 +8363,11 @@
 
         // initial speed setting
         function initializeSpeed() {
-            if (isShortPage) { video.playbackRate = lastUserRate !== null ? lastUserRate : defaultSpeed; }
-            else if ((USER_CONFIG.VerifiedArtist && isMusicVideo) || isLiveVideo || isLiveStream) video.playbackRate = 1;
-            else video.playbackRate = defaultSpeed;
-            video.defaultPlaybackRate = video.playbackRate;
+            if (isShortPage) { newUserRate = lastUserRate !== null ? lastUserRate : defaultSpeed; }
+            else if ((USER_CONFIG.VerifiedArtist && isMusicVideo) || isLiveVideo || isLiveStream) newUserRate = 1;
+            else newUserRate = defaultSpeed;
+            video.defaultPlaybackRate = newUserRate;
 
-            video.addEventListener('ratechange', updateSpeedDisplay);
             setSpeed();
             speedNotification = true;
             if (USER_CONFIG.playbackSpeedBtns) playbackSpeedButtons(video, setSpeed);
@@ -8370,7 +8376,7 @@
         // handle rate change events
         function onRateChange() {
             if (ignoreRateChange) { ignoreRateChange = false; return; }
-            else video.playbackRate = lastUserRate;
+            else if (Math.abs(video.playbackRate - lastUserRate) > 0.2) video.playbackRate = lastUserRate;
         }
 
         // keyboard control handler
@@ -8387,22 +8393,22 @@
 
             switch (key) {
                 case toggleKey:
-                    video.playbackRate = (video.playbackRate !== 1 ? 1 : defaultSpeed);
+                    newUserRate = (video.playbackRate !== 1 ? 1 : defaultSpeed);
                     setSpeed();
                     break;
                 case decreaseKey:
                 case '<':
-                    video.playbackRate = video.playbackRate - STEP_SIZE;
+                    newUserRate = video.playbackRate - STEP_SIZE;
                     setSpeed();
                     break;
                 case increaseKey:
                 case '>':
-                    video.playbackRate = video.playbackRate + STEP_SIZE;
+                    newUserRate = video.playbackRate + STEP_SIZE;
                     setSpeed();
                     break;
                 default:
                     if (matched != null) {
-                        video.playbackRate = matched;
+                        newUserRate = matched;
                         setSpeed();
                     }
             }
@@ -8418,7 +8424,6 @@
             // clean up on Navigation
             const cleanupOnNavigation = () => {
                 window.removeEventListener('keydown', playbackSpeedKeyListener, true);
-                video.removeEventListener('ratechange', updateSpeedDisplay);
                 video.removeEventListener('ratechange', onRateChange);
                 document.removeEventListener('yt-navigate-start', cleanupOnNavigation);
                 speedNotification = false;
@@ -8480,7 +8485,7 @@
                 "yt-spec-button-shape-next--icon-button"
             );
             button.addEventListener("click", () => {
-                video.playbackRate = video.playbackRate + change;
+                newUserRate = video.playbackRate + change;
                 setSpeed();
             });
             return button;
@@ -8539,7 +8544,7 @@
             button.dataset.speed = speed;
 
             button.addEventListener('click', () => {
-                video.playbackRate = speed;
+                newUserRate = speed;
                 setSpeed();
             });
 
@@ -11174,6 +11179,7 @@
     let chronoNotificationRunning = false;
     let cleanupPlaybackSpeedListeners = null;
     let defaultSpeed = USER_CONFIG.playbackSpeedValue;
+    let newUserRate = defaultSpeed;
     const showPlaybackSpeed = USER_CONFIG.playbackSpeed;
     const compactModeSpeed = USER_CONFIG.showRemainingCompact;
     const ChatGPTLabel = USER_CONFIG.targetChatGPTLabel;
