@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      9.16.5.1
+// @version      9.16.6
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 9.16.5.1 - YouTube Alchemy                *
+*                    Version: 9.16.6 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1788,7 +1788,7 @@
                 padding: 0;
                 margin: 0;
                 color: var(--yt-spec-text-primary);
-                background-color: var(--yt-spec-brand-background-primary);
+                background-color: var(--yt-spec-raised-background);
                 z-index: 7;
             }
 
@@ -4848,7 +4848,7 @@
         }
 
         html:not([dark]) .CentAnni-tabView {
-            border: 1px solid var(--yt-spec-10-percent-layer);
+            border: 1px solid var(--yt-spec-outline, var(--yt-spec-10-percent-layer, rgba(0,0,0,.1)));
         }
 
         html:not([dark]) ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
@@ -4874,12 +4874,12 @@
             ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
             #related.style-scope.ytd-watch-flexy) {
-                border: 1px solid var(--yt-spec-10-percent-layer);
+                border: 1px solid var(--yt-spec-outline, var(--yt-spec-10-percent-layer, rgba(0,0,0,.1)));
                 border-top: none;
         }
 
         html:not([dark]) #tab-2 {
-            border-top: 1px solid var(--yt-spec-10-percent-layer);
+            border-top: 1px solid var(--yt-spec-outline, var(--yt-spec-10-percent-layer, rgba(0,0,0,.1)));
         }
 
         html:not([dark]) .yt-tab-shape-wiz__tab--tab-selected,
@@ -10299,7 +10299,7 @@
 
     function shortsPlaybackControl() {
         const shortVideo = document.querySelector('ytd-shorts #shorts-player > div.html5-video-container > video');
-        const menuBtn = document.querySelector('ytd-shorts #actions, ytd-shorts #menu-button');
+        const menuBtn = document.querySelector('ytd-shorts #actions');
         if (!shortVideo || !menuBtn) return;
 
         const savedShortsSetting = 'CentAnni_shortsPlayMode';
