@@ -191,7 +191,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Automatically Open Transcript Panels
   - Automatically Open Comments, Only Works with Tab View Enabled
   - Automatically Enable Timestamps in Transcript Panels
-  - Maintain 1x Playback Speed for Verified Artist Music Videos
+  - Maintain 1x Playback Speed for Music Videos
   - Use Enhanced Bitrate for 1080p Videos, Premium Required
   - Persistent Progress Bar with Chapter Markers and SponsorBlock Support—Even in Fullscreen
   - Display Remaining Time Under Videos Adjusted for Playback Speed—Even in Fullscreen
