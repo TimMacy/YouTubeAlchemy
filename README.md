@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-9.16.6-white.svg" alt="Version: 9.16.6"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-10.0-white.svg" alt="Version: 10.0"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -28,7 +28,7 @@ This toolkit enhances YouTube by customizing the layout and adding more than 200
 </details>
 
 #### 🔒 Privacy Policy
-YouTube Alchemy operates completely client-side with no external dependencies. It doesn't send data to remote servers or pull resources from third parties. It leverages the browser's built-in Intl APIs, stores settings locally (via GM storage/storage.local plus browser localStorage), and reads YouTube's DOM to apply enabled features as well as layout changes. The userscript version utilizes standard metadata for updates (@updateURL, @downloadURL) and icon display (@icon). Required permissions: GM.getValue and GM.setValue for the userscript; storage and scripting for the extension; both are limited to https://\*.youtube.com/\*.
+YouTube Alchemy operates completely client-side with no external dependencies. It doesn't send data to remote servers or pull resources from third parties. It leverages the browser's built-in Intl APIs, stores settings locally (via GM storage or storage.local), and reads YouTube's DOM to apply enabled features as well as layout changes. The userscript version utilizes standard metadata for updates (@updateURL, @downloadURL) and icon display (@icon). Required permissions: GM.getValue and GM.setValue for the userscript; storage and scripting for the extension; both are limited to https://\*.youtube.com/\*.
 
 ### ✨ Overview
 - **Main Settings Panel**: Manage the Transcript Exporter and export, import, or reset settings to their defaults.
@@ -191,6 +191,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Automatically Open Transcript Panels
   - Automatically Open Comments, Only Works with Tab View Enabled
   - Automatically Enable Timestamps in Transcript Panels
+  - Highlight Active Section in Transcript Panels
   - Maintain 1x Playback Speed for Music Videos
   - Use Enhanced Bitrate for 1080p Videos, Premium Required
   - Persistent Progress Bar with Chapter Markers and SponsorBlock Support—Even in Fullscreen
@@ -358,6 +359,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **10.0**: adjustments for YouTube DOM changes; bug fixes; improvements: optimized initialization performance, migrated to persistent storage, streamlined video element handling; changed `Maintain 1x Playback Speed for Verified Artist Music Videos` to `Maintain 1x Playback Speed for Music Videos`; new feature: `Highlight Active Section in Transcript Panels`
 - **9.16.6**: adjustments for YouTube DOM changes (`tabView` header background and border color; Shorts control location)
 - **9.16.5**: adjustments to `Playback Speed` and `Move "Save" Button into Menu` that could cause the page to freeze and result in high CPU usage
 - **9.16**: bug fixes and improvements. new feature: `Hide "Most relevant" on Subscriptions Page`
