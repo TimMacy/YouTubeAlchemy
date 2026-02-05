@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.1
+// @version      10.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.1 - YouTube Alchemy                    *
+*                    Version: 10.2 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1922,7 +1922,7 @@
                 margin: 12px 0 0 0;
             }
 
-            ytd-watch-flexy ytd-comments {
+            ytd-watch-flexy:not([fullscreen]) ytd-comments {
                 margin: 0;
                 padding: 0 10px;
             }
@@ -1952,8 +1952,8 @@
                 flex-direction: column;
             }
 
-            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
+            ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+            ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
                 position: absolute;
                 max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
@@ -1977,7 +1977,7 @@
                 margin-bottom: 0;
             }
 
-            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description] {
+            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description] {
                 position: absolute;
                 max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
@@ -1998,7 +1998,7 @@
                 background-color: transparent;
             }
 
-            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript] {
+            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript] {
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -2047,8 +2047,7 @@
                 width: 100%;
             }
 
-            #items > yt-video-attributes-section-view-model > div > div.yt-video-attributes-section-view-model__video-attributes.yt-video-attributes-section-view-model__scroll-container > div > yt-video-attribute-view-model > div:hover,
-            #media-lockups > ytd-structured-description-playlist-lockup-renderer > #lockup-container:hover {
+            #media-lockups #lockup-container:hover {
                 filter: brightness(1.1);
             }
 
@@ -2063,11 +2062,11 @@
             }
 
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[enable-anchored-panel][target-id="engagement-panel-structured-description"] #content.ytd-engagement-panel-section-list-renderer .ytd-engagement-panel-section-list-renderer:first-child,
-            ytd-watch-flexy ytd-structured-description-content-renderer[engagement-panel] #items.ytd-structured-description-content-renderer {
+            ytd-watch-flexy:not([fullscreen]) ytd-structured-description-content-renderer[engagement-panel] #items.ytd-structured-description-content-renderer {
                 padding: 0;
             }
 
-            ytd-video-description-transcript-section-renderer {
+            ytd-watch-flexy:not([fullscreen]) ytd-video-description-transcript-section-renderer {
                 position: fixed;
                 bottom: 0;
                 left: 0;
@@ -2102,6 +2101,7 @@
 
             ytd-compact-video-renderer:hover,
             #topic-link a#topic-link-container:hover,
+            .yt-video-attribute-view-model--clickable:hover,
             ytd-video-description-course-section-renderer > #topic-link:hover,
             ytd-structured-description-content-renderer #media-lockups a:hover,
             #infocards-section > ytd-compact-infocard-renderer > #content:hover,
@@ -2228,7 +2228,8 @@
 
             ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
             ytd-watch-flexy:not([fixed-panels]):not([squeezeback]) #chat.ytd-watch-flexy:not([collapsed]),
-            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] {
+            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
+            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
                 height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) + 1px) !important;
                 border: 1px solid rgb(51, 51, 51);
             }
@@ -2242,16 +2243,16 @@
             }
 
             /* theater mode active */
-            ytd-watch-flexy[theater] #playlist,
-            ytd-watch-flexy[theater] ytd-comments,
-            ytd-watch-flexy[theater] #related.style-scope.ytd-watch-flexy,
-            ytd-watch-flexy[theater] ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer,
-            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters],
-            ytd-watch-flexy[theater][flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
-            ytd-watch-flexy[theater][flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"] {
+            ytd-watch-flexy[theater]:not([fullscreen]) #playlist,
+            ytd-watch-flexy[theater]:not([fullscreen]) ytd-comments,
+            ytd-watch-flexy[theater]:not([fullscreen]) #related.style-scope.ytd-watch-flexy,
+            ytd-watch-flexy[theater]:not([fullscreen]) ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer,
+            ytd-watch-flexy[theater]:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
+            ytd-watch-flexy[theater]:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
+            ytd-watch-flexy[theater]:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+            ytd-watch-flexy[theater]:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters],
+            ytd-watch-flexy[theater][flexy][js-panel-height_]:not([fullscreen]) #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
+            ytd-watch-flexy[theater][flexy][js-panel-height_]:not([fullscreen]) #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id="engagement-panel-structured-description"] {
                 height: 0;
                 padding-top: 0;
                 padding-bottom: 0;
@@ -2464,42 +2465,55 @@
             #ghost-cards.ytd-continuation-item-renderer,
             #trailing-button.ytd-playlist-panel-renderer,
             ytd-live-chat-frame[modern-buttons][collapsed],
-            #navigation-button.ytd-rich-list-header-renderer,
             #ghost-comment-section.ytd-continuation-item-renderer,
             ytd-watch-flexy:not([is-two-columns_])[theater] #panels,
             ytd-watch-flexy:not([is-two-columns_])[theater] #related,
             ytd-engagement-panel-section-list-renderer ytd-merch-shelf-renderer,
-            ytd-watch-flexy #header.style-scope.ytd-engagement-panel-section-list-renderer,
             #description > #description-inner > #ytd-watch-info-text > tp-yt-paper-tooltip,
+            ytd-watch-flexy:not([fullscreen]) #navigation-button.ytd-rich-list-header-renderer,
             ytd-watch-flexy:not([is-two-columns_]):not([theater]) #expandable-metadata.ytd-watch-flexy,
             .CentAnni-tabView:not(:has(.CentAnni-tabView-tab[data-tab="tab-2"])) ytd-comments#comments,
             ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview],
+            ytd-watch-flexy:not([fullscreen]) #header.style-scope.ytd-engagement-panel-section-list-renderer,
             ytd-expandable-video-description-body-renderer > ytd-expander > tp-yt-paper-button#more.ytd-expander,
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id^="shopping_panel_for_entry_point_"],
             ytd-watch-flexy[theater] #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create],
-            ytd-watch-flexy ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
+            ytd-watch-flexy:not([fullscreen]) ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
                 display: none;
             }
 
-            /* adjustments for: Ask about this video */
-            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] {
+            /* adjustments for: Ask about this video and Quizzes */
+            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
+            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
                 z-index: 2026;
                 max-height: unset !important;
                 margin-top: -52px;
             }
 
-            ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] > #header {
+            ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] > #header,
+            ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] > #header {
                 display: block !important;
             }
 
-            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] {
+            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
+            ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
                 position: fixed;
                 top: var(--ytd-masthead-height, var(--ytd-toolbar-height));
                 right: 24px;
             }
+
+            ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
+            ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
+                background-color: var(--yt-spec-base-background, #0f0f0f);
+            }
+
+            .vote-choice.ytd-backstage-quiz-renderer:hover {
+                background-color: var(--t416e5931fc464589, var(--tf3fc855af2285f5f, rgba(255, 255, 255, .2)));
+            }
         }
 
-        html:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]).CentAnni-video-tabView ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] {
+        html:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]).CentAnni-video-tabView ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
+        html:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]).CentAnni-video-tabView ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
             position: fixed;
             top: calc(var(--ytd-masthead-height, var(--ytd-toolbar-height)) + 52px + var(--topHeaderMargin));
             width: var(--ytd-watch-flexy-sidebar-width);
@@ -2563,12 +2577,18 @@
             }
 
             .segment-text.ytd-transcript-segment-renderer {
+                font-family: -apple-system;
                 opacity: .9;
             }
 
             .segment.ytd-transcript-segment-renderer {
                 align-items: center;
             }
+        }
+
+        html[dark].CentAnni-style-transcript ytd-watch-flexy[fullscreen] ytd-transcript-footer-renderer,
+        html[dark].CentAnni-style-transcript ytd-watch-flexy[fullscreen] ytd-transcript-segment-list-renderer {
+            background-color: black;
         }
 
         html:not([dark]).CentAnni-style-transcript {
@@ -3333,6 +3353,7 @@
             .ytp-delhi-modern .ytp-settings-menu .ytp-menuitem > *:last-child,
             .ytp-delhi-modern .ytp-settings-menu .ytp-menuitem > *:first-child,
             .html5-video-player:not(.ytp-touch-mode) ::-webkit-scrollbar-thumb,
+            ytd-backstage-quiz-renderer .vote-choice.ytd-backstage-quiz-renderer,
             .CentAnni-tabView:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]),
             #playlist-thumbnail.ytd-structured-description-playlist-lockup-renderer,
             ytd-author-comment-badge-renderer[enable-modern-comment-badges][creator],
@@ -4090,10 +4111,10 @@
 
             ytd-watch-flexy #playlist,
             #related.style-scope.ytd-watch-flexy,
-            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
+            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
+            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
+            ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+            ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
                 top: 52px !important;
             }
 
@@ -4119,16 +4140,17 @@
             ytd-watch-flexy[default-layout] #playlist,
             ytd-watch-flexy[default-layout] #container.ytd-playlist-panel-renderer,
             #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy,
-            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
+            ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
+            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
+            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
+            ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
                 max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
             }
 
             ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
             ytd-watch-flexy:not([fixed-panels]):not([squeezeback]) #chat.ytd-watch-flexy:not([collapsed]),
-            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat] {
+            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
+            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
                 height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x)) !important;
             }
 
@@ -4162,6 +4184,20 @@
             ytd-watch-flexy[default-layout]:not([is-vertical-video_]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
             ytd-watch-flexy[default-layout]:not([is-vertical-video_]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
                 border-right: none;
+            }
+
+            #title.yt-confirm-dialog-renderer,
+            #scroller.yt-confirm-dialog-renderer {
+                padding: 0 24px;
+            }
+
+            #main.yt-confirm-dialog-renderer {
+                margin-top: 24px;
+            }
+
+            ytd-watch-flexy[fullscreen][engagement-panel-expanded] ytd-engagement-panel-section-list-renderer[visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"] {
+                width: 100% !important;
+                margin: 0 !important;
             }
         }
 
@@ -4463,7 +4499,8 @@
         .CentAnni-style-hide-add-comment {
             ytd-shorts #header.ytd-item-section-renderer,
             ytd-comments-header-renderer #backstage-post-dialog,
-            ytd-comments ytd-comments-header-renderer #simple-box {
+            ytd-comments ytd-comments-header-renderer #simple-box,
+            ytd-watch-flexy[fullscreen][engagement-panel-expanded] ytd-comments-header-renderer[engagement-panel] {
                 display: none;
             }
 
@@ -6248,7 +6285,7 @@
             form.appendChild(layoutChanges);
 
             // tab view on video page
-            const videoTabView = createCheckboxField('Tab View on Video Page (default: on)', 'videoTabView', USER_CONFIG.videoTabView);
+            const videoTabView = createCheckboxField('Tab View on Video Pages (default: on)', 'videoTabView', USER_CONFIG.videoTabView);
             form.appendChild(videoTabView);
 
             // toggle theater mode w/ active tab
@@ -9345,7 +9382,7 @@
             }
 
             const panel = document.querySelector(settingsPanel);
-            const qualitySelector = () => [...document.querySelectorAll('ytd-watch-flexy .ytp-menuitem')].find(item => item.textContent.includes(qualityText));
+            const qualitySelector = () => [...panel.querySelectorAll('.ytp-menuitem')].find(item => item.textContent.includes(qualityText));
             const qualityItem = qualitySelector();
             if (!qualityItem) return;
             qualityItem.click();
