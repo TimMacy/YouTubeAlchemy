@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-10.2-white.svg" alt="Version: 10.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-10.3-white.svg" alt="Version: 10.3"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -38,7 +38,7 @@ YouTube Alchemy operates completely client-side with no external dependencies. I
 
 <p align="center"><img width="100%" alt="YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/be8b77cd-2b65-41a8-ac1c-72b936d52358" /></p>
 <p align="center">
-  <img width="49.5%" alt="YouTube Alchemy Tab View" title="YouTube Alchemy Tab View" src="https://github.com/user-attachments/assets/e2991d15-93f4-4ee7-9122-1cacd935b1af" /><img width="1%" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" /><img width="49.5%" alt="Read Aloud Speedster by Tim Macy" title="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/ac496cf1-f07c-4299-a85d-af0ffe655f5e" />
+  <img width="49.5%" alt="YouTube Alchemy Tab View" title="YouTube Alchemy Tab View" src="https://github.com/user-attachments/assets/8809307f-cad2-433f-ba6c-44ab54f9c787" /><img width="1%" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" /><img width="49.5%" alt="Read Aloud Speedster by Tim Macy" title="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/ac496cf1-f07c-4299-a85d-af0ffe655f5e" />
 </p>
 <p align="center">
   <img width="49.5%" alt="YouTube Default" title="YouTube Default" src="https://github.com/user-attachments/assets/dea955f2-6479-4de8-a06e-4327b69d25c0" /><img width="1%" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" /><img width="49.5%" alt="YouTube Alchemy by Tim Macy YouTube Home" title="YouTube Alchemy by Tim Macy YouTube Home" src="https://github.com/user-attachments/assets/24904622-9071-4748-8e73-7e24d29f8e9a" />
@@ -93,6 +93,7 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
 <p align="center"><img width="50%" alt="Main Settings Panel" src="https://github.com/user-attachments/assets/14733b83-677d-4689-8d4a-33ff6c08ae4d" /></p>
 
 <br>
+
 
 ## 🔗 Links in Header
 Up to ten links can be added next to the YouTube logo. An empty "Link Text" field won't insert the link into the header.
@@ -179,7 +180,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Restore Homepage Filter Selection
   - Restore Suggested Videos Filter Selection
   - Auto Close Initial Chat Windows
-  - "Videos" Tab as Default on Channel Page
+  - "Videos" Tab as Default on Channel Pages
   - Add RSS Feed Button to Channel Pages
   - Add Playlist Buttons to Channel Pages
   - Add Direction Buttons to Playlist Panels
@@ -204,13 +205,14 @@ Offers various options to customize the layout and functionality of YouTube.
   - Tab View on Video Page
   - Toggle Theater Mode by Clicking the Active Tab
   - Show Chapters Under Videos, Only Works with Tab View Enabled
+  - Compact Layout
+  - Max Panel Height in Default View
   - Disable Animation When Switching Between Theater mode and Default view
   - Hide Comments Section
   - Hide Suggested Videos
   - Square and Compact Search Bar
   - Square Design
   - Square Avatars
-  - Compact Layout
   - Disable Ambient Mode
   - Hide Shorts
   - Redirect Shorts to Standard Video Pages
@@ -221,7 +223,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide "Free with ads" Videos on the Home Page
   - Hide Members Only Featured Videos on the Home Page
   - Hide "Explore more topics" on the Home Page
-  - Hide "Latest posts from . . ." on Search Page
+  - Hide "Latest posts from . . ." on Search Pages
 
 **Modify or Hide UI Elements**
   - Hide "Voice Search" Button
@@ -259,7 +261,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide Fundraiser Icons and Panels
   - Hide Mini Player
   - Hide "Add to queue" Button on Hover
-  - Hide Right Sidebar on Search Page
+  - Hide Right Sidebar on Search Pages
   - Hide "Most relevant" on Subscriptions Page
 
 **Hide Watched Videos**
@@ -359,6 +361,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **10.3**: adjustments for YouTube DOM changes, bug fixes, and improvements. new feature: `Max Panel Height in Default View`
 - **10.2**: adjustments for "Ask" and "Quizzes" panels; fullscreen panel support for Info, Chapter, Transcript, Comments, and Live Chat when "Tab View on Video Pages" is enabled
 - **10.1**: fixed "Transcript Failed to Load" error when both `Enable Transcript Exporter` and `Auto Theater Mode` are enabled, caused by YouTube closing the transcript panel when switching to theater mode
 - **10.0**: adjustments for YouTube DOM changes; bug fixes; improvements: optimized initialization performance, migrated to persistent storage, streamlined video element handling; changed `Maintain 1x Playback Speed for Verified Artist Music Videos` to `Maintain 1x Playback Speed for Music Videos`; new feature: `Highlight Active Section in Transcript Panels`
