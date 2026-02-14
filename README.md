@@ -126,10 +126,10 @@ Offers various options to customize the layout and functionality of YouTube.
     - 360p
     - 240p
     - 144p
-- Audio Language
-- Subtitle Language
-- Transcript Language
-- Language Options:
+  - Audio Language
+  - Subtitle Language
+  - Transcript Language
+  - Language Options:
     - Auto (default)
     - English
     - Spanish
@@ -154,21 +154,21 @@ Offers various options to customize the layout and functionality of YouTube.
     - Hungarian
     - Romanian
     - Ukrainian
-- Choose Font Size
-- Adjust Number of Videos per Row
-- Sidebar Width
-- Search Bar Position
-- Minimum Space Below Player in Default Layout When Tab View and Compact Layout Are Enabled
-- Set Playback Speed for VODs
-  - from 0.25x to 17x with 0.25x increments
-  - defaults to 1x for live videos
-  - works with Shorts
-  - key toggles:
-    - A (or <): -0.25x
-    - S: toggle 1x/set speed
-    - D (or >): +0.25x
-- Choose Playback Speed Buttons
-- Add Additional Playback Speed Buttons
+  - Choose Font Size
+  - Adjust Number of Videos per Row
+  - Sidebar Width
+  - Search Bar Position
+  - Minimum Space Below Player in Default Layout When Tab View and Compact Layout Are Enabled
+  - Set Playback Speed for VODs
+    - from 0.25x to 17x with 0.25x increments
+    - defaults to 1x for live videos
+    - works with Shorts
+    - key toggles (changeable):
+      - A (or <): -0.25x
+      - S: toggle 1x/set speed
+      - D (or >): +0.25x
+  - Assign up to 8 Keys to Custom Playback Speeds
+  - Add Additional Playback Speed Buttons
 
 **Features**
   - Auto Theater Mode
