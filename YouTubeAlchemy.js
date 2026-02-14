@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.2
+// @version      10.3
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.2 - YouTube Alchemy                    *
+*                    Version: 10.3 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -535,7 +535,7 @@
         }
 
         .CentAnni-info-text {
-            color: rgba(175, 175, 175, .9);
+            color: rgba(190, 190, 190, .9);
             font-family: "Roboto", "Arial", sans-serif;
             font-size: 1.2em;
             line-height: 1.5em;
@@ -917,16 +917,21 @@
             -moz-osx-font-smoothing: grayscale !important;
         }
 
+        html[dark]:not(.CentAnni-style-no-ambient):has(ytd-watch-flexy[cinematics-active][default-layout] .html5-video-player:not(.unstarted-mode, .ended-mode)) .CentAnni-notification-error {
+            background-color: transparent;
+            border-color: rgba(250, 250, 250, .4);
+        }
+
         #CentAnni-playback-speed-popup {
             position: fixed;
-            top: var(--ytd-masthead-height, var(--ytd-toolbar-height));
+            top: var(--ytd-toolbar-height, 56px);
             left: 50%;
             transform: translateX(-50%);
             padding: 8px 16px;
-            background: hsl(0, 0%, 7%);
+            background: var( --yt-spec-base-background );
             border-radius: 2px;
             border: 1px solid hsl(0, 0%, 18.82%);
-            color: whitesmoke;
+            color: var(--yt-spec-text-primary);
             font-family: -apple-system, "Roboto", "Arial", sans-serif;
             font-size: 2.3rem;
             font-weight: 600;
@@ -946,6 +951,10 @@
 
         #CentAnni-playback-speed-popup.active {
             opacity: 1;
+        }
+
+        html.CentAnni-style-max-panel #CentAnni-playback-speed-popup {
+            top: var(--CentAnniTabViewHeader);
         }
 
         .loading span::before {
@@ -1385,15 +1394,16 @@
             font-size: var(--fontSize) !important;
             font-family: "Roboto", Arial, sans-serif;
             --CentAnniTabViewHeader: 52px;
-            --topHeaderMargin: var(--ytd-margin-6x), 24px;
-        }
-
-        ytd-watch-flexy {
-            --horizontalMargin: var(--ytd-watch-flexy-horizontal-page-margin, var(--ytd-margin-6x, 24px));
+            --topHeaderMargin: var(--ytd-margin-6x, 24px);
+            --ytd-margin-0x: 16px;
         }
 
         ytd-watch-flexy[reduced-top-margin] {
-            --topHeaderMargin: var(--ytd-margin-3x);
+            --topHeaderMargin: var(--ytd-margin-3x, 12px);
+        }
+
+        ytd-watch-flexy {
+            --horizontalMargin: var(--ytd-watch-flexy-horizontal-page-margin, 16px);
         }
 
         /* progress bar css */
@@ -1853,7 +1863,7 @@
                 margin: 0;
                 display: none;
                 overscroll-behavior: contain;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
+                max-height: var(--ytd-watch-flexy-panel-max-height);
             }
 
             .CentAnni-tabView-content.active {
@@ -1901,7 +1911,7 @@
 
             #related.style-scope.ytd-watch-flexy {
                 position: absolute;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
+                max-height: var(--ytd-watch-flexy-panel-max-height);
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: calc(52px + var(--topHeaderMargin));
                 left: 0;
@@ -1955,7 +1965,6 @@
             ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
             ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
                 position: absolute;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: calc(52px + var(--topHeaderMargin));
                 left: 0;
@@ -1979,7 +1988,6 @@
 
             ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description] {
                 position: absolute;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: calc(52px + var(--topHeaderMargin));
                 left: 0;
@@ -1994,15 +2002,17 @@
                 box-sizing: border-box;
             }
 
+            ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-structured-description"] ytd-structured-description-content-renderer {
+                padding: 0 !important;
+            }
+
             ytd-engagement-panel-section-list-renderer[match-content-theme] #content.ytd-engagement-panel-section-list-renderer {
                 background-color: transparent;
             }
 
             ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript] {
                 position: absolute;
-                top: 0;
                 left: 0;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: calc(52px + var(--topHeaderMargin));
                 margin: 0;
@@ -2197,27 +2207,6 @@
                 margin-top: 0;
             }
 
-            ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
-                z-index: 100;
-                background: black;
-                height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x)) !important;
-                max-height: unset !important;
-                margin-top: -52px;
-            }
-
-            ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] > #header {
-                display: block !important;
-            }
-
-            ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] #content ytd-section-list-renderer {
-                padding-left: 10px;
-            }
-
-            ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] #content ytd-section-list-renderer > #contents {
-                overflow-y: auto;
-                overflow-x: hidden;
-            }
-
             /* live chat adjustments */
             #columns > #secondary > #secondary-inner > #chat-container {
                 top: var(--topHeaderMargin);
@@ -2225,21 +2214,15 @@
                 width: var(--ytd-watch-flexy-sidebar-width);
             }
 
-
-            ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
-            ytd-watch-flexy:not([fixed-panels]):not([squeezeback]) #chat.ytd-watch-flexy:not([collapsed]),
+            ytd-watch-flexy[default-layout] ytd-live-chat-frame:not([no-border]),
             ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
             ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
-                height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) + 1px) !important;
+                height: var(--ytd-watch-flexy-chat-max-height) !important;
                 border: 1px solid rgb(51, 51, 51);
             }
 
             #chat.ytd-watch-flexy {
                 margin-bottom: 0;
-            }
-
-            ytd-watch-flexy:not([is-two-columns_])[theater] #chat.ytd-watch-flexy:not([collapsed]) {
-                height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height))) !important;
             }
 
             /* theater mode active */
@@ -2276,7 +2259,6 @@
                 margin-top: 0;
                 display: flex;
                 justify-content: center;
-                align-items: flex-start;
                 align-self: center;
             }
 
@@ -2289,7 +2271,8 @@
             }
 
             ytd-watch-flexy[is-two-columns_][theater] #columns {
-                height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - clamp(480px, 100dvw * var(--ytd-watch-flexy-height-ratio) / var(--ytd-watch-flexy-width-ratio), 100dvh - 169px));
+                height: fit-content;
+                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - clamp(480px, 100dvw * var(--ytd-watch-flexy-height-ratio) / var(--ytd-watch-flexy-width-ratio), 100dvh - 169px));
             }
 
             ytd-watch-flexy[theater] #primary {
@@ -2304,7 +2287,6 @@
 
             #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy {
                 margin-bottom: 0;
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
                 overflow-y: auto;
             }
 
@@ -2330,10 +2312,8 @@
                 margin-bottom: 0;
             }
 
-            ytd-watch-flexy[default-layout] #playlist,
-            ytd-watch-flexy[default-layout] #secondary,
             ytd-watch-flexy[default-layout] #container.ytd-playlist-panel-renderer {
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
+                max-height: var(--ytd-watch-flexy-panel-max-height) !important;
             }
 
             #container.ytd-playlist-panel-renderer {
@@ -2382,12 +2362,11 @@
             ytd-watch-flexy:not([is-two-columns_]) #primary #playlist,
             ytd-watch-flexy:not([is-two-columns_]) #related.style-scope.ytd-watch-flexy,
             ytd-watch-flexy:not([is-two-columns_]) #panels ytd-engagement-panel-section-list-renderer {
-                top: calc(var(--ytd-watch-flexy-space-below-player) + 54px);
                 max-height: 50dvh !important;
-                width: 90dvw;
+                width: 90dvw !important;
                 margin: 0 !important;
-                left: 50%;
-                transform: translateX(-50%);
+                left: 50% !important;
+                transform: translate(-50%, translate(-50%, calc(var(--ytd-watch-flexy-space-below-player) + 2px)));
             }
 
             ytd-watch-flexy:not([is-two-columns_]):not([theater]) #chat.ytd-watch-flexy:not([collapsed]),
@@ -2482,6 +2461,10 @@
                 display: none;
             }
 
+            #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create] {
+                z-index: 2000;
+            }
+
             /* adjustments for: Ask about this video and Quizzes */
             ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
             ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
@@ -2510,6 +2493,66 @@
             .vote-choice.ytd-backstage-quiz-renderer:hover {
                 background-color: var(--t416e5931fc464589, var(--tf3fc855af2285f5f, rgba(255, 255, 255, .2)));
             }
+
+            #expandable-metadata.ytd-watch-flexy:not(:empty) {
+                display: block !important;
+                margin-bottom: 0;
+            }
+
+            ytd-expandable-metadata-renderer[has-video-summary] #expanded-title-subtitle-group.ytd-expandable-metadata-renderer {
+                margin: 12px 0 6px 0;
+            }
+
+            video-summary-content-view-model.ytd-expandable-metadata-renderer {
+                margin-top: 0;
+            }
+
+            ytd-expandable-metadata-renderer[is-expanded] #content.ytd-expandable-metadata-renderer {
+                margin-bottom: 0;
+            }
+
+            ytd-watch-flexy:not([fullscreen]) #header.ytd-engagement-panel-title-header-renderer {
+                height: var(--ytd-masthead-height, var(--ytd-toolbar-height));
+                padding: 0 2px 0 12px;
+            }
+
+            ytd-watch-flexy #expandable-metadata #content.ytd-expandable-metadata-renderer {
+                display: block !important;
+                height: fit-content;
+                visibility: visible;
+                pointer-events: auto;
+            }
+
+            ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] #collapsed-title.ytd-expandable-metadata-renderer {
+                display: none;
+            }
+
+            ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[has-video-summary] #expanded-title-subtitle-group.ytd-expandable-metadata-renderer {
+                display: flex !important;
+            }
+
+            ytd-watch-flexy #expandable-metadata #expanded-subtitle.ytd-expandable-metadata-renderer {
+                display: block !important;
+                pointer-events: auto;
+            }
+
+            ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] {
+                background: transparent;
+                pointer-events: none;
+            }
+
+            ytd-watch-flexy #expandable-metadata #right-section.ytd-expandable-metadata-renderer {
+                display: none;
+            }
+
+            ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer:not([is-expanded]) #header.ytd-expandable-metadata-renderer:hover {
+                background-color: transparent;
+            }
+        }
+
+        html.CentAnni-video-tabView:has(ytd-watch-flexy[theater][is-extra-wide-video_]:not([hidden])) #page-manager.ytd-app {
+            height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)));
+            align-items: center;
         }
 
         html:has(.CentAnni-tabView-tab.active[data-tab="tab-2"]).CentAnni-video-tabView ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
@@ -2759,6 +2802,26 @@
             animation: none !important;
         }
 
+        ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
+            z-index: 100;
+            background: black;
+            max-height: var(--ytd-watch-flexy-chat-max-height) !important;
+            margin-top: calc(var(--ytd-masthead-height, var(--ytd-toolbar-height)) *-1);
+        }
+
+        ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] > #header {
+            display: block !important;
+        }
+
+        ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] #content ytd-section-list-renderer {
+            padding-left: 10px;
+        }
+
+        ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] #content ytd-section-list-renderer > #contents {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
         .CentAnni-style-hide-comments-btn {
             ytd-comments#comments,
             .CentAnni-tabView-tab[data-tab="tab-2"] {
@@ -2904,8 +2967,8 @@
             #cinematics-container #cinematics > div > div {
                 max-height: unset !important;
                 max-width: unset !important;
+                height: 100dvh;
                 width: 100dvw;
-                height: 100dvw;
             }
 
             .ytp-delhi-modern .ytp-popup,
@@ -3126,15 +3189,20 @@
         }
 
         .CentAnni-style-hide-brand-text {
-            #start ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > picture,
+            #start #logo-icon [id^="youtube-paths_yt"],
             #start #country-code.ytd-topbar-logo-renderer,
-            #start #logo-icon [id^="youtube-paths_yt"] {
+            #start ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > picture {
                 display: none;
             }
 
-            #logo.ytd-masthead {
-                width: 29px !important;
+            #masthead-container ytd-topbar-logo-renderer {
+                margin-right: 0 !important;
+                width: 30px !important;
                 overflow: hidden;
+            }
+
+            #masthead-container #logo-icon {
+                padding: 0;
             }
 
             #start ytd-topbar-logo-renderer > #logo > ytd-yoodle-renderer > ytd-logo {
@@ -3278,10 +3346,13 @@
             #card.ytd-miniplayer,
             .smartimation__border,
             .ytp-progress-bar-end,
+            .ytp-offline-slate-bar,
             .ytp-progress-bar-start,
+            .ytp-offline-slate-button,
             .ytp-tooltip-text-wrapper,
             .ytThumbnailViewModelSmall,
             .ytThumbnailViewModelLarge,
+            ytd-donation-shelf-renderer,
             .ytThumbnailViewModelMedium,
             ytd-playlist-video-renderer,
             .ytOfficialCardViewModelHost,
@@ -3699,6 +3770,13 @@
                     margin-bottom: 5px;
                     min-height: 77px;
                 }
+
+                ytd-rich-item-renderer {
+                    --ytd-rich-grid-gutter-margin: 5px !important;
+                    --ytd-border-space: 0px;
+                    --ytd-rich-item-row-usable-width: calc(100% - var(--ytd-rich-grid-gutter-margin) * var(--ytd-rich-grid-items-per-row) + var(--ytd-rich-grid-gutter-margin) - var(--ytd-border-space));
+                    width: calc(var(--ytd-rich-item-row-usable-width)/var(--ytd-rich-grid-items-per-row));
+                }
             }
 
             .ytd-page-manager[page-subtype="home"] {
@@ -3732,12 +3810,13 @@
 
                 #contents.ytd-rich-grid-renderer {
                     padding-top: 2px;
-                    column-gap: 14px;
-                    row-gap: 14px;
+                    column-gap: 12px;
+                    row-gap: 12px;
                 }
 
-                .style-scope.ytd-two-column-browse-results-renderer {
-                    --ytd-rich-grid-item-margin: .5% !important;
+                ytd-rich-item-renderer {
+                    --ytd-rich-grid-gutter-margin: 12px !important;
+                    --ytd-border-space: 4px;
                 }
 
                 .yt-lockup-metadata-view-model__avatar,
@@ -3813,7 +3892,7 @@
                 }
 
                 ytd-rich-grid-renderer:not([is-default-grid]) #header.ytd-rich-grid-renderer {
-                    transform: translateY(-40px);
+                    transform: translateY(-60px);
                     z-index: 2000;
                     width: max-content;
                     margin-left: auto;
@@ -3825,6 +3904,7 @@
 
                 ytd-two-column-browse-results-renderer.grid-5-columns ytd-rich-grid-renderer:not([is-default-grid]) #header {
                     margin-right: 110px;
+                    margin-bottom: -48px;
                 }
 
                 ytd-rich-grid-renderer ytd-feed-filter-chip-bar-renderer[component-style="FEED_FILTER_CHIP_BAR_STYLE_TYPE_CHANNEL_PAGE_GRID"] {
@@ -3881,11 +3961,6 @@
                     max-width: 100%;
                 }
 
-                #contents {
-                    margin-left: 10px;
-                    margin-right: 10px;
-                }
-
                 #header-container {
                     width: 80dvw;
                     align-self: center;
@@ -3919,6 +3994,14 @@
                 tp-yt-app-header #page-header {
                     position: static !important;
                     transform: none !important;
+                }
+
+                ytd-two-column-browse-results-renderer.grid:not(.grid-disabled) {
+                    max-width: 100%;
+                }
+
+                ytd-rich-item-renderer[is-in-first-column] #details.ytd-rich-grid-media {
+                    margin-left: 7px;
                 }
             }
 
@@ -3976,10 +4059,6 @@
                 border-top: none;
             }
 
-            #header.ytd-engagement-panel-title-header-renderer {
-                padding: 4px 7px 4px 7px;
-            }
-
             #visibility-button.ytd-engagement-panel-title-header-renderer,
             #information-button.ytd-engagement-panel-title-header-renderer {
                 z-index: 1;
@@ -3993,10 +4072,6 @@
             .ytChipShapeActive:hover {
                 background-color: #f1f1f1;
                 color: #0f0f0f;
-            }
-
-            ytd-engagement-panel-title-header-renderer {
-                height: 54px;
             }
 
             .yt-spec-button-shape-next--icon-only-default {
@@ -4136,24 +4211,6 @@
                 padding-top: 0;
             }
 
-            .CentAnni-tabView-content,
-            ytd-watch-flexy[default-layout] #playlist,
-            ytd-watch-flexy[default-layout] #container.ytd-playlist-panel-renderer,
-            #donation-shelf.ytd-watch-flexy ytd-donation-shelf-renderer.ytd-watch-flexy,
-            ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-            ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
-                max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
-            }
-
-            ytd-watch-flexy[flexy]:not([fixed-panels]) #chat.ytd-watch-flexy:not([collapsed]),
-            ytd-watch-flexy:not([fixed-panels]):not([squeezeback]) #chat.ytd-watch-flexy:not([collapsed]),
-            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
-            ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
-                height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x)) !important;
-            }
-
             .ytListViewModelCollectionThumbnailClass {
                 max-width: fit-content;
             }
@@ -4199,11 +4256,14 @@
                 width: 100% !important;
                 margin: 0 !important;
             }
-        }
 
-        html.CentAnni-style-compact-layout.CentAnni-video-tabView #related.style-scope.ytd-watch-flexy,
-        html.CentAnni-style-compact-layout.CentAnni-video-tabView ytd-watch-flexy[default-layout] #secondary {
-            max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--ytd-margin-6x) - var(--CentAnniTabViewHeader)) !important;
+            #masthead-container ytd-topbar-logo-renderer {
+                margin-right: 14px;
+            }
+
+            #masthead-container #start #logo-icon {
+                padding: 0;
+            }
         }
 
         .CentAnni-style-max-video-size:not(.CentAnni-style-compact-layout) ytd-watch-flexy[default-layout] {
@@ -4238,39 +4298,6 @@
             #cinematics-full-bleed-container {
                 display: none !important;
             }
-        }
-
-        ytd-watch-flexy #expandable-metadata #content.ytd-expandable-metadata-renderer {
-            display: block !important;
-            height: calc(var(--yt-macro-marker-list-item-height) - 34px);
-            visibility: visible;
-            pointer-events: auto;
-        }
-
-        ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] #collapsed-title.ytd-expandable-metadata-renderer {
-            display: none;
-        }
-
-        ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[has-video-summary] #expanded-title-subtitle-group.ytd-expandable-metadata-renderer {
-            display: flex !important;
-        }
-
-        ytd-watch-flexy #expandable-metadata #expanded-subtitle.ytd-expandable-metadata-renderer {
-            display: block !important;
-            pointer-events: auto;
-        }
-
-        ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] {
-            background: transparent;
-            pointer-events: none;
-        }
-
-        ytd-watch-flexy #expandable-metadata #right-section.ytd-expandable-metadata-renderer {
-            display: none;
-        }
-
-        ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer:not([is-expanded]) #header.ytd-expandable-metadata-renderer:hover {
-            background-color: transparent;
         }
 
         .ytd-page-manager[page-subtype="home"] {
@@ -4309,6 +4336,7 @@
         .ytd-page-manager[page-subtype="subscriptions"] {
             .CentAnni-style-last-seen {
                 border: 2px solid var(--lastSeenVideoColor);
+                box-sizing: border-box;
                 border-radius: 12px;
             }
         }
@@ -4541,6 +4569,7 @@
             #container.ytd-search ytd-reel-shelf-renderer,
             ytd-rich-item-renderer:has(a[href^="/shorts/"]),
             ytd-watch-metadata #description ytd-reel-shelf-renderer,
+            ytd-browse[page-subtype="channels"] .tabGroupShapeSlider,
             ytd-browse[page-subtype="channels"] ytd-reel-shelf-renderer,
             grid-shelf-view-model:has(h2 span:where(:is(:first-child))),
             ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
@@ -4597,8 +4626,9 @@
         }
 
         .CentAnni-style-hide-members-only {
-            ytd-rich-item-renderer:has(path[d^="M6 .5a5.5 5.5 0"]),
+            ytd-rich-item-renderer:has(path[d^="M6 .5a5"]),
             ytd-rich-item-renderer:has(.badge-style-type-members-only),
+            ytd-playlist-video-renderer:has(.yt-badge-shape--membership),
             yt-lockup-view-model:has(a[aria-label*="Member Exclusive" i]),
             ytd-compact-video-renderer:has(.badge-style-type-members-only),
             ytd-watch-flexy yt-lockup-view-model:has(.yt-badge-shape--commerce),
@@ -4606,8 +4636,10 @@
             ytd-watch-flexy #info-container span[style*="color: rgb(170, 170, 170)"],
             ytd-watch-flexy ytd-badge-supported-renderer:has(.yt-badge-shape--membership),
             ytd-browse[page-subtype="channels"] ytd-rich-item-renderer:has(.yt-badge-shape--membership),
+            ytd-browse[page-subtype="channels"] .ytChipBarViewModelChipWrapper:has([aria-label*="Public"]),
             ytd-browse[page-subtype="channels"] ytd-item-section-renderer:has(.badge-style-type-members-only),
             ytd-browse[page-subtype="channels"] ytd-item-section-renderer:has(.ytd-recognition-shelf-renderer),
+            ytd-browse[page-subtype="channels"] .ytChipBarViewModelChipWrapper:has([aria-label*="Members only"]),
             ytd-rich-item-renderer:has(.yt-badge-shape__text--has-multiple-badges-in-row):has(.yt-badge-shape--commerce),
             ytd-browse[page-subtype="channels"] ytd-section-list-renderer:not([hide-bottom-separator]):not([page-subtype=history]):not([page-subtype=memberships-and-purchases]):not([page-subtype=ypc-offers]):not([live-chat-engagement-panel]) #contents.ytd-section-list-renderer > *.ytd-section-list-renderer:not(:last-child):not(ytd-page-introduction-renderer):not([item-dismissed]):not([has-destination-shelf-renderer]):not(ytd-minor-moment-header-renderer):not([has-section-group-view-model]):has(.badge-style-type-members-only.ytd-badge-supported-renderer) {
                 display: none;
@@ -4976,14 +5008,6 @@
         }
 
         html:not([dark]) ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
-            z-index: 100;
-            background: black;
-            height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-6x)) !important;
-            max-height: unset !important;
-            margin-top: -52px;
-        }
-
-        html:not([dark]) ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
             background-color: #f2f2f2;
         }
 
@@ -5027,6 +5051,7 @@
         html.CentAnni-style-compact-layout:has(ytd-watch-flexy[default-layout]) {
             --ytd-margin-3x: 0px !important;
             --ytd-margin-6x: 0px !important;
+            --ytd-margin-0x: 0px;
         }
 
         html[dark].CentAnni-style-compact-layout:has(ytd-watch-flexy[default-layout]) {
@@ -5041,6 +5066,45 @@
 
         html.CentAnni-style-hide-most-relevant .ytd-page-manager[page-subtype="subscriptions"] ytd-rich-section-renderer {
             display: none;
+        }
+
+        html:has(ytd-watch-flexy:not([hidden], [fullscreen])).CentAnni-style-max-panel ytd-app {
+            --ytd-masthead-height-absolute: 52px !important;
+            --ytd-masthead-height: 52px !important;
+            --ytd-toolbar-height: 52px !important;
+        }
+
+        html:has(ytd-watch-flexy:not([hidden], [fullscreen])).CentAnni-style-max-panel #container.ytd-masthead,
+        html:has(ytd-watch-flexy:not([hidden], [fullscreen])).CentAnni-style-max-panel #background.ytd-masthead {
+            height: 52px !important;
+        }
+
+        html:has(ytd-watch-flexy[default-layout]:not([hidden], [fullscreen], [is-vertical-video_])).CentAnni-style-max-panel #masthead-container.ytd-app {
+            width: calc(100% - var(--sidebarWidth) - 16px) !important;
+        }
+
+        html:has(ytd-watch-flexy[default-layout]:not([hidden], [fullscreen], [is-vertical-video_])).CentAnni-style-max-panel.CentAnni-style-compact-layout #masthead-container.ytd-app {
+            width: calc(100% - var(--sidebarWidth)) !important;
+        }
+
+        html.CentAnni-style-max-panel ytd-watch-flexy[default-layout]:not([hidden], [is-vertical-video_]) #secondary {
+            margin-top: calc(var(--ytd-masthead-height, var(--ytd-toolbar-height)) * -1 - var(--ytd-margin-3x));
+        }
+
+        html.CentAnni-style-max-panel:not(.CentAnni-style-square-search-bar) .ytSearchboxComponentHost {
+            margin: 0 0 0 8px;
+        }
+
+        html.CentAnni-video-tabView ytd-watch-flexy[default-layout]:not([fullscreen]) {
+            --ytd-watch-flexy-chat-max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - var(--topHeaderMargin) - var(--ytd-margin-0x)) !important;
+            --ytd-watch-flexy-panel-max-height: calc(var(--ytd-watch-flexy-chat-max-height) - var(--CentAnniTabViewHeader)) !important;
+            --ytd-watch-flexy-structured-description-max-height: var(--ytd-watch-flexy-panel-max-height) !important;
+        }
+
+        html.CentAnni-style-max-panel ytd-watch-flexy[default-layout]:not([fullscreen], [is-vertical-video_]) {
+            --ytd-watch-flexy-chat-max-height: 100dvh !important;
+            --ytd-watch-flexy-panel-max-height: calc(var(--ytd-watch-flexy-chat-max-height) - var(--CentAnniTabViewHeader)) !important;
+            --ytd-watch-flexy-structured-description-max-height: var(--ytd-watch-flexy-panel-max-height) !important;
         }
     `;
 
@@ -5297,6 +5361,7 @@
         squareDesign: false,
         squareAvatars: false,
         compactLayout: false,
+        maxPanelHeight: false,
         noAmbientMode: false
     };
 
@@ -5334,6 +5399,7 @@
             hideShorts: 'CentAnni-style-hide-shorts',
             noAmbientMode: 'CentAnni-style-no-ambient',
             pureBWBackground: 'CentAnni-style-pure-bg',
+            maxPanelHeight: 'CentAnni-style-max-panel',
             hideAdSlots: 'CentAnni-style-hide-ad-slots',
             hideProdSug: 'CentAnni-style-hide-prod-sug',
             moveSaveBtn: 'CentAnni-style-move-save-btn',
@@ -5449,7 +5515,7 @@
         docElement.style.setProperty('--itemsPerRow', USER_CONFIG.videosPerRow);
         docElement.style.setProperty('--textTransform', USER_CONFIG.textTransform);
         docElement.style.setProperty('--fontSize', `${USER_CONFIG.defaultFontSize}px`);
-        docElement.style.setProperty('--sidebarWidth', `${USER_CONFIG.sidebarWidth}px`);
+        docElement.style.setProperty('--sidebarWidth', `${USER_CONFIG.sidebarWidth || 402}px`);
         docElement.style.setProperty('--spaceBelow', `${USER_CONFIG.spaceBelowPlayer}px`);
         docElement.style.setProperty('--watchedOpacity', USER_CONFIG.videosWatchedOpacity);
         docElement.style.setProperty('--searchbarPosition', `${USER_CONFIG.searchPosition}px`);
@@ -6199,7 +6265,7 @@
             form.appendChild(closeChatWindow);
 
             // channel default videos page
-            const channelReindirizzare = createCheckboxField('"Videos" Tab as Default on Channel Page (default: off)', 'channelReindirizzare', USER_CONFIG.channelReindirizzare);
+            const channelReindirizzare = createCheckboxField('"Videos" Tab as Default on Channel Pages (default: off)', 'channelReindirizzare', USER_CONFIG.channelReindirizzare);
             form.appendChild(channelReindirizzare);
 
             // rss feed button on channel page
@@ -6296,6 +6362,14 @@
             const tabViewChapters = createCheckboxField('Show Chapters Under Videos | Only Works with Tab View Enabled! (default: on)', 'tabViewChapters', USER_CONFIG.tabViewChapters);
             form.appendChild(tabViewChapters);
 
+            // compact layout
+            const compactLayout = createCheckboxField('Compact Layout (default: off)', 'compactLayout', USER_CONFIG.compactLayout);
+            form.appendChild(compactLayout);
+
+            // max secondary panel height
+            const maxPanelHeight = createCheckboxField('Max Panel Height in Default View (default: off)', 'maxPanelHeight', USER_CONFIG.maxPanelHeight);
+            form.appendChild(maxPanelHeight);
+
             // no animation switch theater and default view
             const noAnimation = createCheckboxField('Disable Animation When Switching Between Theater mode and Default view (default: off)', 'noAnimation', USER_CONFIG.noAnimation);
             form.appendChild(noAnimation);
@@ -6319,10 +6393,6 @@
             // square avatars
             const squareAvatars = createCheckboxField('Square Avatars (default: off)', 'squareAvatars', USER_CONFIG.squareAvatars);
             form.appendChild(squareAvatars);
-
-            // compact layout
-            const compactLayout = createCheckboxField('Compact Layout (default: off)', 'compactLayout', USER_CONFIG.compactLayout);
-            form.appendChild(compactLayout);
 
             // disable ambient mode
             const noAmbientMode = createCheckboxField('Disable Ambient Mode (default: off)', 'noAmbientMode', USER_CONFIG.noAmbientMode);
@@ -6365,7 +6435,7 @@
             form.appendChild(hideExploreSection);
 
             // hide latest post from . . .
-            const hideLatestPosts = createCheckboxField('Hide "Latest posts from . . ." on Search Page (default: off)', 'hideLatestPosts', USER_CONFIG.hideLatestPosts);
+            const hideLatestPosts = createCheckboxField('Hide "Latest posts from . . ." on Search Pages (default: off)', 'hideLatestPosts', USER_CONFIG.hideLatestPosts);
             form.appendChild(hideLatestPosts);
 
             // modify or hide ui elements
@@ -6542,7 +6612,7 @@
             form.appendChild(hideQueueBtn);
 
             // hide right sidebar search
-            const hideRightSidebarSearch = createCheckboxField('Hide Right Sidebar on Search Page (default: off)', 'hideRightSidebarSearch', USER_CONFIG.hideRightSidebarSearch);
+            const hideRightSidebarSearch = createCheckboxField('Hide Right Sidebar on Search Pages (default: off)', 'hideRightSidebarSearch', USER_CONFIG.hideRightSidebarSearch);
             form.appendChild(hideRightSidebarSearch);
 
             // hide Most relevant on subscriptions page
@@ -7408,6 +7478,7 @@
             USER_CONFIG.squareDesign = subPanelCustomCSS.elements.squareDesign.checked;
             USER_CONFIG.squareAvatars = subPanelCustomCSS.elements.squareAvatars.checked;
             USER_CONFIG.compactLayout = subPanelCustomCSS.elements.compactLayout.checked;
+            USER_CONFIG.maxPanelHeight = subPanelCustomCSS.elements.maxPanelHeight.checked;
             USER_CONFIG.noAmbientMode = subPanelCustomCSS.elements.noAmbientMode.checked;
         }
 
@@ -8022,8 +8093,6 @@
     function tabView() {
         if (!watchFlexyElement) return;
 
-        let liveChat = !!document.querySelector('ytd-watch-flexy[should-stamp-chat]');
-        let singleColumn = !!document.querySelector('ytd-watch-flexy[is-single-column]');
         transcriptMenuButtonMoved = false;
         let transcriptLanguageSet = false;
         let timestampsEnabled = false;
@@ -8032,6 +8101,9 @@
         let isFirstRun = true;
         let tabElements = [];
         let subheaderDiv;
+        let singleColumn;
+        let isDefault;
+        let liveChat;
 
         // helper function to determine the default tab
         // priority: transcript > chapters > comments > info
@@ -8052,18 +8124,17 @@
 
         // function to update tabView based on player layout
         function updateTabView() {
-            const isTheater = watchFlexyElement.hasAttribute('theater');
-            const isDefault = watchFlexyElement.hasAttribute('default-layout');
+            isDefault = watchFlexyElement.hasAttribute('default-layout');
 
             // if no mode change do nothing
-            if ((isTheater && isTheaterMode === true) || (isDefault && isTheaterMode === false)) {
+            if ((!isDefault && isTheaterMode === true) || (isDefault && isTheaterMode === false)) {
                 if (isFirstRun && isTheaterMode) {
                     if (subheaderDiv) subheaderDiv.addEventListener('click', handleTabViewTabClick);
                     isFirstRun = false;
                 } else if (isFirstRun && !isTheaterMode) isFirstRun = false;
             }
 
-            if (isTheater) {
+            if (!isDefault) {
                 isTheaterMode = true;
 
                 const activeTab = watchFlexyElement.querySelector('.CentAnni-tabView-tab.active');
@@ -8073,7 +8144,7 @@
                 currentActiveTab = null;
 
                 if (subheaderDiv) subheaderDiv.addEventListener('click', handleTabViewTabClick);
-            } else if (isDefault) {
+            } else {
                 isTheaterMode = false;
 
                 if (lastActiveTab) activateTab(lastActiveTab);
@@ -8091,7 +8162,6 @@
         const fullscreenListener = () => { requestAnimationFrame(() => { requestAnimationFrame(() => handleFullscreenChangeTV()); }); };
         document.addEventListener('fullscreenchange', fullscreenListener);
         function handleFullscreenChangeTV() {
-            const isDefault = watchFlexyElement.hasAttribute('default-layout');
             const panel = activePanel[currentActiveTab];
             if (isDefault && (currentActiveTab === 'tab-4' || currentActiveTab === 'tab-5') && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED')
                 currentActiveTab === 'tab-4' ? runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"], ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED") : runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
@@ -8327,8 +8397,12 @@
 
         updateTabView();
         if (USER_CONFIG.tabViewChapters && hasChapterPanel) requestIdleCallback(() => chapterTitles());
-        if (liveChat && singleColumn) toggleYouTubeColumns();
         if (USER_CONFIG.preventBackgroundExecution && !USER_CONFIG.autoTheaterMode) setTimeout(handleFullscreenChangeTV, 250);
+        requestIdleCallback(() => {
+            liveChat = !!document.querySelector('ytd-watch-flexy[should-stamp-chat]');
+            singleColumn = !!document.querySelector('ytd-watch-flexy[is-single-column]');
+            if (liveChat && singleColumn) toggleYouTubeColumns();
+        });
     }
 
     // add chapter titles under videos
@@ -9191,7 +9265,7 @@
     // close live chat initially
     function closeLiveChat() {
         const chatFrame = document.querySelector('ytd-live-chat-frame');
-        if (!chatFrame) return;
+        if (!chatFrame) { docElement.classList.remove('CentAnni-close-live-chat'); return; }
 
         const retryInterval = 250;
         const maxRetries = 12;
@@ -9206,7 +9280,7 @@
                     setTimeout(tryCloseChat, retryInterval);
                 } else {
                     docElement.classList.remove('CentAnni-close-live-chat');
-                    initialRun = false;
+                    initialCloseLiveChat = false;
                 }
                 return;
             }
@@ -9218,7 +9292,7 @@
                     setTimeout(tryCloseChat, retryInterval);
                 } else {
                     docElement.classList.remove('CentAnni-close-live-chat');
-                    initialRun = false;
+                    initialCloseLiveChat = false;
                 }
                 return;
             }
@@ -9240,14 +9314,14 @@
             });
 
             const fallbackTimer = setTimeout(() => {
-                if (initialRun) {
+                if (initialCloseLiveChat) {
                     removeChatCSS();
                     observer.disconnect();
                 }
             }, 3000);
 
             function removeChatCSS() {
-                initialRun = false;
+                initialCloseLiveChat = false;
                 setTimeout(() => { docElement.classList.remove('CentAnni-close-live-chat'); }, 250);
             }
         }
@@ -10812,19 +10886,16 @@
 
     // check and close chat window and close
     function chatWindowCheck() {
-        hasChatPanel = !!(document.querySelector('#chat, iframe#chatframe, yt-video-metadata-carousel-view-model'));
+        if (document.querySelector('ytd-watch-flexy[live-chat-present-and-expanded]')) {
+            const chatMessageElement = document.querySelector('#chat-container ytd-live-chat-frame #message');
+            const chatMessageElementStatus = document.querySelector('ytd-message-renderer.style-scope.ytd-live-chat-frame');
+            const isChatMessageElementVisible = chatMessageElementStatus && window.getComputedStyle(chatMessageElementStatus).display !== 'none';
 
-        const chatMessageElement = document.querySelector('#chat-container ytd-live-chat-frame #message');
-        const chatMessageElementStatus = document.querySelector('ytd-message-renderer.style-scope.ytd-live-chat-frame');
-        const isChatMessageElementVisible = chatMessageElementStatus && window.getComputedStyle(chatMessageElementStatus).display !== 'none';
-
-        if (chatMessageElement && isChatMessageElementVisible) {
-            const messageText = chatMessageElement.textContent.trim();
-            if (messageText === 'Chat is disabled for this live stream.') chatEnabled = false;
-        } else chatEnabled = true;
-
-        if (USER_CONFIG.closeChatWindow && initialRun && hasChatPanel && chatEnabled) closeLiveChat();
-        else docElement.classList.remove('CentAnni-close-live-chat');
+            if (chatMessageElement && isChatMessageElementVisible) {
+                const messageText = chatMessageElement.textContent.trim();
+                if (messageText === 'Chat is disabled for this live stream.') docElement.classList.remove('CentAnni-close-live-chat');
+            } else closeLiveChat();
+        } else docElement.classList.remove('CentAnni-close-live-chat');
     }
 
     // redirect channel page to videos
@@ -10979,7 +11050,7 @@
         if (USER_CONFIG.defaultTranscriptLanguage !== 'auto' || USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto') englishInLanguage = namesInUI.of(languageMap.english.code).toLowerCase();
 
         // live stream check
-        isLiveVideo = watchFlexyElement.querySelector('.ytp-time-display')?.classList.contains('ytp-live');
+        isLiveVideo = !!watchFlexyElement.querySelector('.ytp-time-display.ytp-live');
 
         // music video check
         isMusicVideo = !!docElement.querySelector('meta[itemprop="genre"][content="Music"]');
@@ -11285,6 +11356,7 @@
 
     let pageObserver;
     let mainVideoObserver;
+    let initialRun = true;
     let currentURL = null;
     let videoID = null;
     let lastVideoID = null;
@@ -11314,14 +11386,12 @@
     let isChannelPage = false;
     let isChannelHome = false;
     let isMusicVideo = false;
-    let initialRun = null;
-    let chatEnabled = null;
+    let initialCloseLiveChat = null;
     let isTheaterMode = null;
     let hasChapterPanel = null;
     let chapterPanel = null;
     let hasTranscriptPanel = null;
     let transcriptPanel = null;
-    let hasChatPanel = null;
     let markWatchedVideosTimeout;
     let markWatchedVideosObserver;
     let ignoreRateChange = false;
@@ -11364,6 +11434,7 @@
 
     // initiate the script
     async function initializeAlchemy() {
+        initialRun = false;
         if (USER_CONFIG.preventBackgroundExecution) { await chromeUserWait(); }
         updateCachedElements();
         buttonsLeftHeader();
@@ -11377,7 +11448,6 @@
                 [USER_CONFIG.progressBar && !isLiveVideo && !isLiveStream, keepProgressBarVisible],
                 [USER_CONFIG.displayRemainingTime && !isLiveVideo && !isLiveStream, remainingTime],
                 [USER_CONFIG.playlistDirectionBtns && isPlaylistVideoPage, playlistDirection],
-                [USER_CONFIG.closeChatWindow, () => setTimeout(() => { chatWindowCheck(); }, 500)],
                 [USER_CONFIG.commentsNewFirst && !isLiveVideo && !isLiveStream, sortCommentsNewFirst],
                 [USER_CONFIG.expandVideoDescription && !USER_CONFIG.videoTabView, clickDescriptionBtn],
                 [USER_CONFIG.autoOpenChapters && !USER_CONFIG.videoTabView && hasChapterPanel, openChapters],
@@ -11389,13 +11459,14 @@
                 [USER_CONFIG.maxVidSize || USER_CONFIG.compactLayout, maxVideoSize],
                 [USER_CONFIG.hideProdTxt, hideProductsSpan],
                 [USER_CONFIG.videoTabView, () => requestIdleCallback(tabView)],
+                [USER_CONFIG.closeChatWindow, () => requestIdleCallback(chatWindowCheck)],
                 // [USER_CONFIG.playbackSpeed || USER_CONFIG.progressBar || USER_CONFIG.displayRemainingTime, () => requestIdleCallback(videoObserver)]
             ];
             for (const [flag, callback] of videoFeatures) if (flag) callback();
 
             // transcript exporter
             if (!USER_CONFIG.YouTubeTranscriptExporter) createButtons('settings');
-            else if (USER_CONFIG.lazyTranscriptLoading && hasTranscriptPanel) createButtons(['settings', 'lazyload']);
+            else if (USER_CONFIG.lazyTranscriptLoading && hasTranscriptPanel && !isLiveVideo && !isLiveStream) createButtons(['settings', 'lazyload']);
             else requestIdleCallback(() => runYTE());
         } else {
             createButtons('settings');
@@ -11404,11 +11475,11 @@
                 [USER_CONFIG.plWLBtn && isWatchLater, playlistRemoveWatchedButton],
                 [USER_CONFIG.playlistLinks && isPlaylistPage, handlePlaylistLinks],
                 [USER_CONFIG.colorCodeVideosEnabled && isHomePage, homeColorCodeVideos],
-                [USER_CONFIG.playlistTrashCan && isPlaylistPage, playlistRemovalButtons],
                 [USER_CONFIG.playbackSpeed && isShortPage, createPlaybackSpeedController],
                 [USER_CONFIG.channelRSSBtn && isChannelPage, () => requestIdleCallback(addRSSFeedButton)],
                 [USER_CONFIG.feedFilterChips && isHomePage, () => requestIdleCallback(restoreLastSelectedChip)],
                 [USER_CONFIG.channelPlaylistBtn && isChannelPage, () => requestIdleCallback(addPlaylistButtons)],
+                [USER_CONFIG.playlistTrashCan && isPlaylistPage, () => requestIdleCallback(playlistRemovalButtons)],
                 [USER_CONFIG.lastSeenVideo && isSubscriptionsPage, () => requestAnimationFrame(() => requestAnimationFrame(markLastSeenVideo))]
             ];
             for (const [flag, callback] of browseFeatures) if (flag) callback();
@@ -11427,7 +11498,7 @@
             if (!docBody) docBody = document.body;
             if (!cssSettingsApplied) loadCSSsettings();
             chronoNotificationRunning = false;
-            initialRun = true;
+            initialCloseLiveChat = true;
 
             const urlObj = new URL(newURL);
             isHomePage = urlObj.pathname === '/';
@@ -11457,7 +11528,7 @@
             const tar = (isVideoPage || isLiveStream) ? videoTargets : browseTargets;
             const sel = (isVideoPage || isLiveStream) ? videoPageContainer : browseContainer;
             const ctn = document.querySelector(sel); if (!ctn) return;
-            const init = () => { if (pageObserver) { pageObserver.disconnect(); pageObserver = null; } initializeAlchemy(); };
+            const init = () => { if (pageObserver) { pageObserver.disconnect(); pageObserver = null; } initialRun ? initializeAlchemy() : requestIdleCallback(initializeAlchemy); };
             const t = setTimeout(init, 5000);
 
             let remaining = new Set();
