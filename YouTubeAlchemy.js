@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.3
+// @version      10.4
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.3 - YouTube Alchemy                    *
+*                    Version: 10.4 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1626,7 +1626,6 @@
             }
 
             .CentAnni-playback-speed-display {
-                background: rgba(255, 255, 255, .1);
                 height: 36px;
                 min-width: 32px;
                 padding: 0 8px;
@@ -1637,6 +1636,7 @@
                 -webkit-user-select: none;
                 -moz-user-select: none;
                 -ms-user-select: none;
+                pointer-events: none;
             }
 
             .CentAnni-playback-speed-button {
@@ -2979,6 +2979,10 @@
             .ytp-delhi-modern .ytp-chrome-controls .ytp-next-button:not(.ytp-miniplayer-button-container>*) {
                 background: rgba(28, 28, 28, .9);
             }
+
+            ytd-watch-flexy #top-row.ytd-watch-metadata .yt-spec-button-shape-next--mono.yt-spec-button-shape-next--tonal:not(:hover) {
+                background: transparent;
+            }
         }
 
         html[dark].CentAnni-style-no-frosted-glass #frosted-glass.ytd-app,
@@ -3116,8 +3120,8 @@
 
         .CentAnni-style-sidebar-width {
             ytd-watch-flexy[is-two-columns_] {
-                --ytd-watch-flexy-sidebar-width: var(--sidebarWidth);
-                --ytd-watch-flexy-sidebar-min-width: unset;
+                --ytd-watch-flexy-sidebar-width: var(--sidebarWidth) !important;
+                --ytd-watch-flexy-sidebar-min-width: unset !important;
             }
         }
 
@@ -3569,19 +3573,13 @@
                 border-radius: 0 !important;
                 overflow: hidden;
             }
-            .ytp-delhi-modern .ytp-right-controls-left > .ytp-button::before,
-            .ytp-delhi-modern .ytp-right-controls-right > .ytp-button::before {
+
+            .ytp-delhi-modern .ytp-button::before {
                 border-radius: 0 !important;
             }
 
-            .ytp-delhi-modern .ytp-right-controls-left > .ytp-button:first-of-type,
-            .ytp-delhi-modern .ytp-right-controls-left > .ytp-button:first-of-type::before {
-                border-top-left-radius: 40px !important;
-                border-bottom-left-radius: 40px !important;
-            }
-
-            .ytp-delhi-modern .ytp-right-controls-left > .ytp-expand-right-bottom-section-button + .ytp-button,
-            .ytp-delhi-modern .ytp-right-controls-left > .ytp-expand-right-bottom-section-button + .ytp-button::before {
+            .ytp-delhi-modern .ytp-right-controls-left .ytp-autonav-toggle,
+            .ytp-delhi-modern .ytp-right-controls-left .ytp-autonav-toggle::before {
                 border-top-left-radius: 40px !important;
                 border-bottom-left-radius: 40px !important;
             }
@@ -3898,12 +3896,15 @@
                     margin-left: auto;
                 }
 
+                ytd-two-column-browse-results-renderer.grid-5-columns ytd-rich-grid-renderer:not([is-default-grid]) #header {
+                    margin-right: 110px;
+                }
+
                 ytd-two-column-browse-results-renderer.grid-6-columns ytd-rich-grid-renderer:not([is-default-grid]) #header {
                     margin-right: 5px;
                 }
 
-                ytd-two-column-browse-results-renderer.grid-5-columns ytd-rich-grid-renderer:not([is-default-grid]) #header {
-                    margin-right: 110px;
+                ytd-two-column-browse-results-renderer ytd-rich-grid-renderer:not([is-default-grid]) #header {
                     margin-bottom: -48px;
                 }
 
@@ -4123,6 +4124,10 @@
             .masthead-skeleton-icon:last-child {
                 margin: 0;
                 padding: 0;
+            }
+
+            ytd-watch-flexy #upload-info.ytd-video-owner-renderer {
+                margin-right: 12px;
             }
 
             ytd-browse[page-subtype="playlist"],
@@ -4438,6 +4443,52 @@
             --next-button-visibility: inline-block;
         }
 
+        .CentAnni-style-hide-autoplay-btn {
+            button.ytp-autonav-toggle:has([aria-checked="false"]) {
+                display: none;
+            }
+        }
+
+        html.CentAnni-style-square-design.CentAnni-style-hide-autoplay-btn .ytp-subtitles-button,
+        html.CentAnni-style-square-design.CentAnni-style-hide-autoplay-btn .ytp-subtitles-button::before {
+            border-top-left-radius: 40px !important;
+            border-bottom-left-radius: 40px !important;
+        }
+
+        html.CentAnni-style-square-design.CentAnni-style-show-pip-btn .ytp-subtitles-button,
+        html.CentAnni-style-square-design.CentAnni-style-show-pip-btn .ytp-subtitles-button::before,
+        html.CentAnni-style-square-design.CentAnni-style-show-pip-btn .ytp-delhi-modern .ytp-right-controls-left .ytp-autonav-toggle,
+        html.CentAnni-style-square-design.CentAnni-style-show-pip-btn .ytp-delhi-modern .ytp-right-controls-left .ytp-autonav-toggle::before {
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+        }
+
+        .CentAnni-style-show-pip-btn {
+            .ytp-pip-button {
+                display: inline-block !important;
+                order: 1;
+            }
+
+            .ytp-pip-button svg {
+                padding: 0 !important;
+            }
+
+            .ytp-right-controls-left {
+                order: 2;
+            }
+
+            .ytp-right-controls-right {
+                order: 3;
+            }
+        }
+
+        html.CentAnni-style-square-design.CentAnni-style-show-pip-btn .ytp-pip-button,
+        html.CentAnni-style-square-design.CentAnni-style-show-pip-btn .ytp-pip-button::before {
+            border-radius: 0 !important;
+            border-top-left-radius: 40px !important;
+            border-bottom-left-radius: 40px !important;
+        }
+
         .CentAnni-style-hide-playnext-btn {
             a.ytp-next-button {
                 display: var(--next-button-visibility);
@@ -4547,7 +4598,13 @@
         }
 
         .CentAnni-style-hide-playlists-home {
-            ytd-browse[page-subtype="home"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]) {
+            ytd-browse[page-subtype="home"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="start_radio=1"]) {
+                display: none;
+            }
+        }
+
+        .CentAnni-style-hide-episodes-home {
+            ytd-browse[page-subtype="home"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]):not(:has(a[href*="start_radio=1"])) {
                 display: none;
             }
         }
@@ -4978,8 +5035,7 @@
             background: rgb(205, 205, 205) !important;
         }
 
-        html:not([dark]) .CentAnni-tabView-tab,
-        html:not([dark]) .CentAnni-playback-speed-display {
+        html:not([dark]) .CentAnni-tabView-tab {
             background-color: rgba(0, 0, 0, .05);
             color: #0f0f0f;
         }
@@ -5267,6 +5323,8 @@
         visibleCountryCode: false,
         visibleCountryCodeColor: '#aaaaaa',
         hideJoinButton: false,
+        showPipBtn: true,
+        hideAutoplayBtn: false,
         hidePlayNextButton: false,
         hideAirplayButton: false,
         moveSaveBtn: true,
@@ -5293,12 +5351,13 @@
         hideAddComment: false,
         hideReplyButton: false,
         hidePlaylistsHome: false,
+        hideEpisodesHome: false,
         hideNewsHome: false,
         hideEndCards: false,
         hideEndscreen: false,
         gradientBottom: false,
         smallSubscribeButton: false,
-        pureBWBackground: true,
+        pureBWBackground: false,
         noFrostedGlass: false,
         removeScrubber: false,
         disablePlayOnHover: false,
@@ -5397,6 +5456,7 @@
             settingsGuide: 'CentAnni-settings-btn',
             playbackSpeed: 'CentAnni-playback-speed',
             hideShorts: 'CentAnni-style-hide-shorts',
+            showPipBtn: 'CentAnni-style-show-pip-btn',
             noAmbientMode: 'CentAnni-style-no-ambient',
             pureBWBackground: 'CentAnni-style-pure-bg',
             maxPanelHeight: 'CentAnni-style-max-panel',
@@ -5449,6 +5509,7 @@
             hideLatestPosts: 'CentAnni-style-hide-latest-posts',
             hideVoiceSearch: 'CentAnni-style-hide-voice-search',
             squareSearchBar: 'CentAnni-style-square-search-bar',
+            hideAutoplayBtn: 'CentAnni-style-hide-autoplay-btn',
             hideAirplayButton: 'CentAnni-style-hide-airplay-btn',
             hideFreeWithAds: 'CentAnni-style-hide-free-with-ads',
             lnbHideMusicBtn: 'CentAnni-style-lnb-hide-music-btn',
@@ -5457,6 +5518,7 @@
             homeDisableHover: 'CentAnni-style-home-disable-hover',
             mButtonDisplay: 'CentAnni-style-hide-default-sidebar',
             noAnimation: 'CentAnni-style-no-transition-animation',
+            hideEpisodesHome: 'CentAnni-style-hide-episodes-home',
             hidePlayNextButton: 'CentAnni-style-hide-playnext-btn',
             lnbHideMoviesBtn: 'CentAnni-style-lnb-hide-movies-btn',
             lnbHideGamingBtn: 'CentAnni-style-lnb-hide-gaming-btn',
@@ -6520,7 +6582,7 @@
             form.appendChild(progressbarColorPicker);
 
             // pure b/w bg
-            const pureBWBackground = createCheckboxField('Pure Black-and-White Background (default: on)', 'pureBWBackground', USER_CONFIG.pureBWBackground);
+            const pureBWBackground = createCheckboxField('Pure Black-and-White Background (default: off)', 'pureBWBackground', USER_CONFIG.pureBWBackground);
             form.appendChild(pureBWBackground);
 
             // no frosted glass
@@ -6542,6 +6604,14 @@
             // bottom gradient lower height and different bg image
             const gradientBottom = createCheckboxField('Less Intrusive Bottom Gradient (default: off)', 'gradientBottom', USER_CONFIG.gradientBottom);
             form.appendChild(gradientBottom);
+
+            // show PIP btn
+            const showPipBtn = createCheckboxField('Show "Picture-in-Picture" Button (default: on)', 'showPipBtn', USER_CONFIG.showPipBtn);
+            form.appendChild(showPipBtn);
+
+            // hide the disabled autoplay button
+            const hideAutoplayBtn = createCheckboxField('Hide "Autoplay" Button When Disabled (default: off)', 'hideAutoplayBtn', USER_CONFIG.hideAutoplayBtn);
+            form.appendChild(hideAutoplayBtn);
 
             // hide play next button
             const hidePlayNextButton = createCheckboxField('Hide "Play Next" Button (default: off)', 'hidePlayNextButton', USER_CONFIG.hidePlayNextButton);
@@ -6591,9 +6661,13 @@
             const hideNewsHome = createCheckboxField('Hide "Breaking News" on the Home Page (default: off)', 'hideNewsHome', USER_CONFIG.hideNewsHome);
             form.appendChild(hideNewsHome);
 
-            // hide playlists on home
-            const hidePlaylistsHome = createCheckboxField('Hide Playlists on the Home Page (default: off)', 'hidePlaylistsHome', USER_CONFIG.hidePlaylistsHome);
+            // hide mix playlists on home
+            const hidePlaylistsHome = createCheckboxField('Hide Mix-Playlists on the Home Page (default: off)', 'hidePlaylistsHome', USER_CONFIG.hidePlaylistsHome);
             form.appendChild(hidePlaylistsHome);
+
+            // hide episode playlists on home
+            const hideEpisodesHome = createCheckboxField('Hide Episode-Playlists on the Home Page (default: off)', 'hideEpisodesHome', USER_CONFIG.hideEpisodesHome);
+            form.appendChild(hideEpisodesHome);
 
             // hide latest posts on home
             const hideLatestPostsHome = createCheckboxField('Hide "Latest YouTube posts" on the Home Page (default: off)', 'hideLatestPostsHome', USER_CONFIG.hideLatestPostsHome);
@@ -7398,6 +7472,8 @@
             USER_CONFIG.hideEndscreen = subPanelCustomCSS.elements.hideEndscreen.checked;
             USER_CONFIG.gradientBottom = subPanelCustomCSS.elements.gradientBottom.checked;
             USER_CONFIG.hideJoinButton = subPanelCustomCSS.elements.hideJoinButton.checked;
+            USER_CONFIG.showPipBtn = subPanelCustomCSS.elements.showPipBtn.checked;
+            USER_CONFIG.hideAutoplayBtn = subPanelCustomCSS.elements.hideAutoplayBtn.checked;
             USER_CONFIG.hidePlayNextButton = subPanelCustomCSS.elements.hidePlayNextButton.checked;
             USER_CONFIG.hideAirplayButton = subPanelCustomCSS.elements.hideAirplayButton.checked;
             USER_CONFIG.moveSaveBtn = subPanelCustomCSS.elements.moveSaveBtn.checked;
@@ -7410,6 +7486,7 @@
             USER_CONFIG.hideAddComment = subPanelCustomCSS.elements.hideAddComment.checked;
             USER_CONFIG.hideReplyButton = subPanelCustomCSS.elements.hideReplyButton.checked;
             USER_CONFIG.hidePlaylistsHome = subPanelCustomCSS.elements.hidePlaylistsHome.checked;
+            USER_CONFIG.hideEpisodesHome = subPanelCustomCSS.elements.hideEpisodesHome.checked;
             USER_CONFIG.hideNewsHome = subPanelCustomCSS.elements.hideNewsHome.checked;
             USER_CONFIG.playProgressColor = subPanelCustomCSS.elements.playProgressColor.checked;
             USER_CONFIG.progressbarColorPicker = subPanelCustomCSS.elements.progressbarColorPicker.value;
@@ -8397,7 +8474,30 @@
 
         updateTabView();
         if (USER_CONFIG.tabViewChapters && hasChapterPanel) requestIdleCallback(() => chapterTitles());
-        if (USER_CONFIG.preventBackgroundExecution && !USER_CONFIG.autoTheaterMode) setTimeout(handleFullscreenChangeTV, 250);
+
+        infoPanelObserver?.disconnect();
+        if (USER_CONFIG.preventBackgroundExecution && !USER_CONFIG.autoTheaterMode && isDefault && currentActiveTab === 'tab-1') {
+            requestIdleCallback(() => {
+                const panelCheck = document.querySelector(infoSel);
+                if (!panelCheck) return;
+                const cleanupInfoObserver = () => {
+                    infoPanelObserver?.disconnect();
+                    clearTimeout(infoPanelObserver.timer);
+                    document.removeEventListener('yt-navigate-start', cleanupInfoObserver);
+                    infoPanelObserver = null;
+                };
+
+                infoPanelObserver = new MutationObserver(() => {
+                    if (panelCheck.getAttribute('visibility') === 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN' && isDefault && currentActiveTab === 'tab-1')
+                        panelCheck.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+                });
+
+                infoPanelObserver.observe(panelCheck, { attributes: true, attributeFilter: ['visibility'] });
+                infoPanelObserver.timer = setTimeout(cleanupInfoObserver, 3000);
+                document.addEventListener('yt-navigate-start', cleanupInfoObserver);
+            });
+        }
+
         requestIdleCallback(() => {
             liveChat = !!document.querySelector('ytd-watch-flexy[should-stamp-chat]');
             singleColumn = !!document.querySelector('ytd-watch-flexy[is-single-column]');
@@ -8574,7 +8674,7 @@
 
         let speedDisplay = null;
         function updateSpeedDisplay() {
-            if (!speedDisplay) speedDisplay = document.getElementById("CentAnni-speed-display");
+            if (!speedDisplay || !speedDisplay.isConnected) speedDisplay = document.getElementById("CentAnni-speed-display");
             if (speedDisplay && video) speedDisplay.textContent = `${video.playbackRate}x`;
         }
 
@@ -8700,45 +8800,72 @@
         if (!controller) return;
         const { video, setSpeed, STEP_SIZE } = controller;
 
-        // create container for buttons, display speed, and icon
-        const oldControlDiv = document.getElementById("CentAnni-playback-speed-control");
-        const controlDiv = document.createElement("div");
-        controlDiv.id = "CentAnni-playback-speed-control";
-        controlDiv.classList.add("CentAnni-playback-control", "top-level-buttons", "style-scope", "ytd-menu-renderer");
+        let controlDiv;
+        let btnCreated = false;
+        speedBtnObserver?.disconnect();
+        const speedID = "CentAnni-playback-speed-control";
+        const createPlaybackSpeedBtns = () => {
+            const oldControlDiv = document.getElementById(speedID);
 
-        // create the SVG icon
-        const iconDiv = createPlaybackSpeedIcon();
-        controlDiv.appendChild(iconDiv);
+            // create container for buttons, display speed, and icon
+            controlDiv = document.createElement("div");
+            controlDiv.id = speedID;
+            controlDiv.classList.add("CentAnni-playback-control", "top-level-buttons", "style-scope", "ytd-menu-renderer");
 
-        // display the speed
-        const speedDisplay = document.createElement("span");
-        speedDisplay.id = "CentAnni-speed-display";
-        speedDisplay.classList.add("CentAnni-playback-speed-display", "animated-rolling-number-wiz", "animatedRollingNumberHost");
-        speedDisplay.textContent = `${video.playbackRate}x`;
+            // create the SVG icon
+            const iconDiv = createPlaybackSpeedIcon();
+            controlDiv.appendChild(iconDiv);
 
-        // create minus and plus buttons
-        const createButton = (change) => {
-            const button = document.createElement("button");
-            button.textContent = change > 0 ? "+" : "-";
-            button.classList.add(
-                "CentAnni-playback-speed-button",
-                "yt-spec-button-shape-next",
-                "yt-spec-button-shape-next--tonal",
-                "yt-spec-button-shape-next--mono",
-                "yt-spec-button-shape-next--size-m",
-                "yt-spec-button-shape-next--icon-button"
-            );
-            button.addEventListener("click", () => {
-                newUserRate = video.playbackRate + change;
-                setSpeed();
-            });
-            return button;
+            // display the speed
+            const speedDisplay = document.createElement("span");
+            speedDisplay.id = "CentAnni-speed-display";
+            speedDisplay.classList.add("CentAnni-playback-speed-display", "animated-rolling-number-wiz", "animatedRollingNumberHost", "yt-spec-button-shape-next--mono", "yt-spec-button-shape-next--tonal");
+            speedDisplay.textContent = `${video.playbackRate}x`;
+
+            // create minus and plus buttons
+            const createButton = (change) => {
+                const button = document.createElement("button");
+                button.textContent = change > 0 ? "+" : "-";
+                button.classList.add(
+                    "CentAnni-playback-speed-button",
+                    "yt-spec-button-shape-next",
+                    "yt-spec-button-shape-next--tonal",
+                    "yt-spec-button-shape-next--mono",
+                    "yt-spec-button-shape-next--size-m",
+                    "yt-spec-button-shape-next--icon-button"
+                );
+                button.addEventListener("click", () => {
+                    newUserRate = video.playbackRate + change;
+                    setSpeed();
+                });
+                return button;
+            };
+
+            controlDiv.appendChild(createButton(-STEP_SIZE));
+            controlDiv.appendChild(speedDisplay);
+            controlDiv.appendChild(createButton(STEP_SIZE));
+            oldControlDiv ? oldControlDiv.replaceWith(controlDiv) : menuRenderer.children[0].after(controlDiv);
         };
 
-        controlDiv.appendChild(createButton(-STEP_SIZE));
-        controlDiv.appendChild(speedDisplay);
-        controlDiv.appendChild(createButton(STEP_SIZE));
-        oldControlDiv ? oldControlDiv.replaceWith(controlDiv) : menuRenderer.children[0].after(controlDiv);
+        createPlaybackSpeedBtns();
+        requestIdleCallback(() => {
+            const btnContainer = watchFlexyElement.querySelector('ytd-watch-metadata #top-level-buttons-computed');
+            const cleanupSpeedObserver = () => {
+                speedBtnObserver?.disconnect();
+                clearTimeout(speedBtnObserver.timer);
+                document.removeEventListener('yt-navigate-start', cleanupSpeedObserver);
+                speedBtnObserver = null;
+            };
+
+            speedBtnObserver = new MutationObserver(() => {
+                const btnCheck = document.getElementById(speedID);
+                if (!btnCheck || !btnCheck.isConnected) createPlaybackSpeedBtns();
+            });
+
+            speedBtnObserver.observe(btnContainer, { childList: true });
+            speedBtnObserver.timer = setTimeout(cleanupSpeedObserver, 5000);
+            document.addEventListener('yt-navigate-start', cleanupSpeedObserver);
+        });
     }
 
     // playback speed notification
@@ -8753,7 +8880,7 @@
         speedNotificationElement.textContent = `${speed}x`;
         speedNotificationElement.classList.add('active');
         if (hideNotificationTimeout) clearTimeout(hideNotificationTimeout);
-        hideNotificationTimeout = setTimeout(() => { speedNotificationElement.classList.remove('active'); }, 800);
+        hideNotificationTimeout = setTimeout(() => { speedNotificationElement.classList.remove('active'); }, 850);
     }
 
     // playback speed buttons
@@ -8951,48 +9078,51 @@
                 return merged;
             }
 
-            // debounce the update to prevent excessive updates
+            // build display format
+            const displayFormat = (() => {
+                if (USER_CONFIG.showRemainingCompact) return (elapsed, total, watched, remaining, playbackDisplay) => `${elapsed} / ${total} | -${remaining} ${playbackDisplay}`;
+                else return (elapsed, total, watched, remaining, playbackDisplay) => `total: ${total} | elapsed: ${elapsed}${!USER_CONFIG.progressBar ? ` — watched: ${watched}` : ''} — remaining: ${remaining} ${playbackDisplay}`;
+            })();
+
+            // update UI once per video-second (automatically scales with playback speed)
+            let lastTick = -1;
             video.ontimeupdate = () => {
                 if (animationFrameId) return;
 
                 const updateLoop = (_timestamp, meta) => {
                     ensureBaseEffectiveIsValid();
 
-                    if (!isNaN(baseEffective)) {
-                        const rawDuration = video.duration;
+                    const rawDuration = video.duration;
+                    if (!isNaN(baseEffective) && rawDuration && !isNaN(rawDuration)) {
+                        const tick = Math.floor(meta.mediaTime);
+                        if (tick !== lastTick) {
+                            lastTick = tick;
 
-                        if (!rawDuration || isNaN(rawDuration)) {
-                            if (!video.paused && !video.ended) animationFrameId = video.requestVideoFrameCallback(updateLoop);
-                            else animationFrameId = null;
-                            return;
+                            const currentTime = meta.mediaTime;
+                            const segments = getMergedSegments(rawDuration);
+
+                            let futureSkippableTime = 0;
+                            for (const seg of segments) {
+                                if (seg.end <= currentTime) continue;
+                                if (seg.start >= currentTime) futureSkippableTime += (seg.end - seg.start);
+                                else if (seg.start < currentTime && seg.end > currentTime) futureSkippableTime += (seg.end - currentTime);
+                            }
+
+                            const playbackRate = video.playbackRate;
+                            const playbackDisplay = showPlaybackSpeed ? (fullscreen ? ` (${playbackRate}x)` : '') : ` (${playbackRate}x)`;
+                            const effectiveTotal = baseEffective;
+                            const remaining = Math.max(0, (rawDuration - currentTime) - futureSkippableTime) / playbackRate;
+                            const watchedPercent = rawDuration ? Math.round((currentTime / rawDuration) * 100) + '%' : '0%';
+                            const totalFormatted = formatTime(effectiveTotal);
+                            const rawTotalFormatted = formatTime(rawDuration);
+                            const totalDisplay = Math.round(rawDuration) !== Math.round(effectiveTotal) ? `${rawTotalFormatted} (${totalFormatted})` : rawTotalFormatted;
+                            const elapsedFormatted = formatTime(currentTime);
+                            const remainingFormatted = formatTime(remaining);
+
+                            textNode.data = displayFormat(elapsedFormatted, totalDisplay, watchedPercent, remainingFormatted, playbackDisplay);
                         }
-
-                        const currentTime = meta.mediaTime;
-                        const segments = getMergedSegments(rawDuration);
-
-                        let futureSkippableTime = 0;
-                        for (const seg of segments) {
-                            if (seg.end <= currentTime) continue;
-                            if (seg.start >= currentTime) futureSkippableTime += (seg.end - seg.start);
-                            else if (seg.start < currentTime && seg.end > currentTime) futureSkippableTime += (seg.end - currentTime);
-                        }
-
-                        const playbackRate = video.playbackRate;
-                        const playbackDisplay = showPlaybackSpeed ? (fullscreen ? ` (${playbackRate}x)` : '') : ` (${playbackRate}x)`;
-                        const effectiveTotal = baseEffective;
-                        const remaining = Math.max(0, (rawDuration - currentTime) - futureSkippableTime) / playbackRate;
-                        const watchedPercent = rawDuration ? Math.round((currentTime / rawDuration) * 100) + '%' : '0%';
-                        const totalFormatted = formatTime(effectiveTotal);
-                        const rawTotalFormatted = formatTime(rawDuration);
-                        const totalDisplay = Math.round(rawDuration) !== Math.round(effectiveTotal) ? `${rawTotalFormatted} (${totalFormatted})` : rawTotalFormatted;
-                        const elapsedFormatted = formatTime(currentTime);
-                        const remainingFormatted = formatTime(remaining);
-
-                        compactModeSpeed ? textNode.data = `${elapsedFormatted} / ${totalDisplay} | -${remainingFormatted} ${playbackDisplay}` : textNode.data = `total: ${totalDisplay} | elapsed: ${elapsedFormatted} — watched: ${watchedPercent} — remaining: ${remainingFormatted} (${playbackRate}x)`;
                     }
-
-                    if (!video.paused && !video.ended) animationFrameId = video.requestVideoFrameCallback(updateLoop);
-                    else animationFrameId = null;
+                    animationFrameId = (!video.paused && !video.ended) ? video.requestVideoFrameCallback(updateLoop) : null;
                 };
                 animationFrameId = video.requestVideoFrameCallback(updateLoop);
             };
@@ -9119,6 +9249,7 @@
         let previousProgressBarWidth = 0;
         let previousChaptersLength = 0;
         let cachedMaskImage = null;
+        let resizeTimer;
         let resizeObserver;
         let widthObserver;
 
@@ -9246,6 +9377,7 @@
             video?.removeEventListener('pause', handlePause);
             video?.removeEventListener('play', handlePlay);
             video?.cancelVideoFrameCallback(animationFrameId); animationFrameId = null;
+            clearTimeout(resizeTimer);
             resizeObserver?.disconnect();
             cleanupWidthObserver();
             if (completeReset) document.querySelectorAll('#CentAnni-progress-bar-bar, #CentAnni-progress-bar-start, #CentAnni-progress-bar-end').forEach(el => el.remove());
@@ -9257,8 +9389,16 @@
         renderBuffer();
         updateLayout();
 
+        // debounce resize event
+        const onResize = () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                requestAnimationFrame(updateLayout);
+            }, 120);
+        };
+
         // handle layout changes
-        resizeObserver = new ResizeObserver(updateLayout);
+        resizeObserver = new ResizeObserver(onResize);
         resizeObserver.observe(progressBarContainer);
     }
 
@@ -10485,11 +10625,10 @@
         const urlParams = new URLSearchParams(window.location.search);
         const vinteo = urlParams.get('v');
 
-        if (elements.watchFlexy.hasAttribute('default-layout')) {
+        if (elements.watchFlexy.hasAttribute('theater')) pauseVideo();
+        else {
             if (USER_CONFIG.autoTheaterMode) toggleTheaterMode();
-            setTimeout(pauseVideo, 200);
-        } else if (elements.watchFlexy.hasAttribute('theater')) {
-            pauseVideo();
+            requestAnimationFrame(() => requestAnimationFrame(pauseVideo));
         }
 
         function pauseVideo() {
@@ -11355,7 +11494,9 @@
     //  └───────────────────────────────────────────────────────────────────┘
 
     let pageObserver;
+    let speedBtnObserver;
     let mainVideoObserver;
+    let infoPanelObserver;
     let initialRun = true;
     let currentURL = null;
     let videoID = null;
@@ -11415,7 +11556,6 @@
     let defaultSpeed = USER_CONFIG.playbackSpeedValue;
     let newUserRate = defaultSpeed;
     const showPlaybackSpeed = USER_CONFIG.playbackSpeed;
-    const compactModeSpeed = USER_CONFIG.showRemainingCompact;
     const ChatGPTLabel = USER_CONFIG.targetChatGPTLabel;
     const NotebookLMLabel = USER_CONFIG.targetNotebookLMLabel;
     const infoSel = 'ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description]';
