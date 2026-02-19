@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.4
+// @version      10.4.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.4 - YouTube Alchemy                    *
+*                    Version: 10.4.2 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -836,11 +836,6 @@
             text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
-        }
-
-        .CentAnni-remaining-time-container.live,
-        #movie_player .CentAnni-remaining-time-container.live {
-            display: none;
         }
 
         .html5-video-player.ad-showing #CentAnni-progress-bar-bar,
@@ -2706,6 +2701,10 @@
                 margin-right: .5ch;
             }
 
+            .CentAnni-chapter-title .ytp-chapter-container {
+                margin: 0;
+            }
+
             #movie_player .CentAnni-chapter-title {
                 position: absolute;
                 display: flex;
@@ -3177,6 +3176,10 @@
 
             ytd-app > ytd-popup-container tp-yt-iron-dropdown #sections.ytd-multi-page-menu-renderer > .ytd-multi-page-menu-renderer:not(:last-child) {
                 border: none;
+            }
+
+            ytd-menu-renderer.ytd-notification-renderer:hover {
+                background: var(--yt-spec-additive-background, var(--yt-spec-badge-chip-background, rgba(255, 255, 255, .1)));
             }
         }
 
@@ -3775,6 +3778,10 @@
                     --ytd-rich-item-row-usable-width: calc(100% - var(--ytd-rich-grid-gutter-margin) * var(--ytd-rich-grid-items-per-row) + var(--ytd-rich-grid-gutter-margin) - var(--ytd-border-space));
                     width: calc(var(--ytd-rich-item-row-usable-width)/var(--ytd-rich-grid-items-per-row));
                 }
+
+                .ytNotificationMultiActionRendererButton {
+                    height: 36px;
+                }
             }
 
             .ytd-page-manager[page-subtype="home"] {
@@ -3790,6 +3797,11 @@
                     align-items: center;
                     background-color: rgba(255, 255, 255, .1);
                     border-radius: 50%;
+                }
+
+                .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-button {
+                    height: 36px;
+                    width: 36px;
                 }
 
                 .title-badge.ytd-rich-grid-media,
@@ -4022,6 +4034,11 @@
 
                 .yt-lockup-metadata-view-model__menu-button {
                     top: 45px;
+                }
+
+                .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-button {
+                    height: 36px;
+                    width: 36px;
                 }
 
                 .yt-lockup-metadata-view-model__avatar {
@@ -5161,6 +5178,13 @@
             --ytd-watch-flexy-chat-max-height: 100dvh !important;
             --ytd-watch-flexy-panel-max-height: calc(var(--ytd-watch-flexy-chat-max-height) - var(--CentAnniTabViewHeader)) !important;
             --ytd-watch-flexy-structured-description-max-height: var(--ytd-watch-flexy-panel-max-height) !important;
+        }
+
+        ytd-browse[page-subtype="playlist"] .metadata-wrapper .yt-spec-button-shape-next,
+        ytd-watch-metadata .yt-spec-button-shape-next--mono.yt-spec-button-shape-next--tonal,
+        ytd-browse[page-subtype="playlist"] yt-flexible-actions-view-model .yt-spec-button-shape-next {
+            min-width: 36px;
+            height: 36px;
         }
     `;
 
@@ -8983,10 +9007,6 @@
 
         const initialContainer = normalContainer;
         if (initialContainer) { initialContainer.prepend(element); }
-
-        // hide for live stream
-        if (isLiveVideo) element.classList.add('live');
-        else element.classList.remove('live');
 
         let fullscreen;
         const updateContainer = () => {
