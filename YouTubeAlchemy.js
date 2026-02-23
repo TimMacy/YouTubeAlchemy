@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.5
+// @version      10.5.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.5 - YouTube Alchemy                    *
+*                    Version: 10.5.2 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2429,6 +2429,7 @@
                 display: block !important;
             }
 
+            .watch-skeleton,
             ytd-text-inline-expander,
             #collapse-controls-section,
             #body.ytd-transcript-renderer,
@@ -2445,6 +2446,7 @@
             ytd-engagement-panel-section-list-renderer ytd-merch-shelf-renderer,
             #description > #description-inner > #ytd-watch-info-text > tp-yt-paper-tooltip,
             ytd-watch-flexy:not([fullscreen]) #navigation-button.ytd-rich-list-header-renderer,
+            ytd-watch-flexy #expandable-metadata #right-section.ytd-expandable-metadata-renderer,
             ytd-watch-flexy:not([is-two-columns_]):not([theater]) #expandable-metadata.ytd-watch-flexy,
             .CentAnni-tabView:not(:has(.CentAnni-tabView-tab[data-tab="tab-2"])) ytd-comments#comments,
             ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview],
@@ -2452,6 +2454,7 @@
             ytd-expandable-video-description-body-renderer > ytd-expander > tp-yt-paper-button#more.ytd-expander,
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id^="shopping_panel_for_entry_point_"],
             ytd-watch-flexy[theater] #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create],
+            ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] #collapsed-title.ytd-expandable-metadata-renderer,
             ytd-watch-flexy:not([fullscreen]) ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
                 display: none;
             }
@@ -2518,10 +2521,6 @@
                 pointer-events: auto;
             }
 
-            ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] #collapsed-title.ytd-expandable-metadata-renderer {
-                display: none;
-            }
-
             ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[has-video-summary] #expanded-title-subtitle-group.ytd-expandable-metadata-renderer {
                 display: flex !important;
             }
@@ -2536,13 +2535,19 @@
                 pointer-events: none;
             }
 
-            ytd-watch-flexy #expandable-metadata #right-section.ytd-expandable-metadata-renderer {
-                display: none;
-            }
-
             ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer:not([is-expanded]) #header.ytd-expandable-metadata-renderer:hover {
                 background-color: transparent;
             }
+
+            #player.skeleton .ytp-chrome-bottom,
+            #player.skeleton .ytp-large-play-button,
+            #player.skeleton .ytp-caption-window-container {
+                opacity: 0;
+            }
+        }
+
+        html:has(#player.skeleton).CentAnni-video-tabView #masthead-container.ytd-app {
+            opacity: 0;
         }
 
         html.CentAnni-video-tabView:has(ytd-watch-flexy[theater][is-extra-wide-video_]:not([hidden])) #page-manager.ytd-app {
@@ -3386,6 +3391,7 @@
             .ytp-player-minimized .html5-main-video,
             .ytp-popup.ytp-delhi-modern-contextmenu,
             .ytThumbnailOverlayProgressBarHostLabel,
+            #player.skeleton.flexy #player-api.round,
             .ytCollectionsStackCollectionStack1Large,
             .ytProgressBarLineProgressBarLineRounded,
             .ytCollectionsStackCollectionStack1Small,
@@ -4285,6 +4291,7 @@
                 margin-right: 14px;
             }
 
+            #player.skeleton.flexy,
             #masthead-container #start #logo-icon {
                 padding: 0;
             }
@@ -5149,6 +5156,8 @@
             --ytd-toolbar-height: 52px !important;
         }
 
+        html:has(#player.skeleton).CentAnni-style-max-panel #container.ytd-masthead,
+        html:has(#player.skeleton).CentAnni-style-max-panel #background.ytd-masthead,
         html:has(ytd-watch-flexy:not([hidden], [fullscreen])).CentAnni-style-max-panel #container.ytd-masthead,
         html:has(ytd-watch-flexy:not([hidden], [fullscreen])).CentAnni-style-max-panel #background.ytd-masthead {
             height: 52px !important;
@@ -5711,90 +5720,6 @@
 
         cssSettingsApplied = true;
     } loadCSSsettings();
-
-    // set max video size in default view
-    function maxVideoSize() {
-        const HTML = document.documentElement;
-        const watchFlexy = document.querySelector('ytd-watch-flexy');
-        const video = watchFlexy?.querySelector('video.html5-main-video');
-        if (!HTML || !watchFlexy || !video) return;
-
-        const styleWF = getComputedStyle(watchFlexy);
-        const styleHTML = getComputedStyle(HTML);
-        const aspectRatioWidth = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-width-ratio')) || 16;
-        const aspectRatioHeight = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-height-ratio')) || 9;
-        const aspectRatio = (video.videoWidth && video.videoHeight) ? video.videoWidth / video.videoHeight : aspectRatioWidth / aspectRatioHeight;
-        const sidebarWidth = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-sidebar-width')) || 402;
-        const mastheadHeight = parseFloat(styleHTML.getPropertyValue('--ytd-toolbar-height')) || 56;
-        const marginTop = USER_CONFIG.compactLayout ? 0 : watchFlexy.hasAttribute('reduced-top-margin') ? 12 : 24;
-        const horizontalPageMargin = parseFloat(watchFlexy.style.getPropertyValue('--ytd-watch-flexy-horizontal-page-margin')) || 24;
-        const margin = USER_CONFIG.compactLayout ? 0 : horizontalPageMargin;
-        const space = USER_CONFIG.spaceBelowPlayer;
-        const marginBelow = USER_CONFIG.maxVidSize ? 0 : space;
-
-        const calculate = () => {
-            const maxWidth = window.innerWidth - sidebarWidth - margin * 3;
-            const maxHeight = window.innerHeight - mastheadHeight - marginTop - marginBelow;
-
-            let width = maxWidth;
-            let height = width / aspectRatio;
-
-            if (height > maxHeight) {
-                height = maxHeight;
-                width = height * aspectRatio;
-            }
-
-            return { width, height };
-        };
-
-        const maxSize = function () {
-            if (this.theater) return { width: NaN, height: NaN };
-            return calculate();
-        };
-
-        watchFlexy.calculateNormalPlayerSize_ = maxSize;
-        watchFlexy.calculateCurrentPlayerSize_ = maxSize;
-
-        window.dispatchEvent(new Event('resize'));
-    }
-
-    // get correct thumbnail
-    function getThumbnailUrl(callback) {
-        const baseUrl = `https://i.ytimg.com/vi/${videoID}/`;
-
-        const jsonCheck = document.querySelector('ytd-watch-flexy script[type="application/ld+json"]');
-        const jsonText = jsonCheck?.textContent;
-        const videoIDcheck = jsonText?.includes(`/vi/${videoID}/`);
-        const resolutionCheck = jsonText?.includes('maxresdefault.jpg');
-        if (videoIDcheck) {
-            callback(baseUrl + (resolutionCheck ? 'maxresdefault.jpg' : 'hqdefault.jpg'));
-            return;
-        }
-
-        const img = new Image();
-        img.onload = () => callback(baseUrl + (img.width > 250 ? 'maxresdefault.jpg' : 'hqdefault.jpg'));
-        img.onerror = () => callback(baseUrl + 'hqdefault.jpg');
-        img.src = baseUrl + 'maxresdefault.jpg';
-    }
-
-    // builds key mappings for playback speed controls
-    function speedKeyMap() {
-        const lower = i => (i == null ? '' : String(i).toLowerCase());
-        toggleKey = lower(USER_CONFIG.playbackSpeedToggle);
-        increaseKey = lower(USER_CONFIG.playbackSpeedIncrease);
-        decreaseKey = lower(USER_CONFIG.playbackSpeedDecrease);
-
-        const youtubeKeys = ['<', '>'];
-        defaultKeys = new Set([toggleKey, increaseKey, decreaseKey, ...youtubeKeys]);
-
-        specialKeys = Object.create(null);
-        for (let i = 1; i <= 8; i++) {
-            const key = lower(USER_CONFIG[`playbackSpeedKey${i}`]);
-            const speed = USER_CONFIG[`playbackSpeedKey${i}s`];
-            if (key && speed != null) specialKeys[key] = speed;
-        }
-        speedKeysMapped = true;
-    }
 
     // create and show the settings modal
     function showSettingsModal() {
@@ -7797,6 +7722,90 @@
         } else fileInputSettings.value = '';
 
         typeof fileInputSettings.showPicker === 'function' ? fileInputSettings.showPicker() : fileInputSettings.click();
+    }
+
+    // set max video size in default view
+    function maxVideoSize() {
+        const HTML = document.documentElement;
+        const watchFlexy = document.querySelector('ytd-watch-flexy');
+        const video = watchFlexy?.querySelector('video.html5-main-video');
+        if (!HTML || !watchFlexy || !video) return;
+
+        const styleWF = getComputedStyle(watchFlexy);
+        const styleHTML = getComputedStyle(HTML);
+        const aspectRatioWidth = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-width-ratio')) || 16;
+        const aspectRatioHeight = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-height-ratio')) || 9;
+        const aspectRatio = (video.videoWidth && video.videoHeight) ? video.videoWidth / video.videoHeight : aspectRatioWidth / aspectRatioHeight;
+        const sidebarWidth = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-sidebar-width')) || 402;
+        const mastheadHeight = parseFloat(styleHTML.getPropertyValue('--ytd-toolbar-height')) || 56;
+        const marginTop = USER_CONFIG.compactLayout ? 0 : watchFlexy.hasAttribute('reduced-top-margin') ? 12 : 24;
+        const horizontalPageMargin = parseFloat(watchFlexy.style.getPropertyValue('--ytd-watch-flexy-horizontal-page-margin')) || 24;
+        const margin = USER_CONFIG.compactLayout ? 0 : horizontalPageMargin;
+        const space = USER_CONFIG.spaceBelowPlayer;
+        const marginBelow = USER_CONFIG.maxVidSize ? 0 : space;
+
+        const calculate = () => {
+            const maxWidth = window.innerWidth - sidebarWidth - margin * 3;
+            const maxHeight = window.innerHeight - mastheadHeight - marginTop - marginBelow;
+
+            let width = maxWidth;
+            let height = width / aspectRatio;
+
+            if (height > maxHeight) {
+                height = maxHeight;
+                width = height * aspectRatio;
+            }
+
+            return { width, height };
+        };
+
+        const maxSize = function () {
+            if (this.theater) return { width: NaN, height: NaN };
+            return calculate();
+        };
+
+        watchFlexy.calculateNormalPlayerSize_ = maxSize;
+        watchFlexy.calculateCurrentPlayerSize_ = maxSize;
+
+        window.dispatchEvent(new Event('resize'));
+    }
+
+    // get correct thumbnail
+    function getThumbnailUrl(callback) {
+        const baseUrl = `https://i.ytimg.com/vi/${videoID}/`;
+
+        const jsonCheck = document.querySelector('ytd-watch-flexy script[type="application/ld+json"]');
+        const jsonText = jsonCheck?.textContent;
+        const videoIDcheck = jsonText?.includes(`/vi/${videoID}/`);
+        const resolutionCheck = jsonText?.includes('maxresdefault.jpg');
+        if (videoIDcheck) {
+            callback(baseUrl + (resolutionCheck ? 'maxresdefault.jpg' : 'hqdefault.jpg'));
+            return;
+        }
+
+        const img = new Image();
+        img.onload = () => callback(baseUrl + (img.width > 250 ? 'maxresdefault.jpg' : 'hqdefault.jpg'));
+        img.onerror = () => callback(baseUrl + 'hqdefault.jpg');
+        img.src = baseUrl + 'maxresdefault.jpg';
+    }
+
+    // builds key mappings for playback speed controls
+    function speedKeyMap() {
+        const lower = i => (i == null ? '' : String(i).toLowerCase());
+        toggleKey = lower(USER_CONFIG.playbackSpeedToggle);
+        increaseKey = lower(USER_CONFIG.playbackSpeedIncrease);
+        decreaseKey = lower(USER_CONFIG.playbackSpeedDecrease);
+
+        const youtubeKeys = ['<', '>'];
+        defaultKeys = new Set([toggleKey, increaseKey, decreaseKey, ...youtubeKeys]);
+
+        specialKeys = Object.create(null);
+        for (let i = 1; i <= 8; i++) {
+            const key = lower(USER_CONFIG[`playbackSpeedKey${i}`]);
+            const speed = USER_CONFIG[`playbackSpeedKey${i}s`];
+            if (key && speed != null) specialKeys[key] = speed;
+        }
+        speedKeysMapped = true;
     }
 
     // function to display a notification for settings change or reset
@@ -11394,6 +11403,13 @@
         // transcript panel check
         transcriptPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]');
         hasTranscriptPanel = !!transcriptPanel;
+
+        // ensure correct header width when max panel height is enabled
+        if (USER_CONFIG.preventBackgroundExecution && USER_CONFIG.sidebarWidth === 0 && USER_CONFIG.maxPanelHeight) {
+            const styleWFE = getComputedStyle(watchFlexyElement);
+            const widthCheck = styleWFE.getPropertyValue('--ytd-watch-flexy-sidebar-width').trim();
+            if (widthCheck !== '402px') docElement.style.setProperty('--sidebarWidth', widthCheck);
+        }
     }
 
     // Chrome CSP compliance for setVideoQuality
