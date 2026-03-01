@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.5.2
+// @version      10.6
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.5.2 - YouTube Alchemy                  *
+*                    Version: 10.6 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2544,6 +2544,10 @@
             #player.skeleton .ytp-caption-window-container {
                 opacity: 0;
             }
+
+            #owner.ytd-watch-metadata {
+                min-height: 42px;
+            }
         }
 
         html:has(#player.skeleton).CentAnni-video-tabView #masthead-container.ytd-app {
@@ -2620,7 +2624,6 @@
             }
 
             .segment-text.ytd-transcript-segment-renderer {
-                font-family: -apple-system;
                 opacity: .9;
             }
 
@@ -5223,63 +5226,107 @@
         }
 
         html:has(.html5-video-player.ended-mode) #CentAnni-cinema-mode-btn,
-        html:has(ytd-watch-flexy[hidden], [default-layout], [fullscreen]) #CentAnni-cinema-mode-btn {
+        html:has(ytd-watch-flexy[hidden], [default-layout], [fullscreen], [is-vertical-video_]) #CentAnni-cinema-mode-btn {
             display: none;
         }
 
-        html.CentAnni-cinema-mode:has(ytd-watch-flexy[theater]:not([hidden], [fullscreen]) .html5-video-player:not(.ended-mode)) {
+        html.CentAnni-cinema-mode:has(ytd-watch-flexy[theater]:not([hidden], [fullscreen], [is-vertical-video_]) .html5-video-player:not(.unstarted-mode, .ended-mode)) {
+            & #page-manager.ytd-app {
+                margin-top: 0 !important;
+                align-items: center;
+            }
+
+            &.CentAnni-video-tabView #page-manager.ytd-app {
+                height: 100dvh !important;
+            }
+
+            &.CentAnni-video-tabView #columns {
+                height: max(80px, calc((100dvh - (var(--ytd-watch-flexy-height-ratio)/var(--ytd-watch-flexy-width-ratio)*100dvw)) / 2)) !important;
+            }
+
+            & #secondary {
+                padding-top: 18px;
+                align-self: flex-start;
+            }
+
+            &.CentAnni-video-tabView #primary {
+                overflow-x: visible;
+            }
+
+            &:hover.CentAnni-video-tabView #primary {
+                overflow-x: hidden;
+            }
+
+            & ytd-watch-flexy {
+                margin-top: max(80px, calc((100dvh - (var(--ytd-watch-flexy-height-ratio)/var(--ytd-watch-flexy-width-ratio)*100dvw)) / 2));
+            }
+
+            &.CentAnni-video-tabView ytd-watch-metadata #actions.ytd-watch-metadata {
+                transform: translateY(20px);
+            }
+
             & .CentAnni-remaining-time-container {
                 text-align: center;
                 transform: translateX(calc((var(--ytd-watch-flexy-sidebar-width) + var(--ytd-watch-flexy-horizontal-page-margin)) / 2));
             }
 
-            & #page-manager.ytd-app {
-                height: 100dvh !important;
-                margin-top: 0 !important;
-                align-items: center;
+            & .CentAnni-chapter-title {
+                left: calc(50% + ((var(--ytd-watch-flexy-sidebar-width) + 12px) / 2));
+                transform: translate(-50%, -50px);
+                width: 80dvw;
+                max-width: unset;
+                justify-content: center;
             }
 
-            ytd-watch-flexy {
-                margin-top: 80px;
+            & h1.ytd-watch-metadata {
+                position: fixed;
+                top: max(40px, calc((100dvh - (var(--ytd-watch-flexy-height-ratio)/var(--ytd-watch-flexy-width-ratio)*100dvw)) / 4));
+                transform: translateY(50%);
+                left: 0;
+                width: 100%;
+                text-align: center;
+                justify-content: center;
             }
 
-            & #masthead-container,
-            & #CentAnni-cinema-mode-btn {
-                opacity: 0;
-                transition: opacity .4s ease-out;
+            & h1.ytd-watch-metadata > * {
+                filter: opacity(0);
+                transition: filter .4s ease-out;
+                will-change: filter;
             }
 
-            &:hover #masthead-container,
-            &:hover #CentAnni-cinema-mode-btn {
-                opacity: 1;
-            }
-
-            & #columns {
-                height: 80px !important;
-            }
-
-            & #secondary,
-            & #expandable-metadata,
-            & ytd-watch-metadata.ytd-watch-flexy {
-                opacity: 0;
-                transition: opacity .4s ease-out;
-            }
-
+            & .CentAnni-chapter-title,
             & .CentAnni-remaining-time-container {
                 opacity: .7;
                 transition: opacity .15s ease-out;
             }
 
+            & #secondary,
+            & #primary #comments,
+            & #masthead-container,
+            & #expandable-metadata,
+            & #CentAnni-cinema-mode-btn,
+            & :is(ytd-watch-metadata, ytd-watch-metadata *):has(.CentAnni-chapter-title) > :not(.CentAnni-chapter-title):not(:has(.CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title),
+            & :is(ytd-watch-metadata:not(:has(.CentAnni-chapter-title)), ytd-watch-metadata:not(:has(.CentAnni-chapter-title)) *):has(h1.ytd-watch-metadata) > :not(.CentAnni-chapter-title):not(:has(.CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title) {
+                opacity: 0;
+                transition: opacity .4s ease-out;
+            }
+
             &:hover {
                 & #secondary,
+                & #primary #comments,
+                & #masthead-container,
                 & #expandable-metadata,
-                & ytd-watch-metadata.ytd-watch-flexy {
+                & .CentAnni-chapter-title,
+                & #CentAnni-cinema-mode-btn,
+                & .CentAnni-remaining-time-container,
+                & :is(ytd-watch-metadata, ytd-watch-metadata *):has(.CentAnni-chapter-title) > :not(.CentAnni-chapter-title):not(:has(.CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title),
+                & :is(ytd-watch-metadata:not(:has(.CentAnni-chapter-title)), ytd-watch-metadata:not(:has(.CentAnni-chapter-title)) *):has(h1.ytd-watch-metadata) > :not(.CentAnni-chapter-title):not(:has(.CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title) {
                     opacity: 1;
                 }
+            }
 
-                & .CentAnni-remaining-time-container {
-                    opacity: 1;
-                }
+            &:hover h1.ytd-watch-metadata > * {
+                filter: opacity(1);
             }
         }
     `;
@@ -8444,11 +8491,7 @@
             if (!transcriptMenuButtonMoved && (!USER_CONFIG.YouTubeTranscriptExporter || USER_CONFIG.lazyTranscriptLoading)) { waitForTranscriptWithoutYTE(transcriptMenuButton); }
         }
         else if (USER_CONFIG.autoOpenChapters && hasChapterPanel) runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"], ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
-        else if (!USER_CONFIG.autoOpenComments && videoInfo) videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-
-        const clipPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create]');
-        if (clipPanel && clipPanel.getAttribute('visibility') === 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED')
-            clipPanel.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
+        else if (!USER_CONFIG.autoOpenComments && videoInfo) setTimeout(() => videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED'), 0);
 
         // create the main tabView container
         const newDiv = document.createElement('div');
@@ -8630,6 +8673,8 @@
                         panelCheck.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
                 });
 
+                if (panelCheck.getAttribute('visibility') === 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN' && isDefault && currentActiveTab === 'tab-1')
+                    panelCheck.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
                 infoPanelObserver.observe(panelCheck, { attributes: true, attributeFilter: ['visibility'] });
                 infoPanelObserver.timer = setTimeout(cleanupInfoObserver, 3000);
                 document.addEventListener('yt-navigate-start', cleanupInfoObserver);
@@ -9929,7 +9974,7 @@
 
         // gather all unprocessed videos for processVideo
         function processVideos() {
-            const unprocessedVideos = [...targetContainer.querySelectorAll('ytd-rich-item-renderer:not([data-centanni-video-processed])')];
+            const unprocessedVideos = [...targetContainer.querySelectorAll('ytd-rich-item-renderer:not([data-centanni-video-processed], [is-shelf-item])')];
             unprocessedVideos.forEach(processVideo);
         }
 
@@ -10079,7 +10124,7 @@
     // mark last seen video on subscription page
     async function markLastSeenVideo() {
         const subscriptionPage = document.querySelector('ytd-browse[page-subtype="subscriptions"]:not([hidden])');
-        const videoContainers = subscriptionPage?.querySelectorAll('ytd-rich-item-renderer');
+        const videoContainers = subscriptionPage?.querySelectorAll('ytd-rich-item-renderer:not([is-shelf-item])');
         if (!subscriptionPage || !videoContainers.length) return;
 
         const previousLastSeen = subscriptionPage.querySelector('.CentAnni-style-last-seen');
@@ -10791,9 +10836,7 @@
     // function to prevent autoplay
     function pauseYouTubeVideo(e) {
         e.currentTarget.removeEventListener(e.type, pauseYouTubeVideo);
-
-        if (!/^https:\/\/(www\.|m\.)?youtube\.com\/watch\?v=/.test(window.location.href) || document.querySelector('.ytp-time-display.ytp-live')) return;
-        if (!USER_CONFIG.preventAutoplayPL && /&list=/.test(window.location.href)) return;
+        if (!/^https:\/\/(www\.|m\.)?youtube\.com\/watch\?v=/.test(window.location.href) || document.querySelector('.ytp-time-display.ytp-live') || (!USER_CONFIG.preventAutoplayPL && /&list=/.test(window.location.href))) return;
 
         const elements = {
             player: document.getElementById('movie_player'),
@@ -11797,10 +11840,10 @@
                 [!USER_CONFIG.videoTabView && ((USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel)), scrollToTop],
                 [USER_CONFIG.hideEndscreen, () => setTimeout(() => { getThumbnailUrl((url) => { docElement.style.setProperty('--video-url', `url("${url}")`); }); }, 1000)],
                 [USER_CONFIG.feedFilterChipsWatch, () => requestIdleCallback(restoreLastSelectedChip)],
-                [USER_CONFIG.maxVidSize || USER_CONFIG.compactLayout, maxVideoSize],
-                [USER_CONFIG.hideProdTxt, hideProductsSpan],
-                [USER_CONFIG.videoTabView, () => requestIdleCallback(tabView)],
                 [USER_CONFIG.closeChatWindow, () => requestIdleCallback(chatWindowCheck)],
+                [USER_CONFIG.maxVidSize || USER_CONFIG.compactLayout, maxVideoSize],
+                [USER_CONFIG.videoTabView, () => requestIdleCallback(tabView)],
+                [USER_CONFIG.hideProdTxt, hideProductsSpan],
                 [USER_CONFIG.enableCinemaMode && !cinemaModeActive, cinemaMode],
                 // [USER_CONFIG.playbackSpeed || USER_CONFIG.progressBar || USER_CONFIG.displayRemainingTime, () => requestIdleCallback(videoObserver)]
             ];
@@ -11822,7 +11865,7 @@
                 [USER_CONFIG.feedFilterChips && isHomePage, () => requestIdleCallback(restoreLastSelectedChip)],
                 [USER_CONFIG.channelPlaylistBtn && isChannelPage, () => requestIdleCallback(addPlaylistButtons)],
                 [USER_CONFIG.playlistTrashCan && isPlaylistPage, () => requestIdleCallback(playlistRemovalButtons)],
-                [USER_CONFIG.lastSeenVideo && isSubscriptionsPage, () => requestAnimationFrame(() => requestAnimationFrame(markLastSeenVideo))]
+                [USER_CONFIG.lastSeenVideo && isSubscriptionsPage, () => requestAnimationFrame(() => setTimeout(markLastSeenVideo, 0))]
             ];
             for (const [flag, callback] of browseFeatures) if (flag) callback();
             if (USER_CONFIG.hideMiniPlayer) document.querySelector('.ytp-miniplayer-close-button')?.click();
@@ -11870,7 +11913,7 @@
             const tar = (isVideoPage || isLiveStream) ? videoTargets : browseTargets;
             const sel = (isVideoPage || isLiveStream) ? videoPageContainer : browseContainer;
             const ctn = document.querySelector(sel); if (!ctn) return;
-            const init = () => { if (pageObserver) { pageObserver.disconnect(); pageObserver = null; } initialRun ? initializeAlchemy() : requestIdleCallback(initializeAlchemy); };
+            const init = () => { if (pageObserver) { pageObserver.disconnect(); pageObserver = null; } initialRun ? initializeAlchemy() : typeof scheduler !== 'undefined' && scheduler.postTask ? scheduler.postTask(initializeAlchemy, { priority: 'background' }) : requestIdleCallback(() => setTimeout(initializeAlchemy, 100)); };
             const t = setTimeout(init, 5000);
 
             let remaining = new Set();
