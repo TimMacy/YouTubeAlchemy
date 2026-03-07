@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-10.6-white.svg" alt="Version: 10.6"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-10.7-white.svg" alt="Version: 10.7"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -15,8 +15,8 @@ This toolkit enhances YouTube by customizing the layout and adding more than 200
 - [🔒 Privacy Policy](#-privacy-policy)
 - [✨ Overview](#-overview)
 - [📝 Transcript Exporter](#-transcript-exporter)
-- [🔗 Links in Header](#-links-in-header)
-- [🪄 Features & CSS](#-features--css)
+- [🔗 Header Links](#-header-links)
+- [🪄 Features & Styles](#-features--styles)
 - [🎨 Color Code Videos](#-color-code-videos)
 - [🌐 Supported Languages](#-supported-languages)
 - [🚀 Installation & Minimum Browser Requirements](#-installation--minimum-browser-requirements)
@@ -32,8 +32,8 @@ YouTube Alchemy operates completely client-side with no external dependencies. I
 
 ### ✨ Overview
 - **Main Settings Panel**: Manage the Transcript Exporter and export, import, or reset settings to their defaults.
-  - **Links in Header Panel**: Add custom links next to the YouTube logo and hide the navigation bar.
-  - **Features & CSS Panel**: Access key features like **tab view**, **playback speed**, **remove 'Important' section and sort all notifications chronologically**, **video quality**, **direction buttons for playlists**, prevent autoplay, hide Shorts, **set default audio, subtitle, and transcript languages**, **disable play on hover**, **square design**, **auto-theater mode**, auto-close chat windows, number of videos per row, modify or hide various UI elements, and much more.
+  - **Header Links Panel**: Add custom links next to the YouTube logo and optionally hide and auto-close the Guide.
+  - **Features & Styles Panel**: Access key features like **tab view**, **playback speed**, **remove 'Important' section and sort all notifications chronologically**, **video quality**, **direction buttons for playlists**, prevent autoplay, hide Shorts, **set default audio, subtitle, and transcript languages**, **disable play on hover**, **square design**, **auto-theater mode**, auto-close chat windows, number of videos per row, modify or hide various UI elements, and much more.
   - **Color Code Videos Panel**: Apply customizable borders to videos on the Home page, reflecting their age and status, and highlight the last uploaded video on the Subscriptions page with optional auto-scroll.
 
 <p align="center"><img width="100%" alt="YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/be8b77cd-2b65-41a8-ac1c-72b936d52358" /></p>
@@ -95,15 +95,14 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
 <br>
 
 
-## 🔗 Links in Header
-Up to ten links can be added next to the YouTube logo. An empty "Link Text" field won't insert the link into the header.
-If the left navigation bar is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.
+## 🔗 Header Links
+Up to ten links can be added next to the YouTube logo. An empty 'Link Text' field won't insert the link into the header. If the Guide is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.
 
-<p align="center"><img width="50%" alt="Links in Header" src="https://github.com/user-attachments/assets/f8be4335-2d6e-4e73-9c17-ad308bc7e362" /></p>
+<p align="center"><img width="50%" alt="Header Links" src="https://github.com/user-attachments/assets/f8be4335-2d6e-4e73-9c17-ad308bc7e362" /></p>
 
 <br>
 
-## 🪄 Features & CSS
+## 🪄 Features & Styles
 Offers various options to customize the layout and functionality of YouTube.
 
 **General**
@@ -189,7 +188,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Add Direction Buttons to Playlist Panels
   - Open Playlist Videos Without Being in a Playlist When Clicking the Thumbnail or Title
   - Show Trash Can Icon on Owned Playlists to Quickly Remove Videos
-  - Add "Remove Watched Videos" Button to Watch Later Playlist
+  - Add "Remove Watched Videos" and "Toggle Watched" Buttons to Watch Later Playlist
   - Sort Comments to "Newest First"
   - Automatically Open Chapter Panels
   - Automatically Open Transcript Panels
@@ -281,7 +280,7 @@ Offers various options to customize the layout and functionality of YouTube.
     - Video Pages
     - Search Pages
 
-**Hide UI Elements in the Left Navigation Bar**
+**Hide UI Elements in the Guide**
   - Hide "Home" Button
   - Hide "Subscriptions" Button
   - Restore Order: Home > You > Subscriptions
@@ -367,6 +366,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **10.7**: bug fixes and improvements; hiding the Guide now also auto-closes it; added an additional button to "Remove Watched Videos" to show/hide watched videos on the Watch Later playlist; enabled the `videoObserver` to handle situations when YouTube replaces the video element
 - **10.6**: bug fixes and improvements
 - **10.5.2**: bug fixes
 - **10.5**: adjustments for the latest YouTube DOM changes; optimized `Persistent Progress Bar`; feature changed: `Prevent Autoplay` now doesn't stop videos while in playlists; in order to also stop autoplay there, `Also Prevent Autoplay in Playlists` has to be enabled; new feature: `Cinema Mode` (Adds a button to the bottom right in theater mode. Once activated, all UI elements are hidden while the mouse is outside the page)
@@ -391,9 +391,9 @@ _Support is a work in progress. Other languages may have limited functionality._
 - **9.7.1**: adjustments for the latest YouTube DOM changes (fixed spacing in `Compact Layout`)
 - **9.7**: adjustments for the latest YouTube DOM changes and improvements for the space below the player in `Tab View`. new feature: `Disable Animation When Switching Between Theater mode and Default view (default: off)`
 - **9.6.2**: improvements to `Hide Mini Player`
-- **9.6.1**: shows the "From your Watch later playlist" info on hover in `Compact Layout`, fixed filter chip bar position under Community, and removed the swipe-to-open overlay for the app drawer when `Hide Navigation Bar` is enabled
+- **9.6.1**: shows the "From your Watch later playlist" info on hover in `Compact Layout`, fixed filter chip bar position under Community, and removed the swipe-to-open overlay for the app drawer when `Hide the Guide` is enabled
 - **9.6**: fixed `Max Video Size in Default Layout` aspect ratio handling for non-16:9 videos when tabs were opened in the background, fixed `Remaining Time` jumping for SponsorBlock segments, fixed hiding of the explore section in the left sidebar, fixed hidden description sections in tab view, as well as general bug fixes and improvements
-- **9.4.2**: adjustments for the latest YouTube DOM changes. new feature: `Restore Order: Home > You > Subscriptions (default: off)` in the left navigation bar
+- **9.4.2**: adjustments for the latest YouTube DOM changes. new feature: `Restore Order: Home > You > Subscriptions (default: off)` in the left Guide
 - **9.4.1**: bug fix for playlist buttons
 - **9.4**: improvements for `Remaining Time`
 - **9.3**: bug fix and improvements for `Persistent Progress Bar`
@@ -420,7 +420,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 - **8.7.2**: bug fixes for Max Video Size in Default Layout
 - **8.7.1**: adjustments for the latest YouTube changes, fixed playback speed control breaking when YouTube reloaded a video during playback, and adjustments for non-English languages in the YT Guide. new features: Max Video Size in Default Layout (default: off), Hide Share Button (default: off), Toggle Theater Mode by Clicking the Active Tab (default: on), Search Bar Position (default: 0 | a negative value moves it left), Sidebar Width (default: 0 | equals YouTube's default of 402px)
 - **8.3**: adjustments for the latest YouTube changes and fixed missing remaining time when navigating
-- **8.2**: adjustments for the latest YouTube changes, bug fixes, and improvements. new features: Restore Homepage Filter Selection; Hide "Downloads" Button in the Left Navigation Bar
+- **8.2**: adjustments for the latest YouTube changes, bug fixes, and improvements. new features: Restore Homepage Filter Selection; Hide "Downloads" Button in the Guide
 - **8.1**: improvements for persistent progress bar and display remaining time
 - **8.0.4**: adjustments for the latest YouTube changes, bug fixes, and improvements
 - **8.0.3.1**: adjustments for the latest YouTube changes (general selector updates including for Color Code Last Uploaded Video)
@@ -461,16 +461,16 @@ _Support is a work in progress. Other languages may have limited functionality._
 - **7.7.2**: bug fixes and improvements. new features: show chapters under videos (only works with tab view enabled and is updated by YouTube itself), hide "Free with ads" videos on the home page, less intrusive bottom gradient
 - **7.7.1**: video gradient bug fix
 - **7.7.0.1**: bug fixes and improvements. fixed an issue with Violentmonkey. new features: add playlist buttons to channel pages, add direction buttons to playlist panels, sort comments to "Newest first," hide "your podcasts" button
-- **7.7**: bug fixes and improvements. new features: tab view, set video quality including premium 1080p enhanced bitrate, choose default transcript language, color code and scroll to last seen video on subscriptions page, add RSS feed button to channel pages, added button to reset ChatGPT prompt back to default without changing other settings, change background color of details sections for watch later videos, hide "add to queue" button on hover, hide "Pay to watch" featured videos on the home page, hide "latest posts from . . ." on search page, hide blue info panels, hide comments section, hide notification button and badge, hide own avatar in the header, hide suggested videos, hide various elements in the left navigation bar, open playlist videos without being in a playlist when clicking the thumbnail or title, redirect shorts to the standard video page, show trash can icon on owned playlists to quickly remove videos, square avatars
+- **7.7**: bug fixes and improvements. new features: tab view, set video quality including premium 1080p enhanced bitrate, choose default transcript language, color code and scroll to last seen video on subscriptions page, add RSS feed button to channel pages, added button to reset ChatGPT prompt back to default without changing other settings, change background color of details sections for watch later videos, hide "add to queue" button on hover, hide "Pay to watch" featured videos on the home page, hide "latest posts from . . ." on search page, hide blue info panels, hide comments section, hide notification button and badge, hide own avatar in the header, hide suggested videos, hide various elements in the Guide, open playlist videos without being in a playlist when clicking the thumbnail or title, redirect shorts to the standard video page, show trash can icon on owned playlists to quickly remove videos, square avatars
 - **7.6**: new feature: set playback speed for VODs, defaults to 1x for live videos, color code details section of watch later videos
 - **7.5.5.1**: general bug fixes and improvements. beta feature added: "Display Remaining Time Under a Video, Adjusted for Playback Speed" now also takes SponsorBlock segments into account. if the beta version is enabled, it will be used instead. ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."
-- **7.5.5**: general bug fixes and improvements. updated ChatGPT prompt to better maintain the YouTuber's POV and voice. new features: automatically enable timestamps in transcript panels, hide ad slots on the home page, me page, hide hashtags under videos, hide fundraiser icons and panels, option to hide various UI elements in the left navigation bar
+- **7.5.5**: general bug fixes and improvements. updated ChatGPT prompt to better maintain the YouTuber's POV and voice. new features: automatically enable timestamps in transcript panels, hide ad slots on the home page, me page, hide hashtags under videos, hide fundraiser icons and panels, option to hide various UI elements in the Guide
 - **7.5.1**: fixed missing setting for channel redirect default to videos tab
 - **7.5**: name change to YouTube Alchemy. toggle for 'YouTube Transcript Exporter' added in main settings panel. general bug fixes and improvements. new Features: prevent autoplay, auto-close initial chat windows, hide shorts, hide play next button, hide comment reply button, hide breaking news on home, hide playlists on home, hide right sidebar on search
 - **7.4**: general bug fixes and improvements. reworked initiation of the script. new features: auto-open transcript panels, hide video end cards, hide end screens, hide join and share buttons under videos, small "subscribed" button (icon only), hide add comment text field, disable play on hover, hide main scrollbar in Safari, choose progress bar color
 - **7.3.5**: General bug fixes and improvements. Reorganized the settings panel for upcoming features. New Features: Hide YouTube brand text in the header; Hide video scrubber (red dot in progress bar); Display full titles; and Auto Theater mode
 - **7.3.1**: fixed YouTube scrubber in progress bar
-- **7.3**: New Features: Links in Header, Customize CSS, and Color Code Videos. Also optimized transcript loading and reset function
+- **7.3**: New Features: Header Links, Customize CSS, and Color Code Videos. Also optimized transcript loading and reset function
 - **7.1**: general bug fixes and improvements
 - **7.0**: initial public release
 
