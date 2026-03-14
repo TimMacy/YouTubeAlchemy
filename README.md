@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-10.7-white.svg" alt="Version: 10.7"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-10.8-white.svg" alt="Version: 10.8"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -178,6 +178,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Also Prevent Autoplay in Playlists
   - Disable Play on Hover
   - Sort Notifications Chronologically
+  - Limit Notifications and Hide Read
   - Auto Expand Video Description
   - Restore Homepage Filter Selection
   - Restore Suggested Videos Filter Selection
@@ -366,19 +367,20 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **10.8**: bug fixes, improvements, and optimized "Tab View". new feature: "Limit Notifications and Hide Read"
 - **10.7**: bug fixes and improvements; hiding the Guide now also auto-closes it; added an additional button to "Remove Watched Videos" to show/hide watched videos on the Watch Later playlist; enabled the `videoObserver` to handle situations when YouTube replaces the video element
 - **10.6**: bug fixes and improvements
 - **10.5.2**: bug fixes
-- **10.5**: adjustments for the latest YouTube DOM changes; optimized `Persistent Progress Bar`; feature changed: `Prevent Autoplay` now doesn't stop videos while in playlists; in order to also stop autoplay there, `Also Prevent Autoplay in Playlists` has to be enabled; new feature: `Cinema Mode` (Adds a button to the bottom right in theater mode. Once activated, all UI elements are hidden while the mouse is outside the page)
+- **10.5**: adjustments for the latest YouTube DOM changes; optimized "Persistent Progress Bar"; feature changed: "Prevent Autoplay" now doesn't stop videos while in playlists; in order to also stop autoplay there, "Also Prevent Autoplay in Playlists" has to be enabled; new feature: "Cinema Mode" (Adds a button to the bottom right in theater mode. Once activated, all UI elements are hidden while the mouse is outside the page)
 - **10.4.2**: adjustments for the latest YouTube DOM changes (height of buttons restored to 36px under videos and on playlist pages)
-- **10.4**: fixed YouTube overriding custom sidebar width; made playback speed display and info panel in tab view more robust when navigating; optimized “Prevent Autoplay” and "Persistent Progress Bar"; made “Display Remaining Time" more resource efficient as it now updates once per second and scales with playback speed. new features: `Hide Episode-Playlists on the Home Page`, `Show "Picture-in-Picture" Button`, and `Hide "Autoplay" Button When Disabled`
-- **10.3**: adjustments for YouTube DOM changes, bug fixes, and improvements. new feature: `Max Panel Height in Default View`
+- **10.4**: fixed YouTube overriding custom sidebar width; made playback speed display and info panel in tab view more robust when navigating; optimized “Prevent Autoplay” and "Persistent Progress Bar"; made “Display Remaining Time" more resource efficient as it now updates once per second and scales with playback speed. new features: "Hide Episode-Playlists on the Home Page", "Show "Picture-in-Picture" Button", and "Hide "Autoplay" Button When Disabled"
+- **10.3**: adjustments for YouTube DOM changes, bug fixes, and improvements. new feature: "Max Panel Height in Default View"
 - **10.2**: adjustments for "Ask" and "Quizzes" panels; fullscreen panel support for Info, Chapter, Transcript, Comments, and Live Chat when "Tab View on Video Pages" is enabled
-- **10.1**: fixed "Transcript Failed to Load" error when both `Enable Transcript Exporter` and `Auto Theater Mode` are enabled, caused by YouTube closing the transcript panel when switching to theater mode
-- **10.0**: adjustments for YouTube DOM changes; bug fixes; improvements: optimized initialization performance, migrated to persistent storage, streamlined video element handling; changed `Maintain 1x Playback Speed for Verified Artist Music Videos` to `Maintain 1x Playback Speed for Music Videos`; new feature: `Highlight Active Section in Transcript Panels`
+- **10.1**: fixed "Transcript Failed to Load" error when both "Enable Transcript Exporter" and "Auto Theater Mode" are enabled, caused by YouTube closing the transcript panel when switching to theater mode
+- **10.0**: adjustments for YouTube DOM changes; bug fixes; improvements: optimized initialization performance, migrated to persistent storage, streamlined video element handling; changed "Maintain 1x Playback Speed for Verified Artist Music Videos" to "Maintain 1x Playback Speed for Music Videos"; new feature: "Highlight Active Section in Transcript Panels"
 - **9.16.6**: adjustments for YouTube DOM changes (`tabView` header background and border color; Shorts control location)
-- **9.16.5**: adjustments to `Playback Speed` and `Move "Save" Button into Menu` that could cause the page to freeze and result in high CPU usage
-- **9.16**: bug fixes and improvements. new feature: `Hide "Most relevant" on Subscriptions Page`
+- **9.16.5**: adjustments to "Playback Speed" and "Move "Save" Button into Menu" that could cause the page to freeze and result in high CPU usage
+- **9.16**: bug fixes and improvements. new feature: "Hide "Most relevant" on Subscriptions Page"
 - **9.15**: fixed playback speed not working on Shorts pages, improvements, and adjustments for DOM changes
 - **9.14**: bug fixes. new feature: `Hide "Ask" Button`
 - **9.13.5**: bug fixes and improvements
