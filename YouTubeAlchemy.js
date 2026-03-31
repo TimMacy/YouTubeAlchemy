@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.9
+// @version      10.9.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.9 - YouTube Alchemy                    *
+*                    Version: 10.9.1 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -5406,10 +5406,14 @@
 
             & .CentAnni-chapter-title {
                 left: calc(50% + ((var(--ytd-watch-flexy-sidebar-width) + 12px) / 2));
-                transform: translate(-50%, -50px);
+                transform: translate(-50%, -48px);
                 width: 80dvw;
                 max-width: unset;
                 justify-content: center;
+            }
+
+            &.CentAnni-style-compact-layout .CentAnni-chapter-title {
+                transform: translate(-50%, -43px);
             }
 
             & h1.ytd-watch-metadata {
@@ -5420,6 +5424,10 @@
                 width: 100%;
                 text-align: center;
                 justify-content: center;
+            }
+
+            & #bottom-row > #description {
+                margin-top: 0;
             }
 
             & h1.ytd-watch-metadata > * {
@@ -11666,6 +11674,7 @@
 
             mainVideoObserver?.disconnect();
             watchFlexyElement.querySelectorAll('.CentAnni-remaining-time-container, .CentAnni-info-date, #CentAnni-progress-bar-bar, #CentAnni-progress-bar-start, #CentAnni-progress-bar-end').forEach(el => el.remove());
+            endElement.querySelectorAll('.CentAnni-button-wrapper:not(:has(#transcript-settings-button))').forEach(el => el.remove());
         } else {
             const cleanUp = [
                 [isShortPage, cleanupShortsPlaybackControl],
