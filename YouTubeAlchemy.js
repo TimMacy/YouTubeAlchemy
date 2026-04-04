@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.9.1
+// @version      10.10
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.9.1 - YouTube Alchemy                  *
+*                    Version: 10.10 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2228,6 +2228,7 @@
             /* theater mode active */
             ytd-watch-flexy[theater]:not([fullscreen]) #playlist,
             ytd-watch-flexy[theater]:not([fullscreen]) ytd-comments,
+            ytd-watch-flexy[theater]:not([fullscreen]) #secondary-inner,
             ytd-watch-flexy[theater]:not([fullscreen]) #related.style-scope.ytd-watch-flexy,
             ytd-watch-flexy[theater]:not([fullscreen]) ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer,
             ytd-watch-flexy[theater]:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
@@ -2379,8 +2380,13 @@
             ytd-watch-flexy #columns #below > ytd-watch-metadata #title > ytd-badge-supported-renderer:not([hidden]) {
                 position: absolute;
                 left: calc(50% - 22px);
-                transform: translateY(54px);
+                bottom: 0;
                 cursor: default;
+            }
+
+            ytd-watch-flexy[default-layout] #columns #below > ytd-watch-metadata #title > ytd-badge-supported-renderer:not([hidden]) {
+                bottom: unset;
+                transform: translateY(300%);
             }
 
             ytd-watch-flexy:not([is-two-columns_]):not([theater])[show-expandable-metadata] ytd-watch-metadata {
@@ -3098,7 +3104,7 @@
             background-color: rgb(40, 40, 40);
         }
 
-        html.CentAnni-style-pure-bg[dark] .ytd-page-manager[page-subtype="home"] .ytChipShapeChip:hover {
+        html.CentAnni-style-pure-bg[dark] .ytd-page-manager[page-subtype="home"] .ytChipShapeChip:not(.ytChipShapeActive):hover {
             background-color: rgb(63, 63, 63);
         }
 
@@ -4150,6 +4156,14 @@
                 ytd-rich-item-renderer[is-in-first-column] #details.ytd-rich-grid-media {
                     margin-left: 7px;
                 }
+
+                #right-arrow.yt-horizontal-list-renderer {
+                    right: 30px;
+                }
+
+                #left-arrow.yt-horizontal-list-renderer {
+                    left: 30px;
+                }
             }
 
             .ytd-page-manager[page-subtype="subscriptions"] {
@@ -4208,8 +4222,13 @@
                 padding-left: 364px;
             }
 
-            .item.ytd-watch-metadata {
+            .item.ytd-watch-metadata,
+            #description.ytd-watch-metadata {
                 margin-top: 7px;
+            }
+
+            ytd-watch-metadata:not(:has(.CentAnni-chapter-title)) #description.ytd-watch-metadata {
+                margin-top: 0;
             }
 
             #subheader.ytd-engagement-panel-title-header-renderer:not(:empty) {
@@ -4235,8 +4254,8 @@
             }
 
             .yt-spec-button-shape-next--icon-only-default {
-                width: 35px;
-                height: 35px;
+                min-width: 35px;
+                min-height: 35px;
             }
 
             ytd-miniplayer {
@@ -4330,6 +4349,14 @@
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
+            }
+
+            ytd-thumbnail-overlay-toggle-button-renderer[hovered] {
+                border-radius: 0 2px 2px 0 !important;
+            }
+
+            ytd-thumbnail-overlay-toggle-button-renderer #label.ytd-thumbnail-overlay-toggle-button-renderer {
+                border-radius: 2px 0 0 2px !important;
             }
 
             .yt-spec-button-shape-next--overlay-dark.yt-spec-button-shape-next--tonal:hover {
@@ -4471,12 +4498,12 @@
             .CentAnni-style-newly-video,
             .CentAnni-style-recent-video,
             .CentAnni-style-lately-video,
-            .CentAnni-style-latterly-video {
+            .CentAnni-style-latterly-video,
+            .CentAnni-style-old-video {
                 outline: 2px solid;
                 border-radius: 12px;
             }
 
-            .CentAnni-style-old-video { outline: none; }
             .CentAnni-style-live-video { outline-color: var(--liveVideo); }
             .CentAnni-style-streamed-text { color: var(--streamedText); }
             .CentAnni-style-upcoming-video { outline-color: var(--upComingVideo); }
@@ -4484,7 +4511,7 @@
             .CentAnni-style-recent-video { outline-color: var(--recentVideo); }
             .CentAnni-style-lately-video { outline-color: var(--latelyVideo); }
             .CentAnni-style-latterly-video { outline-color: var(--latterlyVideo); }
-            .CentAnni-style-old-video { opacity: var(--oldVideo); }
+            .CentAnni-style-old-video { outline-color: var(--oldVideo); opacity: var(--oldVideoOpacity); }
 
             #metadata-line > span.inline-metadata-item:has(+ span.CentAnni-style-streamed-span),
             yt-content-metadata-view-model .yt-content-metadata-view-model__metadata-row > .yt-content-metadata-view-model__metadata-text:has(+ .CentAnni-style-streamed-span),
@@ -5361,7 +5388,7 @@
         }
 
         html.CentAnni-cinema-mode:has(ytd-watch-flexy[theater]:not([hidden], [fullscreen], [is-vertical-video_]) .html5-video-player:not(.unstarted-mode, .ended-mode)) {
-            & ytd-app {
+            & ytd-app:has(ytd-watch-flexy[is-dark-theme]) {
                 background-color: black;
             }
 
@@ -5428,6 +5455,11 @@
 
             & #bottom-row > #description {
                 margin-top: 0;
+            }
+
+            & #CentAnni-playback-speed-popup {
+                transform: translate(-50%, 50%);
+                top: 0;
             }
 
             & h1.ytd-watch-metadata > * {
@@ -5548,8 +5580,10 @@
         videosAgeColorPickerRecentLight: '#FF9B00',
         videosAgeColorPickerLately: '#006DFF',
         videosAgeColorPickerLatelyLight: '#0032FF',
-        videosAgeColorPickerLatterly: '#000000',
-        videosAgeColorPickerLatterlyLight: '#FFFFFF',
+        videosAgeColorPickerLatterly: '#010101',
+        videosAgeColorPickerLatterlyLight: '#FEFEFE',
+        videosAgeColorPickerOld: '#010101',
+        videosAgeColorPickerOldLight: '#FEFEFE',
         videosAgeColorPickerLive: '#FF0000',
         videosAgeColorPickerLiveLight: '#FF0000',
         videosAgeColorPickerStreamed: '#FF0000',
@@ -5907,9 +5941,10 @@
         docElement.style.setProperty('--newlyVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerNewly : USER_CONFIG.videosAgeColorPickerNewlyLight);
         docElement.style.setProperty('--recentVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerRecent : USER_CONFIG.videosAgeColorPickerRecentLight);
         docElement.style.setProperty('--latelyVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerLately : USER_CONFIG.videosAgeColorPickerLatelyLight);
-        docElement.style.setProperty('--latterlyVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerLatterly : USER_CONFIG.videosAgeColorPickerLatterlyLight);
+        docElement.style.setProperty('--latterlyVideo', isDarkMode ? (USER_CONFIG.videosAgeColorPickerLatterly === '#010101' ? 'transparent' : USER_CONFIG.videosAgeColorPickerLatterly) : (USER_CONFIG.videosAgeColorPickerLatterlyLight === '#FEFEFE' ? 'transparent' : USER_CONFIG.videosAgeColorPickerLatterlyLight));
+        docElement.style.setProperty('--oldVideo', isDarkMode ? (USER_CONFIG.videosAgeColorPickerOld === '#010101' ? 'transparent' : USER_CONFIG.videosAgeColorPickerOld) : (USER_CONFIG.videosAgeColorPickerOldLight === '#FEFEFE' ? 'transparent' : USER_CONFIG.videosAgeColorPickerOldLight));
         docElement.style.setProperty('--lastSeenVideoColor', isDarkMode ? USER_CONFIG.lastSeenVideoColor : USER_CONFIG.lastSeenVideoColorLight);
-        docElement.style.setProperty('--oldVideo', USER_CONFIG.videosOldOpacity);
+        docElement.style.setProperty('--oldVideoOpacity', USER_CONFIG.videosOldOpacity);
 
         cssSettingsApplied = true;
     } loadCSSsettings();
@@ -7208,7 +7243,7 @@
             form.appendChild(colorCodeVideosOnHome);
 
             const infoColorCodeVideosHome = document.createElement('small');
-            infoColorCodeVideosHome.textContent = "These settings apply only to the Home page.";
+            infoColorCodeVideosHome.textContent = "These settings apply only to the Home page.\nDisable the hover effect, set the opacity of videos older than a year, and pick border colors for videos based on their age for light and dark mode.";
             infoColorCodeVideosHome.classList.add('CentAnni-info-text');
             form.appendChild(infoColorCodeVideosHome);
 
@@ -7233,6 +7268,7 @@
                 { label: 'Videos Uploaded Within the Past Week:', id: 'videosAgeColorPickerRecent' },
                 { label: 'Videos Uploaded Within the Past Month:', id: 'videosAgeColorPickerLately' },
                 { label: 'Videos Uploaded Within 2 to 12 Months:', id: 'videosAgeColorPickerLatterly' },
+                { label: 'Videos Uploaded More than 1 Year Ago:', id: 'videosAgeColorPickerOld' },
                 { label: 'Videos Currently Live:', id: 'videosAgeColorPickerLive' },
                 { label: 'The Word "Streamed" from Videos That Were Live:', id: 'videosAgeColorPickerStreamed' },
                 { label: 'Scheduled Videos and Upcoming Live Streams:', id: 'videosAgeColorPickerUpcoming' }
@@ -7826,6 +7862,8 @@
             USER_CONFIG.videosAgeColorPickerLatelyLight = subPanelColor.elements.videosAgeColorPickerLatelyLight.value;
             USER_CONFIG.videosAgeColorPickerLatterly = subPanelColor.elements.videosAgeColorPickerLatterly.value;
             USER_CONFIG.videosAgeColorPickerLatterlyLight = subPanelColor.elements.videosAgeColorPickerLatterlyLight.value;
+            USER_CONFIG.videosAgeColorPickerOld = subPanelColor.elements.videosAgeColorPickerOld.value;
+            USER_CONFIG.videosAgeColorPickerOldLight = subPanelColor.elements.videosAgeColorPickerOldLight.value;
             USER_CONFIG.videosAgeColorPickerLive = subPanelColor.elements.videosAgeColorPickerLive.value;
             USER_CONFIG.videosAgeColorPickerLiveLight = subPanelColor.elements.videosAgeColorPickerLiveLight.value;
             USER_CONFIG.videosAgeColorPickerStreamed = subPanelColor.elements.videosAgeColorPickerStreamed.value;
@@ -8548,6 +8586,15 @@
         let subheaderDiv;
         let isDefault;
 
+        // prevent page scrolling due to opening the transcript panel
+        const nativeScrollTop = Object.getOwnPropertyDescriptor(Element.prototype, "scrollTop");
+        Object.defineProperty(HTMLHtmlElement.prototype, "scrollTop", {
+            configurable: true,
+            enumerable: nativeScrollTop.enumerable,
+            get() { return nativeScrollTop.get.call(this); },
+            set() {}
+        });
+
         // force two-column layout for live chat videos when viewport width is 1000+
         const toggleYouTubeColumns = () => {
             const videos = watchFlexyElement.querySelector('ytd-item-section-renderer[is-grid-view-enabled], ytd-watch-next-secondary-results-renderer[is-grid-view-enabled]');
@@ -8654,6 +8701,7 @@
             if (hasChapterPanel) chapterPanel.remove();
             videoInfo?.remove();
             videoMore?.classList.remove('CentAnni-tabView-content-attiva');
+            Object.defineProperty(HTMLHtmlElement.prototype, "scrollTop", nativeScrollTop);
             cleanupTabView = null;
         };
 
@@ -8969,30 +9017,17 @@
         });
     }
 
-    // keep scrolling to the top until scroll activity stops or a timeout occurs
+    // prevent scrolling to panel; restore default behavior after 3 seconds
     const scrollToTop = () => {
-        let stopTimeout;
-        let frameID;
+        const nativeScrollTop = Object.getOwnPropertyDescriptor(Element.prototype, "scrollTop");
+        Object.defineProperty(HTMLHtmlElement.prototype, "scrollTop", {
+            configurable: true,
+            enumerable: nativeScrollTop.enumerable,
+            get() { return nativeScrollTop.get.call(this); },
+            set() {}
+        });
 
-        const cancelStop = () => {
-            const doScroll = () => {
-                window.scrollTo(0, 0);
-                clearTimeout(stopTimeout);
-                stopTimeout = setTimeout(remove, 100);
-            };
-            frameID = requestAnimationFrame(doScroll);
-        };
-
-        const remove = () => {
-            window.removeEventListener('scroll', cancelStop);
-            cancelAnimationFrame(frameID);
-            clearTimeout(backupTimeout);
-        };
-
-        window.addEventListener('scroll', cancelStop, { passive: true });
-        const backupTimeout = setTimeout(remove, 1000);
-        stopTimeout = setTimeout(remove, 100);
-        window.scrollTo(0, 0);
+        setTimeout(() => { Object.defineProperty(HTMLHtmlElement.prototype, "scrollTop", nativeScrollTop); }, 3000);
     };
 
     // find the YouTube video
@@ -10166,54 +10201,79 @@
         const streamedRegex = new RegExp(`(?:${categories.streamed.join('|')})`, 'i');
         const homePage = document.querySelector('ytd-browse[page-subtype="home"]:not([hidden])');
         const targetContainer = homePage?.querySelector('ytd-rich-grid-renderer > #contents') || homePage;
+        const streamedMetaSelectors = '.ytContentMetadataViewModelMetadataRow:not(:has(a, yt-badge-view-model)) span.ytContentMetadataViewModelMetadataText:last-of-type:not(:has(*)), .yt-content-metadata-view-model__metadata-row:not(:has(a, yt-badge-view-model)) .yt-content-metadata-view-model__metadata-text:last-of-type:not(:has(*))';
         const liveSelectors = 'badge-shape.yt-badge-shape--thumbnail-live';
+        const pendingVideoRetries = new WeakMap();
         if (!homePage) return;
+
+        // retry processVideo if metadata isn't rendered yet
+        const scheduleVideoRetry = (videoContainer) => {
+            const retryCount = pendingVideoRetries.get(videoContainer) || 0;
+            if (retryCount >= 12) return;
+
+            pendingVideoRetries.set(videoContainer, retryCount + 1);
+            setTimeout(() => {
+                if (!videoContainer.isConnected || videoContainer.hasAttribute('data-centanni-video-processed')) return;
+                processVideo(videoContainer);
+            }, 150);
+        };
 
         // process each individual video
         function processVideo(videoContainer) {
-            videoContainer.setAttribute('data-centanni-video-processed', 'true');
-            const metaBlock = videoContainer.querySelector('.yt-content-metadata-view-model__metadata-row:last-child .yt-content-metadata-view-model__metadata-text:last-of-type');
-            if (!metaBlock) return;
+            try {
+                if (videoContainer.hasAttribute('data-centanni-video-processed')) return;
 
-            const textContent = metaBlock.textContent.trim().toLowerCase();
-            for (const [className, ages] of Object.entries(categories)) {
-                if (ages.some(age => textContent.includes(age))) {
-                    videoContainer.classList.add(`CentAnni-style-${className}-video`);
-                    break;
+                const metaBlock = videoContainer.querySelector(streamedMetaSelectors);
+                if (!metaBlock) {
+                    scheduleVideoRetry(videoContainer);
+                    return;
                 }
-            }
 
-            const liveBadge = videoContainer.querySelector(liveSelectors);
-            if (liveBadge && !videoContainer.classList.contains('CentAnni-style-live-video'))
-                videoContainer.classList.add('CentAnni-style-live-video');
+                pendingVideoRetries.delete(videoContainer);
+                videoContainer.setAttribute('data-centanni-video-processed', 'true');
 
-            const spanElements = videoContainer.querySelectorAll('.yt-content-metadata-view-model__metadata-row:last-child .yt-content-metadata-view-model__metadata-text:last-of-type') || videoContainer.querySelectorAll('yt-content-metadata-view-model .yt-content-metadata-view-model-wiz__metadata-text:not(:has(a)):last-of-type') || videoContainer.querySelectorAll('span.ytd-video-meta-block');
-            spanElements.forEach(el => {
-                const text = el.textContent;
-                const textLower = text.toLowerCase();
-
-                if (categories.upcoming.some(word => textLower.includes(word)) && !videoContainer.classList.contains('CentAnni-style-upcoming-video'))
-                    videoContainer.classList.add('CentAnni-style-upcoming-video');
-
-                if (categories.streamed.some(word => textLower.includes(word))) {
-                    const nextEl = el.nextElementSibling;
-                    if (!nextEl || !nextEl.classList.contains('CentAnni-style-streamed-span')) {
-                        const cloneSpan = document.createElement('span');
-                        cloneSpan.className = el.className + ' CentAnni-style-streamed-span';
-
-                        const streamedWordSpan = document.createElement('span');
-                        streamedWordSpan.className = 'CentAnni-style-streamed-text';
-                        const matched = categories.streamed.find(word => textLower.includes(word)) || categories.streamed[0];
-                        streamedWordSpan.textContent = matched.charAt(0).toUpperCase() + matched.slice(1) + ' ';
-                        const restText = document.createTextNode(text.replace(streamedRegex, '').trimStart());
-
-                        cloneSpan.appendChild(streamedWordSpan);
-                        cloneSpan.appendChild(restText);
-                        const metadataRow = el.closest('yt-content-metadata-view-model > .yt-content-metadata-view-model-wiz__metadata-row:nth-of-type(2),yt-content-metadata-view-model > .yt-content-metadata-view-model__metadata-row:nth-of-type(2)') || metaBlock;
-                        metadataRow?.insertBefore(cloneSpan, el.nextSibling);
+                const textContent = metaBlock.textContent.trim().toLowerCase();
+                for (const [className, ages] of Object.entries(categories)) {
+                    if (ages.some(age => textContent.includes(age))) {
+                        videoContainer.classList.add(`CentAnni-style-${className}-video`);
+                        break;
                     }
                 }
-            });
+
+                const liveBadge = videoContainer.querySelector(liveSelectors);
+                if (liveBadge && !videoContainer.classList.contains('CentAnni-style-live-video'))
+                    videoContainer.classList.add('CentAnni-style-live-video');
+
+                const spanElements = videoContainer.querySelectorAll(streamedMetaSelectors);
+                spanElements.forEach(el => {
+                    const text = el.textContent;
+                    const textLower = text.toLowerCase();
+
+                    if (categories.upcoming.some(word => textLower.includes(word)) && !videoContainer.classList.contains('CentAnni-style-upcoming-video'))
+                        videoContainer.classList.add('CentAnni-style-upcoming-video');
+
+                    if (categories.streamed.some(word => textLower.includes(word))) {
+                        const nextEl = el.nextElementSibling;
+                        if (!nextEl || !nextEl.classList.contains('CentAnni-style-streamed-span')) {
+                            const cloneSpan = document.createElement('span');
+                            cloneSpan.className = el.className + ' CentAnni-style-streamed-span';
+
+                            const streamedWordSpan = document.createElement('span');
+                            streamedWordSpan.className = 'CentAnni-style-streamed-text';
+                            const matched = categories.streamed.find(word => textLower.includes(word)) || categories.streamed[0];
+                            streamedWordSpan.textContent = matched.charAt(0).toUpperCase() + matched.slice(1) + ' ';
+                            const restText = document.createTextNode(text.replace(streamedRegex, '').trimStart());
+
+                            cloneSpan.appendChild(streamedWordSpan);
+                            cloneSpan.appendChild(restText);
+                            el.replaceWith(cloneSpan);
+                        }
+                    }
+                });
+            } catch {
+                videoContainer.removeAttribute('data-centanni-video-processed');
+                pendingVideoRetries.delete(videoContainer);
+            }
         }
 
         // gather all unprocessed videos for processVideo
@@ -10229,13 +10289,20 @@
             processVideos();
 
             homePageObserver = new MutationObserver(mutations => {
+                const videosToProcess = new Set();
+
                 for (const mutation of mutations) {
                     for (const node of mutation.addedNodes) {
                         if (node.nodeType !== 1) continue;
-                        if (node.matches && node.matches('ytd-rich-item-renderer')) processVideo(node);
-                        else if (node.querySelectorAll) node.querySelectorAll('ytd-rich-item-renderer').forEach(processVideo);
+                        if (node.matches && node.matches('ytd-rich-item-renderer:not([is-shelf-item])')) videosToProcess.add(node);
+                        if (node.querySelectorAll) {
+                            const nestedVideos = node.querySelectorAll('ytd-rich-item-renderer:not([is-shelf-item])');
+                            nestedVideos.forEach(video => videosToProcess.add(video));
+                        }
                     }
                 }
+
+                videosToProcess.forEach(processVideo);
             });
 
             const config = { childList: true };
@@ -10266,12 +10333,12 @@
 
         // ensure correct categories
         function checkProcessedVideos() {
-            const processedVideos = homePage.querySelectorAll('ytd-rich-item-renderer:nth-of-type(-n+6)');
+            const processedVideos = homePage.querySelectorAll('ytd-rich-item-renderer:nth-of-type(-n+6):not([is-shelf-item])');
             if (processedVideos.length === 0) return;
 
             let allCorrect = true;
             for (const video of processedVideos) {
-                const metaBlock = video.querySelector('.yt-content-metadata-view-model__metadata-row:last-child .yt-content-metadata-view-model__metadata-text:last-of-type');
+                const metaBlock = video.querySelector(streamedMetaSelectors);
                 if (!metaBlock) continue;
 
                 const textContent = metaBlock.textContent.trim().toLowerCase();
@@ -10285,7 +10352,7 @@
                             break;
                         }
                     }
-                    if (expectedCategory === null) if ([...video.querySelectorAll('.yt-content-metadata-view-model__metadata-row:last-child .yt-content-metadata-view-model__metadata-text:last-of-type')].some(el => /Scheduled for/i.test(el.textContent))) expectedCategory = 'upcoming';
+                    if (expectedCategory === null && [...video.querySelectorAll(streamedMetaSelectors)].some(el => /Scheduled for/i.test(el.textContent))) expectedCategory = 'upcoming';
                 }
 
                 const expectedClassName = expectedCategory ? `CentAnni-style-${expectedCategory}-video` : null;
@@ -10311,9 +10378,10 @@
 
         // handle cleanup
         function cleanupAndReprocessVideos() {
-            const videosToReprocess = homePage.querySelectorAll('ytd-rich-item-renderer[data-centanni-video-processed]');
+            const videosToReprocess = homePage.querySelectorAll('ytd-rich-item-renderer[data-centanni-video-processed]:not([is-shelf-item])');
 
             videosToReprocess.forEach(video => {
+                pendingVideoRetries.delete(video);
                 video.classList.remove(
                     'CentAnni-style-live-video',
                     'CentAnni-style-upcoming-video',
@@ -10345,8 +10413,8 @@
             allButtonObserver = new MutationObserver((mutations) => {
                 for (const mutation of mutations) {
                     if (mutation.type === 'attributes' && mutation.attributeName === 'class' && allButton.classList.contains('iron-selected')) {
-                        checkProcessedVideos();
                         handleFeedFilterAllCleanup();
+                        setTimeout(checkProcessedVideos, 800);
                         break;
                     }
                 }
