@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.10
+// @version      10.11
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.10 - YouTube Alchemy                   *
+*                    Version: 10.11 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1510,6 +1510,11 @@
                 background: rgba(255, 255, 255, .2);
             }
 
+            #CentAnni-progress-bar-end.loaded {
+                width: 8px;
+                background: rgba(255, 255, 255, .52);
+            }
+
             .ytp-autohide .ytp-chrome-bottom .ytp-timed-marker {
                 background-color: black;
                 width: 2px;
@@ -2297,7 +2302,7 @@
                 border-top: none;
             }
 
-            ytd-watch-flexy #playlist {
+            ytd-watch-flexy:not([fullscreen]) #playlist {
                 position: absolute;
                 margin: 0;
                 padding: 0;
@@ -2907,23 +2912,28 @@
                 box-shadow: unset !important;
             }
 
-            .yt-spec-touch-feedback-shape {
+            .yt-spec-touch-feedback-shape,
+            .ytSpecTouchFeedbackShapeHovered {
                 display: none;
             }
         }
 
+        html.CentAnni-style-home-disable-hover:not[dark] .ytLockupMetadataViewModelTitle,
         html.CentAnni-style-home-disable-hover:not[dark] .yt-lockup-metadata-view-model__title {
             color: #0f0f0f !important;
         }
 
+        html.CentAnni-style-home-disable-hover:not[dark] .ytLockupMetadataViewModelMetadata,
         html.CentAnni-style-home-disable-hover:not[dark] .yt-lockup-metadata-view-model__metadata {
             color: #606060 !important;
         }
 
+        html.CentAnni-style-home-disable-hover[dark] .ytLockupMetadataViewModelTitle,
         html.CentAnni-style-home-disable-hover[dark] .yt-lockup-metadata-view-model__title {
             color: #f1f1f1 !important;
         }
 
+        html.CentAnni-style-home-disable-hover[dark] .ytLockupMetadataViewModelMetadata,
         html.CentAnni-style-home-disable-hover[dark] .yt-lockup-metadata-view-model__metadata {
             color: #aaa !important;
         }
@@ -2931,17 +2941,20 @@
         #video-title,
         h1.ytd-watch-metadata,
         html #above-the-fold h1,
+        .ytLockupMetadataViewModelTitle,
         .yt-lockup-metadata-view-model__title {
             text-transform: var(--textTransform) !important;
         }
 
         .CentAnni-style-full-title {
+            .ytLockupMetadataViewModelTitle,
             #video-title.ytd-rich-grid-media,
             .yt-lockup-metadata-view-model__title {
                 white-space: normal !important;
                 text-overflow: unset !important;
                 overflow: unset !important;
                 display: inline-block !important;
+                padding-right: 4px;
             }
 
             #video-title {
@@ -3473,6 +3486,7 @@
             ytd-playlist-video-renderer,
             .ytOfficialCardViewModelHost,
             .ytImageBannerViewModelInset,
+            .ytListItemViewModelContainer,
             #dismissed.ytd-rich-grid-media,
             #home-page-skeleton .text-shell,
             .ytdGhostGridViewModelThumbnail,
@@ -3908,18 +3922,28 @@
             }
 
             .ytd-page-manager[page-subtype="home"] {
+                .ytLockupMetadataViewModelMenuButton,
                 ytd-menu-renderer.ytd-rich-grid-media,
                 .yt-lockup-metadata-view-model__menu-button,
                 .yt-lockup-metadata-view-model-wiz__menu-button {
                     position: absolute;
                     height: 36px;
                     width: 36px;
-                    top: 50px;
+                    top: 40px;
                     right: auto;
-                    left: 6px;
+                    left: 4px;
                     align-items: center;
                     background-color: rgba(255, 255, 255, .1);
                     border-radius: 50%;
+                }
+
+                .ytLockupMetadataViewModelHost:has(.yt-spec-avatar-shape__live-badge) .ytLockupMetadataViewModelMenuButton {
+                    top: 45px
+                }
+
+                .yt-lockup-view-model:has(.ytLockupAttachmentsViewModelHost) .ytLockupMetadataViewModelHost,
+                .ytLockupViewModelMetadata:has(.ytLockupAttachmentsViewModelHost) .ytLockupMetadataViewModelHost {
+                    min-height: 80px;
                 }
 
                 .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-button {
@@ -3969,9 +3993,10 @@
                     --ytd-border-space: 4px;
                 }
 
+                .ytLockupMetadataViewModelAvatar,
                 .yt-lockup-metadata-view-model__avatar,
                 .yt-lockup-metadata-view-model-wiz__avatar {
-                    margin: 0 7px 0 5px;
+                    margin: 0 8px 0 4px;
                 }
 
                 .yt-lockup-metadata-view-model__menu-button,
@@ -4030,6 +4055,10 @@
                 ytd-tabbed-page-header[has-banner] #page-header.ytd-tabbed-page-header {
                     padding-top: 0;
                     padding-bottom: 0;
+                }
+
+                #page-header.ytd-tabbed-page-header {
+                    margin: 12px 12px 0;
                 }
 
                 .yt-page-header-view-model__page-header-headline {
@@ -4167,21 +4196,27 @@
             }
 
             .ytd-page-manager[page-subtype="subscriptions"] {
+                .ytLockupMetadataViewModelMenuButton,
                 ytd-menu-renderer.ytd-rich-grid-media,
                 .yt-lockup-metadata-view-model__menu-button {
                     position: absolute;
                     height: 36px;
                     width: 36px;
-                    top: 50px;
+                    top: 40px;
                     right: auto;
-                    left: 3px;
+                    left: 4px;
                     align-items: center;
                     background-color: rgba(255, 255, 255, .1);
                     border-radius: 50%;
                 }
 
-                .yt-lockup-metadata-view-model__menu-button {
-                    top: 45px;
+                .ytLockupMetadataViewModelHost:has(.yt-spec-avatar-shape__live-badge) .ytLockupMetadataViewModelMenuButton {
+                    top: 45px
+                }
+
+                .yt-lockup-view-model:has(.ytLockupAttachmentsViewModelHost) .ytLockupMetadataViewModelHost,
+                .ytLockupViewModelMetadata:has(.ytLockupAttachmentsViewModelHost) .ytLockupMetadataViewModelHost {
+                    min-height: 80px;
                 }
 
                 .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-button {
@@ -4189,8 +4224,9 @@
                     width: 36px;
                 }
 
+                .ytLockupMetadataViewModelAvatar,
                 .yt-lockup-metadata-view-model__avatar {
-                    margin: 0 9px 0 3px;
+                    margin: 0 8px 0 4px;
                 }
 
                 .title-badge.ytd-rich-grid-media,
@@ -8605,6 +8641,16 @@
             }
         };
 
+        // scroll to selected video in playlist panel
+        const scrollSelectedVideoPL = () => {
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                const panel = playlistSelectedVideo.closest('.playlist-items.ytd-playlist-panel-renderer#items');
+                const panelTop = panel.getBoundingClientRect().top;
+                const itemTop = playlistSelectedVideo.getBoundingClientRect().top;
+                panel.scrollTop += itemTop - panelTop - panel.clientHeight / 2 + playlistSelectedVideo.clientHeight / 2;
+            }));
+        };
+
         // determine the default tab -- priority: transcript > chapters > comments > info
         function determineActiveTab() {
             let activeTabId = 'tab-1';
@@ -8652,7 +8698,7 @@
                 if (currentActiveTab === 'tab-1') videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
                 else if (currentActiveTab === 'tab-4') runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"], ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
                 else if (currentActiveTab === 'tab-5') runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
-                else if (currentActiveTab === 'tab-6' && hasPlaylistPanel && playlistSelectedVideo) requestAnimationFrame(() => playlistSelectedVideo.scrollIntoView({ behavior: 'instant', block: 'center' }));
+                else if (currentActiveTab === 'tab-6' && hasPlaylistPanel && playlistSelectedVideo) scrollSelectedVideoPL();
 
                 subheaderDiv.onclick = null;
             }
@@ -8852,7 +8898,7 @@
                 if (show) {
                     playlistPanel.classList.add('CentAnni-tabView-content-active');
                     playlistPanel.classList.remove('CentAnni-tabView-content-hidden');
-                    if (playlistSelectedVideo) requestAnimationFrame(() => playlistSelectedVideo.scrollIntoView({ behavior: 'instant', block: 'center' }));
+                    if (playlistSelectedVideo) scrollSelectedVideoPL();
                 } else {
                     playlistPanel.classList.add('CentAnni-tabView-content-hidden');
                     playlistPanel.classList.remove('CentAnni-tabView-content-active');
@@ -9721,6 +9767,7 @@
             animationFrameId = video.requestVideoFrameCallback(animateProgress);
         };
 
+        let isLoaded = false;
         const renderBuffer = () => {
             if (!video.duration) return;
             for (let i = video.buffered.length - 1; i >= 0; i--) {
@@ -9728,8 +9775,14 @@
 
                 const timeFraction = video.buffered.end(i) / video.duration;
                 const visualFraction = getVisualProgress(timeFraction);
-
                 buffer.style.transform = `scaleX(${visualFraction})`;
+
+                const hasLoaded = visualFraction >= 0.9999;
+                if (hasLoaded !== isLoaded) {
+                    endDiv.classList.toggle('loaded', hasLoaded);
+                    isLoaded = hasLoaded;
+                }
+
                 break;
             }
         };
@@ -9830,9 +9883,10 @@
                     let rects = "";
 
                     if (chapterSegments.length >= 2 && progressBarWidth > 0) {
-                        chapterSegments.forEach(seg => {
+                        chapterSegments.forEach((seg, i) => {
                             const x = (seg.left / progressBarWidth) * svgWidth;
-                            const w = (seg.width / progressBarWidth) * svgWidth;
+                            const isLastChapter = i === chapterSegments.length - 1;
+                            const w = isLastChapter ? svgWidth - x : (seg.width / progressBarWidth) * svgWidth;
                             if (w > 0) rects += `<rect x="${x}" y="0" width="${w}" height="${svgHeight}" fill="white"/>`;
                         });
                     }
@@ -11110,7 +11164,10 @@
             }
         }
 
-        async function upButtonHandler() {
+        async function upButtonHandler(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
             await GM.setValue(key, 'up');
             reverseDirection = true;
 
@@ -11121,7 +11178,10 @@
         }
 
         // handle down button click
-        async function downButtonHandler() {
+        async function downButtonHandler(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
             await GM.setValue(key, 'down');
             reverseDirection = false;
 
@@ -12308,7 +12368,7 @@
             const tar = (isVideoPage || isLiveStream) ? videoTargets : browseTargets;
             const sel = (isVideoPage || isLiveStream) ? videoPageContainer : browseContainer;
             const ctn = document.querySelector(sel); if (!ctn) return;
-            const init = () => { if (pageObserver) { pageObserver.disconnect(); pageObserver = null; } initialRun ? setTimeout(initializeAlchemy, 0) : setTimeout(() => requestIdleCallback(initializeAlchemy, { timeout: 1250 }), 100); };
+            const init = () => { if (pageObserver) { pageObserver.disconnect(); pageObserver = null; } initialRun ? setTimeout(initializeAlchemy, 50) : setTimeout(() => requestIdleCallback(initializeAlchemy, { timeout: 1250 }), 100); };
             const t = setTimeout(init, 5000);
 
             let remaining = new Set();
