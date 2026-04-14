@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.11
+// @version      10.11.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.11 - YouTube Alchemy                   *
+*                    Version: 10.11.1 - YouTube Alchemy                 *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -3577,6 +3577,8 @@
                 border-radius: 0 !important;
             }
 
+            .ytBadgeShapeHost,
+            .ytBadgeShapeThumbnailBadge,
             .yt-badge-shape--thumbnail-badge,
             .image-wrapper.ytd-hero-playlist-thumbnail-renderer,
             .yt-content-preview-image-view-model-wiz--large-rounded-image,
@@ -10512,8 +10514,8 @@
 
         // helper function to check if a video is live or upcoming
         const isSpecialVideo = (container) => {
-            if (container.querySelector('.yt-content-metadata-view-model__delimiter')) return false;
-            if (container.querySelector('.yt-badge-shape--thumbnail-live, .ytLockupAttachmentsViewModelHost')) return true;
+            if (container.querySelector('.ytContentMetadataViewModelDelimiter,.yt-content-metadata-view-model__delimiter')) return false;
+            if (container.querySelector('.ytBadgeShapeThumbnailLive, .ytLockupAttachmentsViewModelHost,.yt-badge-shape--thumbnail-live')) return true;
             return false;
         };
 
