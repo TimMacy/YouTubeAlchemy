@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.11.5
+// @version      10.11.6
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.11.5 - YouTube Alchemy                 *
+*                    Version: 10.11.6 - YouTube Alchemy                 *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -32,6 +32,32 @@
     // CSS
     const styleSheet = document.createElement('style');
     styleSheet.textContent = `
+        html {
+            font-size: var(--fontSize) !important;
+            font-family: "Roboto", Arial, sans-serif;
+            --CentAnniTabViewHeader: 52px;
+            --topHeaderMargin: var(--ytd-margin-6x, 24px);
+            --ytd-margin-0x: 16px;
+            --yt-text-primary: #0f0f0f;
+            --yt-text-secondary: #606060;
+            --yt-base-background: #fff;
+            --yt-raised-background: #212121;
+        }
+
+        html[dark] {
+            --yt-text-primary: #f1f1f1;
+            --yt-text-secondary: #aaa;
+            --yt-base-background: #0f0f0f;
+        }
+
+        ytd-watch-flexy[reduced-top-margin] {
+            --topHeaderMargin: var(--ytd-margin-3x, 12px);
+        }
+
+        ytd-watch-flexy {
+            --horizontalMargin: var(--ytd-watch-flexy-horizontal-page-margin, 16px);
+        }
+
         /* main CSS */
         .CentAnni-overlay {
             position: fixed;
@@ -59,7 +85,6 @@
             font-size: 9px;
             line-height: 1.2;
             color: white;
-            text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
@@ -649,7 +674,6 @@
             margin-right: 8px;
             display: flex;
             background-color: transparent;
-            text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
@@ -684,11 +708,11 @@
             tp-yt-app-drawer.ytd-app[persistent] #guide-content > #header {
                 display: flex !important;
                 margin-top: -56px;
-                background: var(--yt-spec-base-background);
+                background: var(--yt-base-background);
             }
 
             ytd-app tp-yt-app-drawer.ytd-app[persistent] {
-                background: var(--yt-spec-base-background);
+                background: var(--yt-base-background);
             }
 
             #guide-wrapper .CentAnni-button-wrapper {
@@ -840,10 +864,9 @@
             font-size: 1.4rem;
             font-weight: 500;
             line-height: 1em;
-            color: var(--yt-spec-text-primary);
+            color: var(--yt-text-primary);
             pointer-events: auto;
             cursor: default;
-            text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
@@ -915,7 +938,6 @@
             text-align: center;
             font-weight: 500;
             font-size: 14px;
-            text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
@@ -931,10 +953,10 @@
             left: 50%;
             transform: translateX(-50%);
             padding: 8px 16px;
-            background: var( --yt-spec-base-background );
+            background: var(--yt-base-background);
             border-radius: 2px;
             border: 1px solid hsl(0, 0%, 18.82%);
-            color: var(--yt-spec-text-primary);
+            color: var(--yt-text-primary);
             font-family: -apple-system, "Roboto", "Arial", sans-serif;
             font-size: 2.3rem;
             font-weight: 600;
@@ -947,7 +969,6 @@
             -ms-user-select: none;
             user-select: none;
             pointer-events: none;
-            text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
@@ -968,7 +989,6 @@
             opacity: 0;
             -webkit-animation: pulse 1.5s infinite;
             animation: pulse 1.5s infinite;
-            text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
@@ -1010,7 +1030,6 @@
             background: transparent;
             border: none;
             text-align: center;
-            text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
@@ -1055,7 +1074,6 @@
             flex-direction: column;
             overflow-y: auto;
             color: whitesmoke;
-            text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
@@ -1391,22 +1409,6 @@
         :is(:fullscreen, :-webkit-full-screen, .html5-video-player.ytp-fullscreen) :has(.CentAnni-remaining-time-container) .ytp-autohide #ytp-caption-window-container {
             bottom: 40px;
             top: unset;
-        }
-
-        html {
-            font-size: var(--fontSize) !important;
-            font-family: "Roboto", Arial, sans-serif;
-            --CentAnniTabViewHeader: 52px;
-            --topHeaderMargin: var(--ytd-margin-6x, 24px);
-            --ytd-margin-0x: 16px;
-        }
-
-        ytd-watch-flexy[reduced-top-margin] {
-            --topHeaderMargin: var(--ytd-margin-3x, 12px);
-        }
-
-        ytd-watch-flexy {
-            --horizontalMargin: var(--ytd-watch-flexy-horizontal-page-margin, 16px);
         }
 
         /* progress bar css */
@@ -1813,8 +1815,8 @@
                 height: 50px;
                 padding: 0;
                 margin: 0;
-                color: var(--yt-spec-text-primary);
-                background-color: #212121;
+                color: var(--yt-text-primary);
+                background-color: var(--yt-raised-background);
                 z-index: 7;
             }
 
@@ -2150,7 +2152,7 @@
             ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a[href*="/hashtag/"] {
                 cursor: pointer;
                 pointer-events: all;
-                color: var(--yt-spec-text-secondary);
+                color: var(--yt-text-secondary);
             }
 
             ytd-watch-metadata[description-collapsed] #description.ytd-watch-metadata a:hover {
@@ -2510,7 +2512,7 @@
 
             ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
             ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
-                background-color: var(--yt-spec-base-background, #0f0f0f);
+                background-color: var(--yt-base-background);
             }
 
             .vote-choice.ytd-backstage-quiz-renderer:hover {
@@ -2721,7 +2723,7 @@
                 font-family: -apple-system, "Roboto", "Arial", sans-serif;
                 font-size: 1.4rem;
                 line-height: 2rem;
-                color: var(--yt-spec-text-primary) !important;
+                color: var(--yt-text-primary) !important;
                 -webkit-user-select: none;
                 -moz-user-select: none;
                 -ms-user-select: none;
@@ -3091,7 +3093,7 @@
                 background-color: rgba(10, 10, 10, .9);
             }
 
-            ytd-watch-flexy #top-row.ytd-watch-metadata .ytSpecButtonShapeNextSizeM:not(:hover),
+            ytd-watch-flexy #top-row.ytd-watch-metadata .ytSpecButtonShapeNextSizeM:not(:hover, .ytSpecButtonShapeNextFilled),
             ytd-watch-flexy #top-row.ytd-watch-metadata .yt-spec-button-shape-next--mono.yt-spec-button-shape-next--tonal:not(:hover) {
                 background: transparent;
             }
@@ -3806,12 +3808,11 @@
 
         #CentAnni-playlist-direction-container > span {
             margin-right: 4px;
-            color: var(--yt-spec-text-primary);
+            color: var(--yt-text-primary);
             font-family: "YouTube Sans", "Roboto", sans-serif;
             font-size: 1.7rem;
             line-height: 1rem;
             font-weight: 600;
-            text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
             cursor: default;
@@ -3823,16 +3824,16 @@
 
         .CentAnni-yt-shorts-control-btn,
         .CentAnni-playlist-direction-btn {
-            color: var(--yt-spec-text-secondary) !important;
+            color: var(--yt-text-secondary) !important;
         }
 
         .CentAnni-yt-shorts-control-btn.active,
         .CentAnni-playlist-direction-btn.active {
-            color: var(--yt-spec-text-primary) !important;
+            color: var(--yt-text-primary) !important;
         }
 
         .CentAnni-yt-shorts-control-btn.active {
-            border: 1px solid color-mix(in srgb, var(--yt-spec-text-primary) 20%, transparent) !important;
+            border: 1px solid color-mix(in srgb, var(--yt-text-primary) 20%, transparent) !important;
         }
 
         #CentAnni-yt-shorts-controls {
@@ -3853,7 +3854,6 @@
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
             white-space: normal;
-            text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
@@ -5459,7 +5459,7 @@
             padding: 0;
             z-index: 2027;
             cursor: pointer;
-            background: var(--yt-spec-base-background);
+            background: var(--yt-base-background);
             border: 1px solid rgba(255, 0, 0, .5);
         }
 
@@ -10796,7 +10796,7 @@
         // btn remove watched videos
         const btnRemove = document.createElement('button');
         btnRemove.id = 'CentAnni-remove-watched-btn';
-        btnRemove.className = 'ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeM yt-spec-button-shape-next yt-spec-button-shape-next--tonal yt-spec-button-shape-next--overlay yt-spec-button-shape-next--size-m';
+        btnRemove.className = 'ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextOverlay ytSpecButtonShapeNextSizeM yt-spec-button-shape-next yt-spec-button-shape-next--tonal yt-spec-button-shape-next--overlay yt-spec-button-shape-next--size-m';
         btnRemove.textContent = 'Remove Watched Videos';
         btnRemove.onclick = handleBtnClick;
         wrapper.insertBefore(btnRemove, menuRenderer.nextSibling);
@@ -10804,7 +10804,7 @@
         // btn toggle watched videos
         const btnToggle = document.createElement('button');
         btnToggle.id = 'CentAnni-toggle-watched-btn';
-        btnToggle.className = 'ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeM yt-spec-button-shape-next yt-spec-button-shape-next--tonal yt-spec-button-shape-next--overlay yt-spec-button-shape-next--size-m';
+        btnToggle.className = 'ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextOverlay ytSpecButtonShapeNextSizeM yt-spec-button-shape-next yt-spec-button-shape-next--tonal yt-spec-button-shape-next--overlay yt-spec-button-shape-next--size-m';
         btnToggle.textContent = 'Toggle Watched';
         btnToggle.onclick = () => document.documentElement.classList.toggle('CentAnni-hide-watched-pl');
         wrapperText.insertBefore(btnToggle, menuRendererText.nextSibling);
@@ -10974,7 +10974,7 @@
             playlistIcon.setAttribute('viewBox', '0 0 24 24');
             playlistIcon.setAttribute('width', '24');
             playlistIcon.setAttribute('height', '24');
-            playlistIcon.style.fill = 'var(--yt-spec-text-primary)';
+            playlistIcon.style.fill = 'var(--yt-text-primary)';
             const iconPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             iconPath.setAttribute('clip-rule', 'evenodd');
             iconPath.setAttribute('fill-rule', 'evenodd');
