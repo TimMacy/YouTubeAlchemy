@@ -130,31 +130,32 @@ Offers various options to customize the layout and functionality of YouTube.
   - Transcript Language
   - Language Options:
     - Auto (default)
-    - English
-    - Spanish
-    - Hindi
-    - Portuguese
-    - German
-    - French
-    - Italian
+    - Chinese
+    - Czech
+    - Danish
     - Dutch
-    - Polish
+    - English
+    - Finnish
+    - French
+    - German
+    - Greek
     - Hebrew
+    - Hindi
+    - Hungarian
+    - Indonesian
+    - Italian
     - Japanese
     - Korean
-    - Chinese
-    - Indonesian
-    - Swedish
     - Norwegian
-    - Danish
-    - Finnish
-    - Czech
-    - Greek
-    - Hungarian
+    - Polish
+    - Portuguese
     - Romanian
+    - Spanish
+    - Swedish
     - Ukrainian
-  - Choose Font Size
-  - Adjust Number of Videos per Row
+    - Vietnamese
+  - Font Size
+  - Number of Videos per Row
   - Sidebar Width
   - Search Bar Position
   - Minimum Space Below Player in Default Layout When Tab View and Compact Layout Are Enabled
@@ -171,6 +172,7 @@ Offers various options to customize the layout and functionality of YouTube.
 
 **Features**
   - Auto Theater Mode
+  - Auto-Exit Fullscreen When Video Ends
   - Cinema Mode
     - Adds a button to the bottom right in theater mode. Once activated, all UI elements are hidden while the mouse is outside the page.
   - Max Video Size in Default Layout
@@ -285,7 +287,9 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide "Home" Button
   - Hide "Subscriptions" Button
   - Restore Order: Home > You > Subscriptions
+<!-- -->
   - Hide "You" Button
+  - Hide "Your Channel" Button
   - Hide "History" Button
   - Hide "Playlists" Button
   - Hide "Your Videos" Button
@@ -294,9 +298,11 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide "Watch Later" Button
   - Hide "Liked Videos" Button
   - Hide "Downloads" Button
+<!-- -->
   - Hide "Subscriptions" Section
   - Hide "Subscriptions" Title
   - Hide "Show More" Button
+<!-- -->
   - Hide "Explore" Section
   - Hide "Explore" Title
   - Hide "Trending" Button
@@ -309,17 +315,20 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide "Learning" Button
   - Hide "Fashion & Beauty" Button
   - Hide "Podcasts" Button
+<!-- -->
   - Hide "More from YouTube" Section
   - Hide "More from YouTube" Title
   - Hide "YouTube Premium" Button
   - Hide "YouTube Studio" Button
   - Hide "YouTube Music" Button
   - Hide "YouTube Kids" Button
+<!-- -->
   - Hide Penultimate Section
   - Hide "Settings" Button
   - Hide "Report History" Button
   - Hide "Help" Button
   - Hide "Send Feedback" Button
+<!-- -->
   - Hide Footer
 
 <br>
@@ -329,13 +338,15 @@ Offers various options to customize the layout and functionality of YouTube.
     - Adds customizable borders to videos to visually indicate their age and status, and offers the option to hide watched videos.
   - On Subscriptions Page
     - Adds a customizable border to the last uploaded video to highlight it on subsequent visits, with the option to auto-scroll to it.
+  - On Watch Later Page
+    - Highlight unwatched videos from favorite channels, categorized in gold, silver, and bronze.
 
 <p align="center"><img width="60%" alt="Color Code Videos" src="https://github.com/user-attachments/assets/60115715-f921-4ee8-8be4-2d2923b1c023" /></p>
 
 <br>
 
 ## 🌐 Supported Languages
-The script works with YouTube UI set to the following languages: English, Spanish, Hindi, Portuguese, German, French, Italian, Dutch, Polish, Hebrew, Japanese, Korean, Chinese, Indonesian, Swedish, Norwegian, Danish, Finnish, Czech, Greek, Hungarian, Romanian, and Ukrainian.<br>
+The script works with YouTube UI set to the following languages: Chinese, Czech, Danish, Dutch, English, Finnish, French, German, Greek, Hebrew, Hindi, Hungarian, Indonesian, Italian, Japanese, Korean, Norwegian, Polish, Portuguese, Romanian, Spanish, Swedish, Ukrainian, and Vietnamese.<br>
 _Support is a work in progress. Other languages may have limited functionality._
 
 <br>
