@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.11.7
+// @version      10.12
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.11.7 - YouTube Alchemy                 *
+*                    Version: 10.12 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -200,6 +200,9 @@
         .label-download { color: hsl(359, 88%, 57%); }
         .label-lazy { color: hsl(51, 100%, 50%); }
         .label-settings { color: hsl(0, 0%, 100%); }
+        .label-gold  { color: gold; }
+        .label-silver  { color: silver; }
+        .label-bronze  { color: #CD7F32; }
 
         .input-field-targetNotebookLMUrl:focus { border: 1px solid hsl(134, 61%, 40%); }
         .input-field-targetChatGPTUrl:focus { border: 1px solid hsl(217, 91%, 59%); }
@@ -208,6 +211,9 @@
         .buttonIconCopy-input-field:focus { border: 1px solid hsl(33, 100%, 50%); }
         .buttonIconlazyLoad-input-field:focus { border: 1px solid hsl(51, 100%, 50%); }
         .buttonIconDownload-input-field:focus { border: 1px solid hsl(359, 88%, 57%); }
+        .input-field-watchLaterGold:focus { border: 1px solid gold; }
+        .input-field-watchLaterSilver:focus { border: 1px solid silver; }
+        .input-field-watchLaterBronze:focus { border: 1px solid #CD7F32; }
 
         .buttonIconSettings-input-field:focus,
         .links-header-container input:focus,
@@ -686,6 +692,7 @@
         .CentAnni-button-wrapper.disabled > button,
         #masthead #end.disabled .CentAnni-button-wrapper:not(:has(#transcript-settings-button)) > button {
             pointer-events: none;
+            opacity: .5;
         }
 
         .CentAnni-btn-tooltip {
@@ -1182,7 +1189,7 @@
         }
 
         #color-code-videos-form .CentAnni-info-text {
-            margin: 5px 80px 20px 0px;
+            margin: 5px 60px 20px 0px;
         }
 
         #custom-css-form .checkbox-container {
@@ -2129,10 +2136,12 @@
             ytd-compact-video-renderer:hover,
             #topic-link a#topic-link-container:hover,
             .yt-video-attribute-view-model--clickable:hover,
+            .ytVideoAttributeViewModelContentContainer:hover,
             ytd-video-description-course-section-renderer > #topic-link:hover,
             ytd-structured-description-content-renderer #media-lockups a:hover,
             #infocards-section > ytd-compact-infocard-renderer > #content:hover,
             #related ytd-item-section-renderer yt-lockup-view-model > div:hover,
+            yt-video-attribute-view-model.ytd-horizontal-card-list-renderer:hover,
             #items > ytd-video-description-infocards-section-renderer > #header:hover,
             ytd-watch-card-compact-video-renderer.ytd-vertical-watch-card-list-renderer:not([is-condensed]):hover,
             #always-shown > ytd-rich-metadata-row-renderer > #contents > ytd-rich-metadata-renderer > #endpoint-link:hover,
@@ -2575,6 +2584,24 @@
             #owner.ytd-watch-metadata {
                 min-height: 42px;
             }
+
+            #cinematics {
+                height: 100dvh;
+                width: 100dvw;
+                overflow: hidden;
+                top: calc(-1 * var(--ytd-masthead-height)) !important;
+            }
+
+            #cinematics > div {
+                height: 70% !important;
+                width: 85%;
+                margin-left: 0 !important;
+            }
+
+            ytd-watch-flexy #top-row.ytd-watch-metadata .ytSpecButtonShapeNextSizeM:not(:hover, .ytSpecButtonShapeNextFilled),
+            ytd-watch-flexy #top-row.ytd-watch-metadata .yt-spec-button-shape-next--mono.yt-spec-button-shape-next--tonal:not(:hover) {
+                background: transparent;
+            }
         }
 
         html:has(#player.skeleton).CentAnni-video-tabView #masthead-container.ytd-app {
@@ -2656,6 +2683,10 @@
 
             .segment.ytd-transcript-segment-renderer {
                 align-items: center;
+            }
+
+            .segment.ytd-transcript-segment-renderer:hover .segment-text.ytd-transcript-segment-renderer {
+                font-weight: 400;
             }
         }
 
@@ -2924,7 +2955,7 @@
                 box-shadow: unset !important;
             }
 
-            .yt-spec-touch-feedback-shape,
+            yt-spec-touch-feedback-shape,
             .ytSpecTouchFeedbackShapeHovered {
                 display: none;
             }
@@ -3066,19 +3097,6 @@
                 border: none;
             }
 
-            #cinematics-container #cinematics > div > div {
-                min-height: 100dvh !important;
-                min-width: 100dvw !important;
-                height: 100dvh;
-                width: 100dvw;
-                transform: unset !important;
-            }
-
-            ytd-watch-flexy[is-vertical-video_] #cinematics-container #cinematics > div > div {
-                min-width: 80dvw !important;
-                width: 80dvw;
-            }
-
             .ytp-delhi-modern .ytp-popup,
             .ytp-delhi-modern .ytp-chrome-controls .ytp-right-controls,
             .ytSpecButtonShapeNextOverlayDark.ytSpecButtonShapeNextTonal,
@@ -3091,11 +3109,6 @@
 
             .ytSpecButtonShapeNextOverlayDark.ytSpecButtonShapeNextTonal:hover {
                 background-color: rgba(10, 10, 10, .9);
-            }
-
-            ytd-watch-flexy #top-row.ytd-watch-metadata .ytSpecButtonShapeNextSizeM:not(:hover, .ytSpecButtonShapeNextFilled),
-            ytd-watch-flexy #top-row.ytd-watch-metadata .yt-spec-button-shape-next--mono.yt-spec-button-shape-next--tonal:not(:hover) {
-                background: transparent;
             }
         }
 
@@ -3491,7 +3504,6 @@
         }
 
         .CentAnni-style-square-design {
-            #thumbnail,
             .CentAnni-tabView,
             .ytp-settings-menu,
             #card.ytd-miniplayer,
@@ -3530,6 +3542,8 @@
             ytd-post-renderer[rounded-container],
             #related.style-scope.ytd-watch-flexy,
             ytd-thumbnail[size="medium"]::before,
+            .ytVideoAttributeViewModelImageLarge,
+            .ytVideoAttributeViewModelHeroSection,
             .ytNotificationMultiActionRendererHost,
             .animated-action__background-container,
             .ytp-player-minimized .html5-main-video,
@@ -3578,6 +3592,7 @@
             ytd-live-chat-frame[theater-watch-while][rounded-container],
             ytd-watch-flexy[rounded-player] #ytd-player.ytd-watch-flexy,
             ytd-shorts[enable-anchored-panel] .anchored-panel.ytd-shorts,
+            #thumbnail:not(.ytd-video-description-infocards-section-renderer),
             ytd-live-chat-frame[rounded-container]:not([theater-watch-while]),
             ytd-live-chat-frame[rounded-container] iframe.ytd-live-chat-frame,
             .ytp-delhi-modern .ytp-settings-menu .ytp-menuitem > *:last-child,
@@ -3589,6 +3604,7 @@
             #playlist-thumbnail.ytd-structured-description-playlist-lockup-renderer,
             .ytPageHeaderViewModelDisplayAsSidebar .ytPageHeaderViewModelBackground,
             ytd-author-comment-badge-renderer[enable-modern-comment-badges][creator],
+            ytd-backstage-quiz-renderer .explanation-box.ytd-backstage-quiz-renderer,
             ytd-engagement-panel-section-list-renderer:not([live-chat-engagement-panel]),
             ytd-watch-flexy[rounded-player-large][default-layout] #ytd-player.ytd-watch-flexy,
             .yt-video-attribute-view-model--image-small .yt-video-attribute-view-model__hero-section,
@@ -3622,6 +3638,7 @@
             .ytSpecButtonShapeNextSizeM,
             yt-chip-cloud-chip-renderer,
             ytd-multi-page-menu-renderer,
+            .ytSpecButtonShapeNextSizeXs,
             #description.ytd-watch-metadata,
             .badge-shape-wiz--thumbnail-badge,
             .yt-spec-button-shape-next--size-s,
@@ -4851,6 +4868,7 @@
         }
 
         .CentAnni-style-hide-news-home {
+            ytd-browse[page-subtype="home"] ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[elements-per-row="3"][show-bottom-divider][restrict-contents-overflow][has-expansion-button]),
             ytd-browse[page-subtype="home"] ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[elements-per-row="3"][has-expansion-button][restrict-contents-overflow] #title):has(.yt-spec-avatar-shape__live-badge),
             ytd-browse[page-subtype="home"] ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[elements-per-row="3"][is-show-less-hidden][restrict-contents-overflow] #title):has(.yt-spec-avatar-shape__live-badge),
             ytd-browse[page-subtype="home"] ytd-rich-grid-renderer ytd-rich-section-renderer:has(yt-icon:empty) {
@@ -5494,11 +5512,6 @@
                 height: max(80px, calc((100dvh - (var(--ytd-watch-flexy-height-ratio)/var(--ytd-watch-flexy-width-ratio)*100dvw)) / 2)) !important;
             }
 
-            & #secondary {
-                padding-top: 18px;
-                align-self: flex-start;
-            }
-
             &.CentAnni-video-tabView #primary {
                 overflow-x: visible;
             }
@@ -5592,24 +5605,44 @@
                 filter: opacity(1);
             }
         }
-    `;
 
-    // append css
-    (document.head
-        ? Promise.resolve(document.head)
-        : new Promise(resolve => {
-            document.readyState === 'loading'
-                ? document.addEventListener('DOMContentLoaded', () => resolve(document.head), { once: true })
-                : resolve(document.head);
-        })
-    ).then(head => {
-        if (head)
-            head.appendChild(styleSheet);
-        else {
-            document.documentElement.appendChild(styleSheet);
-            console.error("YouTubeAlchemy: Failed to find head element. Using backup to append stylesheet.");
+        /* favorites watch later list */
+        ytd-browse[page-subtype="playlist"]:is(:not(:has(.ytAvatarStackViewModelAvatars)), :has(#CentAnni-remove-watched-btn)) ytd-playlist-video-renderer:has(a:is(wl-gold)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer)) #index-container {
+            background-color: gold;
         }
-    });
+
+        ytd-browse[page-subtype="playlist"]:is(:not(:has(.ytAvatarStackViewModelAvatars)), :has(#CentAnni-remove-watched-btn)) ytd-playlist-video-renderer:has(a:is(wl-gold)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer)):hover {
+            background-color: rgba(255, 215, 0, .17);
+        }
+
+        ytd-browse[page-subtype="playlist"]:is(:not(:has(.ytAvatarStackViewModelAvatars)), :has(#CentAnni-remove-watched-btn)) ytd-playlist-video-renderer:has(a:is(wl-silver)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer)) #index-container {
+            background-color: silver;
+        }
+
+        ytd-browse[page-subtype="playlist"]:is(:not(:has(.ytAvatarStackViewModelAvatars)), :has(#CentAnni-remove-watched-btn)) ytd-playlist-video-renderer:has(a:is(wl-silver)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer)):hover {
+            background-color: rgba(192, 192, 192, .17);
+        }
+
+        ytd-browse[page-subtype="playlist"]:is(:not(:has(.ytAvatarStackViewModelAvatars)), :has(#CentAnni-remove-watched-btn)) ytd-playlist-video-renderer:has(a:is(wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer)) #index-container {
+            background-color: #CD7F32;
+        }
+
+        ytd-browse[page-subtype="playlist"]:is(:not(:has(.ytAvatarStackViewModelAvatars)), :has(#CentAnni-remove-watched-btn)) ytd-playlist-video-renderer:has(a:is(wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer)):hover {
+            background-color: rgba(205, 127, 50, .17);
+        }
+
+        ytd-browse[page-subtype="playlist"]:is(:not(:has(.ytAvatarStackViewModelAvatars)), :has(#CentAnni-remove-watched-btn)) ytd-playlist-video-renderer:has(a:is(wl-gold,wl-silver,wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer)) #index {
+            color: black;
+        }
+
+        ytd-browse[page-subtype="playlist"]:is(:not(:has(.ytAvatarStackViewModelAvatars)), :has(#CentAnni-remove-watched-btn)) ytd-playlist-video-renderer:has(a:is(wl-gold,wl-silver,wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer)) #content.ytd-playlist-video-renderer {
+            padding: 0;
+        }
+
+        ytd-browse[page-subtype="playlist"]:is(:not(:has(.ytAvatarStackViewModelAvatars)), :has(#CentAnni-remove-watched-btn)) ytd-playlist-video-renderer:has(a:is(wl-gold,wl-silver,wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer)) {
+            padding: 8px 0;
+        }
+    `;
 
     // default configuration
     const DEFAULT_CONFIG = {
@@ -5796,6 +5829,7 @@
         disablePlayOnHover: false,
         chronologicalNotifications: true,
         hideReadNotifications: false,
+        feedFilterChips: false,
         feedFilterChipsWatch: false,
         hideFundraiser: false,
         hideLatestPostsHome: false,
@@ -5857,7 +5891,10 @@
         squareAvatars: false,
         compactLayout: false,
         maxPanelHeight: false,
-        noAmbientMode: false
+        noAmbientMode: false,
+        watchLaterGold: '',
+        watchLaterSilver: '',
+        watchLaterBronze: ''
     };
 
     // load user configuration or use defaults
@@ -5877,6 +5914,31 @@
             ...storedConfig.buttonIcons
         }
     };
+
+    // replace watch later color variables
+    if (USER_CONFIG.watchLaterGold || USER_CONFIG.watchLaterSilver || USER_CONFIG.watchLaterBronze) {
+        const gold = USER_CONFIG.watchLaterGold.split(',').filter(Boolean).map(v => `[href*="${v.trim()}"]`).join(',');
+        const silver = USER_CONFIG.watchLaterSilver.split(',').filter(Boolean).map(v => `[href*="${v.trim()}"]`).join(',');
+        const bronze = USER_CONFIG.watchLaterBronze.split(',').filter(Boolean).map(v => `[href*="${v.trim()}"]`).join(',');
+        styleSheet.textContent = styleSheet.textContent.replaceAll('wl-gold', gold).replaceAll('wl-silver', silver).replaceAll('wl-bronze', bronze);
+    }
+
+    // append css
+    (document.head
+        ? Promise.resolve(document.head)
+        : new Promise(resolve => {
+            document.readyState === 'loading'
+                ? document.addEventListener('DOMContentLoaded', () => resolve(document.head), { once: true })
+                : resolve(document.head);
+        })
+    ).then(head => {
+        if (head)
+            head.appendChild(styleSheet);
+        else {
+            document.documentElement.appendChild(styleSheet);
+            console.error("YouTubeAlchemy: Failed to find head element. Using backup to append stylesheet.");
+        }
+    });
 
     // caching DOM references
     const docElement = document.documentElement;
@@ -6692,6 +6754,10 @@
             const expandVideoDescription = createCheckboxField('Auto Expand Video Description (default: off)', 'expandVideoDescription', USER_CONFIG.expandVideoDescription);
             form.appendChild(expandVideoDescription);
 
+            // restore feed filter chip on the homepage
+            const feedFilterChips = createCheckboxField('Restore Homepage Filter Selection (default: off)', 'feedFilterChips', USER_CONFIG.feedFilterChips);
+            form.appendChild(feedFilterChips);
+
             // restore feed filter chip for suggested videos
             const feedFilterChipsWatch = createCheckboxField('Restore Suggested Videos Filter Selection (default: off)', 'feedFilterChipsWatch', USER_CONFIG.feedFilterChipsWatch);
             form.appendChild(feedFilterChipsWatch);
@@ -7427,6 +7493,21 @@
             const lastSeenVideoScroll = createCheckboxField('Auto-Scroll to Last Uploaded Video (default: off)', 'lastSeenVideoScroll', USER_CONFIG.lastSeenVideoScroll);
             form.appendChild(lastSeenVideoScroll);
 
+            // on watch later page
+            const colorCodeVideosOnWatchLater = document.createElement('label');
+            colorCodeVideosOnWatchLater.textContent = 'Watch Later Page';
+            colorCodeVideosOnWatchLater.classList.add('button-icons', 'features-text');
+            form.appendChild(colorCodeVideosOnWatchLater);
+
+            const infoColorCodeVideosOnWatchLater = document.createElement('small');
+            infoColorCodeVideosOnWatchLater.textContent = 'Highlight unwatched videos from your favorite channels, categorized in gold, silver, and bronze. To enter multiple channels per category, enter the YouTube handles without the "@" symbol separated by commas, e.g. "youtubecreators1,youtubecreators2,youtubecreators3".';
+            infoColorCodeVideosOnWatchLater.classList.add('CentAnni-info-text');
+            form.appendChild(infoColorCodeVideosOnWatchLater);
+
+            form.appendChild(createInputField(`Gold`, 'watchLaterGold', USER_CONFIG.watchLaterGold, 'label-gold'));
+            form.appendChild(createInputField(`Silver`, 'watchLaterSilver', USER_CONFIG.watchLaterSilver, 'label-silver'));
+            form.appendChild(createInputField(`Bronze`, 'watchLaterBronze', USER_CONFIG.watchLaterBronze, 'label-bronze'));
+
             return form;
         }
     }
@@ -7843,6 +7924,7 @@
             USER_CONFIG.disablePlayOnHover = subPanelCustomCSS.elements.disablePlayOnHover.checked;
             USER_CONFIG.chronologicalNotifications = subPanelCustomCSS.elements.chronologicalNotifications.checked;
             USER_CONFIG.hideReadNotifications = subPanelCustomCSS.elements.hideReadNotifications.checked;
+            USER_CONFIG.feedFilterChips = subPanelCustomCSS.elements.feedFilterChips.checked;
             USER_CONFIG.feedFilterChipsWatch = subPanelCustomCSS.elements.feedFilterChipsWatch.checked;
             USER_CONFIG.preventAutoplay = subPanelCustomCSS.elements.preventAutoplay.checked;
             USER_CONFIG.preventAutoplayPL = subPanelCustomCSS.elements.preventAutoplayPL.checked;
@@ -7967,6 +8049,9 @@
             USER_CONFIG.lastSeenVideoScroll = subPanelColor.elements.lastSeenVideoScroll.checked;
             USER_CONFIG.lastSeenVideoColor = subPanelColor.elements.lastSeenVideoColor.value;
             USER_CONFIG.lastSeenVideoColorLight = subPanelColor.elements.lastSeenVideoColorLight.value;
+            USER_CONFIG.watchLaterGold = subPanelColor.elements.watchLaterGold.value;
+            USER_CONFIG.watchLaterSilver = subPanelColor.elements.watchLaterSilver.value;
+            USER_CONFIG.watchLaterBronze = subPanelColor.elements.watchLaterBronze.value;
         }
 
         // save updated config
@@ -8289,11 +8374,20 @@
     }
 
     // function to get video information
-    function getVideoInfo() {
-        const ytTitle = watchFlexyElement.querySelector('div#title h1 > yt-formatted-string')?.textContent.trim() || 'N/A';
-        const channelName = watchFlexyElement.querySelector('ytd-video-owner-renderer ytd-channel-name#channel-name yt-formatted-string#text a')?.textContent.trim() || 'N/A';
-        const uploadDate = watchFlexyElement.querySelector('ytd-video-primary-info-renderer #info-strings yt-formatted-string')?.textContent.trim() || 'N/A';
+    async function getVideoInfo() {
+        const ytTitle = watchFlexyElement.querySelector('h1.ytd-watch-metadata yt-formatted-string')?.textContent.trim() || 'N/A';
+        let channelName = watchFlexyElement.querySelector('#channel-name a')?.textContent.trim();
+        const uploadDate = watchFlexyElement.querySelector('#info-strings yt-formatted-string')?.textContent.trim() || 'N/A';
         const videoURL = window.location.href;
+
+        if (!channelName) {
+            watchFlexyElement.querySelector('#attributed-channel-name a')?.click();
+            await new Promise(r => setTimeout(r, 500));
+            const videoCollaborators = [...document.querySelectorAll('.ytListItemViewModelHost a')].map(a => a.textContent.trim()).filter(Boolean);
+            const collaboratorsFormatted = videoCollaborators.length > 2 ? videoCollaborators.slice(0, -1).join(', ') + ', and ' + videoCollaborators.at(-1) : videoCollaborators.join(' and ');
+            channelName = collaboratorsFormatted ? collaboratorsFormatted : watchFlexyElement.querySelector('#attributed-channel-name a')?.textContent.trim() || 'N/A';
+            docBody.click();
+        }
 
         return { ytTitle, channelName, uploadDate, videoURL };
     }
@@ -8352,9 +8446,9 @@
     }
 
     // function to select and copy the transcript into the clipboard
-    function selectAndCopyTranscript(target) {
+    async function selectAndCopyTranscript(target) {
         const transcriptText = getTranscriptText();
-        const { ytTitle, channelName, uploadDate, videoURL } = getVideoInfo();
+        const { ytTitle, channelName, uploadDate, videoURL } = await getVideoInfo();
 
         let finalText = '';
         let targetUrl = '';
@@ -8377,17 +8471,17 @@
     }
 
     // function to get the formatted transcript with video details for the text file
-    function getFormattedTranscript() {
+    async function getFormattedTranscript() {
         const transcriptText = getTranscriptText();
-        const { ytTitle, channelName, uploadDate, videoURL } = getVideoInfo();
+        const { ytTitle, channelName, uploadDate, videoURL } = await getVideoInfo();
+        const finalText = `Information about the YouTube Video:\nTitle: ${ytTitle}\nChannel: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nYouTube Transcript:\n${transcriptText.trimStart()}`;
 
-        return `Information about the YouTube Video:\nTitle: ${ytTitle}\nChannel: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nYouTube Transcript:\n${transcriptText.trimStart()}`;
+        return { finalText, ytTitle, channelName, uploadDate };
     }
 
     // function to download the transcript as a text file
-    function downloadTranscriptAsText() {
-        const finalText = getFormattedTranscript();
-        const { ytTitle, channelName, uploadDate } = getVideoInfo();
+    async function downloadTranscriptAsText() {
+        const { finalText, ytTitle, channelName, uploadDate } = await getFormattedTranscript();
         const blob = new Blob([finalText], { type: 'text/plain' });
 
         const sanitize = str => str.replace(/[<>:"/\\|?*]+/g, '');
@@ -9619,7 +9713,7 @@
             // build display format
             const displayFormat = (() => {
                 if (USER_CONFIG.showRemainingCompact) return (elapsed, total, watched, remaining, playbackDisplay) => `${elapsed} / ${total} | -${remaining} ${playbackDisplay}`;
-                else return (elapsed, total, watched, remaining, playbackDisplay) => `total: ${total} | elapsed: ${elapsed}${!USER_CONFIG.progressBar ? ` — watched: ${watched}` : ''} — remaining: ${remaining} ${playbackDisplay}`;
+                else return (elapsed, total, watched, remaining, playbackDisplay) => `total: ${total} | elapsed: ${elapsed}${!USER_CONFIG.progressBar ? ` – watched: ${watched}` : ''} – remaining: ${remaining} ${playbackDisplay}`;
             })();
 
             // update UI depending on playback speed and once per second
@@ -10151,29 +10245,30 @@
 
         async function setQualityPremium() {
             const qualityTranslations = {
+                'cs': 'Kvalita',
+                'da': 'Kvalitet',
+                'de': 'Qualität',
+                'el': 'Ποιότητα',
                 'en': 'Quality',
                 'es': 'Calidad',
-                'hi': 'गुणवत्ता',
-                'pt': 'Qualidade',
-                'de': 'Qualität',
+                'fi': 'Laatu',
                 'fr': 'Qualité',
-                'it': 'Qualità',
-                'nl': 'Kwaliteit',
-                'pl': 'Jakość',
                 'he': 'איכות',
+                'hi': 'गुणवत्ता',
+                'hu': 'Minőség',
+                'id': 'Kualitas',
+                'it': 'Qualità',
                 'ja': '品質',
                 'ko': '품질',
-                'zh': '质量',
-                'id': 'Kualitas',
-                'sv': 'Kvalitet',
+                'nl': 'Kwaliteit',
                 'no': 'Kvalitet',
-                'da': 'Kvalitet',
-                'fi': 'Laatu',
-                'cs': 'Kvalita',
-                'el': 'Ποιότητα',
-                'hu': 'Minőség',
+                'pl': 'Jakość',
+                'pt': 'Qualidade',
                 'ro': 'Calitate',
-                'uk': 'Якість'
+                'sv': 'Kvalitet',
+                'uk': 'Якість',
+                'vi': 'Chất lượng',
+                'zh': '质量'
             };
 
             const settingsPanel = 'ytd-watch-flexy .ytp-settings-menu';
@@ -10545,16 +10640,15 @@
 
         // wait for content to load
         await new Promise(resolve => {
-            if (videoElement.childElementCount > 0)
-                return resolve();
+            const check = () => {
+                const videoBadge = videoElement.querySelector('.ytThumbnailBadgeViewModelHost');
+                if (videoBadge?.childElementCount > 0) { videoElementObserver.disconnect(); resolve(videoBadge); }
+            };
 
-            videoElementObserver = new MutationObserver(() => {
-                if (videoElement.childElementCount > 0) {
-                    videoElementObserver.disconnect();
-                    setTimeout(resolve, 100);
-                }
-            });
-            videoElementObserver.observe(videoElement, { childList: true });
+            videoElementObserver = new MutationObserver(check);
+            videoElementObserver.observe(videoElement, { childList: true, subtree: true });
+
+            check();
         });
 
         const videoContainers = subscriptionPage?.querySelectorAll('ytd-rich-item-renderer:not([is-shelf-item])');
@@ -10574,7 +10668,7 @@
             const contentIDClass = Array.from(videoLockup?.classList || []).find(className => className.startsWith('content-id-'));
             if (contentIDClass) return contentIDClass.slice('content-id-'.length);
 
-            const mainThumbnail = container.querySelector('a.yt-lockup-view-model__content-image[href*="/watch?v="]');
+            const mainThumbnail = container.querySelector('a.ytLockupViewModelContentImage[href*="/watch?v="]');
             if (!mainThumbnail || !mainThumbnail.href || !mainThumbnail.href.includes('/watch?v=')) return null;
             return new URL(mainThumbnail.href, location.origin).searchParams.get('v');
         };
@@ -11778,6 +11872,16 @@
         markWatchedVideosObserver.observe(location, { childList: true, subtree: true });
     }
 
+    // helper to restore home chip
+    const restoreHomeFeedFilterChip = (chipText) => {
+        if (!chipText) return;
+
+        runInPage(function (targetChipText) {
+            const chip = [...document.querySelectorAll('ytd-browse[page-subtype="home"]:not([hidden]) #header #chips yt-chip-cloud-chip-renderer')].find(chip => chip.querySelector('.ytChipShapeChip')?.textContent?.trim() === targetChipText);
+            chip?.onTap?.();
+        }, chipText);
+    };
+
     // restore feed filter chip on the homepage and suggested videos
     async function restoreLastSelectedChip() {
         const homePage = document.querySelector('ytd-browse[page-subtype="home"]:not([hidden])');
@@ -11806,7 +11910,7 @@
                 const chipText = chip.querySelector('.ytChipShapeChip')?.textContent?.trim();
                 if (chipText === lastSelectedChip) {
                     const button = chip.querySelector('button[role="tab"]');
-                    button?.click();
+                    isHomePage ? typeof chip.onTap === 'function' ? chip.onTap() : restoreHomeFeedFilterChip(chipText) : button?.click();
                     break;
                 }
             }
@@ -11860,6 +11964,7 @@
                 [USER_CONFIG.plWLBtn && isWatchLater, cleanupWatchLaterRemoveBtn],
                 [USER_CONFIG.playlistLinks && isPlaylistPage, cleanupHandlePlaylistLinks],
                 [USER_CONFIG.playbackSpeed && isShortPage, cleanupPlaybackSpeedController],
+                [USER_CONFIG.feedFilterChips && isHomePage, cleanupRestoreLastSelectedChip],
                 [USER_CONFIG.playlistTrashCan && isPlaylistPage, cleanupPlaylistRemovalButtons],
                 [USER_CONFIG.lastSeenVideo && isSubscriptionsPage, () => videoElementObserver.disconnect()],
             ];
@@ -11960,56 +12065,58 @@
     // settings panel: audio, subtitles, and transcript languages
     const flag = {
         auto: '🌐',
-        english: '🇺🇸',
-        spanish: '🇪🇸',
-        hindi: '🇮🇳',
-        portuguese: '🇵🇹',
-        german: '🇩🇪',
-        french: '🇫🇷',
-        italian: '🇮🇹',
+        chinese: '🇨🇳',
+        czech: '🇨🇿',
+        danish: '🇩🇰',
         dutch: '🇳🇱',
-        polish: '🇵🇱',
+        english: '🇺🇸',
+        finnish: '🇫🇮',
+        french: '🇫🇷',
+        german: '🇩🇪',
+        greek: '🇬🇷',
         hebrew: '🇮🇱',
+        hindi: '🇮🇳',
+        hungarian: '🇭🇺',
+        indonesian: '🇮🇩',
+        italian: '🇮🇹',
         japanese: '🇯🇵',
         korean: '🇰🇷',
-        chinese: '🇨🇳',
-        indonesian: '🇮🇩',
-        swedish: '🇸🇪',
         norwegian: '🇳🇴',
-        danish: '🇩🇰',
-        finnish: '🇫🇮',
-        czech: '🇨🇿',
-        greek: '🇬🇷',
-        hungarian: '🇭🇺',
+        polish: '🇵🇱',
+        portuguese: '🇵🇹',
         romanian: '🇷🇴',
-        ukrainian: '🇺🇦'
+        spanish: '🇪🇸',
+        swedish: '🇸🇪',
+        ukrainian: '🇺🇦',
+        vietnamese: '🇻🇳'
     };
 
     const langs = {
         auto: 'Auto (default)',
         english: 'English',
-        spanish: 'Spanish - Español',
-        hindi: 'Hindi - हिन्दी',
-        portuguese: 'Portuguese - Português',
-        german: 'German - Deutsch',
+        chinese: 'Chinese - 中文',
         french: 'French - Français',
+        german: 'German - Deutsch',
         italian: 'Italian - Italiano',
-        dutch: 'Dutch - Nederlands',
-        polish: 'Polish - Polski',
-        hebrew: 'Hebrew - עברית',
         japanese: 'Japanese - 日本語',
         korean: 'Korean - 한국어',
-        chinese: 'Chinese - 中文',
-        indonesian: 'Indonesian - Bahasa Indonesia',
-        swedish: 'Swedish - Svenska',
-        norwegian: 'Norwegian - Norsk',
-        danish: 'Danish - Dansk',
-        finnish: 'Finnish - Suomi',
         czech: 'Czech - Čeština',
+        danish: 'Danish - Dansk',
+        dutch: 'Dutch - Nederlands',
+        finnish: 'Finnish - Suomi',
         greek: 'Greek - Ελληνικά',
+        hebrew: 'Hebrew - עברית',
+        hindi: 'Hindi - हिन्दी',
         hungarian: 'Hungarian - Magyar',
+        indonesian: 'Indonesian - Bahasa Indonesia',
+        norwegian: 'Norwegian - Norsk',
+        polish: 'Polish - Polski',
+        portuguese: 'Portuguese - Português',
         romanian: 'Romanian - Română',
-        ukrainian: 'Ukrainian - Українська'
+        spanish: 'Spanish - Español',
+        swedish: 'Swedish - Svenska',
+        ukrainian: 'Ukrainian - Українська',
+        vietnamese: 'Vietnamese - Tiếng Việt'
     };
 
     function labeledLangs(includeOff = false) {
@@ -12027,56 +12134,58 @@
         get(cache, key) {
             if (cache[key]) return cache[key];
             const langCode = {
-                english: 'en',
-                spanish: 'es',
-                hindi: 'hi',
-                portuguese: 'pt',
-                german: 'de',
-                french: 'fr',
-                italian: 'it',
+                chinese: 'zh',
+                czech: 'cs',
+                danish: 'da',
                 dutch: 'nl',
-                polish: 'pl',
+                english: 'en',
+                finnish: 'fi',
+                french: 'fr',
+                german: 'de',
+                greek: 'el',
                 hebrew: 'he',
+                hindi: 'hi',
+                hungarian: 'hu',
+                indonesian: 'id',
+                italian: 'it',
                 japanese: 'ja',
                 korean: 'ko',
-                chinese: 'zh',
-                indonesian: 'id',
-                swedish: 'sv',
                 norwegian: 'no',
-                danish: 'da',
-                finnish: 'fi',
-                czech: 'cs',
-                greek: 'el',
-                hungarian: 'hu',
+                polish: 'pl',
+                portuguese: 'pt',
                 romanian: 'ro',
-                ukrainian: 'uk'
+                spanish: 'es',
+                swedish: 'sv',
+                ukrainian: 'uk',
+                vietnamese: 'vi'
             }[key];
             if (!langCode) return;
 
             const fixedLabels = {
+                cs: { subs: 'Titulky', off: 'Vypnuto' },
+                da: { subs: 'Undertekster', off: 'Fra' },
+                de: { subs: 'Untertitel', off: 'Aus' },
+                el: { subs: 'Υπότιτλοι', off: 'Απενεργοποίηση' },
                 en: { subs: 'Subtitles', off: 'Off' },
                 es: { subs: 'Subtítulos', off: 'Desactivados' },
-                hi: { subs: 'उपशीर्षक', off: 'बंद' },
-                pt: { subs: 'Legendas', off: 'Desativar' },
-                de: { subs: 'Untertitel', off: 'Aus' },
+                fi: { subs: 'Tekstitys', off: 'Pois' },
                 fr: { subs: 'Sous-titres', off: 'Désactivés' },
-                it: { subs: 'Sottotitoli', off: 'Disattivati' },
-                nl: { subs: 'Ondertiteling', off: 'Uit' },
-                pl: { subs: 'Napisy', off: 'Wyłączone' },
                 he: { subs: 'כתוביות', off: 'כבוי' },
+                hi: { subs: 'उपशीर्षक', off: 'बंद' },
+                hu: { subs: 'Feliratok', off: 'Ki' },
+                id: { subs: 'Subtitle', off: 'Nonaktifkan' },
+                it: { subs: 'Sottotitoli', off: 'Disattivati' },
                 ja: { subs: '字幕', off: 'オフ' },
                 ko: { subs: '자막', off: '끄기' },
-                zh: { subs: '字幕', off: '关闭' },
-                id: { subs: 'Subtitle', off: 'Nonaktifkan' },
-                sv: { subs: 'Undertexter', off: 'Av' },
+                nl: { subs: 'Ondertiteling', off: 'Uit' },
                 no: { subs: 'Undertekster', off: 'Av' },
-                da: { subs: 'Undertekster', off: 'Fra' },
-                fi: { subs: 'Tekstitys', off: 'Pois' },
-                cs: { subs: 'Titulky', off: 'Vypnuto' },
-                el: { subs: 'Υπότιτλοι', off: 'Απενεργοποίηση' },
-                hu: { subs: 'Feliratok', off: 'Ki' },
+                pl: { subs: 'Napisy', off: 'Wyłączone' },
+                pt: { subs: 'Legendas', off: 'Desativar' },
                 ro: { subs: 'Subtitrări', off: 'Dezactivat' },
-                uk: { subs: 'Субтитри', off: 'Вимкнено' }
+                sv: { subs: 'Undertexter', off: 'Av' },
+                uk: { subs: 'Субтитри', off: 'Вимкнено' },
+                vi: { subs: 'Phụ đề', off: 'Tắt' },
+                zh: { subs: '字幕', off: '关闭' }
             };
 
             const dnUI = new Intl.DisplayNames([uiLanguage], { type: 'language' });
@@ -12144,29 +12253,30 @@
             const old = uniq([[2, 'year'], [1, 'year']].map(([n, u]) => format(n, u)));
 
             const keywordTable = {
+                cs: { live: ['sledujících', 'živě'], upcoming: ['čeká', 'naplánováno na'], streamed: ['vysíláno'] },
+                da: { live: ['seere', 'direkte'], upcoming: ['venter', 'planlagt til'], streamed: ['streamet'] },
+                de: { live: ['zuschauer', 'live'], upcoming: ['wartend', 'geplant für'], streamed: ['gestreamt'] },
+                el: { live: ['θεατές', 'ζωντανά'], upcoming: ['αναμονή', 'προγραμματισμένο για'], streamed: ['μεταδόθηκε'] },
                 en: { live: ['watching', 'live'], upcoming: ['waiting', 'scheduled for'], streamed: ['streamed'] },
                 es: { live: ['espectadores', 'en vivo'], upcoming: ['esperando', 'programado para'], streamed: ['emitido', 'transmitido'] },
-                hi: { live: ['देख रहे', 'लाइव'], upcoming: ['प्रतीक्षा', 'निर्धारित'], streamed: ['स्ट्रीम किया'] },
-                pt: { live: ['assistindo', 'ao vivo'], upcoming: ['aguardando', 'programado para'], streamed: ['transmitido'] },
-                de: { live: ['zuschauer', 'live'], upcoming: ['wartend', 'geplant für'], streamed: ['gestreamt'] },
+                fi: { live: ['katsojaa', 'suorana'], upcoming: ['odottaa', 'suunniteltu'], streamed: ['striimattu'] },
                 fr: { live: ['spectateurs', 'en direct'], upcoming: ['en attente', 'programmé pour'], streamed: ['diffusé'] },
-                it: { live: ['guardando', 'in diretta', 'spettatori'], upcoming: ['in attesa', 'programmato per'], streamed: ['trasmesso', 'in streaming'] },
-                nl: { live: ['kijkers', 'live'], upcoming: ['wachten', 'gepland voor'], streamed: ['gestreamd'] },
-                pl: { live: ['oglądających', 'na żywo'], upcoming: ['oczekujących', 'zaplanowano na'], streamed: ['transmitowano'] },
                 he: { live: ['צופים', 'בשידור חי'], upcoming: ['ממתין', 'מתוזמן ל'], streamed: ['שודר'] },
+                hi: { live: ['देख रहे', 'लाइव'], upcoming: ['प्रतीक्षा', 'निर्धारित'], streamed: ['स्ट्रीम किया'] },
+                hu: { live: ['néző', 'élő'], upcoming: ['várakozik', 'ütemezve'], streamed: ['streamelve'] },
+                id: { live: ['orang menonton', 'langsung'], upcoming: ['menunggu', 'dijadwalkan pada'], streamed: ['streaming'] },
+                it: { live: ['guardando', 'in diretta', 'spettatori'], upcoming: ['in attesa', 'programmato per'], streamed: ['trasmesso', 'in streaming'] },
                 ja: { live: ['人が視聴中', 'ライブ'], upcoming: ['待機中', '予定'], streamed: ['配信済み'] },
                 ko: { live: ['명 시청 중', '라이브'], upcoming: ['명 대기 중', '예정됨'], streamed: ['스트리밍됨'] },
-                zh: { live: ['人正在观看', '直播'], upcoming: ['正在等待', '计划于'], streamed: ['已直播'] },
-                id: { live: ['orang menonton', 'langsung'], upcoming: ['menunggu', 'dijadwalkan pada'], streamed: ['streaming'] },
-                sv: { live: ['tittare', 'direkt'], upcoming: ['väntar', 'planerat till'], streamed: ['sändes'] },
+                nl: { live: ['kijkers', 'live'], upcoming: ['wachten', 'gepland voor'], streamed: ['gestreamd'] },
                 no: { live: ['seere', 'direkte'], upcoming: ['venter', 'planlagt til'], streamed: ['strømmet'] },
-                da: { live: ['seere', 'direkte'], upcoming: ['venter', 'planlagt til'], streamed: ['streamet'] },
-                fi: { live: ['katsojaa', 'suorana'], upcoming: ['odottaa', 'suunniteltu'], streamed: ['striimattu'] },
-                cs: { live: ['sledujících', 'živě'], upcoming: ['čeká', 'naplánováno na'], streamed: ['vysíláno'] },
-                el: { live: ['θεατές', 'ζωντανά'], upcoming: ['αναμονή', 'προγραμματισμένο για'], streamed: ['μεταδόθηκε'] },
-                hu: { live: ['néző', 'élő'], upcoming: ['várakozik', 'ütemezve'], streamed: ['streamelve'] },
+                pl: { live: ['oglądających', 'na żywo'], upcoming: ['oczekujących', 'zaplanowano na'], streamed: ['transmitowano'] },
+                pt: { live: ['assistindo', 'ao vivo'], upcoming: ['aguardando', 'programado para'], streamed: ['transmitido'] },
                 ro: { live: ['spectatori', 'în direct'], upcoming: ['așteaptă', 'programat pentru'], streamed: ['transmis'] },
-                uk: { live: ['глядачів', 'наживо'], upcoming: ['очікує', 'заплановано на'], streamed: ['трансляція'] }
+                sv: { live: ['tittare', 'direkt'], upcoming: ['väntar', 'planerat till'], streamed: ['sändes'] },
+                uk: { live: ['глядачів', 'наживо'], upcoming: ['очікує', 'заплановано на'], streamed: ['трансляція'] },
+                vi: { live: ['đang xem', 'trực tiếp'], upcoming: ['đang chờ', 'đã lên lịch'], streamed: ['đã phát trực tiếp'] },
+                zh: { live: ['人正在观看', '直播'], upcoming: ['正在等待', '计划于'], streamed: ['已直播'] }
             };
             const keywordMatrix = keywordTable[locale] || keywordTable.en;
 
@@ -12185,29 +12295,30 @@
 
     // sort comments newest first
     const commentMatrix = {
+        cs: { off: 'Komentáře jsou vypnuty', newest: 'nejnovější' },
+        da: { off: 'Kommentarer er slået fra', newest: 'nyeste' },
+        de: { off: 'Kommentare sind deaktiviert', newest: 'neueste' },
+        el: { off: 'Τα σχόλια είναι απενεργοποιημένα', newest: 'νεότερα' },
         en: { off: 'Comments are turned off', newest: 'newest' },
         es: { off: 'Los comentarios están desactivados', newest: 'más recientes' },
-        hi: { off: 'टिप्पणियाँ बंद हैं', newest: 'नवीनतम' },
-        pt: { off: 'Os comentários estão desativados', newest: 'mais recentes' },
-        de: { off: 'Kommentare sind deaktiviert', newest: 'neueste' },
+        fi: { off: 'Kommentit ovat pois päältä', newest: 'uusimmat' },
         fr: { off: 'Les commentaires sont désactivés', newest: 'les plus récents' },
-        it: { off: 'I commenti sono disattivati', newest: 'più recenti' },
-        nl: { off: 'Reacties zijn uitgeschakeld', newest: 'nieuwste' },
-        pl: { off: 'Komentarze są wyłączone', newest: 'najnowsze' },
         he: { off: 'התגובות מושבתות', newest: 'החדשות ביותר' },
+        hi: { off: 'टिप्पणियाँ बंद हैं', newest: 'नवीनतम' },
+        hu: { off: 'A hozzászólások ki vannak kapcsolva', newest: 'legújabb' },
+        id: { off: 'Komentar dimatikan', newest: 'terbaru' },
+        it: { off: 'I commenti sono disattivati', newest: 'più recenti' },
         ja: { off: 'コメントはオフになっています', newest: '新しい順' },
         ko: { off: '댓글이 사용 중지되었습니다', newest: '최신' },
-        zh: { off: '评论已关闭', newest: '最新' },
-        id: { off: 'Komentar dimatikan', newest: 'terbaru' },
-        sv: { off: 'Kommentarer är inaktiverade', newest: 'nyaste' },
+        nl: { off: 'Reacties zijn uitgeschakeld', newest: 'nieuwste' },
         no: { off: 'Kommentarer er slått av', newest: 'nyeste' },
-        da: { off: 'Kommentarer er slået fra', newest: 'nyeste' },
-        fi: { off: 'Kommentit ovat pois päältä', newest: 'uusimmat' },
-        cs: { off: 'Komentáře jsou vypnuty', newest: 'nejnovější' },
-        el: { off: 'Τα σχόλια είναι απενεργοποιημένα', newest: 'νεότερα' },
-        hu: { off: 'A hozzászólások ki vannak kapcsolva', newest: 'legújabb' },
+        pl: { off: 'Komentarze są wyłączone', newest: 'najnowsze' },
+        pt: { off: 'Os comentários estão desativados', newest: 'mais recentes' },
         ro: { off: 'Comentariile sunt dezactivate', newest: 'cele mai noi' },
-        uk: { off: 'Коментарі вимкнено', newest: 'найновіші' }
+        sv: { off: 'Kommentarer är inaktiverade', newest: 'nyaste' },
+        uk: { off: 'Коментарі вимкнено', newest: 'найновіші' },
+        vi: { off: 'Tính năng bình luận đã bị tắt', newest: 'mới nhất' },
+        zh: { off: '评论已关闭', newest: '最新' }
     };
 
     //  ┌───────────────────────────────────────────────────────────────────┐
@@ -12363,12 +12474,13 @@
                 [isShortPage, shortsPlaybackControl],
                 [USER_CONFIG.plWLBtn && isWatchLater, watchLaterRemoveBtn],
                 [USER_CONFIG.playlistLinks && isPlaylistPage, handlePlaylistLinks],
+                [USER_CONFIG.lastSeenVideo && isSubscriptionsPage, markLastSeenVideo],
                 [USER_CONFIG.colorCodeVideosEnabled && isHomePage, homeColorCodeVideos],
                 [USER_CONFIG.playbackSpeed && isShortPage, createPlaybackSpeedController],
                 [USER_CONFIG.channelRSSBtn && isChannelPage, () => requestIdleCallback(addRSSFeedButton)],
+                [USER_CONFIG.feedFilterChips && isHomePage, () => requestIdleCallback(restoreLastSelectedChip)],
                 [USER_CONFIG.channelPlaylistBtn && isChannelPage, () => requestIdleCallback(addPlaylistButtons)],
-                [USER_CONFIG.playlistTrashCan && isPlaylistPage, () => requestIdleCallback(playlistRemovalButtons)],
-                [USER_CONFIG.lastSeenVideo && isSubscriptionsPage, () => requestAnimationFrame(() => markLastSeenVideo())]
+                [USER_CONFIG.playlistTrashCan && isPlaylistPage, () => requestIdleCallback(playlistRemovalButtons)]
             ];
             for (const [flag, callback] of browseFeatures) if (flag) callback();
             if (USER_CONFIG.hideMiniPlayer) document.querySelector('.ytp-miniplayer-close-button')?.click();
