@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      10.12
+// @version      10.13
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 10.12 - YouTube Alchemy                   *
+*                    Version: 10.13 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1014,6 +1014,10 @@
 
         #start.ytd-masthead {
             gap: 12px;
+        }
+
+        #start.ytd-masthead:not(:has(.buttons-left)) {
+            min-width: var(--startMastheadWidth);
         }
 
         #logo.ytd-masthead {
@@ -3074,8 +3078,32 @@
             margin-top: -36px;
         }
 
-        .metadata-text-wrapper.ytd-playlist-header-renderer:has(#CentAnni-toggle-watched-btn) yt-formatted-string.ytd-playlist-byline-renderer:nth-child(4) {
+        html.CentAnni-style-compact-layout:has(#CentAnni-remove-watched-btn, .CentAnni-hide-watched-pl) ytd-item-section-renderer > #header,
+        .metadata-text-wrapper.ytd-playlist-header-renderer:is( html.CentAnni-hide-watched-pl *, :has(#CentAnni-toggle-watched-btn) ) yt-formatted-string.ytd-playlist-byline-renderer:not(:has(*)) {
             display: none;
+        }
+
+        html.CentAnni-style-compact-layout:has(#CentAnni-remove-watched-btn, .CentAnni-hide-watched-pl) chip-bar-view-model.ytd-item-section-renderer {
+            margin: 0;
+        }
+
+        html.CentAnni-style-compact-layout:has(#CentAnni-remove-watched-btn, .CentAnni-hide-watched-pl) #header.ytd-item-section-renderer .ytChipShapeEndIconPadding {
+            width: 113px;
+            overflow: hidden;
+        }
+
+        html.CentAnni-style-compact-layout:has(#CentAnni-remove-watched-btn, .CentAnni-hide-watched-pl) #header.ytd-item-section-renderer .ytChipShapeEndIconPadding > div {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        html.CentAnni-style-compact-layout:has(#CentAnni-remove-watched-btn, .CentAnni-hide-watched-pl) ytd-two-column-browse-results-renderer.ytd-browse {
+            margin-top: -8px !important;
+        }
+
+        html.CentAnni-style-compact-layout:has(#CentAnni-remove-watched-btn, .CentAnni-hide-watched-pl) ytd-playlist-video-list-renderer #contents {
+            margin-top: -8px;
         }
 
         .CentAnni-style-hide-watched-videos-global {
@@ -3098,6 +3126,7 @@
             }
 
             .ytp-delhi-modern .ytp-popup,
+            .ytp-delhi-modern .ytp-offline-slate-bar,
             .ytp-delhi-modern .ytp-chrome-controls .ytp-right-controls,
             .ytSpecButtonShapeNextOverlayDark.ytSpecButtonShapeNextTonal,
             .ytp-delhi-modern .ytp-time-wrapper:not(.ytp-miniplayer-ui *),
@@ -3286,6 +3315,7 @@
         }
 
         .CentAnni-style-hide-queue-btn {
+            button[aria-label="Add to queue"],
             yt-list-item-view-model:has(path[d^="M2 2.864v6"]),
             yt-list-item-view-model:has(path[d^="M21 16h-7v"]),
             ytd-menu-service-item-renderer:has(path[d^="M21 16h-7v"]),
@@ -3359,6 +3389,7 @@
                 display: none;
             }
 
+            ytd-masthead #masthead-logo,
             #masthead-container ytd-topbar-logo-renderer {
                 margin-right: 0 !important;
                 width: 30px !important;
@@ -3746,7 +3777,7 @@
             }
 
             .snackbarViewModelHost {
-                border-radius: 0px 4px 4px 0px;
+                border-radius: 0px 1px 1px 0px;
             }
 
             .ytp-delhi-modern .ytp-right-controls-left > .ytp-button,
@@ -4505,6 +4536,7 @@
             .yt-list-item-view-model__accessory,
             .guide-icon.ytd-guide-entry-renderer,
             ytd-transcript-footer-renderer button#button,
+            ytd-thumbnail-overlay-toggle-button-renderer svg,
             .yt-spec-button-shape-next--size-m .yt-spec-button-shape-next__icon,
             ytd-menu-service-item-renderer[system-icons] yt-icon.ytd-menu-service-item-renderer,
             ytd-menu-service-item-renderer[system-icons] .ytIconWrapperHost.ytd-menu-service-item-renderer,
@@ -5945,8 +5977,9 @@
     let docBody = document.body;
 
     // load CSS settings
+    let smw;
     let cssSettingsApplied = false;
-    function loadCSSsettings() {
+    async function loadCSSsettings() {
         // custom css
         const classMap = {
             plWLBtn: 'CentAnni-hide-watched-pl',
@@ -6068,6 +6101,7 @@
             docElement.classList.toggle(className, USER_CONFIG[flag]);
 
         // features css
+        smw = await GM.getValue('btnsLeftHeaderWidth', 'unset');
         const isDarkMode = document.documentElement.hasAttribute('dark');
         docElement.classList.toggle('CentAnni-style-video-row', USER_CONFIG.videosPerRow !== 0);
         docElement.classList.toggle('CentAnni-style-sidebar-width', USER_CONFIG.sidebarWidth !== 0);
@@ -6085,6 +6119,7 @@
         docElement.style.setProperty('--progressBarColor', USER_CONFIG.progressbarColorPicker);
         docElement.style.setProperty('--selectionColor', isDarkMode ? USER_CONFIG.darkModeSelectionColor : USER_CONFIG.lightModeSelectionColor);
         docElement.style.setProperty('--countryCodeColor', USER_CONFIG.visibleCountryCodeColor);
+        docElement.style.setProperty('--startMastheadWidth', smw === 'unset' ? smw : `${smw}px`);
 
         // color code videos
         docElement.style.setProperty('--liveVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerLive : USER_CONFIG.videosAgeColorPickerLiveLight);
@@ -9231,7 +9266,7 @@
     // find the YouTube video
     const findMainVideo = () => {
         if (!mainVideo || !mainVideo.isConnected || mainVideo.readyState === 0) {
-            mainVideo = watchFlexyElement.querySelector('video.html5-main-video');
+            mainVideo = watchFlexyElement?.querySelector('video.html5-main-video');
             if (isShortPage) mainVideo = document.querySelector('ytd-shorts')?.querySelector('video.html5-main-video');
         }
     };
@@ -10326,9 +10361,8 @@
     // sidebar and header links
     function buttonsLeftHeader() {
         if (isHideSidebarChecked && guideOpen) openGuide();
-        if (mastheadElement?.querySelector('.buttons-left')) return;
-        const container = mastheadElement?.querySelector('#container #start');
-        if (!mastheadElement || !container) return;
+        if (!mastheadElement || !startElement) return;
+        if (startElement.querySelector('.buttons-left')) return;
 
         function openGuide() {
             if (!guideButton || !guideButton.isConnected) guideButton = mastheadElement.querySelector('#guide-button button');
@@ -10385,9 +10419,15 @@
                         }
                     }
                 } else if (config.type === 'link') element = createLink(config.text, config.url);
-                if (element) container.appendChild(element);
+                if (element) startElement.appendChild(element);
             }
         });
+
+        const saveStartHeaderWidth = async () => {
+            const btnsLeftHeaderWidth = startElement.getBoundingClientRect().width;
+            if (btnsLeftHeaderWidth !== smw) await GM.setValue('btnsLeftHeaderWidth', btnsLeftHeaderWidth);
+        };
+        if (initialRun) requestIdleCallback(() => saveStartHeaderWidth());
     }
 
     // color code videos on home
@@ -10906,6 +10946,12 @@
             playlistPage.querySelectorAll('#CentAnni-remove-watched-btn, #CentAnni-toggle-watched-btn').forEach(el => el.remove());
             cleanupWatchLaterRemoveBtn = null;
         };
+
+        if (USER_CONFIG.compactLayout) {
+            const header = document.querySelector('#header.ytd-item-section-renderer');
+            const sidebar = document.querySelector('.thumbnail-and-metadata-wrapper.ytd-playlist-header-renderer');
+            if (header && sidebar) sidebar.appendChild(header);
+        }
     }
 
     // open playlist videos without being in a playlist
@@ -11455,7 +11501,7 @@
 
         const savedShortsSetting = 'CentAnni_shortsPlayMode';
         const savedMode = await GM.getValue(savedShortsSetting, 'loop');
-        const BTN_CLASS = 'yt-spec-button-shape-next yt-spec-button-shape-next--tonal yt-spec-button-shape-next--mono yt-spec-button-shape-next--size-l yt-spec-button-shape-next--icon-button yt-spec-button-shape-next--enable-backdrop-filter-experiment';
+        const BTN_CLASS = 'ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeL ytSpecButtonShapeNextIconButton ytSpecButtonShapeNextEnableBackdropFilterExperiment';
         let animationID = null;
         let endedListener = null;
 
@@ -11989,6 +12035,7 @@
     // cache elements
     function updateCachedElements() {
         mastheadElement = document.querySelector('#masthead');
+        startElement = mastheadElement?.querySelector('#start');
         endElement = mastheadElement?.querySelector('#end');
         guideOpen = mastheadElement?.hasAttribute('guide-persistent-and-visible');
         headerElement = document.querySelector('#guide #guide-content > #header');
@@ -12351,6 +12398,7 @@
     let guideButton = null;
     let guideOpen;
     let mastheadElement = null;
+    let startElement = null;
     let endElement = null;
     let headerElement = null;
     let videoSizeBtn = null;
