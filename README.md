@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-10.13-white.svg" alt="Version: 10.13"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-10.16-white.svg" alt="Version: 10.16"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -64,7 +64,10 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
     - uploadDate - Channel - Title.txt
 
 > [!TIP]
-> The URLs for buttons one and two, along with all button icons, are fully customizable. If a button field is left empty, that button won’t be added to the header. The settings button reverts to its default if its field is empty. To modify the labels for NotebookLM and ChatGPT, enter "Label | domain.com" into their respective URL fields—this also updates the icons' hover text.
+> The URLs for buttons one and two, along with all button icons, are fully customizable. If a button field is left empty, that button won’t be added to the header. The settings button reverts to its default if its field is empty. To modify the labels for NotebookLM and ChatGPT, enter `Label | domain.com` into their respective URL fields—this also updates the icons' hover text.
+
+> [!TIP]
+> The default prompt uses a dynamic minimum word count for the summary based on transcript length. To use this in a custom prompt, add `summaryWordCount` instead of a fixed number. When `summaryWordCount` reaches 400, the prompt requests a two-paragraph summary instead of just one. Add `paragraphCount` wherever "One-Paragraph" or "Two-Paragraph" should appear.
 
 > [!IMPORTANT]
 > Due to the Same-Origin Policy (SOP) in web development, JavaScript cannot directly interact across different websites: i.e. while the script can copy the transcript to the clipboard from YouTube and open a link (e.g. ChatGPT or NotebookLM), the copied transcript must be pasted manually into the text field via CTRL+V (Windows/Linux) or CMD+V (macOS).
@@ -167,6 +170,7 @@ Offers various options to customize the layout and functionality of YouTube.
       - A (or <): -0.25x
       - S: toggle 1x/set speed
       - D (or >): +0.25x
+  - Set Custom Playback Speeds for Channels
   - Assign up to 8 Keys to Custom Playback Speeds
   - Add Additional Playback Speed Buttons
 
@@ -191,7 +195,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Add Direction Buttons to Playlist Panels
   - Open Playlist Videos Without Being in a Playlist When Clicking the Thumbnail or Title
   - Show Trash Can Icon on Owned Playlists to Quickly Remove Videos
-  - Add "Remove Watched Videos" and "Toggle Watched" Buttons to Watch Later Playlist
+  - Add "Remove Watched Videos" and "Toggle Watched" Buttons to the Watch Later Playlist
   - Sort Comments to "Newest First"
   - Automatically Open Chapter Panels
   - Automatically Open Transcript Panels
@@ -210,25 +214,18 @@ Offers various options to customize the layout and functionality of YouTube.
   - Tab View on Video Page
   - Toggle Theater Mode by Clicking the Active Tab
   - Show Chapters Under Videos, Only Works with Tab View Enabled
-  - Compact Layout
   - Max Panel Height in Default View
   - Disable Animation When Switching Between Theater mode and Default view
-  - Hide Comments Section
-  - Hide Suggested Videos
+  - Disable Ambient Mode
+  - Disable Video Zoom
+  - Compact Layout
   - Square and Compact Search Bar
   - Square Design
   - Square Avatars
-  - Disable Ambient Mode
+  - Hide Comments Section
+  - Hide Suggested Videos
   - Hide Shorts
   - Redirect Shorts to Standard Video Pages
-  - Hide Ad Slots on the Home Page
-  - Hide "X products" Text Under Videos
-  - Hide Product Suggestion Under Videos
-  - Hide "Pay to Watch" Featured Videos on the Home Page
-  - Hide "Free with ads" Videos on the Home Page
-  - Hide Members Only Featured Videos on the Home Page
-  - Hide "Explore more topics" on the Home Page
-  - Hide "Latest posts from . . ." on Search Pages
 
 **Modify or Hide UI Elements**
   - Hide "Voice Search" Button
@@ -250,27 +247,35 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide End Screens
   - Less Intrusive Bottom Gradient
   - Show "Picture-in-Picture" Button
+  - Move "Save" Button into Menu
   - Hide "Autoplay" Button When Disabled
   - Hide "Play Next" Button
   - Hide "Airplay" Button
-  - Move "Save" Button into Menu
   - Hide "Ask" Button
   - Hide "Share" Button
   - Hide "Share" Button Only under Videos
-  - Hide Hashtags under Videos
-  - Hide Blue Info Panels
   - Hide "Add Comment" Textfield
   - Hide Comment "Reply" Button
-  - Hide "YouTube Playables" on the Home Page
+  - Hide Blue Info Panels
+  - Hide Fundraiser Icons and Panels
+  - Hide Hashtags under Videos
+  - Hide "X products" Text Under Videos
+  - Hide Product Suggestion Under Videos
+  - Hide Ad Slots on the Home Page
+  - Hide "Pay to Watch" Featured Videos
+  - Hide "Free with ads" Videos
+  - Hide Members Only Featured Videos
+  - Hide "YouTube Playables"
   - Hide "Breaking News" on the Home Page
   - Hide Mix-Playlists on the Home Page
   - Hide Episode-Playlists on the Home Page
   - Hide "Latest YouTube posts" on the Home Page
-  - Hide Fundraiser Icons and Panels
-  - Hide Mini Player
-  - Hide "Add to queue" Button on Hover
+  - Hide "Explore more topics"
   - Hide Right Sidebar on Search Pages
+  - Hide "Latest posts from . . ." on Search Pages
   - Hide "Most relevant" on Subscriptions Page
+  - Hide "Add to queue" Button on Hover
+  - Hide Mini Player
 
 **Hide Watched Videos**
   - Hide Watched Videos Regardless of Progress Everywhere
@@ -341,7 +346,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - On Watch Later Page
     - Highlight unwatched videos from favorite channels, categorized in gold, silver, and bronze.
 
-<p align="center"><img width="60%" alt="Color Code Videos" src="https://github.com/user-attachments/assets/60115715-f921-4ee8-8be4-2d2923b1c023" /></p>
+<p align="center"><img width="60%" alt="Color Code Videos" src="https://github.com/user-attachments/assets/d675f1f1-58ed-4a9f-a7c2-6991181bdabf" /></p>
 
 <br>
 
@@ -378,6 +383,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **10.16**: adjustments for YouTube DOM changes, bug fixes, and improvements; prompt summary word count is now dynamic based on transcript length (to use it, replace a fixed number in a prompt with `summaryWordCount`, or click "Reset Prompt" in the settings panel—see [📝 Transcript Exporter](#-transcript-exporter) for details); feature changed: "Playback Speed" now restores speed to 1x once caught up for live videos; new features: "Disable Video Zoom" and the playback speed display is now clickable to set custom speeds per channel
 - **10.13**: adjustments for YouTube DOM changes, bug fixes, and improvements
 - **10.12**: adjustments for YouTube DOM changes, bug fixes, and improvements; exported transcripts now support collaborators under channel name; re-added feature: "Restore Homepage Filter Selection"; new feature: "Highlight unwatched videos from your favorite channels on the Watch Later Page, categorized in gold, silver, and bronze." it can be found under "Color Code Videos"
 - **10.11.7**: bug fixes for Brave browser
