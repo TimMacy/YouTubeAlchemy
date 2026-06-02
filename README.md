@@ -360,13 +360,13 @@ _Support is a work in progress. Other languages may have limited functionality._
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/Safari_18%2B_(flag_required)-Supported-brightgreen?logo=safari" alt="Safari Supported"></a>
   &nbsp;&nbsp;
-  <a href="#"><img src="https://img.shields.io/badge/Chrome_105%2B-Supported-brightgreen?logo=googlechrome&logoColor=white" alt="Chrome Supported"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Chrome_120%2B-Supported-brightgreen?logo=googlechrome&logoColor=white" alt="Chrome Supported"></a>
   <br>
-  <a href="#"><img src="https://img.shields.io/badge/Firefox_121%2B-Supported-brightgreen?logo=firefoxbrowser" alt="Firefox Supported"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Firefox_142%2B-Supported-brightgreen?logo=firefoxbrowser" alt="Firefox Supported"></a>
   &nbsp;&nbsp;
-  <a href="#"><img src="https://img.shields.io/badge/Edge_105%2B-Supported-brightgreen" alt="Edge Supported"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Edge_120%2B-Supported-brightgreen" alt="Edge Supported"></a>
   &nbsp;&nbsp;
-  <a href="#"><img src="https://img.shields.io/badge/Opera_91%2B-Supported-brightgreen?logo=opera" alt="Opera Supported"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Opera_106%2B-Supported-brightgreen?logo=opera" alt="Opera Supported"></a>
 </p>
 
 1. **Install or open a userscript manager**.
@@ -378,7 +378,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 > **Important for Safari Users**: This script requires the requestIdleCallback Web API. Activate it under: Settings → Advanced → enable 'Show features for web developers' → Feature Flags → search for 'requestIdleCallback' and ensure it's checked.
 
 > [!NOTE]
-> This script is designed primarily for desktop browsers; compatibility and functionality on mobile devices may vary.
+> This script is primarily designed for desktop browsers; compatibility and functionality on mobile or touch devices may vary.
 
 <br>
 
