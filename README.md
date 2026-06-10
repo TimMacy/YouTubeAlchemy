@@ -76,19 +76,19 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
 > Status messages for the Transcript Exporter are displayed at the button's location in the YouTube header.
 > <table align="center">
 >     <tr>
->         <td align="center"><img src="https://github.com/user-attachments/assets/24f92c69-51fa-4f69-9c64-1d97364d5ea1" alt="Transcript is loading"></td>
+>         <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/24f92c69-51fa-4f69-9c64-1d97364d5ea1" alt="Transcript is loading"></td>
 >         <td align="left">The transcript has to be loaded into the HTML before it can be used. This can take from a few milliseconds up to a couple of seconds—depending on the length of the video.</td>
 >     </tr>
 >     <tr>
->         <td align="center"><img src="https://github.com/user-attachments/assets/80afbacf-0e88-4bd6-a5d3-3b5d928af3a3" alt="Live stream, no transcript"></td>
+>         <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/80afbacf-0e88-4bd6-a5d3-3b5d928af3a3" alt="Live stream, no transcript"></td>
 >         <td align="left">YouTube live streams don't have transcripts. Wait until the stream has finished and YouTube's API has processed the video.</td>
 >     </tr>
 >     <tr>
->         <td align="center"><img src="https://github.com/user-attachments/assets/ee51708d-701a-499f-b8b6-94e423ab4db5" alt="Transcript not available"></td>
+>         <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/ee51708d-701a-499f-b8b6-94e423ab4db5" alt="Transcript not available"></td>
 >         <td align="left">If the creator hasn't included captions (subtitles), YouTube's API processes the video to generate the transcript. This can take a few minutes. If speech recognition fails due to e.g. lack of clear speech or background noise, no transcript will be available.</td>
 >     </tr>
 >     <tr>
->       <td align="center"><img src="https://github.com/user-attachments/assets/283c4306-5ee8-4308-8c37-41d3ee1a24d0" alt="Transcript failed to load"></td>
+>       <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/283c4306-5ee8-4308-8c37-41d3ee1a24d0" alt="Transcript failed to load"></td>
 >       <td align="left">If the transcript fails to load, the Transcript Exporter will terminate. Click ⚠️ or reload the page to retry.</td>
 >     </tr>
 > </table>
