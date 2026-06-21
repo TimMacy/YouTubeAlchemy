@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-10.16-white.svg" alt="Version: 10.16"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.0-white.svg" alt="Version: 11.0"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -202,6 +202,8 @@ Offers various options to customize the layout and functionality of YouTube.
   - Automatically Open Comments, Only Works with Tab View Enabled
   - Automatically Enable Timestamps in Transcript Panels
   - Highlight Active Section in Transcript Panels
+  - Automatically Enable Subtitles When Muted
+  - Show Subtitles for 10 Seconds When Rewinding with "J"
   - Maintain 1x Playback Speed for Music Videos
   - Use Enhanced Bitrate for 1080p Videos, Premium Required
   - Persistent Progress Bar with Chapter Markers and SponsorBlock Support—Even in Fullscreen
@@ -293,6 +295,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide "Subscriptions" Button
   - Restore Order: Home > You > Subscriptions
 <!-- -->
+  - Hide "You" Section
   - Hide "You" Button
   - Hide "Your Channel" Button
   - Hide "History" Button
@@ -319,6 +322,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide "Sports" Button
   - Hide "Learning" Button
   - Hide "Fashion & Beauty" Button
+  - Hide "Playables" Button
   - Hide "Podcasts" Button
 <!-- -->
   - Hide "More from YouTube" Section
@@ -383,6 +387,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **11.0**: adjustments for YouTube DOM changes, bug fixes, and performance improvements: CSS is now toggled per page while for the Guide it only applies when opened; new features: "Hide 'You' Section" and "Hide 'Playables' Button" in the YouTube Guide; added a new retry button (⚠️) when the transcript fails to load; if both "Remaining Time" and "Persistent Progress Bar" are enabled, watched SponsorBlock segments are dimmed down; Automatically Enable Subtitles When Muted; Show Subtitles for 10 Seconds When Rewinding with "J"
 - **10.16**: adjustments for YouTube DOM changes, bug fixes, and improvements; prompt summary word count is now dynamic based on transcript length (to use it, replace a fixed number in a prompt with `summaryWordCount`, or click "Reset Prompt" in the settings panel—see [📝 Transcript Exporter](#-transcript-exporter) for details); feature changed: "Playback Speed" now restores speed to 1x once caught up for live videos; new features: "Disable Video Zoom" and the playback speed display is now clickable to set custom speeds per channel
 - **10.13**: adjustments for YouTube DOM changes, bug fixes, and improvements
 - **10.12**: adjustments for YouTube DOM changes, bug fixes, and improvements; exported transcripts now support collaborators under channel name; re-added feature: "Restore Homepage Filter Selection"; new feature: "Highlight unwatched videos from your favorite channels on the Watch Later Page, categorized in gold, silver, and bronze." it can be found under "Color Code Videos"
@@ -456,7 +461,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 - **8.0.3.1**: adjustments for the latest YouTube changes (general selector updates including for Color Code Last Uploaded Video)
 - **8.0.2**: adjustments for the latest YouTube changes (fixed missing date in tab view)
 - **8.0.1**: adjustments for the latest YouTube changes (fixed font size of remaining time and chapters in fullscreen)
-- **8.0**: browser extension release. bug fixes and improvements. new feature: move settings button into the YouTube guide, load transcript manually, dark and light mode support for Color Code Videos
+- **8.0**: browser extension release. bug fixes and improvements. new feature: move settings button into the YouTube guide, load a transcript manually, dark and light mode support for Color Code Videos
 - **7.2**: adjustments for the latest YouTube changes
 - **7.19**: adjustments for the latest YouTube changes
 - **7.18**: adjustments for the latest YouTube changes; new feature: Hide "Latest YouTube posts" on the Home Page
