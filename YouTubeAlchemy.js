@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      11.0
+// @version      11.0.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 11.0 - YouTube Alchemy                    *
+*                    Version: 11.0.1 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -4895,7 +4895,7 @@
         .CentAnni-style-hide-voice-search #voice-search-button.ytd-masthead,
         .CentAnni-style-hide-info-panel :is(#middle-row, ytd-info-panel-container-renderer),
         .CentAnni-style-hide-playables ytd-rich-section-renderer:has(a[href^="/playables"]),
-        .is-watch-page #masthead-container.ytd-app:not(:has(yt-searchbox input[placeholder])),
+        .is-watch-page #masthead-container.ytd-app:not(:has(yt-searchbox [placeholder])),
         .CentAnni-style-hide-share-btn #below #top-level-buttons-computed yt-button-view-model,
         .CentAnni-style-hide-miniplayer :is(ytd-miniplayer, #ytd-player .ytp-miniplayer-button),
         .CentAnni-style-hide-autoplay-btn button.ytp-autonav-toggle:has([aria-checked="false"]),
