@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      11.0.1
+// @version      11.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 11.0.1 - YouTube Alchemy                  *
+*                    Version: 11.1 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -691,28 +691,26 @@
             margin: 0 12px;
         }
 
-        .masthead-skeleton-icon {
-            background-color: transparent !important;
-            border-radius: 0;
-        }
-
-        .masthead-skeleton-icon:first-child {
-            width: 97.5px;
-            height: 36px;
-            margin: 0 8px 0 0;
-        }
-
-        .masthead-skeleton-icon:nth-child(2) {
-            width: 40px;
+        #masthead-skeleton-icons {
             height: 40px;
-            margin: 0 8px 0 0;
-        }
 
-        .masthead-skeleton-icon:last-child {
-            width: 32px;
-            height: 32px;
-            margin: 0 8px;
-            padding: 1px 6px;
+            .masthead-skeleton-icon {
+                background-color: transparent !important;
+                margin: 0 8px 0 0;
+
+                &:first-child {
+                    width: 97.1875px;
+                }
+
+                &:nth-child(2) {
+                    width: 40px;
+                }
+
+                &:last-child {
+                    width: 54px;
+                    margin: 0;
+                }
+            }
         }
 
         .CentAnni-button-wrapper {
@@ -1031,10 +1029,6 @@
             pointer-events: none;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
-        }
-
-        html.CentAnni-style-max-panel #CentAnni-playback-speed-popup {
-            top: var(--CentAnniTabViewHeader);
         }
 
         #CentAnni-notification-error.loading span::before {
@@ -1987,7 +1981,7 @@
                     top: 30px;
                 }
 
-                & .ytLockupViewModelHorizontal .ytLockupViewModelContentImage {
+                .ytLockupViewModelHorizontal .ytLockupViewModelContentImage {
                     width: 44% !important;
                 }
             }
@@ -1998,7 +1992,7 @@
             }
 
             ytd-watch-flexy:not([fullscreen]) ytd-structured-description-content-renderer[engagement-panel] #items.ytd-structured-description-content-renderer {
-                padding: 10px 0 0;
+                padding: 10px 10px 0 0;
             }
 
             #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id=engagement-panel-structured-description] #content.ytd-engagement-panel-section-list-renderer {
@@ -2106,6 +2100,11 @@
                             height: fit-content;
                             max-height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)) - clamp(480px, 100dvw * var(--ytd-watch-flexy-height-ratio) / var(--ytd-watch-flexy-width-ratio), 100dvh - 169px));
                         }
+                    }
+
+                    #title ytd-badge-supported-renderer:not([hidden]) {
+                        bottom: 0;
+                        transform: translate(52px, calc(100% + 5px));
                     }
                 }
 
@@ -2247,19 +2246,52 @@
                         }
                     }
                 }
-            }
 
-            ytd-watch-flexy #related yt-chip-cloud-renderer:not([no-top-margin]) yt-chip-cloud-chip-renderer.yt-chip-cloud-renderer {
-                margin: 0 8px 8px 0;
-            }
+                #above-the-fold #top-row {
+                    border: none !important;
+                    padding: 0 !important;
+                }
 
-            ytd-watch-metadata.ytd-watch-flexy {
-                margin: 12px 0 0 0 !important;
-            }
+                #related yt-chip-cloud-renderer:not([no-top-margin]) yt-chip-cloud-chip-renderer.yt-chip-cloud-renderer {
+                    margin: 0 8px 8px 0;
+                }
 
-            ytd-watch-flexy:not([fullscreen]) ytd-comments {
-                margin: 0;
-                padding: 0 10px;
+                ytd-watch-metadata.ytd-watch-flexy {
+                    margin: 12px 0 0 0 !important;
+                }
+
+                &:not([fullscreen]) ytd-comments {
+                    margin: 0;
+                    padding: 0 10px;
+                }
+
+                .ryd-tooltip-new-design {
+                    bottom: 0;
+
+                    .ryd-tooltip-bar-container {
+                        padding: 0;
+                        top: 0
+                    }
+                }
+
+                ytd-watch-metadata:not(:has(#CentAnni-chapter-title)) #description.ytd-watch-metadata {
+                    margin-top: 0;
+                }
+
+                #title ytd-badge-supported-renderer:not([hidden]) {
+                    position: absolute;
+                    cursor: default;
+
+                    .ytBadgeShapeDefault {
+                        background: transparent;
+                        padding: 0;
+
+                        &[aria-label^="AI"] {
+                            color: white;
+                            transform: translate(-150%, -200%);
+                        }
+                    }
+                }
             }
 
             #comments > #sections > #header > ytd-comments-header-renderer > #title > #additional-section {
@@ -2308,7 +2340,6 @@
                 border: none;
                 border-radius: 0;
                 background: transparent;
-                padding-right: 10px;
             }
 
             .ytwHowThisWasMadeSectionViewModelHost {
@@ -2371,8 +2402,8 @@
                 text-decoration: underline;
             }
 
-            #left-arrow:hover,
-            #right-arrow:hover {
+            #shelf-container .arrow:hover,
+            #social-links .arrow-container:hover {
                 background-color: var(--yt-base-background-secondary);
             }
 
@@ -2522,24 +2553,6 @@
                 padding: 0;
             }
 
-            /* auto-dubbed position */
-            ytd-watch-flexy #title ytd-badge-supported-renderer:not([hidden]) {
-                position: absolute;
-                cursor: default;
-                bottom: 0;
-                transform: translate(52px, calc(100% + 5px));
-            }
-
-            ytd-watch-flexy #title ytd-badge-supported-renderer:not([hidden]) .ytBadgeShapeDefault {
-                background: transparent;
-                padding: 0;
-
-                &[aria-label^="AI: "] {
-                    color: white;
-                    transform: translate(-150%,-200%);
-                }
-            }
-
             #container.ytd-masthead {
                 padding: 0 16px;
             }
@@ -2554,7 +2567,7 @@
                 display: flex;
             }
 
-            ytd-app[is-watch-page]:not([scrolling]):has(ytd-watch-flexy:not([is-two-columns_]):not([theater])) {
+            ytd-app:not([scrolling]):has(ytd-watch-flexy:not([is-two-columns_]):not([theater])) {
                 overflow: unset;
             }
 
@@ -2663,14 +2676,19 @@
                 min-height: 42px;
             }
 
-            &.CentAnni-style-compact-layout {
-                & ytd-watch-flexy {
+            &.CentAnni-style-compact-layout-video {
+                ytd-watch-flexy {
                     &[default-layout] #title ytd-badge-supported-renderer:not([hidden]) {
                         transform: translate(52px, calc(350% + 12px));
                     }
 
                     &[theater]:has(ytd-badge-supported-renderer:not([hidden])) #bottom-row.ytd-watch-metadata {
                         margin-bottom: 20px;
+                    }
+
+
+                    #title ytd-badge-supported-renderer:not([hidden]) .ytBadgeShapeDefault[aria-label^="AI"] {
+                        transform: translate(-170%, -130%);
                     }
                 }
 
@@ -2687,13 +2705,9 @@
                 #description-inner.ytd-watch-metadata {
                     margin: 0px 12px 0 48px;
                 }
-
-                & ytd-watch-flexy #title ytd-badge-supported-renderer:not([hidden]) .ytBadgeShapeDefault[aria-label^="AI: "] {
-                    transform: translate(-170%,-100%);
-                }
             }
 
-            ytd-app[is-watch-page] #page-manager:has(ytd-watch-flexy[theater][is-extra-wide-video_]:not([hidden])) {
+            ytd-app #page-manager:has(ytd-watch-flexy[theater][is-extra-wide-video_]:not([hidden])) {
                 height: calc(100dvh - var(--ytd-masthead-height, var(--ytd-toolbar-height)));
                 align-items: center;
             }
@@ -2758,7 +2772,7 @@
                     }
                 }
 
-                ytd-app[is-watch-page]:has(ytd-watch-flexy[cinematics-active][default-layout] .html5-video-player:not(.unstarted-mode, .ended-mode)) {
+                ytd-app:has(ytd-watch-flexy[cinematics-active][default-layout] .html5-video-player:not(.unstarted-mode, .ended-mode)) {
                     .ytSearchboxComponentInputBoxDark,
                     .ytSearchboxComponentSearchButtonDark {
                         background-color: transparent;
@@ -2766,13 +2780,13 @@
                     }
                 }
 
-                ytd-app[is-watch-page]:has(ytd-watch-flexy[cinematics-active][default-layout] .html5-video-player:not(.unstarted-mode, .ended-mode)) .ytSearchboxComponentInputBoxDark:hover,
-                ytd-app[is-watch-page]:has(ytd-watch-flexy[cinematics-active][default-layout] .html5-video-player:not(.unstarted-mode, .ended-mode)) .ytSearchboxComponentSearchButtonDark:hover,
+                ytd-app:has(ytd-watch-flexy[cinematics-active][default-layout] .html5-video-player:not(.unstarted-mode, .ended-mode)) .ytSearchboxComponentInputBoxDark:hover,
+                ytd-app:has(ytd-watch-flexy[cinematics-active][default-layout] .html5-video-player:not(.unstarted-mode, .ended-mode)) .ytSearchboxComponentSearchButtonDark:hover,
                 ytd-watch-flexy[cinematics-active][default-layout]:has(.html5-video-player:not(.unstarted-mode, .ended-mode)) .input-container.ytd-transcript-search-box-renderer:hover {
                     background-color: hsla(0, 0%, 7.1%, .5);
                 }
 
-                ytd-app[is-watch-page]:has(ytd-watch-flexy[cinematics-active][default-layout] .html5-video-player:not(.unstarted-mode, .ended-mode)) .ytSearchboxComponentInputBoxDark:focus-within,
+                ytd-app:has(ytd-watch-flexy[cinematics-active][default-layout] .html5-video-player:not(.unstarted-mode, .ended-mode)) .ytSearchboxComponentInputBoxDark:focus-within,
                 ytd-watch-flexy[cinematics-active][default-layout]:has(.html5-video-player:not(.unstarted-mode, .ended-mode)) .input-container.ytd-transcript-search-box-renderer:focus-within {
                     background-color: hsl(0, 0%, 7%);
                 }
@@ -2910,27 +2924,27 @@
 
                 :is( :has(ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters]),
                     :has(ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters])) {
-                    & ytd-watch-flexy #description > #description-inner {
+                    ytd-watch-flexy #description > #description-inner {
                         width: calc(40% - 32px);
                     }
 
-                    & ytd-watch-flexy #description > #description-inner #info-container {
+                    ytd-watch-flexy #description > #description-inner #info-container {
                         height: fit-content;
                         flex-wrap: wrap;
                     }
 
-                    & ytd-watch-flexy #description > #description-inner #info:has(> a[href*="/hashtag/"]) span.CentAnni-info-date + span::after {
+                    ytd-watch-flexy #description > #description-inner #info:has(> a[href*="/hashtag/"]) span.CentAnni-info-date + span::after {
                         content: "";
                         display: block;
                         height: 0;
                         margin-bottom: 5px;
                     }
 
-                    & ytd-watch-flexy #description > #description-inner #info a.yt-simple-endpoint.bold {
+                    ytd-watch-flexy #description > #description-inner #info a.yt-simple-endpoint.bold {
                         display: inline-block;
                     }
 
-                    & ytd-watch-flexy #bottom-row.ytd-watch-metadata {
+                    ytd-watch-flexy #bottom-row.ytd-watch-metadata {
                         height: 50px;
                     }
 
@@ -2947,6 +2961,49 @@
 
                 #movie_player .ytp-chrome-bottom:not(:has(#CentAnni-chapter-title)) #CentAnni-remaining-time-container {
                     left: 50% !important;
+                }
+            }
+
+            &.CentAnni-style-max-panel {
+                tp-yt-iron-dropdown:has([menu-style="multi-page-menu-style-type-notifications"]) {
+                    top: 52px !important;
+                }
+
+                ytd-app:not([fullscreen]) {
+                    --ytd-masthead-height-absolute: 52px !important;
+                    --ytd-masthead-height: 52px !important;
+                    --ytd-toolbar-height: 52px !important;
+
+                    #container.ytd-masthead,
+                    #background.ytd-masthead {
+                        height: 52px !important;
+                    }
+
+                    &:has(ytd-watch-flexy:not([is-vertical-video_])) #masthead-container:not(:has(#masthead[theater])) {
+                        width: var(--mastheadWidth, calc(100% - var(--sidebarWidth) - var(--ytd-margin-0x))) !important;
+                    }
+
+                    ytd-watch-flexy[default-layout]:not([is-vertical-video_]) {
+                        --ytd-watch-flexy-chat-max-height: 100dvh !important;
+                        --ytd-watch-flexy-panel-max-height: calc(var(--ytd-watch-flexy-chat-max-height) - var(--CentAnniTabViewHeader)) !important;
+                        --ytd-watch-flexy-structured-description-max-height: var(--ytd-watch-flexy-panel-max-height) !important;
+
+                        #secondary {
+                            margin-top: calc(var(--ytd-masthead-height, var(--ytd-toolbar-height)) * -1 - var(--ytd-margin-3x));
+                        }
+                    }
+
+                    ytd-app yt-page-navigation-progress {
+                        background-color: transparent !important;
+                    }
+                }
+
+                &:not(.CentAnni-style-square-search-bar) .ytSearchboxComponentHost {
+                    margin: 0 0 0 8px;
+                }
+
+                #CentAnni-playback-speed-popup {
+                    top: var(--CentAnniTabViewHeader);
                 }
             }
         }
@@ -3316,11 +3373,11 @@
 
         .CentAnni-style-hide-own-avatar {
             #avatar-btn,
-            .masthead-skeleton-icon:last-child {
+            #masthead-skeleton-icons :last-child {
                 display: none !important;
             }
 
-            .masthead-skeleton-icon:nth-child(2),
+            #masthead-skeleton-icons :nth-child(2),
             #end ytd-notification-topbar-button-renderer {
                 margin-right: 0 !important;
             }
@@ -3581,6 +3638,8 @@
             .ytAnimatedActionBackgroundContainer,
             .ytVideoMetadataCarouselViewModelHost,
             .ytdTalkToRecsFlowRendererFlowContent,
+            #header .ytSpecTouchFeedbackShapeFill,
+            #header .ytSpecTouchFeedbackShapeStroke,
             yt-interaction.ytd-guide-entry-renderer,
             .ytSuggestionComponentRoundedSuggestion,
             .dropdown-content.tp-yt-paper-menu-button,
@@ -3807,10 +3866,12 @@
         }
 
         .CentAnni-style-compact-layout {
-            masthead-skeleton-icons,
-            #middle-row.ytd-watch-metadata:empty,
             ytd-rich-section-renderer:has(.grid-subheader.ytd-shelf-renderer) {
                 display: none;
+            }
+
+            #masthead-skeleton-icons .masthead-skeleton-icon:last-child {
+                width: 32px;
             }
 
             #page-manager.ytd-app {
@@ -3819,18 +3880,6 @@
 
             ytd-browse[page-subtype="hashtag-landing-page"] {
                 transform: translateY(0px);
-            }
-
-            .ytSpecButtonShapeNextSizeM,
-            .ytNotificationMultiActionRendererButton,
-            .ytNotificationMultiActionRendererButton button,
-            .ytSpecButtonShapeNextSizeM.ytSpecButtonShapeNextIconButton,
-            .ytNotificationMultiActionRendererButton .ytSpecButtonShapeNextButtonTextContent {
-                height: 36px;
-            }
-
-            .ytSpecButtonShapeNextSizeM.ytSpecButtonShapeNextIconButton {
-                width: 36px;
             }
 
             .ytSpecTouchFeedbackShapeHovered {
@@ -4188,6 +4237,10 @@
                 .ytTabShapeTabBar {
                     bottom: 12px;
                 }
+
+                .ytLockupViewModelMetadata {
+                    margin-left: 5px;
+                }
             }
 
             ytd-browse[page-subtype="subscriptions"] {
@@ -4279,11 +4332,6 @@
                 margin: 0;
             }
 
-            .masthead-skeleton-icon:last-child {
-                margin: 0;
-                padding: 0;
-            }
-
             ytd-browse[page-subtype="playlist"],
             ytd-browse[has-page-header-sidebar] {
                 padding-top: 0;
@@ -4345,26 +4393,6 @@
                 max-width: fit-content;
             }
 
-            .ytIconWrapperHost,
-            .ytp-popup.ytp-settings-menu,
-            .yt-list-item-view-model__accessory,
-            .guide-icon.ytd-guide-entry-renderer,
-            yt-icon.ytd-menu-navigation-item-renderer,
-            ytd-transcript-footer-renderer button#button,
-            ytd-thumbnail-overlay-toggle-button-renderer svg,
-            #button.ytd-menu-renderer yt-icon.ytd-menu-renderer,
-            .yt-spec-button-shape-next--size-m .yt-spec-button-shape-next__icon,
-            ytd-menu-service-item-renderer[system-icons] yt-icon.ytd-menu-service-item-renderer,
-            :is(#notification-preference-button, .ytLikeButtonViewModelHost) .ytSpecButtonShapeNextIcon,
-            ytd-menu-service-item-renderer[system-icons] .ytIconWrapperHost.ytd-menu-service-item-renderer,
-            #icon.ytd-notification-topbar-button-renderer {
-                scale: .85;
-            }
-
-            .ytp-popup.ytp-settings-menu {
-                transform: translateY(35px);
-            }
-
             ytd-app[guide-persistent-and-visible] ytd-page-manager.ytd-app {
                 margin-left: 232px;
             }
@@ -4382,7 +4410,6 @@
                 margin-right: 14px;
             }
 
-            #player.skeleton.flexy,
             #masthead-container #start #logo-icon {
                 padding: 0;
             }
@@ -4396,125 +4423,144 @@
                 background-color: #f1f1f1;
                 color: #0f0f0f;
             }
+        }
 
-            &.is-watch-page {
-                ytd-watch-metadata:not(:has(#CentAnni-chapter-title)) #description.ytd-watch-metadata {
-                    margin-top: 0;
+        .CentAnni-style-compact-layout-video {
+            #middle-row.ytd-watch-metadata:empty {
+                display: none;
+            }
+
+            .ytp-popup.ytp-settings-menu {
+                transform: translateY(35px);
+            }
+
+            #player.skeleton.flexy {
+                padding: 0;
+            }
+
+            .item.ytd-watch-metadata,
+            #description.ytd-watch-metadata {
+                margin-top: 7px;
+            }
+
+            #subheader.ytd-engagement-panel-title-header-renderer:not(:empty) {
+                padding: 0 !important;
+                transform: translateX(110px) translateY(-44px);
+                background-color: transparent;
+                border-top: none;
+            }
+
+            #visibility-button.ytd-engagement-panel-title-header-renderer,
+            #information-button.ytd-engagement-panel-title-header-renderer {
+                z-index: 1;
+            }
+
+            #columns > #secondary > #secondary-inner > #chat-container {
+                top: 0 !important;
+            }
+
+            ytd-watch-flexy {
+                #title > ytd-badge-supported-renderer div > yt-icon {
+                    padding: 0 2px 0px 0;
                 }
 
-                .item.ytd-watch-metadata,
-                #description.ytd-watch-metadata {
-                    margin-top: 7px;
+                #upload-info.ytd-video-owner-renderer {
+                    margin-right: 8px;
                 }
 
-                #subheader.ytd-engagement-panel-title-header-renderer:not(:empty) {
-                    padding: 0 !important;
-                    transform: translateX(110px) translateY(-44px);
-                    background-color: transparent;
-                    border-top: none;
+                #comments #header ytd-comments-header-renderer {
+                    margin: 12px 0 24px 0;
                 }
 
-                #visibility-button.ytd-engagement-panel-title-header-renderer,
-                #information-button.ytd-engagement-panel-title-header-renderer {
-                    z-index: 1;
+                #endpoint.ytd-macro-markers-list-item-renderer {
+                    min-width: 100%;
                 }
 
-                #columns > #secondary > #secondary-inner > #chat-container {
-                    top: 0 !important;
+                #share-button.ytd-macro-markers-list-item-renderer,
+                #repeat-button.ytd-macro-markers-list-item-renderer {
+                    transform: translate(-35px, 10px);
+                    margin-top: auto;
+                    height: 40px;
+                    scale: .9;
                 }
 
-                ytd-watch-flexy {
-                    & #title > ytd-badge-supported-renderer div > yt-icon {
-                        padding: 0 2px 0px 0;
-                    }
+                #playlist,
+                #related,
+                &:not([fullscreen]) #panels :is(ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters]) {
+                    top: 52px !important;
+                }
 
-                    & .ryd-tooltip-new-design .ryd-tooltip-bar-container {
-                        padding: 0;
-                        margin-top: -2px;
-                    }
+                &[default-layout] #below {
+                    margin-left: var(--ytd-watch-flexy-horizontal-page-margin);
+                    padding-right: var(--ytd-watch-flexy-horizontal-page-margin);
+                }
 
-                    & #above-the-fold #top-row {
-                        border: none !important;
-                        padding: 0 !important;
-                    }
+                &[default-layout]:not([no-top-margin]):not([reduced-top-margin]) :is(#primary, #secondary) {
+                    padding-top: 0;
+                }
 
-                    & #upload-info.ytd-video-owner-renderer {
-                        margin-right: 8px;
-                    }
+                &[default-layout][flexy-small-window_]:not([is-vertical-video_]) :is(.CentAnni-tabView, #related, #panels :is(ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters])) {
+                    border-right: none;
+                }
 
-                    & #comments #header ytd-comments-header-renderer {
-                        margin: 12px 0 24px 0;
-                    }
+                &[fullscreen][engagement-panel-expanded] ytd-engagement-panel-section-list-renderer[visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"] {
+                    width: 100% !important;
+                    margin: 0 !important;
+                }
 
-                    & #endpoint.ytd-macro-markers-list-item-renderer {
-                        min-width: 100%;
-                    }
-
-                    & #share-button.ytd-macro-markers-list-item-renderer,
-                    & #repeat-button.ytd-macro-markers-list-item-renderer {
-                        transform: translate(-35px, 10px);
-                        margin-top: auto;
-                        height: 40px;
-                        scale: .9;
-                    }
-
-                    & #playlist,
-                    & #related,
-                    &:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-                    &:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-                    &:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-                    &:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
-                        top: 52px !important;
-                    }
-
-                    &[default-layout] #below {
-                        margin-left: var(--ytd-watch-flexy-horizontal-page-margin);
-                        padding-right: var(--ytd-watch-flexy-horizontal-page-margin);
-                    }
-
-                    &[default-layout]:not([no-top-margin]):not([reduced-top-margin]) #primary,
-                    &[default-layout]:not([no-top-margin]):not([reduced-top-margin]) #secondary {
-                        padding-top: 0;
-                    }
-
-                    &[default-layout]:not([is-vertical-video_]) .CentAnni-tabView,
-                    &[default-layout]:not([is-vertical-video_]) #related,
-                    &[default-layout]:not([is-vertical-video_]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-                    &[default-layout]:not([is-vertical-video_]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-                    &[default-layout]:not([is-vertical-video_]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-                    &[default-layout]:not([is-vertical-video_]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
-                        border-right: none;
-                    }
-
-                    &[fullscreen][engagement-panel-expanded] ytd-engagement-panel-section-list-renderer[visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"] {
-                        width: 100% !important;
-                        margin: 0 !important;
-                    }
-
-                    &[default-layout] #primary,
-                    &[default-layout] #secondary {
-                        margin: 0;
-                        padding: 0;
-                    }
+                &[default-layout] #primary,
+                &[default-layout] #secondary {
+                    margin: 0;
+                    padding: 0;
                 }
             }
         }
 
-        .CentAnni-style-max-video-size:not(.CentAnni-style-compact-layout) ytd-watch-flexy[default-layout] {
+        :is(.CentAnni-style-compact-layout, .CentAnni-style-compact-layout-video) {
+            .ytSpecButtonShapeNextSizeM,
+            .ytNotificationMultiActionRendererButton,
+            .ytNotificationMultiActionRendererButton button,
+            .ytSpecButtonShapeNextSizeM.ytSpecButtonShapeNextIconButton,
+            .ytNotificationMultiActionRendererButton .ytSpecButtonShapeNextButtonTextContent {
+                height: 36px;
+            }
+
+            #voice-search-button button,
+            .ytSpecButtonShapeNextSizeM.ytSpecButtonShapeNextIconButton {
+                width: 36px;
+            }
+
+            .ytIconWrapperHost,
+            .ytp-popup.ytp-settings-menu,
+            .yt-list-item-view-model__accessory,
+            .guide-icon.ytd-guide-entry-renderer,
+            yt-icon.ytd-menu-navigation-item-renderer,
+            ytd-transcript-footer-renderer button#button,
+            ytd-thumbnail-overlay-toggle-button-renderer svg,
+            #button.ytd-menu-renderer yt-icon.ytd-menu-renderer,
+            .yt-spec-button-shape-next--size-m .yt-spec-button-shape-next__icon,
+            ytd-menu-service-item-renderer[system-icons] yt-icon.ytd-menu-service-item-renderer,
+            :is(#notification-preference-button, .ytLikeButtonViewModelHost) .ytSpecButtonShapeNextIcon,
+            ytd-menu-service-item-renderer[system-icons] .ytIconWrapperHost.ytd-menu-service-item-renderer {
+                scale: .85;
+            }
+        }
+
+        .CentAnni-style-max-video-size:not(.CentAnni-style-compact-layout-video) ytd-watch-flexy[default-layout] {
             --ytd-watch-flexy-max-player-width: min(calc(100dvw - (var(--horizontalMargin) * 3) - var(--ytd-watch-flexy-sidebar-width)),
                     calc((100dvh - var(--topHeaderMargin) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
             --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - (var(--horizontalMargin) * 3) - var(--ytd-watch-flexy-sidebar-width)),
                     calc((100dvh - var(--topHeaderMargin) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
         }
 
-        .CentAnni-style-compact-layout:not(.CentAnni-style-max-video-size) ytd-watch-flexy[default-layout] {
+        .CentAnni-style-compact-layout-video:not(.CentAnni-style-max-video-size) ytd-watch-flexy[default-layout] {
             --ytd-watch-flexy-max-player-width: min(calc(100dvw - var(--ytd-watch-flexy-sidebar-width)),
                     calc((100dvh - var(--spaceBelow) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
             --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - var(--ytd-watch-flexy-sidebar-width)),
                     calc((100dvh - var(--spaceBelow) - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
         }
 
-        .CentAnni-style-max-video-size.CentAnni-style-compact-layout ytd-watch-flexy[default-layout] {
+        .CentAnni-style-max-video-size.CentAnni-style-compact-layout-video ytd-watch-flexy[default-layout] {
             --ytd-watch-flexy-max-player-width: min(calc(100dvw - var(--ytd-watch-flexy-sidebar-width)),
                     calc((100dvh - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
             --ytd-watch-flexy-max-player-width-wide-screen: min(calc(100dvw - var(--ytd-watch-flexy-sidebar-width)),
@@ -4643,7 +4689,7 @@
                 display: inline-block !important;
                 order: 1;
 
-                & svg {
+                svg {
                     padding: 8px 12px !important;
                 }
             }
@@ -4722,7 +4768,7 @@
                 max-width: calc(60% - 32px);
             }
 
-            & ytd-watch-flexy #bottom-row.ytd-watch-metadata {
+            ytd-watch-flexy #bottom-row.ytd-watch-metadata {
                 height: fit-content !important;
             }
         }
@@ -4893,9 +4939,10 @@
         .CentAnni-style-no-zoom .ytp-speedmaster-overlay,
         .CentAnni-style-hide-airplay-btn #ytd-player .ytp-airplay-button,
         .CentAnni-style-hide-voice-search #voice-search-button.ytd-masthead,
+        .CentAnni-style-hide-notification-badge #end .ytSpecIconBadgeShapeBadge,
+        .is-watch-page #masthead-container.ytd-app:not(:has(yt-searchbox [placeholder])),
         .CentAnni-style-hide-info-panel :is(#middle-row, ytd-info-panel-container-renderer),
         .CentAnni-style-hide-playables ytd-rich-section-renderer:has(a[href^="/playables"]),
-        .is-watch-page #masthead-container.ytd-app:not(:has(yt-searchbox [placeholder])),
         .CentAnni-style-hide-share-btn #below #top-level-buttons-computed yt-button-view-model,
         .CentAnni-style-hide-miniplayer :is(ytd-miniplayer, #ytd-player .ytp-miniplayer-button),
         .CentAnni-style-hide-autoplay-btn button.ytp-autonav-toggle:has([aria-checked="false"]),
@@ -4912,16 +4959,15 @@
         .CentAnni-style-hide-explore-section ytd-rich-section-renderer:has(.ytdChipsShelfWithVideoShelfRendererHost),
         .CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen #CentAnni-remaining-time-container,
         .CentAnni-style-no-ambient :is(#cinematic-container, #cinematics-container, #cinematics-full-bleed-container),
-        .CentAnni-style-hide-create-btn :is(.masthead-skeleton-icon:first-child, #end ytd-button-renderer.ytd-masthead),
         .CentAnni-style-hide-posts-home ytd-browse[page-subtype="home"] ytd-rich-section-renderer:has(ytd-post-renderer),
         .CentAnni-style-hide-fundraiser :is(#donation-shelf, ytd-badge-supported-renderer:has([aria-label="Fundraiser"])),
+        .CentAnni-style-hide-create-btn :is(#masthead-skeleton-icons :first-child, #end ytd-button-renderer.ytd-masthead),
         .CentAnni-style-hide-ask-btn :is(yt-button-view-model, #teaser-carousel):has(:is([aria-label="Ask"], path[d^="M480"])),
         .CentAnni-style-hide-most-relevant ytd-browse[page-subtype="subscriptions"] ytd-rich-section-renderer:not(:has([is-shorts])),
         .yt-watch-later .metadata-text-wrapper.ytd-playlist-header-renderer yt-formatted-string.ytd-playlist-byline-renderer:not(:has(*)),
         .CentAnni-style-hide-pay-to-watch :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-video-renderer):has(.badge-style-type-ypc),
-        .CentAnni-style-hide-notification-badge #masthead-container #end #buttons ytd-notification-topbar-button-renderer .yt-spec-icon-badge-shape__badge,
+        .CentAnni-style-hide-notification-btn :is(#masthead-skeleton-icons :nth-child(2), #masthead-container #end ytd-notification-topbar-button-renderer),
         .CentAnni-style-hide-free-with-ads :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-rich-section-renderer):has([aria-label="Free with ads"]),
-        .CentAnni-style-hide-notification-btn :is(.masthead-skeleton-icon:nth-child(2), #masthead-container #end #buttons ytd-notification-topbar-button-renderer),
         .CentAnni-style-hide-playlists-home ytd-browse[page-subtype="home"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="start_radio=1"]),
         .CentAnni-playlist-remove-btn-hide-menus :is(tp-yt-iron-overlay-backdrop.opened, ytd-popup-container > tp-yt-paper-dialog, ytd-popup-container > tp-yt-iron-dropdown),
         .CentAnni-style-hide-episodes-home ytd-browse[page-subtype="home"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]):not(:has(a[href*="start_radio=1"])),
@@ -4945,59 +4991,46 @@
         /* dark and light mode */
         html[dark] {
             &.CentAnni-style-no-frosted-glass {
-                #frosted-glass.ytd-app,
-                #background.ytd-masthead,
-                #frosted-glass.with-chipbar.ytd-app {
-                    background: #0f0f0f !important;
+                --ta889dfda9605a358: #0f0f0f;
+
+                #background.ytd-masthead {
+                    background: #0f0f0f;
                 }
             }
 
-            &.CentAnni-style-pure-bg :is(tp-yt-app-drawer.ytd-app[persistent] #guide-content > #header,
-                #chips-wrapper.ytd-feed-filter-chip-bar-renderer,
-                #page-header-container.ytd-tabbed-page-header,
-                ytd-app tp-yt-app-drawer.ytd-app[persistent],
-                .playlist-items.ytd-playlist-panel-renderer,
-                #tabs-container.ytd-tabbed-page-header,
-                #page-header.ytd-tabbed-page-header,
-                .header.ytd-playlist-panel-renderer,
-                #frosted-glass.with-chipbar.ytd-app,
-                #background.ytd-masthead,
-                #frosted-glass.ytd-app,
-                ytd-app:not([is-shorts-page]:has(#shorts-cinematic-container canvas),[is-watch-page]:has(ytd-watch-flexy[default-layout][cinematics-active]:not([hidden]) .html5-video-player:not(.unstarted-mode, .ended-mode)))) {
-                background: black !important;
-            }
+            &.CentAnni-style-pure-bg {
+                --t3e41d7b17b187f69: black !important;
+                --ta889dfda9605a358: black;
 
-            &.CentAnni-style-pure-bg ytd-browse[page-subtype="home"] {
-                .ytChipShapeInactive {
-                    background-color: rgb(40, 40, 40);
+                ytd-tabbed-page-header {
+                    --yt-lightsource-section1-color: black !important;
                 }
 
-                .ytChipShapeChip:not(.ytChipShapeActive):hover {
-                    background-color: rgb(63, 63, 63);
+                #background.ytd-masthead {
+                    background: black;
+                }
+
+                ytd-browse[page-subtype="home"] {
+                    .ytChipShapeInactive {
+                        background-color: rgb(40, 40, 40);
+                    }
+
+                    .ytChipShapeChip:not(.ytChipShapeActive):hover {
+                        background-color: rgb(63, 63, 63);
+                    }
+                }
+
+                &.is-watch-page ytd-watch-flexy[default-layout][cinematics-active]:has(.html5-video-player.ended-mode) #cinematics-container {
+                    opacity: 0;
                 }
             }
         }
 
         html:not([dark]) {
-            &.CentAnni-style-no-frosted-glass {
-                #frosted-glass.ytd-app,
-                #frosted-glass.with-chipbar.ytd-app {
-                    background: white !important;
-                }
-            }
-
             &.CentAnni-style-pure-bg {
-                ytd-app {
-                    background: white !important;
-                }
-
                 ytd-browse[page-subtype="home"] .ytChipShapeChip:hover {
-                    background: rgba(0, 0, 0, .2);
+                    background-color: rgba(0, 0, 0, .2);
                 }
-            }
-
-            &.CentAnni-style-no-frosted-glass.is-watch-page:has(ytd-watch-flexy[default-layout]) #background.ytd-masthead {
-                background: white !important;
             }
 
             &.is-watch-page {
@@ -5092,49 +5125,10 @@
             border-color: var(--selectionColor) !important;
         }
 
-        html.CentAnni-style-compact-layout:has(ytd-watch-flexy[default-layout]) {
+        html.CentAnni-style-compact-layout-video:has(ytd-watch-flexy[default-layout]) {
             --ytd-margin-3x: 0px !important;
             --ytd-margin-6x: 0px !important;
             --ytd-margin-0x: 0px;
-        }
-
-        .CentAnni-style-max-panel {
-            tp-yt-iron-dropdown:has([menu-style="multi-page-menu-style-type-notifications"]) {
-                top: 52px !important;
-            }
-
-            ytd-app[is-watch-page]:not([fullscreen]) {
-                --ytd-masthead-height-absolute: 52px !important;
-                --ytd-masthead-height: 52px !important;
-                --ytd-toolbar-height: 52px !important;
-
-                & #container.ytd-masthead,
-                & #background.ytd-masthead {
-                    height: 52px !important;
-                }
-
-                &:has(ytd-watch-flexy:not([is-vertical-video_])) #masthead-container:not(:has(#masthead[theater])) {
-                    width: calc(100% - var(--sidebarWidth) - var(--ytd-margin-0x)) !important;
-                }
-
-                & ytd-watch-flexy[default-layout]:not([is-vertical-video_]) {
-                    --ytd-watch-flexy-chat-max-height: 100dvh !important;
-                    --ytd-watch-flexy-panel-max-height: calc(var(--ytd-watch-flexy-chat-max-height) - var(--CentAnniTabViewHeader)) !important;
-                    --ytd-watch-flexy-structured-description-max-height: var(--ytd-watch-flexy-panel-max-height) !important;
-
-                    & #secondary {
-                        margin-top: calc(var(--ytd-masthead-height, var(--ytd-toolbar-height)) * -1 - var(--ytd-margin-3x));
-                    }
-                }
-            }
-
-            &.CentAnni-video-tabView ytd-app[is-watch-page] yt-page-navigation-progress {
-                background-color: transparent !important;
-            }
-        }
-
-        html.CentAnni-style-max-panel:not(.CentAnni-style-square-search-bar) .ytSearchboxComponentHost {
-            margin: 0 0 0 8px;
         }
 
         /* cinema mode */
@@ -5169,11 +5163,11 @@
         }
 
         html.CentAnni-cinema-mode.is-watch-page:has(ytd-watch-flexy[theater]:not([hidden], [fullscreen], [is-vertical-video_]) #ytd-player .html5-video-player:not(.unstarted-mode, .ended-mode)) {
-            & ytd-app:has(ytd-watch-flexy[is-dark-theme]) {
+            ytd-app:has(ytd-watch-flexy[is-dark-theme]) {
                 background-color: black;
             }
 
-            & #page-manager.ytd-app {
+            #page-manager.ytd-app {
                 margin-top: 0 !important;
                 align-items: center;
             }
@@ -5194,7 +5188,7 @@
                 overflow-x: hidden;
             }
 
-            & ytd-watch-flexy {
+            ytd-watch-flexy {
                 margin-top: max(80px, calc((100dvh - (var(--ytd-watch-flexy-height-ratio)/var(--ytd-watch-flexy-width-ratio)*100dvw)) / 2));
             }
 
@@ -5202,12 +5196,12 @@
                 transform: translateY(20px);
             }
 
-            & #CentAnni-remaining-time-container {
+            #CentAnni-remaining-time-container {
                 text-align: center;
                 transform: translateX(calc((var(--ytd-watch-flexy-sidebar-width) + var(--ytd-watch-flexy-horizontal-page-margin)) / 2));
             }
 
-            & #CentAnni-chapter-title {
+            #CentAnni-chapter-title {
                 left: calc(50% + ((var(--ytd-watch-flexy-sidebar-width) + 12px) / 2));
                 transform: translate(-50%, -54px);
                 width: 80dvw;
@@ -5215,11 +5209,11 @@
                 justify-content: center;
             }
 
-            &.CentAnni-style-compact-layout #CentAnni-chapter-title {
+            &.CentAnni-style-compact-layout-video #CentAnni-chapter-title {
                 transform: translate(-50%, -35px);
             }
 
-            & h1.ytd-watch-metadata {
+            h1.ytd-watch-metadata {
                 position: fixed;
                 top: max(40px, calc((100dvh - (var(--ytd-watch-flexy-height-ratio)/var(--ytd-watch-flexy-width-ratio)*100dvw)) / 4));
                 transform: translateY(50%);
@@ -5229,48 +5223,48 @@
                 justify-content: center;
             }
 
-            & #bottom-row > #description {
+            #bottom-row > #description {
                 margin-top: 0;
             }
 
-            & #CentAnni-playback-speed-popup {
+            #CentAnni-playback-speed-popup {
                 transform: translate(-50%, 50%);
                 top: 0;
             }
 
-            & h1.ytd-watch-metadata > * {
+            h1.ytd-watch-metadata > * {
                 filter: opacity(0);
                 transition: filter .4s ease-out;
                 will-change: filter;
             }
 
-            & #CentAnni-chapter-title,
-            & #CentAnni-remaining-time-container {
+            #CentAnni-chapter-title,
+            #CentAnni-remaining-time-container {
                 opacity: .7;
                 transition: opacity .15s ease-out;
             }
 
-            & #secondary,
-            & #primary #comments,
-            & #masthead-container,
-            & #expandable-metadata,
-            & #CentAnni-cinema-mode-btn,
-            & :is(ytd-watch-metadata, ytd-watch-metadata *):has(#CentAnni-chapter-title) > :not(#CentAnni-chapter-title):not(:has(#CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title),
-            & :is(ytd-watch-metadata:not(:has(#CentAnni-chapter-title)), ytd-watch-metadata:not(:has(#CentAnni-chapter-title)) *):has(h1.ytd-watch-metadata) > :not(#CentAnni-chapter-title):not(:has(#CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title) {
+            #secondary,
+            #primary #comments,
+            #masthead-container,
+            #expandable-metadata,
+            #CentAnni-cinema-mode-btn,
+            :is(ytd-watch-metadata, ytd-watch-metadata *):has(#CentAnni-chapter-title) > :not(#CentAnni-chapter-title):not(:has(#CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title),
+            :is(ytd-watch-metadata:not(:has(#CentAnni-chapter-title)), ytd-watch-metadata:not(:has(#CentAnni-chapter-title)) *):has(h1.ytd-watch-metadata) > :not(#CentAnni-chapter-title):not(:has(#CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title) {
                 opacity: 0;
                 transition: opacity .4s ease-out;
             }
 
             &:hover {
-                & #secondary,
-                & #primary #comments,
-                & #masthead-container,
-                & #expandable-metadata,
-                & #CentAnni-chapter-title,
-                & #CentAnni-cinema-mode-btn,
-                & #CentAnni-remaining-time-container,
-                & :is(ytd-watch-metadata, ytd-watch-metadata *):has(#CentAnni-chapter-title) > :not(#CentAnni-chapter-title):not(:has(#CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title),
-                & :is(ytd-watch-metadata:not(:has(#CentAnni-chapter-title)), ytd-watch-metadata:not(:has(#CentAnni-chapter-title)) *):has(h1.ytd-watch-metadata) > :not(#CentAnni-chapter-title):not(:has(#CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title) {
+                #secondary,
+                #primary #comments,
+                #masthead-container,
+                #expandable-metadata,
+                #CentAnni-chapter-title,
+                #CentAnni-cinema-mode-btn,
+                #CentAnni-remaining-time-container,
+                :is(ytd-watch-metadata, ytd-watch-metadata *):has(#CentAnni-chapter-title) > :not(#CentAnni-chapter-title):not(:has(#CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title),
+                :is(ytd-watch-metadata:not(:has(#CentAnni-chapter-title)), ytd-watch-metadata:not(:has(#CentAnni-chapter-title)) *):has(h1.ytd-watch-metadata) > :not(#CentAnni-chapter-title):not(:has(#CentAnni-chapter-title)):not(:has(h1.ytd-watch-metadata)):not(#above-the-fold):not(#title) {
                     opacity: 1;
                 }
             }
@@ -5568,6 +5562,7 @@
         squareDesign: false,
         squareAvatars: false,
         compactLayout: false,
+        compactLayoutVideo: false,
         maxPanelHeight: false,
         noAmbientMode: false,
         noVideoZoom: false,
@@ -5691,7 +5686,7 @@
         docElement.style.setProperty('--itemsPerRow', USER_CONFIG.videosPerRow);
         docElement.style.setProperty('--textTransform', USER_CONFIG.textTransform);
         docElement.style.setProperty('--fontSize', `${USER_CONFIG.defaultFontSize}px`);
-        docElement.style.setProperty('--sidebarWidth', `${USER_CONFIG.sidebarWidth || 402}px`);
+        docElement.style.setProperty('--sidebarWidth', `${USER_CONFIG.sidebarWidth}px`);
         docElement.style.setProperty('--spaceBelow', `${USER_CONFIG.spaceBelowPlayer}px`);
         docElement.style.setProperty('--watchedOpacity', USER_CONFIG.videosWatchedOpacity);
         docElement.style.setProperty('--searchbarPosition', `${USER_CONFIG.searchPosition}px`);
@@ -5754,6 +5749,7 @@
         hidePlayNextButton: { class: 'CentAnni-style-hide-playnext-btn', pages: () => isWatchPage },
         hideCommentsSection: { class: 'CentAnni-style-hide-comments-btn', pages: () => isWatchPage },
         playProgressColor: { class: 'CentAnni-style-play-progress-color', pages: () => isWatchPage },
+        compactLayoutVideo: { class: 'CentAnni-style-compact-layout-video', pages: () => isWatchPage },
         smallSubscribeButton: { class: 'CentAnni-style-small-subscribe-btn', pages: () => isWatchPage },
         hideJoinButton: { class: 'CentAnni-style-hide-join-btn', pages: () => isChannelPage || isWatchPage },
         // subscription page
@@ -6604,7 +6600,7 @@
             form.appendChild(tabViewChapters);
 
             // max secondary panel height
-            const maxPanelHeight = createCheckboxField('Max Panel Height in Default View (default: off)', 'maxPanelHeight', USER_CONFIG.maxPanelHeight);
+            const maxPanelHeight = createCheckboxField('Max Panel Height in Default View  | Only Works with Tab View Enabled! (default: off)', 'maxPanelHeight', USER_CONFIG.maxPanelHeight);
             form.appendChild(maxPanelHeight);
 
             // no animation switch theater and default view
@@ -6622,6 +6618,10 @@
             // compact layout
             const compactLayout = createCheckboxField('Compact Layout (default: off)', 'compactLayout', USER_CONFIG.compactLayout);
             form.appendChild(compactLayout);
+
+            // compact layout video page
+            const compactLayoutVideo = createCheckboxField('Compact Video Page Layout (default: off)', 'compactLayoutVideo', USER_CONFIG.compactLayoutVideo);
+            form.appendChild(compactLayoutVideo);
 
             // square and compact search bar
             const squareSearchBar = createCheckboxField('Square and Compact Search Bar (default: off)', 'squareSearchBar', USER_CONFIG.squareSearchBar);
@@ -7772,6 +7772,7 @@
             USER_CONFIG.squareDesign = subPanelCustomCSS.elements.squareDesign.checked;
             USER_CONFIG.squareAvatars = subPanelCustomCSS.elements.squareAvatars.checked;
             USER_CONFIG.compactLayout = subPanelCustomCSS.elements.compactLayout.checked;
+            USER_CONFIG.compactLayoutVideo = subPanelCustomCSS.elements.compactLayoutVideo.checked;
             USER_CONFIG.maxPanelHeight = subPanelCustomCSS.elements.maxPanelHeight.checked;
             USER_CONFIG.noAmbientMode = subPanelCustomCSS.elements.noAmbientMode.checked;
             USER_CONFIG.noVideoZoom = subPanelCustomCSS.elements.noVideoZoom.checked;
@@ -7907,9 +7908,9 @@
         const aspectRatio = (video.videoWidth && video.videoHeight) ? video.videoWidth / video.videoHeight : aspectRatioWidth / aspectRatioHeight;
         const sidebarWidth = parseFloat(styleWF.getPropertyValue('--ytd-watch-flexy-sidebar-width')) || 402;
         const mastheadHeight = parseFloat(styleHTML.getPropertyValue('--ytd-toolbar-height')) || 56;
-        const marginTop = USER_CONFIG.compactLayout ? 0 : watchFlexy.hasAttribute('reduced-top-margin') ? 12 : 24;
+        const marginTop = USER_CONFIG.compactLayoutVideo ? 0 : watchFlexy.hasAttribute('reduced-top-margin') ? 12 : 24;
         const horizontalPageMargin = parseFloat(watchFlexy.style.getPropertyValue('--ytd-watch-flexy-horizontal-page-margin')) || 24;
-        const margin = USER_CONFIG.compactLayout ? 0 : horizontalPageMargin;
+        const margin = USER_CONFIG.compactLayoutVideo ? 0 : horizontalPageMargin;
         const space = USER_CONFIG.spaceBelowPlayer;
         const marginBelow = USER_CONFIG.maxVidSize ? 0 : space;
 
@@ -8094,7 +8095,7 @@
 
     async function runYTE() {
         try { await preLoadTranscript(); }
-        catch (error) { setTimeout(() => { createButtons((isLive || !hasTranscriptPanel) ? ['settings'] : ['settings', 'error']); }, 2000); throw error; }
+        catch (error) { setTimeout(() => { createButtons((isLive || !hasTranscriptPanel) ? ['settings'] : ['settings', 'error']); }, 2000); return; }
         createButtons('all');
     }
 
@@ -8573,15 +8574,44 @@
         transcriptMenuButtonMoved = false;
         let transcriptLanguageSet = false;
         let timestampsEnabled = false;
+        let setMastheadWidth = false;
         let currentActiveTab = null;
         let isSingleColumn = false;
         let lastActiveTab = null;
         let hasLiveChat = false;
+        let mastheadWidthTimer;
         let isFirstRun = true;
         let tabElements = [];
         let subheaderDiv;
         let isDefault;
         let dateSpan;
+
+        // check and update sidebar and masthead width
+        const updateMastheadWidth = () => {
+            if (USER_CONFIG.sidebarWidth === 0) {
+                const styleWFE = getComputedStyle(watchFlexyElement);
+                const sidebarWidth = styleWFE.getPropertyValue('--ytd-watch-flexy-sidebar-width').trim();
+                docElement.style.setProperty('--sidebarWidth', sidebarWidth);
+            }
+
+            const columnsRight = watchFlexyElement.querySelector('#columns').getBoundingClientRect().right;
+            const hasRightSpace = document.documentElement.clientWidth - columnsRight > .5;
+            if (hasRightSpace) docElement.style.setProperty('--mastheadWidth', `${watchFlexyElement.querySelector('#primary').getBoundingClientRect().right}px`);
+            else docElement.style.removeProperty('--mastheadWidth');
+
+            setMastheadWidth = true;
+        };
+
+        const checkMastheadWidth = () => {
+            if (isTheaterMode) setMastheadWidth = false;
+            else {
+                clearTimeout(mastheadWidthTimer);
+                mastheadWidthTimer = setTimeout(() => {
+                    if (isTheaterMode) setMastheadWidth = false;
+                    else requestAnimationFrame(updateMastheadWidth);
+                }, 250);
+            }
+        };
 
         // prevent page scrolling due to opening the transcript panel
         const nativeScrollTop = Object.getOwnPropertyDescriptor(Element.prototype, "scrollTop");
@@ -8662,6 +8692,8 @@
                 else if (currentActiveTab === 'tab-6' && hasPlaylistPanel && playlistSelectedVideo) scrollSelectedVideoPL();
 
                 subheaderDiv.onclick = null;
+
+                if (USER_CONFIG.maxPanelHeight && !setMastheadWidth) updateMastheadWidth();
             }
         }
 
@@ -8688,18 +8720,22 @@
                 }));
             }
         };
+
         document.addEventListener('yt-set-theater-mode-enabled', updateTabView);
         document.addEventListener('fullscreenchange', fullscreenListener);
+        if (USER_CONFIG.maxPanelHeight) window.addEventListener('resize', checkMastheadWidth);
 
         //  clean up
         cleanupTabView = () => {
             subheaderDiv.onclick = null;
+            window.removeEventListener('resize', checkMastheadWidth);
             document.removeEventListener('fullscreenchange', fullscreenListener);
             document.removeEventListener('yt-set-theater-mode-enabled', updateTabView);
             document.removeEventListener('yt-autonav-pause-player-ended', exitFullscreen);
             const activeTabId = currentActiveTab || (isTheaterMode ? lastActiveTab : null);
             contentSectionById[activeTabId]?.classList.remove('active');
             setTabPanelState(activeTabId, false);
+            clearTimeout(mastheadWidthTimer);
             tabElements.forEach(tab => {
                 tab.element.onclick = null;
                 tab.element.classList.remove('active');
@@ -11953,13 +11989,6 @@
             hasDonationPanel = !!donationPanel?.querySelector('ytd-donation-shelf-renderer');
         }
 
-        // ensure correct header width when max panel height is enabled
-        if (USER_CONFIG.sidebarWidth === 0 && USER_CONFIG.maxPanelHeight) {
-            const styleWFE = getComputedStyle(watchFlexyElement);
-            const widthCheck = styleWFE.getPropertyValue('--ytd-watch-flexy-sidebar-width').trim();
-            if (widthCheck !== '402px') docElement.style.setProperty('--sidebarWidth', widthCheck);
-        }
-
         // playback speed channel check
         if (USER_CONFIG.playbackSpeed) {
             channelHandle = watchFlexyElement.querySelector('#channel-name a')?.getAttribute('href')?.slice(2);
@@ -12377,7 +12406,7 @@
                 [USER_CONFIG.hideEndscreen, () => setTimeout(() => { getThumbnailUrl((url) => { docElement.style.setProperty('--video-url', url); }); }, 1000)],
                 [USER_CONFIG.playlistDirectionBtns && isPlaylistVideoPage, () => requestIdleCallback(playlistDirection)],
                 [USER_CONFIG.feedFilterChipsWatch, () => requestIdleCallback(restoreLastSelectedChip)],
-                [USER_CONFIG.maxVidSize || USER_CONFIG.compactLayout, maxVideoSize],
+                [USER_CONFIG.maxVidSize || USER_CONFIG.compactLayoutVideo, maxVideoSize],
                 [USER_CONFIG.videoTabView, () => initialRun ? requestIdleCallback(tabView) : tabView()],
                 [USER_CONFIG.closeChatWindow, () => initialRun ? requestIdleCallback(chatWindowCheck) : setTimeout(chatWindowCheck, 1000)],
                 [USER_CONFIG.enableCinemaMode && !cinemaModeActive, cinemaMode],
@@ -12485,9 +12514,9 @@
             isWatchLater = sp.get('list') === 'WL';
             isShortPage = pn.startsWith('/shorts/');
             isWatchPage = isVideoPage || isLiveStream;
-            isChannelPage = /^\/@[a-zA-Z0-9._-]+/.test(pn);
             isSubscriptionsPage = pn === '/feed/subscriptions';
-            isChannelHome = /^(\/@[a-zA-Z0-9._-]+|\/channel\/[a-zA-Z0-9_\-=.]+)$/.test(pn);
+            isChannelPage = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)/.test(pn);
+            isChannelHome = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)$/.test(pn);
             if (USER_CONFIG.channelReindirizzare && isChannelHome) { channelRedirect(); return; }
             if (USER_CONFIG.redirectShorts && isShortPage) { redirectShortsToVideoPage(); return; }
             if (isWatchPage || isShortPage) {
