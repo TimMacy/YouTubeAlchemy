@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.1-white.svg" alt="Version: 11.1"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.3-white.svg" alt="Version: 11.3"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -130,7 +130,6 @@ Offers various options to customize the layout and functionality of YouTube.
     - 144p
   - Audio Language
   - Subtitle Language
-  - Transcript Language
   - Language Options:
     - Auto (default)
     - Chinese
@@ -200,7 +199,6 @@ Offers various options to customize the layout and functionality of YouTube.
   - Automatically Open Chapter Panels
   - Automatically Open Transcript Panels
   - Automatically Open Comments, Only Works with Tab View Enabled
-  - Automatically Enable Timestamps in Transcript Panels
   - Highlight Active Section in Transcript Panels
   - Automatically Enable Subtitles When Muted
   - Show Subtitles for 10 Seconds When Rewinding with "J"
@@ -388,6 +386,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **11.3**: adjustments for YouTube DOM changes, bug fixes, and improvements; features removed: "Transcript Language" and "Automatically Enable Timestamps in Transcript Panels"; added aria-labels for transcript buttons and select fields; feature changed: "Transcript Exporter" now uses the new transcript panel `data-target-id="PAmodern_transcript_view"` instead of `target-id="engagement-panel-searchable-transcript"`
 - **11.1**: adjustments for YouTube DOM changes, bug fixes, and improvements; features changed: "Max Panel Height in Default View" now only works if "Tab View" is enabled, "Compact Layout" can now be enabled just on video pages via "Compact Video Page Layout"
 - **11.0.1**: adjustments for YouTube DOM changes
 - **11.0**: adjustments for YouTube DOM changes, bug fixes, and performance improvements; CSS is now toggled per page while for the Guide it only applies when opened; new features: "Hide 'You' Section" and "Hide 'Playables' Button" in the Guide; added a new retry button (⚠️) if the transcript fails to load; when both "Remaining Time" and "Persistent Progress Bar" are enabled, skipped SponsorBlock segments have reduced opacity; Automatically Enable Subtitles When Muted; Show Subtitles for 10 Seconds When Rewinding with "J"
