@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      11.1
+// @version      11.3
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 11.1 - YouTube Alchemy                    *
+*                    Version: 11.3 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1068,7 +1068,7 @@
         }
 
         .buttons-left {
-            font-family: -apple-system, system-ui, "Roboto", "Arial", sans-serif;
+            font-family: -apple-system, "Roboto", "Arial", sans-serif;
             font-size: 14px;
             font-weight: 500;
             line-height: 1em;
@@ -1953,10 +1953,7 @@
             }
 
             #related.ytd-watch-flexy,
-            ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-            ytd-watch-flexy:not([fullscreen]) ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
+            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer {
                 position: absolute;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: calc(52px + var(--topHeaderMargin));
@@ -2042,11 +2039,8 @@
                         #playlist,
                         ytd-comments,
                         #related.ytd-watch-flexy,
-                        ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer,
-                        ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-                        ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-                        ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-                        ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
+                        #panels ytd-engagement-panel-section-list-renderer,
+                        ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer {
                             height: 0;
                             padding-top: 0 !important;
                             padding-bottom: 0 !important;
@@ -2076,10 +2070,14 @@
 
                     ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
                     ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
-                        position: fixed;
-                        top: var(--ytd-masthead-height, var(--ytd-toolbar-height));
-                        width: 400px;
                         right: 16px;
+                        opacity: 1 !important;
+                        z-index: 17 !important;
+                        left: unset !important;
+                        height: 500px !important;
+                        position: fixed !important;
+                        visibility: visible !important;
+                        pointer-events: all !important;
                     }
 
                     &:not([hidden]) #sponsorBlockPopupContainer {
@@ -2129,9 +2127,9 @@
                     /* adjustments for: Ask about this video and Quizzes */
                     ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
                     ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
-                        z-index: 2026;
+                        z-index: 2026 !important;
                         max-height: unset !important;
-                        margin-top: -52px;
+                        margin-top: -52px !important;
                     }
 
                     #title ytd-badge-supported-renderer:not([hidden]) {
@@ -2792,13 +2790,11 @@
                 }
             }
 
-            &:fullscreen #related.ytd-watch-flexy,
-            &:fullscreen ytd-watch-flexy #playlist,
-            &:fullscreen ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-            &:fullscreen ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-            &:fullscreen ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-            &:fullscreen ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters] {
-                top: 52px;
+            &:fullscreen ytd-watch-flexy {
+                #related.ytd-watch-flexy,
+                #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer {
+                    top: 52px;
+                }
             }
 
             &:not([dark]) ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
@@ -3006,6 +3002,16 @@
                     top: var(--CentAnniTabViewHeader);
                 }
             }
+
+            /* hide fixed side menu and split scroll */
+            #fixed-side-menu,
+            #columns.ytd-watch-flexy:after {
+                display: none !important;
+            }
+
+            ytd-watch-flexy[side-rail-with-border] {
+                --ytd-watch-flexy-fixed-side-menu-width: 0 !important;
+            }
         }
 
         html:has(#secondary .CentAnni-tabView-tab.active[data-tab="tab-2"]).CentAnni-video-tabView ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
@@ -3017,43 +3023,28 @@
         }
 
         .CentAnni-style-transcript {
-            ytd-transcript-segment-renderer.active .segment.ytd-transcript-segment-renderer .segment-text.ytd-transcript-segment-renderer {
+            .ytwTranscriptSegmentViewModelHost {
+                display: flex;
+                flex-direction: row;
+                font-weight: normal;
+                line-height: 2.5rem;
+                font-size: 1.7rem;
+            }
+
+            .ytwTranscriptSegmentViewModelTimestamp {
+                background-color: unset !important;
+                align-items: center;
+                display: flex;
+                padding: 0;
+            }
+
+            .ytwTranscriptSegmentViewModelHostActive {
+                font-size: 2.5rem;
                 font-weight: 500;
-                font-size: 3.35rem;
                 line-height: 1;
                 color: white;
                 opacity: 1;
                 margin-top: -0.15em;
-                padding: 12px 16px 12px 4px;
-            }
-
-            .segment-text.ytd-transcript-segment-renderer {
-                opacity: .9;
-            }
-
-            .segment.ytd-transcript-segment-renderer {
-                align-items: center;
-            }
-
-            .segment.ytd-transcript-segment-renderer:hover .segment-text.ytd-transcript-segment-renderer {
-                font-weight: 400;
-            }
-
-            ytd-watch-flexy [target-id="engagement-panel-searchable-transcript"] span.bold.style-scope.yt-formatted-string {
-                color: rgb(253, 1, 48);
-            }
-
-            &[dark] {
-                ytd-watch-flexy[fullscreen] ytd-transcript-footer-renderer,
-                ytd-watch-flexy[fullscreen] ytd-transcript-segment-list-renderer {
-                    background-color: black;
-                }
-            }
-
-            &:not([dark]) {
-                ytd-transcript-segment-renderer.active .segment.ytd-transcript-segment-renderer .segment-text.ytd-transcript-segment-renderer {
-                    color: black;
-                }
             }
         }
 
@@ -3511,6 +3502,7 @@
             .ytp-offline-slate-button,
             .ytp-tooltip-text-wrapper,
             .ytThumbnailViewModelHost,
+            .ytSearchInputViewModelHost,
             ytd-donation-shelf-renderer,
             ytd-playlist-video-renderer,
             .ytOfficialCardViewModelHost,
@@ -4486,7 +4478,7 @@
 
                 #playlist,
                 #related,
-                &:not([fullscreen]) #panels :is(ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters]) {
+                &:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer {
                     top: 52px !important;
                 }
 
@@ -4499,7 +4491,7 @@
                     padding-top: 0;
                 }
 
-                &[default-layout][flexy-small-window_]:not([is-vertical-video_]) :is(.CentAnni-tabView, #related, #panels :is(ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters])) {
+                &[default-layout][flexy-small-window_]:not([is-vertical-video_]) :is(.CentAnni-tabView, #related, #panels ytd-engagement-panel-section-list-renderer) {
                     border-right: none;
                 }
 
@@ -4540,9 +4532,14 @@
             #button.ytd-menu-renderer yt-icon.ytd-menu-renderer,
             .yt-spec-button-shape-next--size-m .yt-spec-button-shape-next__icon,
             ytd-menu-service-item-renderer[system-icons] yt-icon.ytd-menu-service-item-renderer,
-            :is(#notification-preference-button, .ytLikeButtonViewModelHost) .ytSpecButtonShapeNextIcon,
-            ytd-menu-service-item-renderer[system-icons] .ytIconWrapperHost.ytd-menu-service-item-renderer {
+            ytd-menu-service-item-renderer[system-icons] .ytIconWrapperHost.ytd-menu-service-item-renderer,
+            :is(#notification-preference-button, .ytLikeButtonViewModelHost, .ytSubscribeButtonViewModelContainer) .ytSpecButtonShapeNextIcon {
                 scale: .85;
+            }
+
+            .ytPageHeaderViewModelAttribution span.ytIconWrapperHost,
+            .ytSubscribeButtonViewModelContainer .ytSpecButtonShapeNextIcon .ytIconWrapperHost {
+                scale: 1;
             }
         }
 
@@ -5105,14 +5102,12 @@
             }
         }
 
-        :is(html:not([dark]).CentAnni-video-tabView) :is(ytd-watch-flexy[flexy][js-panel-height_] #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
-            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters],
-            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description],
-            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript],
-            ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters],
-            #related.style-scope.ytd-watch-flexy) {
-            border: 1px solid rgba(0, 0, 0, .1);
-            border-top: none;
+        html:not([dark]).CentAnni-video-tabView ytd-watch-flexy {
+            #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
+            #related.style-scope.ytd-watch-flexy {
+                border: 1px solid rgba(0, 0, 0, .1);
+                border-top: none;
+            }
         }
 
         /* selection color */
@@ -5324,7 +5319,6 @@
         includeTimestamps: true,
         includeChapterHeaders: true,
         openSameTab: false,
-        transcriptTimestamps: false,
         highlightTranscript: false,
         preventBackgroundExecution: true,
         settingsGuide: false,
@@ -5437,7 +5431,6 @@
         playlistTrashCan: false,
         plWLBtn: false,
         commentsNewFirst: false,
-        defaultTranscriptLanguage: 'auto',
         defaultAudioLanguage: 'auto',
         defaultSubtitleLanguage: 'auto',
         subtitlesWhenMuted: false,
@@ -5627,11 +5620,10 @@
     let uiLanguageLabels;
     let englishInLanguage;
     let subtitleInLanguage;
-    let transcriptInLanguage;
+
     const localizeConfiguredLanguages = () => {
         const targetLanguageAudio = USER_CONFIG.defaultAudioLanguage.replace('auto', 'english');
         const targetLanguageSubtitles = USER_CONFIG.defaultSubtitleLanguage.replace('auto', 'english');
-        const targetLanguageTranscript = USER_CONFIG.defaultTranscriptLanguage.replace('auto', 'english');
         const namesInUI = new Intl.DisplayNames([uiLanguage], { type: 'language' });
 
         if (USER_CONFIG.defaultAudioLanguage !== 'auto') audioInLanguage = namesInUI.of(getLanguageCode(targetLanguageAudio)).toLowerCase();
@@ -5639,9 +5631,8 @@
             if (targetLanguageSubtitles === 'off' && !uiLanguageLabels) createUiLanguageLabels();
             subtitleInLanguage = targetLanguageSubtitles === 'off' ? uiLanguageLabels.off.toLowerCase() : namesInUI.of(getLanguageCode(targetLanguageSubtitles)).toLowerCase();
         }
-        if (USER_CONFIG.defaultTranscriptLanguage !== 'auto') transcriptInLanguage = namesInUI.of(getLanguageCode(targetLanguageTranscript)).toLowerCase();
         englishInLanguage = namesInUI.of('en').toLowerCase();
-    }; if (USER_CONFIG.defaultTranscriptLanguage !== 'auto' || USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto') localizeConfiguredLanguages();
+    }; if (USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto') localizeConfiguredLanguages();
 
     // load CSS settings
     let smw;
@@ -5663,7 +5654,6 @@
             hideMiniPlayer: 'CentAnni-style-hide-miniplayer',
             noFrostedGlass: 'CentAnni-style-no-frosted-glass',
             hideCreateButton: 'CentAnni-style-hide-create-btn',
-            lnbRestoreOrder: 'CentAnni-style-lnb-restore-order',
             hideMembersOnly: 'CentAnni-style-hide-members-only',
             hideVoiceSearch: 'CentAnni-style-hide-voice-search',
             squareSearchBar: 'CentAnni-style-square-search-bar',
@@ -5768,7 +5758,7 @@
         hideExploreSection: { class: 'CentAnni-style-hide-explore-section', pages: () => isHomePage },
         colorCodeVideosEnabled: { class: 'CentAnni-style-color-code-videos', pages: () => isHomePage },
         hideAdSlots: { class: 'CentAnni-style-hide-ad-slots', pages: () => isWatchPage || isHomePage || isSearchPage },
-        homeDisableHover: { class: 'CentAnni-style-home-disable-hover', pages: () => isHomePage || isSubscriptionsPage },
+        homeDisableHover: { class: 'CentAnni-style-home-disable-hover', pages: () => isHomePage || isChannelPage || isSubscriptionsPage },
         // watch later page
         plWLBtn: { class: 'CentAnni-hide-watched-wl', pages: () => isWatchLater },
         compactLayout: { class: 'CentAnni-style-watched-later-header', pages: () => isWatchLater },
@@ -5791,6 +5781,7 @@
         lnbHideMoreBtn: 'CentAnni-style-lnb-hide-more-btn',
         lnbHideHomeBtn: 'CentAnni-style-lnb-hide-home-btn',
         lnbHideHelpBtn: 'CentAnni-style-lnb-hide-help-btn',
+        lnbRestoreOrder: 'CentAnni-style-lnb-restore-order',
         lnbHideMusicBtn: 'CentAnni-style-lnb-hide-music-btn',
         lnbHideMoviesBtn: 'CentAnni-style-lnb-hide-movies-btn',
         lnbHideGamingBtn: 'CentAnni-style-lnb-hide-gaming-btn',
@@ -6334,9 +6325,6 @@
             // default subtitle language
             form.appendChild(createSelectField('Subtitle Language:', 'label-subtitle-language', 'defaultSubtitleLanguage', USER_CONFIG.defaultSubtitleLanguage, languageOptionsWithOff));
 
-            // default transcript language
-            form.appendChild(createSelectField('Transcript Language:', 'label-transcript-language', 'defaultTranscriptLanguage', USER_CONFIG.defaultTranscriptLanguage, standardLanguageOptions));
-
             // font size
             const defaultFontSizeField = createNumberInputField('Font Size (default: 10)', 'defaultFontSize', USER_CONFIG.defaultFontSize);
             form.appendChild(defaultFontSizeField);
@@ -6537,10 +6525,6 @@
             const autoOpenComments = createCheckboxField('Automatically Open Comments | Only Works with Tab View Enabled! (default: off)', 'autoOpenComments', USER_CONFIG.autoOpenComments);
             form.appendChild(autoOpenComments);
 
-            // enable transcript timestamps
-            const transcriptTimestamps = createCheckboxField('Automatically Enable Timestamps in Transcript Panels (default: off)', 'transcriptTimestamps', USER_CONFIG.transcriptTimestamps);
-            form.appendChild(transcriptTimestamps);
-
             // highlight active transcript section
             const highlightTranscript = createCheckboxField('Highlight Active Section in Transcript Panels (default: off)', 'highlightTranscript', USER_CONFIG.highlightTranscript);
             form.appendChild(highlightTranscript);
@@ -6569,17 +6553,17 @@
             const displayRemainingTime = createCheckboxField('Display Remaining Time Under Videos Adjusted for Playback Speed (default: on)', 'displayRemainingTime', USER_CONFIG.displayRemainingTime);
             form.appendChild(displayRemainingTime);
 
+            // info for remaining time minus segments
+            const descriptionRemainingTime = document.createElement('small');
+            descriptionRemainingTime.textContent = 'To also include skipped SponsorBlock segments, ensure "Show time with skips removed" is enabled in that browser extension under "Interface".';
+            descriptionRemainingTime.classList.add('CentAnni-info-text');
+            form.appendChild(descriptionRemainingTime);
+
             const showRemainingCompact = createCheckboxField('Compact Version for Remaining Time (default: off)', 'showRemainingCompact', USER_CONFIG.showRemainingCompact);
             form.appendChild(showRemainingCompact);
 
             const fsRemainingTime = createCheckboxField('Hide Remaining Time and Chapters in Fullscreen (default: off)', 'fsRemainingTime', USER_CONFIG.fsRemainingTime);
             form.appendChild(fsRemainingTime);
-
-            // info for remaining time minus segments
-            const descriptionRemainingTime = document.createElement('small');
-            descriptionRemainingTime.textContent = 'To also include skipped SponsorBlock segments, ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."';
-            descriptionRemainingTime.classList.add('CentAnni-info-text');
-            form.appendChild(descriptionRemainingTime);
 
             // layout changes
             const layoutChanges = document.createElement('div');
@@ -7288,16 +7272,27 @@
         const container = document.createElement('div');
         container.classList.add('file-naming-container');
 
+        const labelId = `${settingKey}-label`;
+        const selectId = `${settingKey}-button`;
+        const listId = `${settingKey}-list`;
+
         const label = document.createElement('label');
+        label.id = labelId;
         label.textContent = labelText;
         label.className = labelClass;
         label.classList.add('label-style-settings');
         container.appendChild(label);
 
         const select = document.createElement('div');
+        select.id = selectId;
         select.classList.add('select-file-naming');
         select.textContent = options[settingValue];
         select.setAttribute('tabindex', '0');
+        select.setAttribute('role', 'combobox');
+        select.setAttribute('aria-haspopup', 'listbox');
+        select.setAttribute('aria-expanded', 'false');
+        select.setAttribute('aria-controls', listId);
+        select.setAttribute('aria-labelledby', `${labelId} ${selectId}`);
         container.appendChild(select);
 
         const hiddenSelect = document.createElement('select');
@@ -7307,35 +7302,45 @@
             const option = document.createElement('option');
             option.value = value;
             option.text = text;
-            if (value === settingValue) {
-                option.selected = true;
-            }
+            if (value === settingValue) option.selected = true;
             hiddenSelect.appendChild(option);
         }
+
         container.appendChild(hiddenSelect);
 
         const dropdownList = document.createElement('div');
+        dropdownList.id = listId;
         dropdownList.classList.add('dropdown-list');
+        dropdownList.setAttribute('role', 'listbox');
         container.appendChild(dropdownList);
 
         for (const [value, text] of Object.entries(options)) {
             const item = document.createElement('div');
+            item.id = `${settingKey}-option-${value}`;
             item.classList.add('dropdown-item');
             item.textContent = text;
             item.dataset.value = value;
+            item.setAttribute('role', 'option');
+            item.setAttribute('aria-selected', value === settingValue ? 'true' : 'false');
 
-            if (value === settingValue) { item.classList.add('dropdown-item-selected'); }
+            if (value === settingValue) {
+                item.classList.add('dropdown-item-selected');
+                select.setAttribute('aria-activedescendant', item.id);
+            }
 
             item.onclick = () => {
                 const previouslySelected = dropdownList.querySelector('.dropdown-item-selected');
                 if (previouslySelected) {
                     previouslySelected.classList.remove('dropdown-item-selected');
+                    previouslySelected.setAttribute('aria-selected', 'false');
                 }
 
                 item.classList.add('dropdown-item-selected');
+                item.setAttribute('aria-selected', 'true');
                 select.textContent = text;
+                select.setAttribute('aria-activedescendant', item.id);
                 hiddenSelect.value = value;
-                dropdownList.classList.remove('show');
+                closeDropdown();
             };
 
             dropdownList.appendChild(item);
@@ -7345,15 +7350,21 @@
         select.onclick = (event) => {
             event.stopPropagation();
             document.querySelectorAll('.dropdown-list.show').forEach(list => {
-                if (list !== dropdownList) list.classList.remove('show');
+                if (list !== dropdownList) {
+                    list.classList.remove('show');
+                    list.closest('.file-naming-container')?.querySelector('.select-file-naming')?.setAttribute('aria-expanded', 'false');
+                }
             });
+
             const isShown = dropdownList.classList.toggle('show');
+            select.setAttribute('aria-expanded', isShown ? 'true' : 'false');
             if (isShown) document.addEventListener('click', closeDropdown, { once: true });
         };
 
         // close dropdown
         const closeDropdown = () => {
             dropdownList.classList.remove('show');
+            select.setAttribute('aria-expanded', 'false');
         };
 
         return container;
@@ -7609,7 +7620,6 @@
             USER_CONFIG.autoOpenChapters = subPanelCustomCSS.elements.autoOpenChapters.checked;
             USER_CONFIG.autoOpenTranscript = subPanelCustomCSS.elements.autoOpenTranscript.checked;
             USER_CONFIG.autoOpenComments = subPanelCustomCSS.elements.autoOpenComments.checked;
-            USER_CONFIG.transcriptTimestamps = subPanelCustomCSS.elements.transcriptTimestamps.checked;
             USER_CONFIG.highlightTranscript = subPanelCustomCSS.elements.highlightTranscript.checked;
             USER_CONFIG.subtitlesWhenMuted = subPanelCustomCSS.elements.subtitlesWhenMuted.checked;
             USER_CONFIG.subtitlesWhenRewind = subPanelCustomCSS.elements.subtitlesWhenRewind.checked;
@@ -7657,7 +7667,6 @@
             USER_CONFIG.playbackSpeedDecrease = subPanelCustomCSS.elements.playbackSpeedDecrease.value.trim() || 'a';
             USER_CONFIG.playbackSpeedIncrease = subPanelCustomCSS.elements.playbackSpeedIncrease.value.trim() || 'd';
             USER_CONFIG.defaultQuality = subPanelCustomCSS.elements.defaultQuality.value;
-            USER_CONFIG.defaultTranscriptLanguage = subPanelCustomCSS.elements.defaultTranscriptLanguage.value;
             USER_CONFIG.defaultAudioLanguage = subPanelCustomCSS.elements.defaultAudioLanguage.value;
             USER_CONFIG.defaultSubtitleLanguage = subPanelCustomCSS.elements.defaultSubtitleLanguage.value;
             USER_CONFIG.hideVoiceSearch = subPanelCustomCSS.elements.hideVoiceSearch.checked;
@@ -8034,7 +8043,7 @@
     // function to add the transcript exporter buttons
     function buttonLocation(buttons, callback) {
         if (endElement) {
-            buttons.forEach(({ id, text, clickHandler, tooltip }) => {
+            buttons.forEach(({ id, text, clickHandler, tooltip, ariaLabel }) => {
 
                 // button wrapper
                 const buttonWrapper = document.createElement('div');
@@ -8045,6 +8054,7 @@
                 button.id = id;
                 button.textContent = text;
                 button.classList.add('button-style');
+                button.setAttribute('aria-label', ariaLabel);
                 if (id === 'transcript-settings-button') button.classList.add('button-style-settings');
 
                 button.onclick = clickHandler;
@@ -8094,16 +8104,16 @@
     }
 
     async function runYTE() {
-        try { await preLoadTranscript(); }
-        catch (error) { setTimeout(() => { createButtons((isLive || !hasTranscriptPanel) ? ['settings'] : ['settings', 'error']); }, 2000); return; }
-        createButtons('all');
+        try {
+            await preLoadTranscript();
+            !USER_CONFIG.YouTubeTranscriptExporter ? createButtons('settings') : createButtons('all');
+        }
+        catch (error) {
+            setTimeout(() => {
+                createButtons((isLive || !hasTranscriptPanel) ? ['settings'] : ['settings', 'error']);
+            }, 2000);
+        }
     }
-
-    const loadTranscriptAgain = () => {
-        transcriptPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]');
-        hasTranscriptPanel = !!transcriptPanel;
-        hasTranscriptPanel ? runYTE() : createButtons('settings');
-    };
 
     function createButtons(buttonType = 'all') {
         const allButtons = {
@@ -8113,7 +8123,7 @@
             chatgpt: { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy Transcript with a Prompt and Open ${ChatGPTLabel}`, ariaLabel: `Copy Transcript to Clipboard with a Prompt and Open ${ChatGPTLabel}.` },
             notebooklm: { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: `Copy Transcript and Open ${NotebookLMLabel}`, ariaLabel: `Copy Transcript to Clipboard and Open ${NotebookLMLabel}.` },
             lazyload: { id: 'transcript-lazy-button', text: USER_CONFIG.buttonIcons.lazyLoad, clickHandler: runYTE, tooltip: 'Load the Transcript', ariaLabel: 'Load the Transcript.' },
-            error: { id: 'transcript-error-button', text: '⚠️', clickHandler: loadTranscriptAgain, tooltip: 'Retry Loading Transcript', ariaLabel: 'Retry Loading Transcript.' }
+            error: { id: 'transcript-error-button', text: '⚠️', clickHandler: runYTE, tooltip: 'Retry Loading Transcript', ariaLabel: 'Retry Loading Transcript.' }
         };
 
         let buttonsToCreate = [];
@@ -8139,15 +8149,14 @@
     // function to check for a transcript
     function handleTranscriptAction(callback) {
         setTimeout(() => endElement.classList.remove("disabled"), endElement.classList.add("disabled") || 1000);
-        const checkPanel = watchFlexyElement.querySelector('#structured-description button[aria-label="Show transcript"]') || watchFlexyElement.querySelector('ytd-video-description-transcript-section-renderer');
+        const checkPanel = getTranscriptPanel();
         if (!checkPanel) {
             console.error("YouTubeAlchemy: Transcript button or section not found. Subtitles/closed captions are unavailable or the language is unsupported. Reload this page to try again.");
             alert('Transcript unavailable or cannot be found.\nEnsure the video has a transcript.\nReload this page to try again.');
             return;
         }
 
-        const transcriptItems = watchFlexyElement.querySelectorAll('ytd-transcript-segment-list-renderer ytd-transcript-segment-renderer:nth-of-type(-n+3)');
-        if (transcriptItems.length === 0) {
+        if (!checkPanel.querySelector(transcriptSegmentSel)) {
             console.error("YouTubeAlchemy: Transcript has not loaded.");
             alert('Transcript has not loaded successfully.\nReload this page to try again.');
             return;
@@ -8175,40 +8184,62 @@
         return { ytTitle, channelName, uploadDate, videoURL };
     }
 
+    function getTranscriptPanel() {
+        const transcriptList = watchFlexyElement.querySelector(`#panels ${transcriptListSel}`);
+        transcriptPanel = transcriptList?.closest('ytd-engagement-panel-section-list-renderer') || null;
+        hasTranscriptPanel = !!(transcriptPanel || watchFlexyElement.querySelector(transcriptButtonSel));
+        return transcriptPanel;
+    }
+
+    function openTranscript(preload = false) {
+        const panel = getTranscriptPanel();
+        if (!panel) return null;
+
+        transcriptPanel = panel;
+        if (preload) panel.classList.add("transcript-preload");
+        panel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+        panel.visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED";
+        return panel;
+    }
+    const clickTranscriptBtn = () => { watchFlexyElement.querySelector(transcriptButtonSel)?.click(); };
+
+    function closeTranscriptPanel(panel = transcriptPanel) {
+        panel?.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN");
+        if (panel) panel.visibility = "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN";
+    }
+
     // function to get the transcript text
     function getTranscriptText() {
-        const transcriptContainer = watchFlexyElement.querySelector('ytd-transcript-segment-list-renderer #segments-container');
-        if (!transcriptContainer) {
-            console.error("YouTubeAlchemy: Transcript container not found.");
+        const transcriptList = getTranscriptPanel()?.querySelector(transcriptListSel);
+        if (!transcriptList) {
+            console.error("YouTubeAlchemy: Transcript panel not found.");
             return '';
         }
 
-        const transcriptElements = transcriptContainer.children;
+        const transcriptElements = transcriptList.querySelectorAll('macro-markers-panel-item-view-model');
         const transcriptLines = [];
         let currentLine = '';
         let lastTime = null;
 
-        [...transcriptElements].forEach(element => {
-            if (element.tagName === 'YTD-TRANSCRIPT-SECTION-HEADER-RENDERER') {
+        for (const element of transcriptElements) {
+            const chapterTitleElement = element.querySelector('timeline-chapter-view-model .ytwTimelineChapterViewModelTitle');
+            if (chapterTitleElement) {
 
                 // chapter header segment
                 if (USER_CONFIG.includeChapterHeaders) {
-                    const chapterTitleElement = element.querySelector('h2 > span');
-                    if (chapterTitleElement) {
-                        if (currentLine) {
-                            transcriptLines.push(currentLine);
-                            currentLine = '';
-                        }
-                        const chapterTitle = chapterTitleElement.textContent.trim();
-                        transcriptLines.push(`\nChapter: ${chapterTitle}`);
-                        lastTime = null;
+                    if (currentLine) {
+                        transcriptLines.push(currentLine);
+                        currentLine = '';
                     }
+                    const chapterTitle = chapterTitleElement.textContent.trim();
+                    transcriptLines.push(`\nChapter: ${chapterTitle}`);
+                    lastTime = null;
                 }
-            } else if (element.tagName === 'YTD-TRANSCRIPT-SEGMENT-RENDERER') {
+            } else {
 
                 // transcript segment
-                const timeElement = element.querySelector('.segment-timestamp');
-                const textElement = element.querySelector('.segment-text');
+                const timeElement = element.querySelector('.ytwTranscriptSegmentViewModelTimestamp');
+                const textElement = element.querySelector('.ytAttributedStringHost[role="text"]');
                 if (timeElement && textElement) {
                     const time = timeElement.textContent.trim();
                     const text = textElement.textContent.replace(/\s+/g, ' ').trim();
@@ -8222,7 +8253,7 @@
                     }
                 }
             }
-        });
+        }
 
         if (currentLine) transcriptLines.push(currentLine);
         return transcriptLines.join('\n');
@@ -8321,7 +8352,9 @@
                 return;
             }
 
-            if (!hasTranscriptPanel) {
+            const initialPanel = getTranscriptPanel();
+            const transcriptBtn = watchFlexyElement.querySelector(transcriptButtonSel);
+            if (!initialPanel && !transcriptBtn) {
                 showNotificationError("Transcript not available");
                 reject();
                 return;
@@ -8341,39 +8374,52 @@
             let loaded = false;
             let transcriptObserver;
             let fallbackTimer;
-            let containerObserver;
 
-            const isClosed = transcriptPanel?.getAttribute("visibility") === "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN";
-            if (isClosed) {
-                transcriptPanel.classList.add("transcript-preload");
-                transcriptPanel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+            const panelsElement = watchFlexyElement.querySelector('#panels');
+            let wasClosed = initialPanel?.getAttribute("visibility") !== "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED";
+            if (!transcriptLoaded && !USER_CONFIG.YouTubeTranscriptExporter) wasClosed = false;
+            const preloadPanels = new Set();
+
+            if (initialPanel) {
+                openTranscript(true);
+                preloadPanels.add(initialPanel);
+            } else {
+                watchFlexyElement.querySelectorAll('#panels ytd-engagement-panel-section-list-renderer[target-id="PAmodern_transcript_view"], #panels ytd-engagement-panel-section-list-renderer:not([target-id])').forEach(panel => {
+                    panel.classList.add("transcript-preload");
+                    preloadPanels.add(panel);
+                });
+                transcriptBtn.click();
             }
 
             const cleanup = (failed) => {
                 if (fallbackTimer) clearTimeout(fallbackTimer);
-                containerObserver?.disconnect();
                 transcriptObserver?.disconnect();
                 wrapper?.remove();
-                if (isClosed) {
-                    transcriptPanel.classList.remove("transcript-preload");
-                    transcriptPanel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN");
-                }
+                if (wasClosed) closeTranscriptPanel(transcriptPanel);
+                preloadPanels.forEach(panel => panel.classList.remove("transcript-preload"));
+                transcriptPanel?.classList.remove("transcript-preload");
+                transcriptLoaded = true;
                 if (failed) showNotificationError("Transcript failed to load");
             };
 
             const handleTranscriptReady = () => {
                 loaded = true;
                 cleanup(false);
-                if (!transcriptMenuButtonMoved) transcriptMenuButton();
-                if (USER_CONFIG.transcriptTimestamps) enableTimestamps();
-                if (USER_CONFIG.defaultTranscriptLanguage !== 'auto') setTimeout(() => setTranscriptLanguage(), 250);
             };
 
-            const segmentsContainer = transcriptPanel.querySelector('ytd-transcript-segment-list-renderer #segments-container');
-            const firstItem = segmentsContainer?.querySelector('ytd-transcript-segment-renderer');
-
-            if (segmentsContainer && firstItem) {
+            const checkFirstItem = () => {
+                const panel = getTranscriptPanel();
+                if (panel) {
+                    panel.classList.add("transcript-preload");
+                    preloadPanels.add(panel);
+                }
+                const transcriptList = panel?.querySelector(transcriptListSel);
+                if (!transcriptList?.querySelector(transcriptSegmentSel)) return false;
                 handleTranscriptReady();
+                return true;
+            };
+
+            if (checkFirstItem()) {
                 resolve();
                 return;
             }
@@ -8384,34 +8430,20 @@
                     cleanup(true);
                     reject();
                 }
-            }, 10000);
+            }, 5000);
 
-            containerObserver = new MutationObserver(() => {
-                const segmentsContainer = transcriptPanel.querySelector('ytd-transcript-segment-list-renderer #segments-container');
-                if (segmentsContainer) {
-                    containerObserver.disconnect();
-                    const checkFirstItem = () => {
-                        const firstItem = segmentsContainer.querySelector('ytd-transcript-segment-renderer');
-                        if (firstItem) {
-                            handleTranscriptReady();
-                            return true;
-                        }
-                        return false;
-                    };
-
-                    if (!checkFirstItem()) {
-                        transcriptObserver = new MutationObserver(() => {
-                            if (checkFirstItem()) {
-                                transcriptObserver.disconnect();
-                                resolve();
-                            }
-                        });
-                        transcriptObserver.observe(segmentsContainer, { childList: true });
-                    } else resolve();
-
+            transcriptObserver = new MutationObserver(() => {
+                if (!initialPanel) {
+                    watchFlexyElement.querySelectorAll('#panels ytd-engagement-panel-section-list-renderer[target-id="PAmodern_transcript_view"], #panels ytd-engagement-panel-section-list-renderer:not([target-id])').forEach(panel => {
+                        panel.classList.add("transcript-preload");
+                        preloadPanels.add(panel);
+                    });
                 }
+                if (!checkFirstItem()) return;
+                transcriptObserver.disconnect();
+                resolve();
             });
-            containerObserver.observe(transcriptPanel, { childList: true, subtree: true });
+            transcriptObserver.observe(panelsElement || transcriptPanel, { childList: true, subtree: true });
         });
     }
 
@@ -8547,18 +8579,6 @@
         await new Promise(resolve => setTimeout(resolve, 125));
     }
 
-    // set default transcript language
-    function setTranscriptLanguage() {
-        const menuTrigger = transcriptPanel.querySelector('tp-yt-paper-button#label');
-        const labelTextEl = document.getElementById('label-text');
-        if (!menuTrigger || !labelTextEl) return;
-
-        const itemsArray = [...transcriptPanel.querySelectorAll('tp-yt-paper-item')];
-        const target = itemsArray.find(el => el.textContent.trim().toLowerCase().startsWith(transcriptInLanguage)) || itemsArray.find(el => el.textContent.trim().toLowerCase().startsWith(englishInLanguage));
-        if (!target) return;
-        target.click();
-    }
-
     // function tab view on video page
     function runInPage(fn) {
         const c = `;(${fn})();`;
@@ -8570,14 +8590,11 @@
 
     function tabView() {
         if (!watchFlexyElement) return;
-
-        transcriptMenuButtonMoved = false;
-        let transcriptLanguageSet = false;
-        let timestampsEnabled = false;
         let setMastheadWidth = false;
         let currentActiveTab = null;
         let isSingleColumn = false;
         let lastActiveTab = null;
+        transcriptLoaded = false;
         let hasLiveChat = false;
         let mastheadWidthTimer;
         let isFirstRun = true;
@@ -8631,6 +8648,15 @@
                 videos.removeAttribute('is-grid-view-enabled');
             }
         };
+
+        // fixed side menu and split scroll fix
+        const removeWatchFlexyAttrs = () => {
+            watchFlexyElement.removeAttribute('split-scroll');
+            watchFlexyElement.removeAttribute('show-fixed-side-menu');
+            if (isDefault && currentActiveTab === 'tab-1') videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+        };
+        const watchFlexyAttrsObserver = new MutationObserver(() => removeWatchFlexyAttrs());
+        const startWatchFlexyAttrsObs = () => watchFlexyAttrsObserver.observe(watchFlexyElement, { attributes: true, attributeFilter: ['split-scroll', 'show-fixed-side-menu'] });
 
         // scroll to selected video in playlist panel
         const scrollSelectedVideoPL = () => {
@@ -8687,8 +8713,8 @@
                 else activateTab(determineActiveTab());
 
                 if (currentActiveTab === 'tab-1') videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-                else if (currentActiveTab === 'tab-4') runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"], ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
-                else if (currentActiveTab === 'tab-5') runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+                else if (currentActiveTab === 'tab-4') openChapters();
+                else if (currentActiveTab === 'tab-5') transcriptLoaded ? openTranscript() : runYTE();
                 else if (currentActiveTab === 'tab-6' && hasPlaylistPanel && playlistSelectedVideo) scrollSelectedVideoPL();
 
                 subheaderDiv.onclick = null;
@@ -8701,7 +8727,7 @@
         const handleFullscreenChange = () => {
             const panel = activePanel[currentActiveTab];
             if (isDefault && (currentActiveTab === 'tab-4' || currentActiveTab === 'tab-5') && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED')
-                currentActiveTab === 'tab-4' ? runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"], ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED") : runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+                currentActiveTab === 'tab-4' ? runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"], ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED") : openTranscript();
             else if (USER_CONFIG.preventBackgroundExecution && isDefault && currentActiveTab === 'tab-1' && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED') videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
             if (hasLiveChat && isSingleColumn) toggleYouTubeColumns();
         };
@@ -8734,6 +8760,7 @@
             document.removeEventListener('yt-autonav-pause-player-ended', exitFullscreen);
             const activeTabId = currentActiveTab || (isTheaterMode ? lastActiveTab : null);
             contentSectionById[activeTabId]?.classList.remove('active');
+            watchFlexyAttrsObserver.disconnect();
             setTabPanelState(activeTabId, false);
             clearTimeout(mastheadWidthTimer);
             tabElements.forEach(tab => {
@@ -8845,7 +8872,7 @@
         }
 
         // update panel visibility based on active tab
-        function setTabPanelState(tabId, show) {
+        async function setTabPanelState(tabId, show) {
             if (tabId === 'tab-1') {
                 videoInfo?.setAttribute('visibility', show ? 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED' : 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
                 return;
@@ -8853,19 +8880,16 @@
 
             if (tabId === 'tab-4') {
                 if (!chapterPanel?.isConnected) return;
-                if (show) runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"], ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+                if (show) openChapters();
                 else runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"], ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN");
                 return;
             }
 
             if (tabId === 'tab-5') {
+                if (!transcriptLoaded) await runYTE();
                 if (!transcriptPanel?.isConnected) return;
-                if (show) {
-                    runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
-                    if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !transcriptLanguageSet) { waitForTranscriptWithoutYTE(() => { setTimeout(() => setTranscriptLanguage(), 250); }); transcriptLanguageSet = true; }
-                    if (!USER_CONFIG.YouTubeTranscriptExporter && USER_CONFIG.transcriptTimestamps && !timestampsEnabled) { waitForTranscriptWithoutYTE(enableTimestamps); timestampsEnabled = true; }
-                    if (!transcriptMenuButtonMoved && (!USER_CONFIG.YouTubeTranscriptExporter || USER_CONFIG.lazyTranscriptLoading)) { waitForTranscriptWithoutYTE(transcriptMenuButton); }
-                } else runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN");
+                if (show) openTranscript();
+                else closeTranscriptPanel();
             }
 
             if (tabId === 'tab-3') {
@@ -8957,7 +8981,8 @@
         hasLiveChat = watchFlexyElement.hasAttribute('should-stamp-chat');
         isSingleColumn = watchFlexyElement.hasAttribute('is-single-column');
         if (hasLiveChat && isSingleColumn) toggleYouTubeColumns();
-        watchFlexyElement.removeAttribute('split-scroll');
+        removeWatchFlexyAttrs();
+        startWatchFlexyAttrsObs();
 
         // add tab view header into the DOM
         const secondaryElement = watchFlexyElement.querySelector('#secondary'); if (!secondaryElement) return;
@@ -11694,55 +11719,6 @@
         runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"], ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
     }
 
-    // function to automatically open the transcript panel
-    function openTranscript() {
-        runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
-        if (USER_CONFIG.defaultTranscriptLanguage !== 'auto' && !USER_CONFIG.YouTubeTranscriptExporter) waitForTranscriptWithoutYTE(() => { setTimeout(() => setTranscriptLanguage(), 250); });
-        if (USER_CONFIG.transcriptTimestamps && !USER_CONFIG.YouTubeTranscriptExporter) waitForTranscriptWithoutYTE(enableTimestamps);
-    }
-
-    // transcript enable timestamps
-    function enableTimestamps() {
-        const transcriptPanelTimestamps = watchFlexyElement.querySelector('ytd-transcript-search-panel-renderer[hide-timestamps]');
-        if (transcriptPanelTimestamps) transcriptPanelTimestamps.removeAttribute('hide-timestamps');
-    }
-
-    // move transcript menu button
-    function transcriptMenuButton() {
-        if (transcriptPanel) {
-            const menuButton = transcriptPanel?.querySelector('#header > #menu');
-            const footerSlot = transcriptPanel?.querySelector('#footer > ytd-transcript-footer-renderer');
-            if (menuButton && footerSlot) footerSlot.appendChild(menuButton);
-            transcriptMenuButtonMoved = true;
-        }
-    }
-
-    // wait for transcript to load
-    function waitForTranscriptWithoutYTE(callback) {
-        const transcriptItems = transcriptPanel.querySelectorAll("ytd-transcript-segment-renderer");
-        if (transcriptItems.length > 0) {
-            callback();
-            return;
-        }
-
-        let transcriptLoadedWithoutYTE = null;
-        const transcriptObserver = new MutationObserver(() => {
-            const transcriptItems = transcriptPanel.querySelectorAll("ytd-transcript-segment-renderer");
-            if (transcriptItems.length > 0) {
-                transcriptLoadedWithoutYTE = true;
-                clearTimeout(transcriptFallbackTimer);
-                transcriptObserver.disconnect();
-                callback();
-            }
-        });
-
-        transcriptObserver.observe(transcriptPanel, { childList: true, subtree: true });
-
-        const transcriptFallbackTimer = setTimeout(() => {
-            if (!transcriptLoadedWithoutYTE) transcriptObserver.disconnect();
-        }, 7000);
-    }
-
     // check and close chat window and close
     function chatWindowCheck() {
         if (watchFlexyElement.hasAttribute('live-chat-present-and-expanded')) {
@@ -11980,8 +11956,7 @@
         } else hasPlaylistPanel = false;
 
         // transcript panel check
-        transcriptPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]');
-        hasTranscriptPanel = !!transcriptPanel;
+        getTranscriptPanel();
 
         // donation panel check
         if (!USER_CONFIG.hideFundraiser) {
@@ -12316,6 +12291,7 @@
     let chapterPanel = null;
     let hasTranscriptPanel = null;
     let transcriptPanel = null;
+    let transcriptLoaded = false;
     let markWatchedVideosTimeout;
     let markWatchedVideosObserver;
     let ignoreRateChange = false;
@@ -12353,7 +12329,6 @@
     let toggleKey = '', increaseKey = '', decreaseKey = '';
     let defaultKeys = new Set();
     let specialKeys = Object.create(null);
-    let transcriptMenuButtonMoved = false;
     let chronoNotificationRunning = false;
     let cleanupPlaybackSpeedListeners = null;
     let defaultSpeed = USER_CONFIG.playbackSpeedValue;
@@ -12369,6 +12344,9 @@
     const showPlaybackSpeed = USER_CONFIG.playbackSpeed;
     const ChatGPTLabel = USER_CONFIG.targetChatGPTLabel;
     const NotebookLMLabel = USER_CONFIG.targetNotebookLMLabel;
+    const transcriptButtonSel = '#panels ytd-video-description-transcript-section-renderer button';
+    const transcriptListSel = 'yt-section-list-renderer[data-target-id="PAmodern_transcript_view"]';
+    const transcriptSegmentSel = 'transcript-segment-view-model.ytwTranscriptSegmentViewModelHost, .ytwTranscriptSegmentViewModelHost';
     const infoSel = 'ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description]';
     const menuSel = '#primary #top-row #top-level-buttons-computed';
     const fsCnSel = '#movie_player > div.ytp-chrome-bottom';
@@ -12400,7 +12378,7 @@
                 [USER_CONFIG.commentsNewFirst && !isLive, sortCommentsNewFirst],
                 [USER_CONFIG.expandVideoDescription && !USER_CONFIG.videoTabView, clickDescriptionBtn],
                 [USER_CONFIG.autoOpenChapters && !USER_CONFIG.videoTabView && hasChapterPanel, openChapters],
-                [USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel, openTranscript],
+                [USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel, clickTranscriptBtn],
                 [(USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto'), setLanguage],
                 [!USER_CONFIG.videoTabView && ((USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel)), scrollToTop],
                 [USER_CONFIG.hideEndscreen, () => setTimeout(() => { getThumbnailUrl((url) => { docElement.style.setProperty('--video-url', url); }); }, 1000)],
@@ -12421,7 +12399,7 @@
             // transcript exporter
             if (!USER_CONFIG.YouTubeTranscriptExporter) createButtons('settings');
             else if (USER_CONFIG.lazyTranscriptLoading && hasTranscriptPanel && !isLive) createButtons(['settings', 'lazyload']);
-            else requestIdleCallback(() => runYTE());
+            else requestIdleCallback(() => setTimeout(runYTE, 250));
         } else {
             createButtons('settings');
             const browseFeatures = [
