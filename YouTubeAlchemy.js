@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      11.3
+// @version      11.4
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 11.3 - YouTube Alchemy                    *
+*                    Version: 11.4 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -3038,13 +3038,49 @@
                 padding: 0;
             }
 
-            .ytwTranscriptSegmentViewModelHostActive {
+            .ytwTranscriptSegmentViewModelHostActive,
+            ytd-transcript-segment-renderer.active .segment.ytd-transcript-segment-renderer .segment-text.ytd-transcript-segment-renderer {
                 font-size: 2.5rem;
                 font-weight: 500;
                 line-height: 1;
                 color: white;
                 opacity: 1;
                 margin-top: -0.15em;
+            }
+
+            ytd-transcript-segment-renderer.active .segment.ytd-transcript-segment-renderer .segment-text.ytd-transcript-segment-renderer {
+                font-size: 3.35rem;
+                padding: 12px 16px 12px 4px;
+            }
+
+            .segment-text.ytd-transcript-segment-renderer {
+                font-family: -apple-system;
+                opacity: .9;
+            }
+
+            .segment.ytd-transcript-segment-renderer {
+                align-items: center;
+            }
+
+            .segment.ytd-transcript-segment-renderer:hover .segment-text.ytd-transcript-segment-renderer {
+                font-weight: 400;
+            }
+
+            ytd-watch-flexy [target-id="engagement-panel-searchable-transcript"] span.bold.style-scope.yt-formatted-string {
+                color: rgb(253, 1, 48);
+            }
+
+            &[dark] {
+                ytd-watch-flexy[fullscreen] ytd-transcript-footer-renderer,
+                ytd-watch-flexy[fullscreen] ytd-transcript-segment-list-renderer {
+                    background-color: black;
+                }
+            }
+
+            &:not([dark]) {
+                ytd-transcript-segment-renderer.active .segment.ytd-transcript-segment-renderer .segment-text.ytd-transcript-segment-renderer {
+                    color: black;
+                }
             }
         }
 
@@ -5317,6 +5353,7 @@
         targetNotebookLMLabel: 'NotebookLM',
         fileNamingFormat: 'title-channel',
         includeTimestamps: true,
+        useLegacyTranscriptPanel: true,
         includeChapterHeaders: true,
         openSameTab: false,
         highlightTranscript: false,
@@ -5936,6 +5973,9 @@
         // lazy transcript loading
         form.appendChild(createCheckboxField(`Load the Transcript Manually ${USER_CONFIG.buttonIcons.lazyLoad} (default: off)`, 'lazyTranscriptLoading', USER_CONFIG.lazyTranscriptLoading));
 
+        // use engagement-panel-searchable-transcript by default with PAmodern_transcript_view as a backup
+        form.appendChild(createCheckboxField('Use Legacy Transcript Panel with Modern as a Backup (default: on)', 'useLegacyTranscriptPanel', USER_CONFIG.useLegacyTranscriptPanel));
+
         // include Timestamps
         form.appendChild(createCheckboxField('Include Timestamps in the Transcript (default: on)', 'includeTimestamps', USER_CONFIG.includeTimestamps));
 
@@ -6522,7 +6562,7 @@
             form.appendChild(autoOpenTranscript);
 
             // auto open comments
-            const autoOpenComments = createCheckboxField('Automatically Open Comments | Only Works with Tab View Enabled! (default: off)', 'autoOpenComments', USER_CONFIG.autoOpenComments);
+            const autoOpenComments = createCheckboxField('Automatically Open Comments | Only Works with Tab View Enabled (default: off)', 'autoOpenComments', USER_CONFIG.autoOpenComments);
             form.appendChild(autoOpenComments);
 
             // highlight active transcript section
@@ -6580,11 +6620,11 @@
             form.appendChild(toggleTheaterModeBtn);
 
             // show chapters - only in tab view
-            const tabViewChapters = createCheckboxField('Show Chapters Under Videos | Only Works with Tab View Enabled! (default: on)', 'tabViewChapters', USER_CONFIG.tabViewChapters);
+            const tabViewChapters = createCheckboxField('Show Chapters Under Videos | Only Works with Tab View Enabled (default: on)', 'tabViewChapters', USER_CONFIG.tabViewChapters);
             form.appendChild(tabViewChapters);
 
             // max secondary panel height
-            const maxPanelHeight = createCheckboxField('Max Panel Height in Default View  | Only Works with Tab View Enabled! (default: off)', 'maxPanelHeight', USER_CONFIG.maxPanelHeight);
+            const maxPanelHeight = createCheckboxField('Max Panel Height in Default View  | Only Works with Tab View Enabled (default: off)', 'maxPanelHeight', USER_CONFIG.maxPanelHeight);
             form.appendChild(maxPanelHeight);
 
             // no animation switch theater and default view
@@ -6678,7 +6718,7 @@
             form.appendChild(visibleCountryCodeColor);
 
             // small subscribed button
-            const smallSubscribeButton = createCheckboxField('Small Subscribed Button Under Videos—Displays Only the Notification Icon (default: off)', 'smallSubscribeButton', USER_CONFIG.smallSubscribeButton);
+            const smallSubscribeButton = createCheckboxField('Small Subscribed Button Under Videos | Displays Only the Notification Icon (default: off)', 'smallSubscribeButton', USER_CONFIG.smallSubscribeButton);
             form.appendChild(smallSubscribeButton);
 
             // hide join button
@@ -7549,6 +7589,7 @@
         USER_CONFIG.lazyTranscriptLoading = form.elements.lazyTranscriptLoading.checked;
         USER_CONFIG.fileNamingFormat = form.elements.fileNamingFormat.value;
         USER_CONFIG.includeTimestamps = form.elements.includeTimestamps.checked;
+        USER_CONFIG.useLegacyTranscriptPanel = form.elements.useLegacyTranscriptPanel.checked;
         USER_CONFIG.includeChapterHeaders = form.elements.includeChapterHeaders.checked;
         USER_CONFIG.openSameTab = form.elements.openSameTab.checked;
         USER_CONFIG.ChatGPTPrompt = form.elements.ChatGPTPrompt.value;
@@ -8115,6 +8156,11 @@
         }
     }
 
+    const transcriptError = () => {
+        useSearchableTranscript = !useSearchableTranscript;
+        runYTE();
+    };
+
     function createButtons(buttonType = 'all') {
         const allButtons = {
             settings: USER_CONFIG.settingsGuide && settingsBtnMoved?.isConnected ? null : { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' },
@@ -8123,7 +8169,7 @@
             chatgpt: { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy Transcript with a Prompt and Open ${ChatGPTLabel}`, ariaLabel: `Copy Transcript to Clipboard with a Prompt and Open ${ChatGPTLabel}.` },
             notebooklm: { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: `Copy Transcript and Open ${NotebookLMLabel}`, ariaLabel: `Copy Transcript to Clipboard and Open ${NotebookLMLabel}.` },
             lazyload: { id: 'transcript-lazy-button', text: USER_CONFIG.buttonIcons.lazyLoad, clickHandler: runYTE, tooltip: 'Load the Transcript', ariaLabel: 'Load the Transcript.' },
-            error: { id: 'transcript-error-button', text: '⚠️', clickHandler: runYTE, tooltip: 'Retry Loading Transcript', ariaLabel: 'Retry Loading Transcript.' }
+            error: { id: 'transcript-error-button', text: '⚠️', clickHandler: transcriptError, tooltip: 'Retry Loading Transcript', ariaLabel: 'Retry Loading Transcript.' }
         };
 
         let buttonsToCreate = [];
@@ -8146,6 +8192,35 @@
     function handleCopyClick() { handleTranscriptAction(function () { selectAndCopyTranscript('Copy2Clipboard'); }); }
     function handleDownloadClick() { handleTranscriptAction(downloadTranscriptAsText); }
 
+    // function to switch between transcript panels
+    function getTranscriptMode() {
+        if (useSearchableTranscript) {
+            return {
+                panel: () => watchFlexyElement.querySelector(transcriptSearchableSel),
+                root: panel => panel?.querySelector(transcriptSearchableContainerSel),
+                readySel: transcriptSearchableSegmentSel,
+                preloadSel: transcriptSearchableSel,
+                timeout: 10000,
+                elements: root => root.children,
+                chapterTitleElement: element => element.tagName === 'YTD-TRANSCRIPT-SECTION-HEADER-RENDERER' ? element.querySelector('h2 > span') : null,
+                timeElement: element => element.querySelector('.segment-timestamp'),
+                textElement: element => element.querySelector('.segment-text')
+            };
+        }
+
+        return {
+            panel: () => watchFlexyElement.querySelector(`#panels ${transcriptListSel}`)?.closest('ytd-engagement-panel-section-list-renderer') || null,
+            root: panel => panel?.querySelector(transcriptListSel),
+            readySel: transcriptSegmentSel,
+            preloadSel: '#panels ytd-engagement-panel-section-list-renderer[target-id="PAmodern_transcript_view"], #panels ytd-engagement-panel-section-list-renderer:not([target-id])',
+            timeout: 5000,
+            elements: root => root.querySelectorAll('macro-markers-panel-item-view-model'),
+            chapterTitleElement: element => element.querySelector('timeline-chapter-view-model .ytwTimelineChapterViewModelTitle'),
+            timeElement: element => element.querySelector('.ytwTranscriptSegmentViewModelTimestamp'),
+            textElement: element => element.querySelector('.ytAttributedStringHost[role="text"]')
+        };
+    }
+
     // function to check for a transcript
     function handleTranscriptAction(callback) {
         setTimeout(() => endElement.classList.remove("disabled"), endElement.classList.add("disabled") || 1000);
@@ -8156,7 +8231,7 @@
             return;
         }
 
-        if (!checkPanel.querySelector(transcriptSegmentSel)) {
+        if (!isTranscriptReady(checkPanel)) {
             console.error("YouTubeAlchemy: Transcript has not loaded.");
             alert('Transcript has not loaded successfully.\nReload this page to try again.');
             return;
@@ -8185,9 +8260,9 @@
     }
 
     function getTranscriptPanel() {
-        const transcriptList = watchFlexyElement.querySelector(`#panels ${transcriptListSel}`);
-        transcriptPanel = transcriptList?.closest('ytd-engagement-panel-section-list-renderer') || null;
-        hasTranscriptPanel = !!(transcriptPanel || watchFlexyElement.querySelector(transcriptButtonSel));
+        const mode = getTranscriptMode();
+        transcriptPanel = mode.panel();
+        hasTranscriptPanel = useSearchableTranscript ? !!transcriptPanel : !!(transcriptPanel || watchFlexyElement.querySelector(transcriptButtonSel));
         return transcriptPanel;
     }
 
@@ -8208,21 +8283,28 @@
         if (panel) panel.visibility = "ENGAGEMENT_PANEL_VISIBILITY_HIDDEN";
     }
 
+    function isTranscriptReady(panel = transcriptPanel || getTranscriptPanel()) {
+        const mode = getTranscriptMode();
+        const transcriptRoot = mode.root(panel);
+        return !!transcriptRoot?.querySelector(mode.readySel);
+    }
+
     // function to get the transcript text
     function getTranscriptText() {
-        const transcriptList = getTranscriptPanel()?.querySelector(transcriptListSel);
-        if (!transcriptList) {
+        const mode = getTranscriptMode();
+        const panel = getTranscriptPanel();
+        const transcriptRoot = mode.root(panel);
+        if (!transcriptRoot) {
             console.error("YouTubeAlchemy: Transcript panel not found.");
             return '';
         }
 
-        const transcriptElements = transcriptList.querySelectorAll('macro-markers-panel-item-view-model');
         const transcriptLines = [];
         let currentLine = '';
         let lastTime = null;
 
-        for (const element of transcriptElements) {
-            const chapterTitleElement = element.querySelector('timeline-chapter-view-model .ytwTimelineChapterViewModelTitle');
+        for (const element of mode.elements(transcriptRoot)) {
+            const chapterTitleElement = mode.chapterTitleElement(element);
             if (chapterTitleElement) {
 
                 // chapter header segment
@@ -8235,22 +8317,21 @@
                     transcriptLines.push(`\nChapter: ${chapterTitle}`);
                     lastTime = null;
                 }
-            } else {
+                continue;
+            }
 
-                // transcript segment
-                const timeElement = element.querySelector('.ytwTranscriptSegmentViewModelTimestamp');
-                const textElement = element.querySelector('.ytAttributedStringHost[role="text"]');
-                if (timeElement && textElement) {
-                    const time = timeElement.textContent.trim();
-                    const text = textElement.textContent.replace(/\s+/g, ' ').trim();
+            // transcript segment
+            const timeElement = mode.timeElement(element);
+            const textElement = mode.textElement(element);
+            if (timeElement && textElement) {
+                const time = timeElement.textContent.trim();
+                const text = textElement.textContent.replace(/\s+/g, ' ').trim();
 
-                    if (time === lastTime) {
-                        currentLine += ` ${text}`;
-                    } else {
-                        if (currentLine) transcriptLines.push(currentLine);
-                        currentLine = USER_CONFIG.includeTimestamps ? `${time} ${text}` : text;
-                        lastTime = time;
-                    }
+                if (time === lastTime) currentLine += ` ${text}`;
+                else {
+                    if (currentLine) transcriptLines.push(currentLine);
+                    currentLine = USER_CONFIG.includeTimestamps ? `${time} ${text}` : text;
+                    lastTime = time;
                 }
             }
         }
@@ -8343,8 +8424,9 @@
     }
 
     // function to preload the transcript
-    function preLoadTranscript() {
+    function preLoadTranscript(tryOtherPanel = false) {
         return new Promise((resolve, reject) => {
+            const mode = getTranscriptMode();
             endElement.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
             if (isLive) {
                 showNotificationError("Live stream, no transcript");
@@ -8376,7 +8458,7 @@
             let fallbackTimer;
 
             const panelsElement = watchFlexyElement.querySelector('#panels');
-            let wasClosed = initialPanel?.getAttribute("visibility") !== "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED";
+            if (!tryOtherPanel) wasClosed = initialPanel?.getAttribute("visibility") !== "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED";
             if (!transcriptLoaded && !USER_CONFIG.YouTubeTranscriptExporter) wasClosed = false;
             const preloadPanels = new Set();
 
@@ -8384,22 +8466,21 @@
                 openTranscript(true);
                 preloadPanels.add(initialPanel);
             } else {
-                watchFlexyElement.querySelectorAll('#panels ytd-engagement-panel-section-list-renderer[target-id="PAmodern_transcript_view"], #panels ytd-engagement-panel-section-list-renderer:not([target-id])').forEach(panel => {
+                watchFlexyElement.querySelectorAll(mode.preloadSel).forEach(panel => {
                     panel.classList.add("transcript-preload");
                     preloadPanels.add(panel);
                 });
                 transcriptBtn.click();
             }
 
-            const cleanup = (failed) => {
+            const cleanup = (failed, retrying = false) => {
                 if (fallbackTimer) clearTimeout(fallbackTimer);
                 transcriptObserver?.disconnect();
                 wrapper?.remove();
                 if (wasClosed) closeTranscriptPanel(transcriptPanel);
                 preloadPanels.forEach(panel => panel.classList.remove("transcript-preload"));
                 transcriptPanel?.classList.remove("transcript-preload");
-                transcriptLoaded = true;
-                if (failed) showNotificationError("Transcript failed to load");
+                if (!retrying) failed ? showNotificationError("Transcript failed to load") : transcriptLoaded = true;
             };
 
             const handleTranscriptReady = () => {
@@ -8413,8 +8494,7 @@
                     panel.classList.add("transcript-preload");
                     preloadPanels.add(panel);
                 }
-                const transcriptList = panel?.querySelector(transcriptListSel);
-                if (!transcriptList?.querySelector(transcriptSegmentSel)) return false;
+                if (!isTranscriptReady(panel)) return false;
                 handleTranscriptReady();
                 return true;
             };
@@ -8427,14 +8507,20 @@
             fallbackTimer = setTimeout(() => {
                 if (!loaded) {
                     console.error("YouTubeAlchemy: The transcript took too long to load. Reload this page to try again.");
-                    cleanup(true);
-                    reject();
+                    if (!tryOtherPanel) {
+                        cleanup(true, true);
+                        useSearchableTranscript = !useSearchableTranscript;
+                        preLoadTranscript(true).then(resolve).catch(reject);
+                    } else {
+                        cleanup(true);
+                        reject();
+                    }
                 }
-            }, 5000);
+            }, mode.timeout);
 
             transcriptObserver = new MutationObserver(() => {
                 if (!initialPanel) {
-                    watchFlexyElement.querySelectorAll('#panels ytd-engagement-panel-section-list-renderer[target-id="PAmodern_transcript_view"], #panels ytd-engagement-panel-section-list-renderer:not([target-id])').forEach(panel => {
+                    watchFlexyElement.querySelectorAll(mode.preloadSel).forEach(panel => {
                         panel.classList.add("transcript-preload");
                         preloadPanels.add(panel);
                     });
@@ -8886,7 +8972,7 @@
             }
 
             if (tabId === 'tab-5') {
-                if (!transcriptLoaded) await runYTE();
+                if (!transcriptLoaded && isDefault) await runYTE();
                 if (!transcriptPanel?.isConnected) return;
                 if (show) openTranscript();
                 else closeTranscriptPanel();
@@ -11956,6 +12042,7 @@
         } else hasPlaylistPanel = false;
 
         // transcript panel check
+        useSearchableTranscript = USER_CONFIG.useLegacyTranscriptPanel;
         getTranscriptPanel();
 
         // donation panel check
@@ -12292,6 +12379,8 @@
     let hasTranscriptPanel = null;
     let transcriptPanel = null;
     let transcriptLoaded = false;
+    let useSearchableTranscript;
+    let wasClosed;
     let markWatchedVideosTimeout;
     let markWatchedVideosObserver;
     let ignoreRateChange = false;
@@ -12344,8 +12433,11 @@
     const showPlaybackSpeed = USER_CONFIG.playbackSpeed;
     const ChatGPTLabel = USER_CONFIG.targetChatGPTLabel;
     const NotebookLMLabel = USER_CONFIG.targetNotebookLMLabel;
+    const transcriptSearchableSegmentSel = 'ytd-transcript-segment-renderer';
     const transcriptButtonSel = '#panels ytd-video-description-transcript-section-renderer button';
     const transcriptListSel = 'yt-section-list-renderer[data-target-id="PAmodern_transcript_view"]';
+    const transcriptSearchableContainerSel = 'ytd-transcript-segment-list-renderer #segments-container';
+    const transcriptSearchableSel = '#panels ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]';
     const transcriptSegmentSel = 'transcript-segment-view-model.ytwTranscriptSegmentViewModelHost, .ytwTranscriptSegmentViewModelHost';
     const infoSel = 'ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description]';
     const menuSel = '#primary #top-row #top-level-buttons-computed';
