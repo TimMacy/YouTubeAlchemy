@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      11.4
+// @version      11.5
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 11.4 - YouTube Alchemy                    *
+*                    Version: 11.5 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1968,7 +1968,7 @@
                 border-top: none;
             }
 
-            #related.style-scope.ytd-watch-flexy {
+            #related.ytd-watch-flexy {
                 padding: 15px 10px 0 10px;
                 max-height: var(--ytd-watch-flexy-panel-max-height);
                 visibility: hidden;
@@ -2509,7 +2509,6 @@
                 flex-direction: row;
                 padding: 12px;
                 height: fit-content;
-                margin: 20px 0 24px 0;
                 gap: 20px;
                 align-items: center;
             }
@@ -2587,6 +2586,7 @@
             #body.ytd-transcript-renderer,
             .CentAnni-tabView-content-none,
             #below ytd-merch-shelf-renderer,
+            .ytContentMetadataViewModelLeadingIcon,
             #description > #description-interaction,
             #description-placeholder.ytd-watch-metadata,
             #ghost-cards.ytd-continuation-item-renderer,
@@ -2596,12 +2596,12 @@
             ytd-watch-flexy:not([is-two-columns_])[theater] #panels,
             ytd-watch-flexy:not([is-two-columns_])[theater] #related,
             ytd-engagement-panel-section-list-renderer ytd-merch-shelf-renderer,
+            ytd-watch-flexy #top-row.ytd-watch-metadata .contribYtLightShapeHost,
             &.CentAnni-tabView-chapters .ytp-chrome-controls .ytp-chapter-title-content,
             #description > #description-inner > #ytd-watch-info-text > tp-yt-paper-tooltip,
             ytd-watch-flexy:not([fullscreen]) #navigation-button.ytd-rich-list-header-renderer,
             ytd-watch-flexy #expandable-metadata #right-section.ytd-expandable-metadata-renderer,
             ytd-watch-flexy:not([is-two-columns_]):not([theater]) #expandable-metadata.ytd-watch-flexy,
-            .CentAnni-tabView:not(:has(.CentAnni-tabView-tab[data-tab="tab-2"])) ytd-comments#comments,
             ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview],
             ytd-watch-flexy:not([fullscreen]) #header.style-scope.ytd-engagement-panel-section-list-renderer,
             #ytd-watch-info-text[view-count-post-number-text][date-text-post-number-text] .CentAnni-info-date,
@@ -2631,11 +2631,11 @@
             }
 
             ytd-expandable-metadata-renderer[has-video-summary] #expanded-title-subtitle-group.ytd-expandable-metadata-renderer {
-                margin: 25px 0 6px 0;
+                margin: 10px 0 6px 0;
             }
 
             video-summary-content-view-model.ytd-expandable-metadata-renderer {
-                margin-top: 0;
+                margin: 0 12px;
             }
 
             ytd-expandable-metadata-renderer[is-expanded] #content.ytd-expandable-metadata-renderer {
@@ -2711,7 +2711,7 @@
             }
 
             &:not([dark]) .CentAnni-tabView-header,
-            ytd-watch-flexy #top-row.ytd-watch-metadata .ytSpecButtonShapeNextSizeM:not(:hover, .ytSpecButtonShapeNextFilled),
+            ytd-watch-flexy #top-row.ytd-watch-metadata .ytSpecButtonShapeNextSizeM:not(:hover),
             ytd-engagement-panel-section-list-renderer[match-content-theme] #content.ytd-engagement-panel-section-list-renderer,
             ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer:not([is-expanded]) #header.ytd-expandable-metadata-renderer:hover {
                 background: transparent;
@@ -3003,23 +3003,66 @@
                 }
             }
 
-            /* hide fixed side menu and split scroll */
-            #fixed-side-menu,
-            #columns.ytd-watch-flexy:after {
-                display: none !important;
-            }
+            /* restore delimiter, views, and date */
+            &.tabView-tab-3 {
+                .ytContentMetadataViewModelDelimiter {
+                    line-height: 0 !important;
+                    font-size: 0 !important;
+                    margin: 0 !important;
 
-            ytd-watch-flexy[side-rail-with-border] {
-                --ytd-watch-flexy-fixed-side-menu-width: 0 !important;
+                    &::before {
+                        content: var(--CentAnniViews);
+                        font-family: Roboto, "Arial", sans-serif;
+                        font-size: 1.2rem;
+                        line-height: 1.8rem;
+                        font-weight: 400;
+                        margin-left: .5ch;
+                        white-space: nowrap;
+                        vertical-align: middle;
+                        color: var(--yt-text-secondary);
+                    }
+
+                    &::after {
+                        content: "•";
+                        font-family: Roboto, "Arial", sans-serif;
+                        font-size: 1.2rem;
+                        line-height: 1.8rem;
+                        font-weight: 400;
+                        margin: 0 4px;
+                        vertical-align: middle;
+                        color: var(--yt-text-secondary);
+                    }
+
+                    + .ytContentMetadataViewModelMetadataText {
+                        line-height: 0 !important;
+                        font-size: 0 !important;
+
+                        &::after {
+                            content: attr(aria-label);
+                            font-family: Roboto, "Arial", sans-serif;
+                            font-size: 1.2rem;
+                            line-height: 1.8rem;
+                            font-weight: 400;
+                            white-space: nowrap;
+                            vertical-align: middle;
+                            text-overflow: ellipsis;
+                            color: var(--yt-text-secondary);
+                        }
+                    }
+                }
             }
         }
 
-        html:has(#secondary .CentAnni-tabView-tab.active[data-tab="tab-2"]).CentAnni-video-tabView ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=PAyouchat],
-        html:has(#secondary .CentAnni-tabView-tab.active[data-tab="tab-2"]).CentAnni-video-tabView ytd-watch-flexy[default-layout] ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
-            position: fixed;
-            top: calc(var(--ytd-masthead-height, var(--ytd-toolbar-height)) + 52px + var(--topHeaderMargin));
-            width: var(--ytd-watch-flexy-sidebar-width);
-            min-width: var(--ytd-watch-flexy-sidebar-min-width);
+        :is(.CentAnni-video-tabView, .CentAnni-style-compact-layout-video) {
+            #fixed-side-menu,
+            #columns.ytd-watch-flexy::after {
+                display: none !important;
+            }
+
+            ytd-watch-flexy {
+                --ytd-watch-flexy-side-menu-margin: 0 !important;
+                --ytd-watch-flexy-fixed-side-menu-width: 0 !important;
+            }
         }
 
         .CentAnni-style-transcript {
@@ -3133,24 +3176,12 @@
                 display: none;
             }
 
-            &:not([dark]) {
-                .ytLockupMetadataViewModelTitle {
-                    color: #0f0f0f !important;
-                }
-
-                .ytLockupMetadataViewModelMetadata {
-                    color: #606060 !important;
-                }
+            .ytLockupMetadataViewModelTitle {
+                color: var(--yt-text-primary) !important;
             }
 
-            &[dark] {
-                .ytLockupMetadataViewModelTitle {
-                    color: #f1f1f1 !important;
-                }
-
-                .ytLockupMetadataViewModelMetadata {
-                    color: #aaa !important;
-                }
+            .ytLockupMetadataViewModelMetadata {
+                color: var(--yt-text-secondary) !important;
             }
         }
 
@@ -4324,8 +4355,14 @@
                 padding-left: 364px;
             }
 
-            ytd-browse[page-subtype=playlist] ytd-playlist-header-renderer.ytd-browse {
-                height: calc(100vh - var(--ytd-toolbar-height));
+            ytd-browse[page-subtype=playlist] {
+                ytd-playlist-video-renderer #content.ytd-playlist-video-renderer {
+                    padding: 5px 0;
+                }
+
+                ytd-playlist-header-renderer.ytd-browse {
+                    height: calc(100vh - var(--ytd-toolbar-height));
+                }
             }
 
             .immersive-header-container.ytd-playlist-header-renderer {
@@ -4751,17 +4788,15 @@
             }
         }
 
-        :root {
-            --next-button-visibility: none;
-        }
-
-        .CentAnni-video-tabView:has(#secondary .CentAnni-tabView-tab[data-tab="tab-6"]) {
-            --next-button-visibility: inline-block;
-        }
-
         .CentAnni-style-hide-playnext-btn {
             a.ytp-next-button {
-                display: var(--next-button-visibility);
+                display: none;
+            }
+
+            &.tabView-tab-6 {
+                a.ytp-next-button {
+                    display: inline-block;
+                }
             }
         }
 
@@ -4970,9 +5005,11 @@
         .CentAnni-style-playlist-hide-menu,
         .is-watch-page #watch-page-skeleton,
         .CentAnni-style-no-zoom .ytp-speedmaster-overlay,
+        .CentAnni-style-pure-bg .contribYtLightShapeHost,
         .CentAnni-style-hide-airplay-btn #ytd-player .ytp-airplay-button,
         .CentAnni-style-hide-voice-search #voice-search-button.ytd-masthead,
         .CentAnni-style-hide-notification-badge #end .ytSpecIconBadgeShapeBadge,
+        .CentAnni-style-hide-ask-btn #teaser-carousel:not(:has(path[d^="M16"])),
         .is-watch-page #masthead-container.ytd-app:not(:has(yt-searchbox [placeholder])),
         .CentAnni-style-hide-info-panel :is(#middle-row, ytd-info-panel-container-renderer),
         .CentAnni-style-hide-playables ytd-rich-section-renderer:has(a[href^="/playables"]),
@@ -4995,13 +5032,13 @@
         .CentAnni-style-hide-posts-home ytd-browse[page-subtype="home"] ytd-rich-section-renderer:has(ytd-post-renderer),
         .CentAnni-style-hide-fundraiser :is(#donation-shelf, ytd-badge-supported-renderer:has([aria-label="Fundraiser"])),
         .CentAnni-style-hide-create-btn :is(#masthead-skeleton-icons :first-child, #end ytd-button-renderer.ytd-masthead),
-        .CentAnni-style-hide-ask-btn :is(yt-button-view-model, #teaser-carousel):has(:is([aria-label="Ask"], path[d^="M480"])),
         .CentAnni-style-hide-most-relevant ytd-browse[page-subtype="subscriptions"] ytd-rich-section-renderer:not(:has([is-shorts])),
         .yt-watch-later .metadata-text-wrapper.ytd-playlist-header-renderer yt-formatted-string.ytd-playlist-byline-renderer:not(:has(*)),
         .CentAnni-style-hide-pay-to-watch :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-video-renderer):has(.badge-style-type-ypc),
         .CentAnni-style-hide-notification-btn :is(#masthead-skeleton-icons :nth-child(2), #masthead-container #end ytd-notification-topbar-button-renderer),
         .CentAnni-style-hide-free-with-ads :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-rich-section-renderer):has([aria-label="Free with ads"]),
         .CentAnni-style-hide-playlists-home ytd-browse[page-subtype="home"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="start_radio=1"]),
+        .CentAnni-style-hide-ask-btn #teaser-carousel:has(path[d^="M480"]) :is(.ytCarouselItemViewModelHost:has(path[d^="M480"]), .ytCarouselTitleViewModelNavigation),
         .CentAnni-playlist-remove-btn-hide-menus :is(tp-yt-iron-overlay-backdrop.opened, ytd-popup-container > tp-yt-paper-dialog, ytd-popup-container > tp-yt-iron-dropdown),
         .CentAnni-style-hide-episodes-home ytd-browse[page-subtype="home"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]):not(:has(a[href*="start_radio=1"])),
         .CentAnni-style-hide-queue-btn :is(:is(button, ytd-thumbnail-overlay-toggle-button-renderer)[aria-label="Add to queue"], :is(.ytListItemViewModelHost, ytd-menu-service-item-renderer):has(path[d^="M2 2"])),
@@ -5019,6 +5056,10 @@
             max-height: calc(100vh - var(--mastheadHeight)) !important;
             margin-top: var(--mastheadHeight) !important;
             margin-bottom: 0 !important;
+        }
+
+        .CentAnni-style-hide-ask-btn .ytVideoMetadataCarouselViewModelItemSection {
+            min-width: unset !important;
         }
 
         /* dark and light mode */
@@ -5140,7 +5181,7 @@
 
         html:not([dark]).CentAnni-video-tabView ytd-watch-flexy {
             #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
-            #related.style-scope.ytd-watch-flexy {
+            #related.ytd-watch-flexy {
                 border: 1px solid rgba(0, 0, 0, .1);
                 border-top: none;
             }
@@ -5468,6 +5509,7 @@
         playlistTrashCan: false,
         plWLBtn: false,
         commentsNewFirst: false,
+        defaultTranscriptLanguage: 'auto',
         defaultAudioLanguage: 'auto',
         defaultSubtitleLanguage: 'auto',
         subtitlesWhenMuted: false,
@@ -5653,14 +5695,17 @@
     const uiLanguage = (docElement.lang || navigator.language || 'en').split('-')[0];
 
     // localize languages
+    let viewLanguage;
     let audioInLanguage;
     let uiLanguageLabels;
     let englishInLanguage;
     let subtitleInLanguage;
+    let transcriptInLanguage;
 
     const localizeConfiguredLanguages = () => {
         const targetLanguageAudio = USER_CONFIG.defaultAudioLanguage.replace('auto', 'english');
         const targetLanguageSubtitles = USER_CONFIG.defaultSubtitleLanguage.replace('auto', 'english');
+        const targetLanguageTranscript = USER_CONFIG.defaultTranscriptLanguage.replace('auto', 'english');
         const namesInUI = new Intl.DisplayNames([uiLanguage], { type: 'language' });
 
         if (USER_CONFIG.defaultAudioLanguage !== 'auto') audioInLanguage = namesInUI.of(getLanguageCode(targetLanguageAudio)).toLowerCase();
@@ -5668,8 +5713,39 @@
             if (targetLanguageSubtitles === 'off' && !uiLanguageLabels) createUiLanguageLabels();
             subtitleInLanguage = targetLanguageSubtitles === 'off' ? uiLanguageLabels.off.toLowerCase() : namesInUI.of(getLanguageCode(targetLanguageSubtitles)).toLowerCase();
         }
+        if (USER_CONFIG.defaultTranscriptLanguage !== 'auto') transcriptInLanguage = namesInUI.of(getLanguageCode(targetLanguageTranscript)).toLowerCase();
         englishInLanguage = namesInUI.of('en').toLowerCase();
-    }; if (USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto') localizeConfiguredLanguages();
+    }; if (USER_CONFIG.defaultTranscriptLanguage !== 'auto' || USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto') localizeConfiguredLanguages();
+
+    // language matrix to restore views
+    if (uiLanguage !== 'en') {
+        const viewLanguageMatrix = {
+            cs: 'zhlédnutí',
+            da: 'visninger',
+            de: 'Aufrufe',
+            el: 'προβολές',
+            es: 'visualizaciones',
+            fi: 'katselukertaa',
+            fr: 'vues',
+            he: 'צפיות',
+            hi: 'बार देखा गया',
+            hu: 'megtekintés',
+            id: 'x ditonton',
+            it: 'visualizzazioni',
+            ja: '回視聴',
+            ko: '회',
+            nl: 'weergaven',
+            no: 'visninger',
+            pl: 'wyświetleń',
+            pt: 'visualizações',
+            ro: 'vizionări',
+            sv: 'visningar',
+            uk: 'переглядів',
+            vi: 'lượt xem',
+            zh: '次观看'
+        };
+        viewLanguage = viewLanguageMatrix[uiLanguage];
+    }
 
     // load CSS settings
     let smw;
@@ -5713,6 +5789,7 @@
         docElement.style.setProperty('--itemsPerRow', USER_CONFIG.videosPerRow);
         docElement.style.setProperty('--textTransform', USER_CONFIG.textTransform);
         docElement.style.setProperty('--fontSize', `${USER_CONFIG.defaultFontSize}px`);
+        docElement.style.setProperty('--CentAnniViews', `'${viewLanguage || 'views'}'`);
         docElement.style.setProperty('--sidebarWidth', `${USER_CONFIG.sidebarWidth}px`);
         docElement.style.setProperty('--spaceBelow', `${USER_CONFIG.spaceBelowPlayer}px`);
         docElement.style.setProperty('--watchedOpacity', USER_CONFIG.videosWatchedOpacity);
@@ -6364,6 +6441,9 @@
 
             // default subtitle language
             form.appendChild(createSelectField('Subtitle Language:', 'label-subtitle-language', 'defaultSubtitleLanguage', USER_CONFIG.defaultSubtitleLanguage, languageOptionsWithOff));
+
+            // default transcript language in legacy panel
+            form.appendChild(createSelectField('Legacy Transcript Panel Language:', 'label-transcript-language', 'defaultTranscriptLanguage', USER_CONFIG.defaultTranscriptLanguage, standardLanguageOptions));
 
             // font size
             const defaultFontSizeField = createNumberInputField('Font Size (default: 10)', 'defaultFontSize', USER_CONFIG.defaultFontSize);
@@ -7708,6 +7788,7 @@
             USER_CONFIG.playbackSpeedDecrease = subPanelCustomCSS.elements.playbackSpeedDecrease.value.trim() || 'a';
             USER_CONFIG.playbackSpeedIncrease = subPanelCustomCSS.elements.playbackSpeedIncrease.value.trim() || 'd';
             USER_CONFIG.defaultQuality = subPanelCustomCSS.elements.defaultQuality.value;
+            USER_CONFIG.defaultTranscriptLanguage = subPanelCustomCSS.elements.defaultTranscriptLanguage.value;
             USER_CONFIG.defaultAudioLanguage = subPanelCustomCSS.elements.defaultAudioLanguage.value;
             USER_CONFIG.defaultSubtitleLanguage = subPanelCustomCSS.elements.defaultSubtitleLanguage.value;
             USER_CONFIG.hideVoiceSearch = subPanelCustomCSS.elements.hideVoiceSearch.checked;
@@ -8479,8 +8560,11 @@
                 wrapper?.remove();
                 if (wasClosed) closeTranscriptPanel(transcriptPanel);
                 preloadPanels.forEach(panel => panel.classList.remove("transcript-preload"));
-                transcriptPanel?.classList.remove("transcript-preload");
                 if (!retrying) failed ? showNotificationError("Transcript failed to load") : transcriptLoaded = true;
+                if (transcriptLoaded) {
+                    if (currentActiveTab !== 'tab-5') transcriptPanel.querySelector('#visibility-button button')?.click();
+                    if (USER_CONFIG.defaultTranscriptLanguage !== 'auto' && useSearchableTranscript) setTimeout(setTranscriptLanguage, 250);
+                }
             };
 
             const handleTranscriptReady = () => {
@@ -8665,6 +8749,18 @@
         await new Promise(resolve => setTimeout(resolve, 125));
     }
 
+    // set default transcript language
+    function setTranscriptLanguage() {
+        const menuTrigger = transcriptPanel.querySelector('tp-yt-paper-button#label');
+        const labelTextEl = document.getElementById('label-text');
+        if (!menuTrigger || !labelTextEl) return;
+
+        const itemsArray = [...transcriptPanel.querySelectorAll('tp-yt-paper-item')];
+        const target = itemsArray.find(el => el.textContent.trim().toLowerCase().startsWith(transcriptInLanguage)) || itemsArray.find(el => el.textContent.trim().toLowerCase().startsWith(englishInLanguage));
+        target ? target.click() : console.error('YouTubeAlchemy: Transcript Language not found');
+
+    }
+
     // function tab view on video page
     function runInPage(fn) {
         const c = `;(${fn})();`;
@@ -8677,11 +8773,11 @@
     function tabView() {
         if (!watchFlexyElement) return;
         let setMastheadWidth = false;
-        let currentActiveTab = null;
         let isSingleColumn = false;
         let lastActiveTab = null;
         transcriptLoaded = false;
         let hasLiveChat = false;
+        currentActiveTab = null;
         let mastheadWidthTimer;
         let isFirstRun = true;
         let tabElements = [];
@@ -8886,7 +8982,7 @@
 
         // grab info and more video panels
         const videoInfo = watchFlexyElement.querySelector(infoSel);
-        const videoMore = watchFlexyElement.querySelector('#related.style-scope.ytd-watch-flexy');
+        const videoMore = watchFlexyElement.querySelector('#related.ytd-watch-flexy');
 
         // create the main tabView container
         const newDiv = document.createElement('div');
@@ -12040,6 +12136,7 @@
             hasPlaylistPanel = !!(playlistVideoItem && playlistPanel);
             playlistSelectedVideo = watchFlexyElement.querySelector('ytd-playlist-panel-video-renderer[selected]');
         } else hasPlaylistPanel = false;
+        docElement.classList.toggle('tabView-tab-6', hasPlaylistPanel);
 
         // transcript panel check
         useSearchableTranscript = USER_CONFIG.useLegacyTranscriptPanel;
@@ -12379,6 +12476,7 @@
     let hasTranscriptPanel = null;
     let transcriptPanel = null;
     let transcriptLoaded = false;
+    let currentActiveTab = null;
     let useSearchableTranscript;
     let wasClosed;
     let markWatchedVideosTimeout;
