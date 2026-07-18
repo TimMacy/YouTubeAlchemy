@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.5-white.svg" alt="Version: 11.5"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.7-white.svg" alt="Version: 11.7"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -108,31 +108,17 @@ Up to ten links can be added next to the YouTube logo. An empty 'Link Text' fiel
 ## 🪄 Features & Styles
 Offers various options to customize the layout and functionality of YouTube.
 
-**General**
+<br>
+<p align="center"><strong>General</strong></p>
+
   - Move Settings Button into the YouTube Guide
   - Change Opacity of Watched Videos
-  - Title Case Selection:
-    - uppercase
-    - lowercase
-    - capitalize
-    - normal-case (default)
-  - Video Quality:
-    - Auto (default)
-    - Highest Available
-    - 4320p - 8K
-    - 2160p - 4K
-    - 1440p - QHD
-    - 1080p - FHD
-    - 720p - HD
-    - 480p
-    - 360p
-    - 240p
-    - 144p
   - Audio Language
   - Subtitle Language
+  - Transcript Language
   - Language Options:
     - Auto (default)
-    - Chinese
+    - Chinese (简体)
     - Czech
     - Danish
     - Dutch
@@ -156,11 +142,33 @@ Offers various options to customize the layout and functionality of YouTube.
     - Swedish
     - Ukrainian
     - Vietnamese
+  - Default Channel Page
+  - Video Quality:
+    - Auto (default)
+    - Highest Available
+    - 4320p - 8K
+    - 2160p - 4K
+    - 1440p - QHD
+    - 1080p - FHD
+    - 720p - HD
+    - 480p
+    - 360p
+    - 240p
+    - 144p
+  - Title Case Selection:
+    - uppercase
+    - lowercase
+    - capitalize
+    - normal-case (default)
   - Font Size
   - Number of Videos per Row
   - Sidebar Width
   - Search Bar Position
   - Minimum Space Below Player in Default Layout When Tab View and Compact Layout Are Enabled
+
+<br>
+<p align="center"><strong>Playback Speed</strong></p>
+
   - Set Playback Speed for VODs
     - from 0.25x to 17x with 0.25x increments
     - defaults to 1x for live videos
@@ -173,7 +181,9 @@ Offers various options to customize the layout and functionality of YouTube.
   - Assign up to 8 Keys to Custom Playback Speeds
   - Add Additional Playback Speed Buttons
 
-**Features**
+<br>
+<p align="center"><strong>Features</strong></p>
+
   - Auto Theater Mode
   - Auto-Exit Fullscreen When Video Ends
   - Cinema Mode
@@ -188,7 +198,6 @@ Offers various options to customize the layout and functionality of YouTube.
   - Restore Homepage Filter Selection
   - Restore Suggested Videos Filter Selection
   - Auto Close Initial Chat Windows
-  - "Videos" Tab as Default on Channel Pages
   - Add RSS Feed Button to Channel Pages
   - Add Playlist Buttons to Channel Pages
   - Add Direction Buttons to Playlist Panels
@@ -206,11 +215,13 @@ Offers various options to customize the layout and functionality of YouTube.
   - Use Enhanced Bitrate for 1080p Videos, Premium Required
   - Persistent Progress Bar with Chapter Markers and SponsorBlock Support—Even in Fullscreen
   - Display Remaining Time Under Videos Adjusted for Playback Speed—Even in Fullscreen
-    - To also include skipped SponsorBlock segments, ensure "Show time with skips removed" is enabled in SponsorBlock settings under "Interface."
+    - To also include skipped [SponsorBlock](https://sponsor.ajay.app "SponsorBlock browser extension by Ajay Ramachandran") segments, ensure "Show time with skips removed" is enabled in that browser extension under "Interface".
   - Compact Version for Remaining Time
   - Hide Remaining Time and Chapters in Fullscreen
 
-**Layout Changes**
+<br>
+<p align="center"><strong>Layout Changes</strong></p>
+
   - Tab View on Video Page
   - Toggle Theater Mode by Clicking the Active Tab
   - Show Chapters Under Videos, Only Works with Tab View Enabled
@@ -228,7 +239,9 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide Shorts
   - Redirect Shorts to Standard Video Pages
 
-**Modify or Hide UI Elements**
+<br>
+<p align="center"><strong>Modify or Hide UI Elements</strong></p>
+
   - Hide "Voice Search" Button
   - Hide "Create" Button
   - Hide "Notification" Button
@@ -278,7 +291,9 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide "Add to queue" Button on Hover
   - Hide Mini Player
 
-**Hide Watched Videos**
+<br>
+<p align="center"><strong>Hide Watched Videos</strong></p>
+
   - Hide Watched Videos Regardless of Progress Everywhere
   - Hide Watched Videos Regardless of Progress Only on the Home Page
   - Pick a Percentage to Hide Videos on
@@ -289,7 +304,9 @@ Offers various options to customize the layout and functionality of YouTube.
     - Video Pages
     - Search Pages
 
-**Hide UI Elements in the Guide**
+<br>
+<p align="center"><strong>Hide UI Elements in the Guide</strong></p>
+
   - Hide "Home" Button
   - Hide "Subscriptions" Button
   - Restore Order: Home > You > Subscriptions
@@ -386,6 +403,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **11.7**: adjustments for YouTube DOM changes, bug fixes, and improvements; feature changed: "'Videos' Tab as Default on Channel Pages" is now a drop-down menu "Default Channel Page"
 - **11.5**: adjustments for YouTube DOM changes and bug fixes; re-added feature: "Legacy Transcript Panel Language"
 - **11.4**: adjustments for YouTube DOM changes; new feature: "Use Legacy Transcript Panel with Modern as a Backup"; both the legacy transcript panel `target-id="engagement-panel-searchable-transcript"` and the modern `data-target-id="PAmodern_transcript_view"` are now supported
 - **11.3**: adjustments for YouTube DOM changes, bug fixes, and improvements; features removed: "Transcript Language" and "Automatically Enable Timestamps in Transcript Panels"; added aria-labels for transcript buttons and select fields; feature changed: "Transcript Exporter" now uses the new transcript panel `data-target-id="PAmodern_transcript_view"` instead of `target-id="engagement-panel-searchable-transcript"`
