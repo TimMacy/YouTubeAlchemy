@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      11.5.1
+// @version      11.7
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 11.5.1 - YouTube Alchemy                  *
+*                    Version: 11.7 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -35,7 +35,7 @@
         html {
             font-size: var(--fontSize) !important;
             font-family: "Roboto", Arial, sans-serif;
-            --CentAnniTabViewHeader: 52px;
+            --CentAnniTabViewHeader: 50px;
             --topHeaderMargin: var(--ytd-margin-6x, 24px);
             --ytd-margin-0x: 16px;
             --yt-text-primary: #0f0f0f;
@@ -44,6 +44,8 @@
             --yt-base-background-secondary: #f2f2f2;
             --yt-raised-background: #212121;
             --yt-spec-background: rgba(0, 0, 0, .05);
+            --CentAnniRed: rgb(253, 1, 48);
+            --bronze-color: #CD7F32;
             --mastheadHeight: 56px;
         }
 
@@ -64,6 +66,15 @@
         }
 
         /* main CSS */
+        #yt-alchemy-settings-modal {
+            --NotebookLM-color: hsl(134, 61%, 40%);
+            --ChatGPT-color: hsl(217, 91%, 59%);
+            --copy-color: hsl(33, 100%, 50%);
+            --lazy-color: hsl(51, 100%, 50%);
+            --download-color: hsl(359, 88%, 57%);
+            --settings-color: hsl(0, 0%, 100%);
+        }
+
         .CentAnni-overlay {
             position: fixed;
             display: flex;
@@ -207,35 +218,45 @@
             }
         }
 
-        .label-NotebookLM { color: hsl(134, 61%, 40%); }
-        .label-ChatGPT { color: hsl(217, 91%, 59%); }
-        .label-copy { color: hsl(33, 100%, 50%); }
-        .label-download { color: hsl(359, 88%, 57%); }
-        .label-lazy { color: hsl(51, 100%, 50%); }
-        .label-settings { color: hsl(0, 0%, 100%); }
+        .label-NotebookLM { color: var(--NotebookLM-color); }
+        .label-ChatGPT { color: var(--ChatGPT-color); }
+        .label-copy { color: var(--copy-color); }
+        .label-download { color: var(--download-color); }
+        .label-lazy { color: var(--lazy-color); }
+        .label-settings { color: var(--settings-color); }
         .label-gold  { color: gold; }
         .label-silver  { color: silver; }
-        .label-bronze  { color: #CD7F32; }
+        .label-bronze  { color: var(--bronze-color); }
 
-        .input-field-targetNotebookLMUrl:focus, .buttonIconNotebookLM-input-field:focus { border-color: hsl(134, 61%, 40%); }
-        .input-field-targetChatGPTUrl:focus, .buttonIconChatGPT-input-field:focus { border-color: hsl(217, 91%, 59%); }
-        .buttonIconCopy-input-field:focus { border-color: hsl(33, 100%, 50%); }
-        .buttonIconlazyLoad-input-field:focus { border-color: hsl(51, 100%, 50%); }
-        .buttonIconDownload-input-field:focus { border-color: hsl(359, 88%, 57%); }
+        .buttonIconNotebookLM-input-field, .input-field-targetNotebookLMUrl { --field-color: var(--NotebookLM-color); }
+        .buttonIconChatGPT-input-field, .input-field-targetChatGPTUrl { --field-color: var(--ChatGPT-color); }
+        .buttonIconCopy-input-field { --field-color: var(--copy-color); }
+        .buttonIconlazyLoad-input-field { --field-color: var(--lazy-color); }
+        .buttonIconDownload-input-field { --field-color: var(--download-color); }
+        .buttonIconSettings-input-field { --field-color: var(--settings-color); }
+        .input-field-watchLaterGold { --field-color: gold; }
+        .input-field-watchLaterSilver { --field-color: silver; }
+        .input-field-watchLaterBronze { --field-color: var(--bronze-color); }
+
+        .input-field-targetNotebookLMUrl:focus, .buttonIconNotebookLM-input-field:focus { border-color: var(--NotebookLM-color); }
+        .input-field-targetChatGPTUrl:focus, .buttonIconChatGPT-input-field:focus { border-color: var(--ChatGPT-color); }
+        .buttonIconCopy-input-field:focus { border-color: var(--copy-color); }
+        .buttonIconlazyLoad-input-field:focus { border-color: var(--lazy-color); }
+        .buttonIconDownload-input-field:focus { border-color: var(--download-color); }
         .input-field-watchLaterGold:focus { border-color: gold; }
         .input-field-watchLaterSilver:focus { border-color: silver; }
-        .input-field-watchLaterBronze:focus { border-color: #CD7F32; }
+        .input-field-watchLaterBronze:focus { border-color: var(--bronze-color); }
 
         .buttonIconSettings-input-field:focus,
         .links-header-container input:focus,
         .sidebar-container input:focus,
         #custom-css-form .select-file-naming:focus,
         #custom-css-form .dropdown-list {
-            border-color: hsl(0, 0%, 100%);
+            border-color: var(--settings-color, hsl(0, 0%, 100%));
         }
 
         .file-naming-container .label-Video-Quality ~ .dropdown-list {
-            max-height: 500px;
+            max-height: 300px;
         }
 
         .file-naming-container .label-audio-language ~ .dropdown-list,
@@ -329,6 +350,7 @@
             border: 1px solid hsl(0, 0%, 18.82%);
             border-radius: 2px;
             box-sizing: border-box;
+            caret-color: var(--field-color);
         }
 
         .container-button-input:focus {
@@ -381,6 +403,7 @@
             border: 1px solid hsl(0, 0%, 18.82%);
             border-radius: 2px;
             box-sizing: border-box;
+            caret-color: var(--field-color, auto);
         }
 
         .input-field-url:focus {
@@ -443,7 +466,7 @@
             max-height: 60dvh;
             overflow-y: auto;
             background-color: hsl(0, 0%, 7%);
-            border: 1px solid hsl(359, 88%, 57%);
+            border: 1px solid var(--download-color, hsl(0, 0%, 100%));
             border-radius: 1px 1px 8px 8px;
             box-sizing: border-box;
             transition: opacity .5s ease-in-out, transform .5s ease-in-out, visibility .5s, border-color .5s ease-in-out;
@@ -468,6 +491,19 @@
             transition: background-color .3s, color .3s;
             padding-left: 1.6em;
 
+            &.dropdown-item-selected {
+                font-weight: 600;
+                color: var(--download-color);
+                background-color: rgba(255, 255, 255, .025);
+
+                &::before {
+                    content: '✓';
+                    position: absolute;
+                    left: 6px;
+                    color: var(--download-color);
+                }
+            }
+
             &:hover {
                 color: ghostwhite;
                 background-color: rgba(255, 255, 255, .05);
@@ -479,21 +515,9 @@
             }
         }
 
-        .dropdown-item-selected {
-            color: hsl(359, 88%, 57%);
-            font-weight: 600;
-        }
-
-        .dropdown-item-selected::before {
-            content: '✓';
-            position: absolute;
-            left: 6px;
-            color: hsl(359, 88%, 57%);
-        }
-
         .select-file-naming:focus {
             background-color: hsl(0, 0%, 10.37%);
-            border-color: hsl(359, 88%, 57%);
+            border-color: var(--download-color);
         }
 
         .checkbox-label,
@@ -511,14 +535,18 @@
             -ms-user-select: none;
             user-select: none;
             white-space: pre-line;
+
+            &:hover {
+                text-decoration: underline;
+            }
+
+            #CentAnni-main-settings-form & {
+                accent-color: var(--ChatGPT-color);
+            }
         }
 
         .checkbox-container {
             margin-bottom: 5px;
-        }
-
-        .checkbox-label:hover {
-            text-decoration: underline;
         }
 
         .checkbox-field {
@@ -583,8 +611,13 @@
             cursor: default;
             white-space: pre-line;
 
-            &.hide-watched {
+            &.hide-watched,
+            &.playback-speed {
                 margin: 5px 0;
+            }
+
+            &.playback-speed {
+                white-space: pre-wrap;
             }
         }
 
@@ -619,12 +652,13 @@
             overscroll-behavior: contain;
             overflow: hidden;
             cursor: pointer;
+            caret-color: var(--ChatGPT-color);
         }
 
         .chatgpt-prompt-textarea:focus {
             height: 630px;
             background-color: hsl(0, 0%, 10.37%);
-            border-color: hsl(217, 91%, 59%);
+            border-color: var(--ChatGPT-color);
             overflow: auto;
             cursor: auto;
         }
@@ -714,7 +748,6 @@
         }
 
         .CentAnni-button-wrapper {
-            position: relative;
             margin-right: 8px;
             display: flex;
             background-color: transparent;
@@ -733,22 +766,6 @@
             opacity: .5;
         }
 
-        .CentAnni-btn-tooltip {
-            .transcript-settings-button .button-tooltip {
-                white-space: normal;
-            }
-
-            .transcript-download-button .button-tooltip {
-                white-space: normal;
-                width: 75px;
-            }
-
-            .transcript-ChatGPT-button .button-tooltip {
-                white-space: normal;
-                width: 172px;
-            }
-        }
-
         .CentAnni-settings-btn {
             tp-yt-app-drawer.ytd-app[persistent] #guide-content > #header {
                 display: flex !important;
@@ -760,37 +777,32 @@
                 background: var(--yt-base-background);
             }
 
-            #guide-wrapper .CentAnni-button-wrapper {
-                margin-left: auto;
-                margin-right: 12px;
+            #guide-wrapper {
+                .CentAnni-button-wrapper {
+                    margin-left: auto;
+                    margin-right: 12px;
+                }
+
+                .button-tooltip {
+                    justify-self: auto;
+                    margin-inline: unset;
+                    left: anchor(center);
+                    transform: translateX(-50%);
+                }
             }
 
-            .transcript-settings-button .button-tooltip {
-                white-space: nowrap;
-            }
-
-            .transcript-download-button .button-tooltip {
-                width: 117px;
-                white-space: normal;
-            }
-
-            .transcript-ChatGPT-button .button-tooltip {
-                width: 172px;
-                white-space: normal;
-            }
-
-            .button-style-settings {
+            #transcript-settings-button {
                 width: 40px;
-            }
 
-            .transcript-settings-button:hover {
-                background-color: rgba(255, 255, 255, .1);
-                border-radius: 24px;
-            }
+                &:hover {
+                    background-color: rgba(255, 255, 255, .1);
+                    border-radius: 24px;
+                }
 
-            .transcript-settings-button:active {
-                background-color: rgba(255, 255, 255, .2);
-                border-radius: 24px;
+                &:active {
+                    background-color: rgba(255, 255, 255, .2);
+                    border-radius: 24px;
+                }
             }
         }
 
@@ -825,6 +837,7 @@
         .button-style {
             width: 40px;
             height: 40px;
+            anchor-name: var(--centanni-tooltip-anchor);
             font-family: -apple-system, system-ui, "Roboto", "Arial", sans-serif;
             font-size: 24px;
             display: inline-block;
@@ -865,38 +878,60 @@
         }
 
         .button-tooltip {
+            opacity: 0;
             visibility: hidden;
             background-color: black;
             color: white;
             text-align: center;
-            border-radius: 2px;
-            padding: 6px 8px;
-            position: absolute;
-            z-index: 2053;
-            top: 120%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            white-space: nowrap;
             font-size: 12px;
             font-family: -apple-system, "Roboto", "Arial", sans-serif;
+            border-radius: 2px;
+            white-space: nowrap;
+            padding: 6px 8px;
+            position: fixed;
+            position-anchor: var(--centanni-tooltip-anchor);
+            inset: auto;
+            top: calc(anchor(bottom) + 8px);
+            justify-self: anchor-center;
+            z-index: 2053;
+            margin-inline: 16px;
+            pointer-events: none;
+            transition: visibility 0s, opacity 0s;
             border-top: solid 1px white;
             border-bottom: solid 1px black;
             border-left: solid 1px transparent;
             border-right: solid 1px transparent;
             border-image: linear-gradient(to bottom, white, black);
             border-image-slice: 1;
-        }
 
-        .button-tooltip-arrow {
-            position: absolute;
-            top: -5px;
-            left: 50%;
-            transform: translateX(-50%) rotate(45deg);
-            width: 10px;
-            height: 10px;
-            background: linear-gradient(135deg, white 0%, white 50%, black 50%, black 100%);
-            z-index: -1;
+            + .button-tooltip-arrow {
+                opacity: 0;
+                visibility: hidden;
+                position: fixed;
+                position-anchor: var(--centanni-tooltip-anchor);
+                inset: auto;
+                top: calc(anchor(bottom) + 4px);
+                justify-self: anchor-center;
+                width: 10px;
+                height: 10px;
+                z-index: 2052;
+                pointer-events: none;
+                transform: rotate(45deg);
+                transition: visibility 0s, opacity 0s;
+                background: linear-gradient(135deg, white 0%, white 50%, black 50%, black 100%);
+            }
+
+            .button-style:hover + & {
+                visibility: visible;
+                opacity: 1;
+                transition-delay: 700ms;
+
+                + .button-tooltip-arrow {
+                    visibility: visible;
+                    opacity: 1;
+                    transition-delay: 700ms;
+                }
+            }
         }
 
         #CentAnni-remaining-time-container {
@@ -1044,15 +1079,13 @@
         }
 
         @-webkit-keyframes pulse {
-            0%   { opacity: 0;   }
-            50%  { opacity: .71; }
-            100% { opacity: 0;   }
+            0%, 100% { opacity: 0;   }
+            50%      { opacity: .71; }
         }
 
         @keyframes pulse {
-            0%   { opacity: 0;   }
-            50%  { opacity: .71; }
-            100% { opacity: 0;   }
+            0%, 100% { opacity: 0;   }
+            50%      { opacity: .71; }
         }
 
         #start.ytd-masthead {
@@ -1267,7 +1300,7 @@
 
         #custom-css-form .dropdown-item-selected,
         #custom-css-form .dropdown-item-selected::before {
-            color: hsl(0, 0%, 100%);
+            color: var(--settings-color);
         }
 
         .sub-panel input[type="range"] {
@@ -1780,7 +1813,7 @@
             }
 
             .CentAnni-speed-preset-button.active {
-                background: rgb(253, 1, 48) !important;
+                background: var(--CentAnniRed) !important;
             }
 
             ytd-watch-flexy[default-layout] #CentAnni-speed-buttons {
@@ -1841,7 +1874,7 @@
                 display: flex;
                 position: relative;
                 overflow: hidden;
-                height: 50px;
+                height: 48px;
                 padding: 0;
                 margin: 0;
                 color: var(--yt-text-primary);
@@ -1855,7 +1888,7 @@
                 flex-direction: row;
                 min-width: 0;
                 width: 100%;
-                height: 50px;
+                height: 48px;
                 font-size: 9px;
                 line-height: 1;
                 padding: 0 8px;
@@ -1956,7 +1989,7 @@
             ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer {
                 position: absolute;
                 width: var(--ytd-watch-flexy-sidebar-width);
-                top: calc(52px + var(--topHeaderMargin));
+                top: calc(50px + var(--topHeaderMargin));
                 left: 0;
                 margin: 0;
                 z-index: 5;
@@ -1998,7 +2031,7 @@
 
             ytd-watch-flexy:not([fullscreen]) #playlist {
                 position: absolute;
-                top: calc(52px + var(--topHeaderMargin));
+                top: calc(50px + var(--topHeaderMargin));
                 width: var(--ytd-watch-flexy-sidebar-width);
                 left: 0;
                 margin: 0;
@@ -2102,7 +2135,7 @@
 
                     #title ytd-badge-supported-renderer:not([hidden]) {
                         bottom: 0;
-                        transform: translate(52px, calc(100% + 5px));
+                        transform: translate(48px, calc(100% + 5px));
                     }
                 }
 
@@ -2115,6 +2148,43 @@
 
                     #container.ytd-playlist-panel-renderer {
                         max-height: var(--ytd-watch-flexy-panel-max-height) !important;
+
+                        ytd-playlist-panel-video-renderer[selected][use-color-palette],
+                        ytd-playlist-panel-video-renderer[selected][use-color-palette]:hover:not(.dragging) {
+                            background-color: var(--yt-spec-background);
+                        }
+
+                        ytd-playlist-panel-video-renderer[selected][use-color-palette] {
+                            #video-title.ytd-playlist-panel-video-renderer {
+                                color: var(--yt-text-primary);
+                            }
+
+                            #index.ytd-playlist-panel-video-renderer,
+                            #byline.ytd-playlist-panel-video-renderer,
+                            #play-icon.ytd-playlist-panel-video-renderer,
+                            #video-info.ytd-playlist-panel-video-renderer {
+                                color: var(--yt-text-secondary);
+                            }
+                        }
+
+                        ytd-playlist-panel-video-renderer.ytd-playlist-panel-renderer {
+                            padding: 4px 0 !important;
+                        }
+
+                        #thumbnail-container.ytd-playlist-panel-video-renderer {
+                            width: 37%;
+                            height: fit-content;
+                            aspect-ratio: 16 / 9;
+
+                            > ytd-thumbnail.ytd-playlist-panel-video-renderer {
+                                width: 100%;
+                                height: 100%;
+                            }
+                        }
+
+                        #menu.ytd-playlist-panel-video-renderer {
+                            display: none;
+                        }
                     }
 
                     ytd-live-chat-frame:not([no-border]),
@@ -2129,12 +2199,12 @@
                     ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-posts] {
                         z-index: 2026 !important;
                         max-height: unset !important;
-                        margin-top: -52px !important;
+                        margin-top: -50px !important;
                     }
 
                     #title ytd-badge-supported-renderer:not([hidden]) {
                         bottom: unset;
-                        transform: translate(52px, calc(500% + 12px));
+                        transform: translate(48px, calc(500% + 12px));
                     }
 
                     #primary #below {
@@ -2162,6 +2232,12 @@
                             width: 85%;
                             margin-left: 0 !important;
                         }
+                    }
+
+                    .ytd-watch-flexy[target-id="engagement-panel-macro-markers-description-chapters"] h3.ytd-macro-markers-list-item-renderer {
+                        line-clamp: 4;
+                        -webkit-line-clamp: 4;
+                        max-height: unset;
                     }
                 }
 
@@ -2406,6 +2482,7 @@
             }
 
             ytd-compact-video-renderer:hover,
+            .ytwFactoidRendererColorSampledHost,
             #topic-link a#topic-link-container:hover,
             .yt-video-attribute-view-model--clickable:hover,
             .ytVideoAttributeViewModelContentContainer:hover,
@@ -2677,7 +2754,7 @@
             &.CentAnni-style-compact-layout-video {
                 ytd-watch-flexy {
                     &[default-layout] #title ytd-badge-supported-renderer:not([hidden]) {
-                        transform: translate(52px, calc(350% + 12px));
+                        transform: translate(48px, calc(350% + 12px));
                     }
 
                     &[theater]:has(ytd-badge-supported-renderer:not([hidden])) #bottom-row.ytd-watch-metadata {
@@ -2711,8 +2788,9 @@
             }
 
             &:not([dark]) .CentAnni-tabView-header,
+            ytd-watch-flexy .header.ytd-playlist-panel-renderer,
+            ytd-watch-flexy ytd-engagement-panel-section-list-renderer #content.ytd-engagement-panel-section-list-renderer,
             ytd-watch-flexy #top-row.ytd-watch-metadata .ytSpecButtonShapeNextSizeM:not(:hover, .ytSpecButtonShapeNextFilled),
-            ytd-engagement-panel-section-list-renderer[match-content-theme] #content.ytd-engagement-panel-section-list-renderer,
             ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer:not([is-expanded]) #header.ytd-expandable-metadata-renderer:hover {
                 background: transparent;
             }
@@ -2735,6 +2813,10 @@
             ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] #content ytd-section-list-renderer > #contents {
                 overflow-y: auto;
                 overflow-x: hidden;
+            }
+
+            .ytwMarkdownDivHostEnableDefaultStyling strong {
+                color: var(--CentAnniRed);
             }
 
             /* SponsorBlock adjustments */
@@ -2793,7 +2875,7 @@
             &:fullscreen ytd-watch-flexy {
                 #related.ytd-watch-flexy,
                 #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer {
-                    top: 52px;
+                    top: 50px;
                 }
             }
 
@@ -2962,17 +3044,17 @@
 
             &.CentAnni-style-max-panel {
                 tp-yt-iron-dropdown:has([menu-style="multi-page-menu-style-type-notifications"]) {
-                    top: 52px !important;
+                    top: 50px !important;
                 }
 
                 ytd-app:not([fullscreen]) {
-                    --ytd-masthead-height-absolute: 52px !important;
-                    --ytd-masthead-height: 52px !important;
-                    --ytd-toolbar-height: 52px !important;
+                    --ytd-masthead-height-absolute: 50px !important;
+                    --ytd-masthead-height: 50px !important;
+                    --ytd-toolbar-height: 50px !important;
 
                     #container.ytd-masthead,
                     #background.ytd-masthead {
-                        height: 52px !important;
+                        height: 50px !important;
                     }
 
                     &:has(ytd-watch-flexy:not([is-vertical-video_])) #masthead-container:not(:has(#masthead[theater])) {
@@ -3001,11 +3083,18 @@
                 #CentAnni-playback-speed-popup {
                     top: var(--CentAnniTabViewHeader);
                 }
+
+                .button-tooltip {
+                    top: calc(anchor(bottom) + 5px);
+
+                    + .button-tooltip-arrow {
+                        top: calc(anchor(bottom) + 1px);
+                    }
+                }
             }
 
-            /* restore delimiter, views, and date */
-            &.tabView-tab-3 {
-                .ytContentMetadataViewModelDelimiter {
+            &.tabView-tab-3 .ytLockupMetadataViewModelMoveLockupOverflowMenuToBottomRight span[aria-label] {
+                + .ytContentMetadataViewModelDelimiter {
                     line-height: 0 !important;
                     font-size: 0 !important;
                     margin: 0 !important;
@@ -3110,7 +3199,7 @@
             }
 
             ytd-watch-flexy [target-id="engagement-panel-searchable-transcript"] span.bold.style-scope.yt-formatted-string {
-                color: rgb(253, 1, 48);
+                color: var(--CentAnniRed);
             }
 
             &[dark] {
@@ -3774,11 +3863,6 @@
                 border-radius: 0 3px 3px 0;
             }
 
-            ytd-expandable-metadata-renderer:not([is-expanded]) {
-                --yt-img-border-radius: 0px;
-                border-radius: 0px;
-            }
-
             .desktopShortsPlayerControlsWizHost {
                 left: 0;
                 right: 0;
@@ -3789,32 +3873,44 @@
                 border-radius: 18px;
             }
 
-            .ytp-delhi-modern .ytp-right-controls-left > .ytp-button,
-            .ytp-delhi-modern .ytp-right-controls-right > .ytp-button {
-                border-radius: 0 !important;
-                overflow: hidden;
-            }
+            &.is-watch-page {
+                ytd-expandable-metadata-renderer:not([is-expanded]) {
+                    --yt-img-border-radius: 0px;
+                    border-radius: 0px;
+                }
 
-            .ytp-delhi-modern .ytp-right-controls-left .ytp-autonav-toggle,
-            .ytp-delhi-modern .ytp-right-controls-left .ytp-autonav-toggle::before {
-                border-top-left-radius: 40px !important;
-                border-bottom-left-radius: 40px !important;
-            }
+                .ytp-delhi-modern .ytp-right-controls-left > .ytp-button,
+                .ytp-delhi-modern .ytp-right-controls-right > .ytp-button {
+                    border-radius: 0 !important;
+                    overflow: hidden;
+                }
 
-            .ytp-delhi-modern .ytp-right-controls-right > .ytp-button:last-of-type,
-            .ytp-delhi-modern .ytp-right-controls-right > .ytp-button:last-of-type::before {
-                border-top-right-radius: 40px !important;
-                border-bottom-right-radius: 40px !important;
-            }
+                .ytp-delhi-modern .ytp-right-controls-left .ytp-autonav-toggle,
+                .ytp-delhi-modern .ytp-right-controls-left .ytp-autonav-toggle::before {
+                    border-top-left-radius: 40px !important;
+                    border-bottom-left-radius: 40px !important;
+                }
 
-            .ytp-delhi-modern .ytp-chrome-controls .ytp-next-button:not(.ytp-miniplayer-button-container>*).ytp-playlist-ui {
-                border-radius: 50%;
-                margin-left: 3px;
-                width: 40px;
-            }
+                .ytp-delhi-modern .ytp-right-controls-right > .ytp-button:last-of-type,
+                .ytp-delhi-modern .ytp-right-controls-right > .ytp-button:last-of-type::before {
+                    border-top-right-radius: 40px !important;
+                    border-bottom-right-radius: 40px !important;
+                }
 
-            .ytp-delhi-modern .ytp-chrome-controls .ytp-next-button:not(.ytp-miniplayer-button-container>*).ytp-playlist-ui > svg {
-                padding: 0 10px;
+                .ytp-delhi-modern .ytp-chrome-controls .ytp-next-button:not(.ytp-miniplayer-button-container>*).ytp-playlist-ui {
+                    border-radius: 50%;
+                    margin-left: 3px;
+                    width: 40px;
+                }
+
+                .ytp-delhi-modern .ytp-chrome-controls .ytp-next-button:not(.ytp-miniplayer-button-container>*).ytp-playlist-ui > svg {
+                    padding: 0 10px;
+                }
+
+                .ytwYouChatChipsDataChip,
+                .ytChatUserTurnViewModelTextContainer {
+                    border-radius: 0 7px 0 0;
+                }
             }
 
             /* chamfered corners */
@@ -4552,7 +4648,7 @@
                 #playlist,
                 #related,
                 &:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer {
-                    top: 52px !important;
+                    top: 50px !important;
                 }
 
                 &[default-layout] #below {
@@ -5013,6 +5109,7 @@
         .is-watch-page #masthead-container.ytd-app:not(:has(yt-searchbox [placeholder])),
         .CentAnni-style-hide-info-panel :is(#middle-row, ytd-info-panel-container-renderer),
         .CentAnni-style-hide-playables ytd-rich-section-renderer:has(a[href^="/playables"]),
+        .CentAnni-style-hide-ask-btn #actions-inner yt-button-view-model:has(path[d^="M480"]),
         .CentAnni-style-hide-share-btn #below #top-level-buttons-computed yt-button-view-model,
         .CentAnni-style-hide-miniplayer :is(ytd-miniplayer, #ytd-player .ytp-miniplayer-button),
         .CentAnni-style-hide-autoplay-btn button.ytp-autonav-toggle:has([aria-checked="false"]),
@@ -5189,8 +5286,8 @@
 
         /* selection color */
         html.CentAnni-style-selection-color ::selection {
+            color: contrast-color(var(--selectionColor));
             background: var(--selectionColor);
-            color: white;
         }
 
         html.CentAnni-style-selection-color .ytSearchboxComponentInputBoxHasFocus {
@@ -5347,40 +5444,60 @@
         }
 
         /* favorites watch later list */
-        html.yt-watch-later ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer:has(a:is(wl-gold)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))) #index-container {
-            background-color: gold;
-        }
+        html.yt-watch-later ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer {
+            &:has(a:is(wl-gold)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))) {
+                #index-container {
+                    background-color: gold;
+                }
 
-        html.yt-watch-later ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer:has(a:is(wl-gold)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))):hover {
-            background-color: rgba(255, 215, 0, .17);
-        }
+                &:hover {
+                    background-color: rgba(255, 215, 0, .17);
+                }
+            }
 
-        html.yt-watch-later ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer:has(a:is(wl-silver)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))) #index-container {
-            background-color: silver;
-        }
+            &:has(a:is(wl-silver)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))) {
+                #index-container {
+                    background-color: silver;
+                }
 
-        html.yt-watch-later ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer:has(a:is(wl-silver)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))):hover {
-            background-color: rgba(192, 192, 192, .17);
-        }
+                &:hover {
+                    background-color: rgba(192, 192, 192, .17);
+                }
+            }
 
-        html.yt-watch-later ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer:has(a:is(wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))) #index-container {
-            background-color: #CD7F32;
-        }
+            &:has(a:is(wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))) {
+                #index-container {
+                    background-color: var(--bronze-color);
+                }
 
-        html.yt-watch-later ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer:has(a:is(wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))):hover {
-            background-color: rgba(205, 127, 50, .17);
-        }
+                &:hover {
+                    background-color: rgba(205, 127, 50, .17);
+                }
+            }
 
-        html.yt-watch-later ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer:has(a:is(wl-gold,wl-silver,wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))) #index {
-            color: black;
-        }
+            &:has(a:is(wl-gold, wl-silver, wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))) {
+                padding: 8px 0;
 
-        html.yt-watch-later ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer:has(a:is(wl-gold,wl-silver,wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))) #content.ytd-playlist-video-renderer {
-            padding: 0;
-        }
+                #index {
+                    color: black;
+                }
 
-        html.yt-watch-later ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer:has(a:is(wl-gold,wl-silver,wl-bronze)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))) {
-            padding: 8px 0;
+                #content.ytd-playlist-video-renderer {
+                    padding: 0;
+                }
+            }
+
+            #container {
+                align-items: center;
+            }
+
+            &:has(.ytBadgeShapeThumbnailLive) {
+                background: linear-gradient(to right, transparent 0, transparent 236px, rgba(225, 0, 45, .9));
+
+                &:hover {
+                    background: linear-gradient(to right, transparent 0, transparent 117px, rgba(225, 0, 45, .9));
+                }
+            }
         }
     `;
 
@@ -5455,6 +5572,7 @@
         progressbarColorPicker: '#FF0033',
         lightModeSelectionColor: '#000000',
         darkModeSelectionColor: '#007CC3',
+        defaultChannelPage: 'home',
         textTransform: 'none',
         defaultFontSize: 10,
         selectionColor: false,
@@ -5584,7 +5702,6 @@
         enableCinemaMode: false,
         maxVidSize: false,
         expandVideoDescription: false,
-        channelReindirizzare: false,
         channelRSSBtn: false,
         channelPlaylistBtn: false,
         playlistDirectionBtns: true,
@@ -5784,7 +5901,6 @@
         // features css
         const isDarkMode = docElement.hasAttribute('dark');
         docElement.classList.toggle('CentAnni-style-search-position', USER_CONFIG.searchPosition !== 0);
-        docElement.classList.toggle('CentAnni-btn-tooltip', USER_CONFIG.hideOwnAvatar && USER_CONFIG.hideNotificationBtn);
         docElement.classList.toggle('CentAnni-style-visible-country-code', USER_CONFIG.visibleCountryCode && USER_CONFIG.hideBrandText);
         docElement.style.setProperty('--itemsPerRow', USER_CONFIG.videosPerRow);
         docElement.style.setProperty('--textTransform', USER_CONFIG.textTransform);
@@ -5797,7 +5913,7 @@
         docElement.style.setProperty('--progressBarColor', USER_CONFIG.progressbarColorPicker);
         docElement.style.setProperty('--selectionColor', isDarkMode ? USER_CONFIG.darkModeSelectionColor : USER_CONFIG.lightModeSelectionColor);
         docElement.style.setProperty('--countryCodeColor', USER_CONFIG.visibleCountryCodeColor);
-        if (USER_CONFIG.maxPanelHeight) docElement.style.setProperty('--mastheadHeight', '52px');
+        if (USER_CONFIG.maxPanelHeight) docElement.style.setProperty('--mastheadHeight', '50px');
 
         // color code videos
         docElement.style.setProperty('--liveVideo', isDarkMode ? USER_CONFIG.videosAgeColorPickerLive : USER_CONFIG.videosAgeColorPickerLiveLight);
@@ -6409,12 +6525,27 @@
             const videosWatchedOpacity = createSliderInputField('Change Opacity of Watched Videos (default 0.5):', 'videosWatchedOpacity', USER_CONFIG.videosWatchedOpacity, '0', '1', '0.1');
             form.appendChild(videosWatchedOpacity);
 
-            // title text transform
-            form.appendChild(createSelectField('Title Case:', 'label-Text-Transform', 'textTransform', USER_CONFIG.textTransform, {
-                'uppercase': 'uppercase - THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.',
-                'lowercase': 'lowercase - the quick brown fox jumps over the lazy dog.',
-                'capitalize': 'capitalize - The Quick Brown Fox Jumps Over The Lazy Dog.',
-                'none': 'none (default) - The quick brown fox jumps over the lazy dog.'
+            if (!labeledLanguageOptions) createLabeledLanguageOptions();
+            const { standard: standardLanguageOptions, withOff: languageOptionsWithOff } = labeledLanguageOptions;
+
+            // default audio language
+            form.appendChild(createSelectField('Audio Language:', 'label-audio-language', 'defaultAudioLanguage', USER_CONFIG.defaultAudioLanguage, standardLanguageOptions));
+
+            // default subtitle language
+            form.appendChild(createSelectField('Subtitle Language:', 'label-subtitle-language', 'defaultSubtitleLanguage', USER_CONFIG.defaultSubtitleLanguage, languageOptionsWithOff));
+
+            // default transcript language in legacy panel
+            form.appendChild(createSelectField('Legacy Transcript Panel Language:', 'label-transcript-language', 'defaultTranscriptLanguage', USER_CONFIG.defaultTranscriptLanguage, standardLanguageOptions));
+
+            // default channel page
+            form.appendChild(createSelectField('Default Channel Page:', 'label-channel-page', 'defaultChannelPage', USER_CONFIG.defaultChannelPage, {
+                'home': 'Home (default)',
+                'videos': 'Videos',
+                'shorts': 'Shorts',
+                'streams': 'Live',
+                'podcasts': 'Podcasts',
+                'playlists': 'Playlists',
+                'posts': 'Posts'
             }));
 
             // default video quality
@@ -6433,17 +6564,13 @@
                 'lowest': 'Lowest Available'
             }));
 
-            if (!labeledLanguageOptions) createLabeledLanguageOptions();
-            const { standard: standardLanguageOptions, withOff: languageOptionsWithOff } = labeledLanguageOptions;
-
-            // default audio language
-            form.appendChild(createSelectField('Audio Language:', 'label-audio-language', 'defaultAudioLanguage', USER_CONFIG.defaultAudioLanguage, standardLanguageOptions));
-
-            // default subtitle language
-            form.appendChild(createSelectField('Subtitle Language:', 'label-subtitle-language', 'defaultSubtitleLanguage', USER_CONFIG.defaultSubtitleLanguage, languageOptionsWithOff));
-
-            // default transcript language in legacy panel
-            form.appendChild(createSelectField('Legacy Transcript Panel Language:', 'label-transcript-language', 'defaultTranscriptLanguage', USER_CONFIG.defaultTranscriptLanguage, standardLanguageOptions));
+            // title text transform
+            form.appendChild(createSelectField('Title Case:', 'label-Text-Transform', 'textTransform', USER_CONFIG.textTransform, {
+                'uppercase': 'uppercase - THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.',
+                'lowercase': 'lowercase - the quick brown fox jumps over the lazy dog.',
+                'capitalize': 'capitalize - The Quick Brown Fox Jumps Over The Lazy Dog.',
+                'none': 'none (default) - The quick brown fox jumps over the lazy dog.'
+            }));
 
             // font size
             const defaultFontSizeField = createNumberInputField('Font Size (default: 10)', 'defaultFontSize', USER_CONFIG.defaultFontSize);
@@ -6471,11 +6598,17 @@
             playSpeed.classList.add('button-icons', 'features-text');
             form.appendChild(playSpeed);
 
+            // info for playback speed
+            const descriptionPlaybackSpeed = document.createElement('small');
+            descriptionPlaybackSpeed.textContent = `To save a custom playback speed for a channel, set the desired speed on a video page first, then click the playback speed display.\nKeyboard shortcuts:\n   • "${USER_CONFIG.playbackSpeedDecrease}" or "<" to slow down the video playback rate by 0.25x\n   • "${USER_CONFIG.playbackSpeedToggle}" to toggle between 1x and the saved speed for VODs\n   • "${USER_CONFIG.playbackSpeedIncrease}" or ">" to speed up the video playback rate by 0.25x`;
+            descriptionPlaybackSpeed.classList.add('CentAnni-info-text', 'playback-speed');
+            form.appendChild(descriptionPlaybackSpeed);
+
             // playback speed
             const playbackSpeedContainer = document.createElement('div');
             playbackSpeedContainer.className = 'playback-speed-container';
 
-            const playbackSpeed = createCheckboxField('Enabled (default: on)\nkey toggles: A: -0.25x | S: toggle 1x/set speed | D: +0.25x', 'playbackSpeed', USER_CONFIG.playbackSpeed);
+            const playbackSpeed = createCheckboxField('Enabled (default: on)', 'playbackSpeed', USER_CONFIG.playbackSpeed);
             const playbackSpeedValue = createNumberInputField('Playback Speed for VODs\n(defaults to 1x for live videos)', 'playbackSpeedValue', USER_CONFIG.playbackSpeedValue);
 
             playbackSpeedContainer.appendChild(playbackSpeedValue);
@@ -6600,10 +6733,6 @@
             // close chat window
             const closeChatWindow = createCheckboxField('Auto Close Initial Chat Windows (default: off)', 'closeChatWindow', USER_CONFIG.closeChatWindow);
             form.appendChild(closeChatWindow);
-
-            // channel default videos page
-            const channelReindirizzare = createCheckboxField('"Videos" Tab as Default on Channel Pages (default: off)', 'channelReindirizzare', USER_CONFIG.channelReindirizzare);
-            form.appendChild(channelReindirizzare);
 
             // rss feed button on channel page
             const channelRSSBtn = createCheckboxField('Add RSS Feed Button to Channel Pages (default: off)', 'channelRSSBtn', USER_CONFIG.channelRSSBtn);
@@ -7722,6 +7851,7 @@
         if (subPanelCustomCSS) {
             USER_CONFIG.settingsGuide = subPanelCustomCSS.elements.settingsGuide.checked;
             USER_CONFIG.preventBackgroundExecution = subPanelCustomCSS.elements.preventBackgroundExecution.checked;
+            USER_CONFIG.defaultChannelPage = subPanelCustomCSS.elements.defaultChannelPage.value;
             USER_CONFIG.textTransform = subPanelCustomCSS.elements.textTransform.value;
             USER_CONFIG.defaultFontSize = parseFloat(subPanelCustomCSS.elements.defaultFontSize.value);
             USER_CONFIG.videosWatchedOpacity = parseFloat(subPanelCustomCSS.elements.videosWatchedOpacity.value);
@@ -7843,7 +7973,6 @@
             USER_CONFIG.enableCinemaMode = subPanelCustomCSS.elements.enableCinemaMode.checked;
             USER_CONFIG.maxVidSize = subPanelCustomCSS.elements.maxVidSize.checked;
             USER_CONFIG.expandVideoDescription = subPanelCustomCSS.elements.expandVideoDescription.checked;
-            USER_CONFIG.channelReindirizzare = subPanelCustomCSS.elements.channelReindirizzare.checked;
             USER_CONFIG.channelRSSBtn = subPanelCustomCSS.elements.channelRSSBtn.checked;
             USER_CONFIG.channelPlaylistBtn = subPanelCustomCSS.elements.channelPlaylistBtn.checked;
             USER_CONFIG.playlistDirectionBtns = subPanelCustomCSS.elements.playlistDirectionBtns.checked;
@@ -8170,6 +8299,7 @@
                 // button wrapper
                 const buttonWrapper = document.createElement('div');
                 buttonWrapper.classList.add('CentAnni-button-wrapper', id);
+                buttonWrapper.style.setProperty('--centanni-tooltip-anchor', `--${id}-tooltip`);
 
                 // buttons
                 const button = document.createElement('button');
@@ -8189,26 +8319,11 @@
                 // tooltip arrow
                 const arrowDiv = document.createElement('div');
                 arrowDiv.classList.add('button-tooltip-arrow');
-                tooltipDiv.appendChild(arrowDiv);
-
-                // show and hide tooltip on hover
-                let tooltipTimeout;
-                button.addEventListener('mouseenter', () => {
-                    tooltipTimeout = setTimeout(() => {
-                        tooltipDiv.style.visibility = 'visible';
-                        tooltipDiv.style.opacity = '1';
-                    }, 700);
-                });
-
-                button.addEventListener('mouseleave', () => {
-                    clearTimeout(tooltipTimeout);
-                    tooltipDiv.style.visibility = 'hidden';
-                    tooltipDiv.style.opacity = '0';
-                });
 
                 // append button elements
                 buttonWrapper.appendChild(button);
                 buttonWrapper.appendChild(tooltipDiv);
+                buttonWrapper.appendChild(arrowDiv);
                 id === 'transcript-settings-button' && USER_CONFIG.settingsGuide && headerElement ? (settingsBtnMoved = buttonWrapper, headerElement.append(buttonWrapper)) : endElement.prepend(buttonWrapper);
             });
         } else {
@@ -8244,13 +8359,13 @@
 
     function createButtons(buttonType = 'all') {
         const allButtons = {
-            settings: USER_CONFIG.settingsGuide && settingsBtnMoved?.isConnected ? null : { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy Settings', ariaLabel: 'YouTube Alchemy Settings.' },
-            download: { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download Transcript as a Text File', ariaLabel: 'Download Transcript as a Text File.' },
-            copy: { id: 'transcript-copy-button', text: USER_CONFIG.buttonIcons.copy, clickHandler: handleCopyClick, tooltip: 'Copy Transcript to Clipboard', ariaLabel: 'Copy Transcript to Clipboard.' },
-            chatgpt: { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy Transcript with a Prompt and Open ${ChatGPTLabel}`, ariaLabel: `Copy Transcript to Clipboard with a Prompt and Open ${ChatGPTLabel}.` },
-            notebooklm: { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: `Copy Transcript and Open ${NotebookLMLabel}`, ariaLabel: `Copy Transcript to Clipboard and Open ${NotebookLMLabel}.` },
-            lazyload: { id: 'transcript-lazy-button', text: USER_CONFIG.buttonIcons.lazyLoad, clickHandler: runYTE, tooltip: 'Load the Transcript', ariaLabel: 'Load the Transcript.' },
-            error: { id: 'transcript-error-button', text: '⚠️', clickHandler: transcriptError, tooltip: 'Retry Loading Transcript', ariaLabel: 'Retry Loading Transcript.' }
+            settings: USER_CONFIG.settingsGuide && settingsBtnMoved?.isConnected ? null : { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy settings', ariaLabel: 'YouTube Alchemy settings' },
+            download: { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download transcript as a text file', ariaLabel: 'Download transcript as a text file' },
+            copy: { id: 'transcript-copy-button', text: USER_CONFIG.buttonIcons.copy, clickHandler: handleCopyClick, tooltip: 'Copy transcript to clipboard', ariaLabel: 'Copy transcript to clipboard' },
+            chatgpt: { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy transcript with a prompt and open ${ChatGPTLabel}`, ariaLabel: `Copy transcript to clipboard with a prompt and open ${ChatGPTLabel}` },
+            notebooklm: { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: `Copy transcript and open ${NotebookLMLabel}`, ariaLabel: `Copy transcript to clipboard and open ${NotebookLMLabel}` },
+            lazyload: { id: 'transcript-lazy-button', text: USER_CONFIG.buttonIcons.lazyLoad, clickHandler: runYTE, tooltip: 'Load the transcript', ariaLabel: 'Load the transcript' },
+            error: { id: 'transcript-error-button', text: '⚠️', clickHandler: transcriptError, tooltip: 'Retry loading transcript', ariaLabel: 'Retry loading transcript' }
         };
 
         let buttonsToCreate = [];
@@ -8835,6 +8950,7 @@
         const removeWatchFlexyAttrs = () => {
             watchFlexyElement.removeAttribute('split-scroll');
             watchFlexyElement.removeAttribute('show-fixed-side-menu');
+            watchFlexyElement.removeAttribute('fixed-default-panels');
             if (isDefault && currentActiveTab === 'tab-1') videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
         };
         const watchFlexyAttrsObserver = new MutationObserver(() => removeWatchFlexyAttrs());
@@ -8942,6 +9058,7 @@
             document.removeEventListener('yt-autonav-pause-player-ended', exitFullscreen);
             const activeTabId = currentActiveTab || (isTheaterMode ? lastActiveTab : null);
             contentSectionById[activeTabId]?.classList.remove('active');
+            docElement.classList.remove('tabView-tab-3');
             watchFlexyAttrsObserver.disconnect();
             setTabPanelState(activeTabId, false);
             clearTimeout(mastheadWidthTimer);
@@ -9076,6 +9193,7 @@
 
             if (tabId === 'tab-3') {
                 if (!videoMore?.isConnected) return;
+                docElement.classList.toggle('tabView-tab-3', show);
                 if (show) {
                     videoMore.classList.add('CentAnni-tabView-content-attiva');
                     videoMore.classList.remove('CentAnni-tabView-content-nascosta');
@@ -9938,7 +10056,7 @@
             }
 
             const currentTime = video.currentTime;
-            for (const seg of cachedSegmentTimes) seg.el.classList.toggle('segment-watched', seg.end <= currentTime);
+            for (const seg of cachedSegmentTimes) seg.el.classList.toggle('segment-watched', seg.end <= currentTime + .5);
         };
 
         const bar = document.createElement('div');
@@ -10400,7 +10518,7 @@
                 'sv': 'Kvalitet',
                 'uk': 'Якість',
                 'vi': 'Chất lượng',
-                'zh': '质量'
+                'zh': '画质'
             };
 
             const settingsPanel = 'ytd-watch-flexy .ytp-settings-menu';
@@ -10847,8 +10965,7 @@
         }
 
         // update last seen video ID
-        if (newLastSeenID && newLastSeenID !== lastSeenID)
-            await GM.setValue(key, newLastSeenID);
+        if (newLastSeenID && newLastSeenID !== lastSeenID) await GM.setValue(key, newLastSeenID);
 
         // scroll to the last seen video
         if (USER_CONFIG.lastSeenVideoScroll && targetElement) {
@@ -11917,7 +12034,7 @@
 
     // redirect channel page to videos
     function channelRedirect() {
-        window.location.href = window.location.href.replace(/\/$/, '') + '/videos';
+        window.location.href = window.location.href.replace(/\/$/, '') + `/${USER_CONFIG.defaultChannelPage}`;
     }
 
     // redirect shorts to video page
@@ -12204,7 +12321,7 @@
         const languages = {
             auto: 'Auto (default)',
             english: 'English',
-            chinese: 'Chinese - 中文',
+            chinese: 'Chinese - 中文 (简体)',
             french: 'French - Français',
             german: 'German - Deutsch',
             italian: 'Italian - Italiano',
@@ -12347,7 +12464,7 @@
             case 'sv': return { live: ['tittare', 'direkt'], upcoming: ['väntar', 'planerat till'], streamed: ['sändes'] };
             case 'uk': return { live: ['глядачів', 'наживо'], upcoming: ['очікує', 'заплановано на'], streamed: ['трансляція'] };
             case 'vi': return { live: ['đang xem', 'trực tiếp'], upcoming: ['đang chờ', 'đã lên lịch'], streamed: ['đã phát trực tiếp'] };
-            case 'zh': return { live: ['人正在观看', '直播'], upcoming: ['正在等待', '计划于'], streamed: ['已直播'] };
+            case 'zh': return { live: ['人正在观看', '直播'], upcoming: ['正在等待', '预定发布时间'], streamed: ['直播时间'] };
             default: return { live: ['watching', 'live'], upcoming: ['waiting', 'scheduled for'], streamed: ['streamed'] };
         }
     }
@@ -12374,11 +12491,11 @@
                 live: keywords.live,
                 upcoming: keywords.upcoming,
                 streamed: keywords.streamed,
-                newly: uniq([[1, 'day'], [2, 'hour'], [1, 'hour'], [2, 'minute'], [1, 'minute'], [2, 'second'], [1, 'second']].map(([n, u]) => format(n, u))),
-                recent: uniq([[1, 'week'], [7, 'day'], [6, 'day'], [5, 'day'], [4, 'day'], [3, 'day'], [2, 'day']].map(([n, u]) => format(n, u))),
-                lately: uniq([[1, 'month'], [2, 'week'], [14, 'day'], [13, 'day'], [12, 'day'], [11, 'day'], [10, 'day'], [9, 'day'], [8, 'day']].map(([n, u]) => format(n, u))),
+                old: uniq([[2, 'year'], [1, 'year']].map(([n, u]) => format(n, u))),
                 latterly: uniq([12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2].map(n => format(n, 'month'))),
-                old: uniq([[2, 'year'], [1, 'year']].map(([n, u]) => format(n, u)))
+                lately: uniq([[1, 'month'], [2, 'week'], [14, 'day'], [13, 'day'], [12, 'day'], [11, 'day'], [10, 'day'], [9, 'day'], [8, 'day']].map(([n, u]) => format(n, u))),
+                recent: uniq([[1, 'week'], [7, 'day'], [6, 'day'], [5, 'day'], [4, 'day'], [3, 'day'], [2, 'day']].map(([n, u]) => format(n, u))),
+                newly: uniq([[1, 'day'], [2, 'hour'], [1, 'hour'], [2, 'minute'], [1, 'minute'], [2, 'second'], [1, 'second']].map(([n, u]) => format(n, u)))
             };
         }
 
@@ -12685,7 +12802,7 @@
             isSubscriptionsPage = pn === '/feed/subscriptions';
             isChannelPage = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)/.test(pn);
             isChannelHome = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)$/.test(pn);
-            if (USER_CONFIG.channelReindirizzare && isChannelHome) { channelRedirect(); return; }
+            if (USER_CONFIG.defaultChannelPage !== 'home' && isChannelHome) { channelRedirect(); return; }
             if (USER_CONFIG.redirectShorts && isShortPage) { redirectShortsToVideoPage(); return; }
             if (isWatchPage || isShortPage) {
                 lastVideoID = videoID;
