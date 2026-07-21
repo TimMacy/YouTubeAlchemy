@@ -1,0 +1,28 @@
+name: Feature Request
+description: Suggest an idea for this project.
+labels: [enhancement]
+body:
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      options:
+        - label: The requested feature would improve the quality of the script and provide users with a better viewing experience on YouTube.
+          required: true
+        - label: I've read the [README](https://github.com/TimMacy/YouTubeAlchemy#youtube-alchemy-) and confirmed that the requested feature doesn't already exist.
+          required: true
+        - label: I searched the [existing issues](https://github.com/TimMacy/YouTubeAlchemy/issues) and confirmed that this feature has not already been requested.
+          required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the feature
+      placeholder: Provide a clear description of the requested feature. On which page should it appear, and what should happen? How would it benefit users? Do any other userscripts or browser extensions already provide this feature? If so, why should it also be implemented in YouTube Alchemy?
+    validations:
+      required: true
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Upload screenshots
+      description: Add screenshots to help demonstrate the problem the feature would solve.
+    validations:
+      required: false
