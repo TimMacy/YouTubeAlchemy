@@ -1,0 +1,66 @@
+name: Bug Report
+description: Report a bug for the current YouTube version.
+labels: [bug]
+body:
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      options:
+        - label: I've verified that the issue persists in the latest available [userscript version](https://github.com/TimMacy/YouTubeAlchemy/blob/main/YouTubeAlchemy.js).
+          required: true
+        - label: The issue persists with the default settings, or I have identified the specific setting that causes it.
+          required: true
+        - label: I disabled all other browser extensions and userscripts to rule out conflicts.
+          required: true
+        - label: I've read the [Minimum Browser Requirements](https://github.com/TimMacy/YouTubeAlchemy#-installation--minimum-browser-requirements) and confirmed that my setup meets all applicable requirements.
+          required: true
+        - label: I understand that YouTube's A/B tests and site-specific changes may break features that cannot be fixed until those changes roll out more broadly.
+          required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the Bug
+      placeholder: Provide a clear description of the bug, including the expected behavior and steps to reproduce the issue.
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - Selection
+        - userscript
+        - browser extension
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Operating System
+      placeholder: "e.g., macOS, Windows"
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Browser
+      placeholder: "e.g., Safari 26, Chrome Version 150 (Official Build) (arm64)"
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Script Version
+      placeholder: "e.g., v11"
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Setting
+      placeholder: "What specific setting causes the issue?"
+    validations:
+      required: false
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Upload screenshots
+      description: Add screenshots to help demonstrate the problem.
+    validations:
+      required: false
