@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.7-white.svg" alt="Version: 11.7"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.8-white.svg" alt="Version: 11.8"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -143,6 +143,7 @@ Offers various options to customize the layout and functionality of YouTube.
     - Ukrainian
     - Vietnamese
   - Default Channel Page
+    - Set Individual Default Pages for Channels
   - Video Quality:
     - Auto (default)
     - Highest Available
@@ -403,6 +404,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **11.8**: adjustments for YouTube DOM changes, bug fixes, and improvements; new feature: added "Save Default Channel Page" button on channel banners to set a different "Default Channel Page" for individual channels
 - **11.7**: adjustments for YouTube DOM changes, bug fixes, and improvements; feature changed: "'Videos' Tab as Default on Channel Pages" is now a drop-down menu "Default Channel Page"
 - **11.5**: adjustments for YouTube DOM changes and bug fixes; re-added feature: "Legacy Transcript Panel Language"
 - **11.4**: adjustments for YouTube DOM changes; new feature: "Use Legacy Transcript Panel with Modern as a Backup"; both the legacy transcript panel `target-id="engagement-panel-searchable-transcript"` and the modern `data-target-id="PAmodern_transcript_view"` are now supported
