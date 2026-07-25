@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      11.7
+// @version      11.8
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 11.7 - YouTube Alchemy                    *
+*                    Version: 11.8 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -38,23 +38,29 @@
             --CentAnniTabViewHeader: 50px;
             --topHeaderMargin: var(--ytd-margin-6x, 24px);
             --ytd-margin-0x: 16px;
+            --yt-primary: black;
+            --yt-secondary: white;
             --yt-text-primary: #0f0f0f;
             --yt-text-secondary: #606060;
             --yt-base-background: #fff;
             --yt-base-background-secondary: #f2f2f2;
             --yt-raised-background: #212121;
-            --yt-spec-background: rgba(0, 0, 0, .05);
-            --CentAnniRed: rgb(253, 1, 48);
+            --yt-spec-background: rgb(0 0 0 / .05);
+            --yt-btn-hover: rgb(0 0 0 / .1);
+            --CentAnniRed: rgb(253 1 48);
             --bronze-color: #CD7F32;
             --mastheadHeight: 56px;
         }
 
         html[dark] {
+            --yt-primary: white;
+            --yt-secondary: black;
             --yt-text-primary: #f1f1f1;
             --yt-text-secondary: #aaa;
             --yt-base-background: #0f0f0f;
             --yt-base-background-secondary: #282828;
-            --yt-spec-background: rgba(255, 255, 255, .1);
+            --yt-spec-background: rgb(255 255 255 / .1);
+            --yt-btn-hover: rgb(255 255 255 / .2);
         }
 
         .is-watch-page ytd-watch-flexy {
@@ -77,8 +83,9 @@
 
         .CentAnni-overlay {
             position: fixed;
-            display: flex;
+            display: none;
             z-index: 2053;
+            opacity: 0;
             left: 0;
             top: 0;
             width: 100%;
@@ -87,6 +94,23 @@
             justify-content: center;
             background-color: rgba(0, 0, 0, .5);
             backdrop-filter: blur(5px);
+            transition: opacity, display;
+            transition-behavior: allow-discrete;
+            transition-timing-function: linear;
+            transition-duration: .2s;
+
+            &.active {
+                display: flex;
+                opacity: 1;
+
+                @starting-style {
+                    opacity: 0;
+                }
+            }
+
+            &.reload {
+                transition: none;
+            }
         }
 
         .CentAnni-modal-content {
@@ -481,6 +505,7 @@
 
         .dropdown-item {
             padding: 15px;
+            padding-left: 1.6em;
             cursor: pointer;
             font-family: -apple-system, "Roboto", "Arial", sans-serif;
             font-size: 1.47em;
@@ -488,13 +513,27 @@
             font-weight: 400;
             color: lightgray;
             position: relative;
-            transition: background-color .3s, color .3s;
-            padding-left: 1.6em;
+            isolation: isolate;
+            transition: color .2s;
+
+            &::after {
+                content: "";
+                position: absolute;
+                z-index: -1;
+                inset: 0;
+                background-color: white;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity .2s;
+            }
 
             &.dropdown-item-selected {
                 font-weight: 600;
                 color: var(--download-color);
-                background-color: rgba(255, 255, 255, .025);
+
+                &::after {
+                    opacity: .025;
+                }
 
                 &::before {
                     content: '✓';
@@ -506,7 +545,10 @@
 
             &:hover {
                 color: ghostwhite;
-                background-color: rgba(255, 255, 255, .05);
+
+                &::after {
+                    opacity: .05;
+                }
 
                 &::before {
                     color: ghostwhite;
@@ -1137,6 +1179,11 @@
             width: 100%;
             height: 100%;
             display: none;
+            opacity: 0;
+            transition: opacity, display;
+            transition-behavior: allow-discrete;
+            transition-duration: .5s;
+            transition-timing-function: cubic-bezier(.18, .47, .3, .97);
             background-color: rgba(0, 0, 0, .5);
             font-family: "Roboto", "Arial", sans-serif;
             font-size: 9px;
@@ -1147,35 +1194,50 @@
             backdrop-filter: blur(1px);
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
-        }
 
-        .sub-panel-overlay.active {
-            display: flex;
-        }
+            .sub-panel {
+                z-index: 2177;
+                background-color: rgba(17, 17, 17, .8);
+                padding: 20px;
+                border: 1px solid rgba(255, 255, 255, .25);
+                border-radius: 8px;
+                width: 60dvw;
+                max-width: 70dvw;
+                max-height: 90dvh;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+                color: whitesmoke;
+                -webkit-font-smoothing: antialiased !important;
+                -moz-osx-font-smoothing: grayscale !important;
+                translate: 0 10dvh;
+                transition: translate .5s cubic-bezier(.18, .47, .3, .97);
 
-        .sub-panel {
-            z-index: 2177;
-            background-color: rgba(17, 17, 17, .8);
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, .25);
-            border-radius: 8px;
-            width: 60dvw;
-            max-width: 70dvw;
-            max-height: 90dvh;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            color: whitesmoke;
-            -webkit-font-smoothing: antialiased !important;
-            -moz-osx-font-smoothing: grayscale !important;
-        }
+                button {
+                    position: sticky;
+                    top: 0;
+                    align-self: flex-end;
+                    box-shadow: 0 0 20px 10px black;
+                }
+            }
 
-        .sub-panel button {
-            position: sticky;
-            top: 0;
-            align-self: flex-end;
-            box-shadow: 0 0 20px 10px black;
+            &.active {
+                display: flex;
+                opacity: 1;
+
+                .sub-panel {
+                    translate: 0 0;
+                }
+
+                @starting-style {
+                    opacity: 0;
+
+                    .sub-panel {
+                        translate: 0 -10dvh;
+                    }
+                }
+            }
         }
 
         .sub-panel-header {
@@ -1661,6 +1723,47 @@
             }
         }
 
+        /* button click animation */
+        @keyframes CentAnni-btn-stroke {
+            from {
+                border-color: color-mix(in srgb, var(--yt-primary) 20%, transparent);
+            }
+
+            to {
+                border-color: transparent;
+            }
+        }
+
+        .CentAnni-btn-feedback-shape {
+            position: relative;
+            isolation: isolate;
+
+            &:hover {
+                background-color: var(--yt-btn-hover);
+            }
+
+            &::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                box-sizing: border-box;
+                z-index: -1;
+                border: 1px solid transparent;
+                border-radius: inherit;
+                pointer-events: none;
+                background-color: transparent;
+            }
+
+            &:active::after {
+                animation: none;
+                background-color: var(--yt-spec-background);
+            }
+
+            &:focus:not(:active)::after {
+                animation: CentAnni-btn-stroke 400ms cubic-bezier(.2, 0, .6, 1);
+            }
+        }
+
         /* playback speed css */
         .CentAnni-playback-speed {
             #actions.ytd-watch-metadata {
@@ -1713,6 +1816,7 @@
             }
 
             .CentAnni-playback-speed-button {
+                outline: none;
                 cursor: pointer;
                 user-select: none;
                 -webkit-user-select: none;
@@ -1731,25 +1835,15 @@
                 border-bottom-left-radius: 0 !important;
             }
 
-            .CentAnni-playback-speed-button:active,
-            .CentAnni-playback-speed-display:active {
-                background: rgb(72, 72, 72) !important;
-            }
-
-            .CentAnni-playback-speed-button:last-child::before,
-            .CentAnni-playback-speed-button:nth-child(2)::after {
+            .CentAnni-playback-speed-display::before,
+            .CentAnni-playback-speed-button:last-child::before {
                 content: "";
-                background: rgba(255, 255, 255, .2);
+                background: var(--yt-btn-hover);
                 position: absolute;
-                right: 0;
+                left: 0;
                 top: 6px;
                 height: 24px;
                 width: 1px;
-            }
-
-            .CentAnni-playback-speed-button:last-child::before {
-                right: unset;
-                left: 0;
             }
 
             ytd-watch-metadata[flex-menu-enabled] #actions-inner.ytd-watch-metadata ytd-menu-renderer {
@@ -1859,7 +1953,7 @@
                 margin: 0;
                 padding: 0;
                 border-radius: 12px 12px 0 0;
-                border: 1px solid rgba(255, 255, 255, .2);
+                border: 1px solid var(--yt-btn-hover);
                 overflow: hidden;
                 box-sizing: border-box;
                 background-color: transparent;
@@ -1909,6 +2003,7 @@
 
             .CentAnni-tabView-tab {
                 align-items: center;
+                outline: none;
                 border: none;
                 border-radius: 8px;
                 display: inline-flex;
@@ -1920,15 +2015,15 @@
                 line-height: 2em;
                 font-weight: 500;
                 margin: 0;
-                background-color: rgba(255, 255, 255, .1);
-                color: #f1f1f1;
+                background-color: var(--yt-spec-background);
+                color: var(--yt-text-primary);
                 text-decoration: none;
                 padding: 0 12px;
                 flex: 0 0 auto;
                 z-index: 10;
 
                 &:hover {
-                    background-color: rgba(255, 255, 255, .2);
+                    background-color: var(--yt-btn-hover);
                 }
             }
 
@@ -1948,7 +2043,7 @@
             }
 
             #tab-2 {
-                border-top: 1px solid rgba(255, 255, 255, .2);
+                border-top: 1px solid var(--yt-btn-hover);
             }
 
             #donation-shelf,
@@ -1982,7 +2077,7 @@
             ytd-donation-shelf-renderer,
             #container.ytd-playlist-panel-renderer,
             ytd-engagement-panel-section-list-renderer:not([live-chat-engagement-panel]) {
-                border-radius: 0 0 12px 12px;
+                border-radius: 0 0 12px 12px !important;
             }
 
             #related.ytd-watch-flexy,
@@ -1997,7 +2092,7 @@
                 overflow-y: auto;
                 overflow-x: hidden;
                 box-sizing: border-box;
-                border: 1px solid rgba(255, 255, 255, .2);
+                border: 1px solid var(--yt-btn-hover);
                 border-top: none;
             }
 
@@ -2054,8 +2149,8 @@
                         border-radius: 18px;
 
                         &.active {
-                            background: rgba(245, 245, 245, .3);
-                            outline: 1px solid rgba(250, 250, 250, .5);
+                            background: rgb(245 245 245 / .3);
+                            outline: 1px solid rgb(250 250 250 / .4);
                         }
                     }
 
@@ -2220,17 +2315,20 @@
                         --ytd-watch-flexy-structured-description-max-height: var(--ytd-watch-flexy-panel-max-height) !important;
                     }
 
-                    &[cinematics-active] #cinematics {
-                        height: 100dvh;
-                        width: 100dvw;
-                        overflow: hidden;
-                        left: calc(-1 * var(--ytd-margin-0x)) !important;
-                        top: calc(-1 * (var(--ytd-masthead-height) + var(--ytd-margin-0x))) !important;
+                    &[cinematics-active] #cinematics-container {
+                        position: fixed;
+                        inset: 0;
 
-                        > div {
-                            height: 70% !important;
-                            width: 85%;
-                            margin-left: 0 !important;
+                        #cinematics {
+                            height: 100dvh;
+                            width: 100dvw;
+                            overflow: hidden;
+
+                            > div {
+                                height: 70% !important;
+                                width: 85%;
+                                margin-left: 0 !important;
+                            }
                         }
                     }
 
@@ -2674,6 +2772,7 @@
             ytd-watch-flexy:not([is-two-columns_])[theater] #related,
             ytd-engagement-panel-section-list-renderer ytd-merch-shelf-renderer,
             ytd-watch-flexy #top-row.ytd-watch-metadata .contribYtLightShapeHost,
+            #secondary:has(#playlist[hidden]) .CentAnni-tabView-tab[data-tab="tab-6"],
             &.CentAnni-tabView-chapters .ytp-chrome-controls .ytp-chapter-title-content,
             #description > #description-inner > #ytd-watch-info-text > tp-yt-paper-tooltip,
             ytd-watch-flexy:not([fullscreen]) #navigation-button.ytd-rich-list-header-renderer,
@@ -2683,7 +2782,9 @@
             ytd-watch-flexy:not([fullscreen]) #header.style-scope.ytd-engagement-panel-section-list-renderer,
             #ytd-watch-info-text[view-count-post-number-text][date-text-post-number-text] .CentAnni-info-date,
             ytd-expandable-video-description-body-renderer > ytd-expander > tp-yt-paper-button#more.ytd-expander,
+            .ytLockupMetadataViewModelMoveLockupOverflowMenuToBottomRight .ytLockupMetadataViewModelMenuButton:after,
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id^="shopping_panel_for_entry_point_"],
+            .ytLockupMetadataViewModelMoveLockupOverflowMenuToBottomRight .ytLockupMetadataViewModelMenuButton:before,
             ytd-watch-flexy[theater] #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create],
             ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] #collapsed-title.ytd-expandable-metadata-renderer,
             ytd-watch-flexy:not([fullscreen]) ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
@@ -2843,6 +2944,7 @@
                     ytd-transcript-search-panel-renderer,
                     ytd-transcript-segment-list-renderer,
                     ytd-transcript-section-header-renderer,
+                    .playlist-items.ytd-playlist-panel-renderer,
                     .input-container.ytd-transcript-search-box-renderer {
                         background-color: transparent;
                     }
@@ -2942,10 +3044,6 @@
                     -ms-user-select: none;
                     user-select: none;
                     cursor: default;
-                }
-
-                #CentAnni-chapter-title.disabled {
-                    display: none;
                 }
 
                 #CentAnni-chapter-title span {
@@ -3313,7 +3411,7 @@
             opacity: .8;
         }
 
-        ytd-browse[page-subtype="history"] {
+        ytd-browse[page-subtype="history"][role="main"] {
             ytd-thumbnail:has(ytd-thumbnail-overlay-resume-playback-renderer),
             yt-thumbnail-view-model:has(yt-thumbnail-overlay-progress-bar-view-model) {
                 opacity: 1;
@@ -3339,7 +3437,7 @@
         }
 
         .CentAnni-style-watched-later-header {
-            ytd-browse[page-subtype="playlist"] ytd-item-section-renderer > #header {
+            ytd-browse[page-subtype="playlist"][role="main"] ytd-item-section-renderer > #header {
                 display: none;
             }
 
@@ -3359,7 +3457,7 @@
                 text-overflow: ellipsis;
             }
 
-            ytd-two-column-browse-results-renderer.ytd-browse[page-subtype="playlist"] {
+            ytd-two-column-browse-results-renderer.ytd-browse[page-subtype="playlist"][role="main"] {
                 margin-top: -8px !important;
             }
 
@@ -3635,7 +3733,7 @@
             cursor: pointer;
         }
 
-        ytd-browse[page-subtype="home"] #contents.ytd-rich-grid-renderer {
+        ytd-browse[page-subtype="home"][role="main"] #contents.ytd-rich-grid-renderer {
             justify-content: center;
         }
 
@@ -3819,6 +3917,10 @@
                 --paper-item-focused-before-border-radius: 0;
             }
 
+            .ytdMiniplayerComponentContent {
+                border-radius: 0 0 12px 0;
+            }
+
             &.CentAnni-style-color-code-videos {
                 yt-chip-cloud-chip-renderer {
                     border-radius: 2px;
@@ -3835,13 +3937,13 @@
                 }
             }
 
-            ytd-browse[page-subtype="subscriptions"] {
+            ytd-browse[page-subtype="subscriptions"][role="main"] {
                 .CentAnni-style-last-seen {
                     border-radius: 0;
                 }
             }
 
-            ytd-browse[page-subtype="channels"] {
+            ytd-browse[page-subtype="channels"][role="main"] {
                 .yt-spec-button-shape-next--size-m {
                     border-radius: 2px;
                 }
@@ -3952,6 +4054,12 @@
             }
         }
 
+        #playlist[playlist-type="TLPQ"] #end-actions {
+            position: absolute;
+            right: 0;
+            transform: translateY(-40px);
+        }
+
         #CentAnni-channel-btn {
             display: flex;
             align-items: center;
@@ -3969,7 +4077,7 @@
             color: var(--yt-text-primary);
             font-family: "YouTube Sans", "Roboto", sans-serif;
             font-size: 1.7rem;
-            line-height: 1rem;
+            line-height: 1.5rem;
             font-weight: 600;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
@@ -4033,7 +4141,7 @@
                 --ytd-toolbar-offset: 0 !important;
             }
 
-            ytd-browse[page-subtype="hashtag-landing-page"] {
+            ytd-browse[page-subtype="hashtag-landing-page"][role="main"] {
                 transform: translateY(0px);
             }
 
@@ -4041,9 +4149,9 @@
                 margin: 0 !important;
             }
 
-            ytd-browse[page-subtype="home"],
-            ytd-browse[page-subtype="channels"],
-            ytd-browse[page-subtype="subscriptions"] {
+            ytd-browse[page-subtype="home"][role="main"],
+            ytd-browse[page-subtype="channels"][role="main"],
+            ytd-browse[page-subtype="subscriptions"][role="main"] {
                 ytd-menu-renderer .ytd-menu-renderer {
                     width: 36px;
                     height: 36px;
@@ -4126,7 +4234,7 @@
                 }
             }
 
-            ytd-browse[page-subtype="home"] {
+            ytd-browse[page-subtype="home"][role="main"] {
                 .ytLockupMetadataViewModelMenuButton,
                 ytd-menu-renderer.ytd-rich-grid-media,
                 .yt-lockup-metadata-view-model__menu-button,
@@ -4245,7 +4353,7 @@
                 }
             }
 
-            ytd-browse[page-subtype="channels"] {
+            ytd-browse[page-subtype="channels"][role="main"] {
                 ytd-tabbed-page-header.grid-5-columns #page-header.ytd-tabbed-page-header,
                 ytd-tabbed-page-header.grid-5-columns[has-inset-banner] #page-header-banner.ytd-tabbed-page-header {
                     padding: 0 !important;
@@ -4398,7 +4506,7 @@
                 }
             }
 
-            ytd-browse[page-subtype="subscriptions"] {
+            ytd-browse[page-subtype="subscriptions"][role="main"] {
                 .ytLockupMetadataViewModelMenuButton,
                 ytd-menu-renderer.ytd-rich-grid-media,
                 .yt-lockup-metadata-view-model__menu-button {
@@ -4493,7 +4601,7 @@
                 margin: 0;
             }
 
-            ytd-browse[page-subtype="playlist"],
+            ytd-browse[page-subtype="playlist"][role="main"],
             ytd-browse[has-page-header-sidebar] {
                 padding-top: 0;
             }
@@ -4952,9 +5060,9 @@
         }
 
         .CentAnni-style-hide-news-home {
-            ytd-browse[page-subtype="home"] ytd-rich-grid-renderer:not([is-filtered-feed]) ytd-rich-section-renderer:has(#rich-shelf-header yt-icon#icon[hidden]):has(#rich-shelf-header yt-img-shadow#avatar[hidden]):has(#subtitle),
-            ytd-browse[page-subtype="home"] ytd-rich-grid-renderer:not([is-filtered-feed]) ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[elements-per-row="3"][show-bottom-divider][has-expansion-button][restrict-contents-overflow] #subtitle:not(:empty)),
-            ytd-browse[page-subtype="home"] ytd-rich-grid-renderer:not([is-filtered-feed]) ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[elements-per-row="3"][show-bottom-divider][restrict-contents-overflow] #top-level-buttons-computed button) {
+            ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer:not([is-filtered-feed]) ytd-rich-section-renderer:has(#rich-shelf-header yt-icon#icon[hidden]):has(#rich-shelf-header yt-img-shadow#avatar[hidden]):has(#subtitle),
+            ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer:not([is-filtered-feed]) ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[elements-per-row="3"][show-bottom-divider][has-expansion-button][restrict-contents-overflow] #subtitle:not(:empty)),
+            ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer:not([is-filtered-feed]) ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[elements-per-row="3"][show-bottom-divider][restrict-contents-overflow] #top-level-buttons-computed button) {
                 display: none;
             }
         }
@@ -4963,15 +5071,15 @@
             a[title="Shorts"],
             #container.ytd-search ytd-reel-shelf-renderer,
             ytd-rich-item-renderer:has(a[href^="/shorts/"]),
-            ytd-browse[page-subtype="channels"] .tabGroupShapeSlider,
-            ytd-browse[page-subtype="channels"] ytd-reel-shelf-renderer,
+            ytd-browse[page-subtype="channels"][role="main"] .tabGroupShapeSlider,
+            ytd-browse[page-subtype="channels"][role="main"] ytd-reel-shelf-renderer,
             grid-shelf-view-model:has(h2 span:where(:is(:first-child))),
             yt-chip-cloud-chip-renderer[chip-shape-data*='"text":"Shorts"'],
             ytd-reel-shelf-renderer.ytd-structured-description-content-renderer,
             yt-chip-cloud-chip-renderer:has(yt-formatted-string[title="Shorts"]),
             ytd-rich-section-renderer:has(div ytd-rich-shelf-renderer[is-shorts]),
             ytd-item-section-renderer[page-subtype="subscriptions"]:has(ytd-reel-shelf-renderer),
-            ytd-browse[page-subtype="hashtag-landing-page"] tp-yt-app-toolbar.ytd-tabbed-page-header,
+            ytd-browse[page-subtype="hashtag-landing-page"][role="main"] tp-yt-app-toolbar.ytd-tabbed-page-header,
             #header #wrapper > #header > #contentContainer #tabsContent > tp-yt-paper-tab:nth-child(4),
             #tabsContent > yt-tab-group-shape > div.tabGroupShapeTabs > yt-tab-shape[tab-title="Shorts"],
             ytd-browse:not([page-subtype="history"]) ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
@@ -5025,12 +5133,12 @@
             ytd-watch-flexy #info a[style*="color: rgb(170, 170, 170)"][href="#"],
             ytd-watch-flexy #info-container span[style*="color: rgb(170, 170, 170)"],
             ytd-watch-flexy ytd-badge-supported-renderer:has(.yt-badge-shape--membership),
-            ytd-browse[page-subtype="channels"] .ytChipBarViewModelChipWrapper:has([aria-label*="Public"]),
-            ytd-browse[page-subtype="channels"] ytd-item-section-renderer:has(.badge-style-type-members-only),
-            ytd-browse[page-subtype="channels"] ytd-item-section-renderer:has(.ytd-recognition-shelf-renderer),
-            ytd-browse[page-subtype="channels"] .ytChipBarViewModelChipWrapper:has([aria-label*="Members only"]),
+            ytd-browse[page-subtype="channels"][role="main"] .ytChipBarViewModelChipWrapper:has([aria-label*="Public"]),
+            ytd-browse[page-subtype="channels"][role="main"] ytd-item-section-renderer:has(.badge-style-type-members-only),
+            ytd-browse[page-subtype="channels"][role="main"] ytd-item-section-renderer:has(.ytd-recognition-shelf-renderer),
+            ytd-browse[page-subtype="channels"][role="main"] .ytChipBarViewModelChipWrapper:has([aria-label*="Members only"]),
             ytd-rich-item-renderer:has(.yt-badge-shape__text--has-multiple-badges-in-row):has(.yt-badge-shape--commerce),
-            ytd-browse[page-subtype="channels"] ytd-section-list-renderer:not([hide-bottom-separator]):not([page-subtype=history]):not([page-subtype=memberships-and-purchases]):not([page-subtype=ypc-offers]):not([live-chat-engagement-panel]) #contents.ytd-section-list-renderer > *.ytd-section-list-renderer:not(:last-child):not(ytd-page-introduction-renderer):not([item-dismissed]):not([has-destination-shelf-renderer]):not(ytd-minor-moment-header-renderer):not([has-section-group-view-model]):has(.badge-style-type-members-only.ytd-badge-supported-renderer) {
+            ytd-browse[page-subtype="channels"][role="main"] ytd-section-list-renderer:not([hide-bottom-separator]):not([page-subtype=history]):not([page-subtype=memberships-and-purchases]):not([page-subtype=ypc-offers]):not([live-chat-engagement-panel]) #contents.ytd-section-list-renderer > *.ytd-section-list-renderer:not(:last-child):not(ytd-page-introduction-renderer):not([item-dismissed]):not([has-destination-shelf-renderer]):not(ytd-minor-moment-header-renderer):not([has-section-group-view-model]):has(.badge-style-type-members-only.ytd-badge-supported-renderer) {
                 display: none;
             }
         }
@@ -5126,24 +5234,24 @@
         .CentAnni-style-hide-explore-section ytd-rich-section-renderer:has(.ytdChipsShelfWithVideoShelfRendererHost),
         .CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen #CentAnni-remaining-time-container,
         .CentAnni-style-no-ambient :is(#cinematic-container, #cinematics-container, #cinematics-full-bleed-container),
-        .CentAnni-style-hide-posts-home ytd-browse[page-subtype="home"] ytd-rich-section-renderer:has(ytd-post-renderer),
+        .CentAnni-style-hide-posts-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-section-renderer:has(ytd-post-renderer),
         .CentAnni-style-hide-fundraiser :is(#donation-shelf, ytd-badge-supported-renderer:has([aria-label="Fundraiser"])),
         .CentAnni-style-hide-create-btn :is(#masthead-skeleton-icons :first-child, #end ytd-button-renderer.ytd-masthead),
-        .CentAnni-style-hide-most-relevant ytd-browse[page-subtype="subscriptions"] ytd-rich-section-renderer:not(:has([is-shorts])),
+        .CentAnni-style-hide-most-relevant ytd-browse[page-subtype="subscriptions"][role="main"] ytd-rich-section-renderer:not(:has([is-shorts])),
         .yt-watch-later .metadata-text-wrapper.ytd-playlist-header-renderer yt-formatted-string.ytd-playlist-byline-renderer:not(:has(*)),
         .CentAnni-style-hide-pay-to-watch :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-video-renderer):has(.badge-style-type-ypc),
         .CentAnni-style-hide-notification-btn :is(#masthead-skeleton-icons :nth-child(2), #masthead-container #end ytd-notification-topbar-button-renderer),
         .CentAnni-style-hide-free-with-ads :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-rich-section-renderer):has([aria-label="Free with ads"]),
-        .CentAnni-style-hide-playlists-home ytd-browse[page-subtype="home"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="start_radio=1"]),
+        .CentAnni-style-hide-playlists-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="start_radio=1"]),
         .CentAnni-style-hide-ask-btn #teaser-carousel:has(path[d^="M480"]) :is(.ytCarouselItemViewModelHost:has(path[d^="M480"]), .ytCarouselTitleViewModelNavigation),
         .CentAnni-playlist-remove-btn-hide-menus :is(tp-yt-iron-overlay-backdrop.opened, ytd-popup-container > tp-yt-paper-dialog, ytd-popup-container > tp-yt-iron-dropdown),
-        .CentAnni-style-hide-episodes-home ytd-browse[page-subtype="home"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]):not(:has(a[href*="start_radio=1"])),
+        .CentAnni-style-hide-episodes-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]):not(:has(a[href*="start_radio=1"])),
         .CentAnni-style-hide-queue-btn :is(:is(button, ytd-thumbnail-overlay-toggle-button-renderer)[aria-label="Add to queue"], :is(.ytListItemViewModelHost, ytd-menu-service-item-renderer):has(path[d^="M2 2"])),
-        .CentAnni-style-hide-watched-videos ytd-browse[page-subtype="home"] :is(ytd-rich-item-renderer:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer)),
+        .CentAnni-style-hide-watched-videos ytd-browse[page-subtype="home"][role="main"] :is(ytd-rich-item-renderer:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer)),
         .CentAnni-style-hide-share-btn-global :is(yt-button-view-model, yt-list-item-view-model, .ytp-fullscreen-quick-actions button-view-model, tp-yt-paper-item.ytd-menu-service-item-renderer):has([aria-label="Share"], path[d^="M10 3"]),
-        .CentAnni-style-hide-join-btn :is(ytd-watch-flexy #sponsor-button.ytd-video-owner-renderer:not(:empty), ytd-browse[page-subtype="channels"] .ytFlexibleActionsViewModelAction:not(:has(a[href*="community"], yt-subscribe-button-view-model, #CentAnni-channel-btn))),
+        .CentAnni-style-hide-join-btn :is(ytd-watch-flexy #sponsor-button.ytd-video-owner-renderer:not(:empty), ytd-browse[page-subtype="channels"][role="main"] .ytFlexibleActionsViewModelAction:not(:has(a[href*="community"], yt-subscribe-button-view-model, #CentAnni-channel-btn))),
         .CentAnni-style-hide-watched-videos-global :is(yt-lockup-view-model:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-rich-item-renderer:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer), ytd-grid-video-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer)),
-        .CentAnni-hide-watched-wl ytd-browse[page-subtype="playlist"] :is(ytd-playlist-video-renderer:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-playlist-video-renderer:has(ytd-thumbnail-overlay-playback-status-renderer):not(:has(.ytBadgeShapeThumbnailLive)), ytd-playlist-video-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))),
+        .CentAnni-hide-watched-wl ytd-browse[page-subtype="playlist"][role="main"] :is(ytd-playlist-video-renderer:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-playlist-video-renderer:has(ytd-thumbnail-overlay-playback-status-renderer):not(:has(.ytBadgeShapeThumbnailLive)), ytd-playlist-video-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))),
         .CentAnni-style-disable-play-on-hover :is(ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-toggle-button-renderer.ytd-thumbnail, ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail, ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-endorsement-renderer.ytd-thumbnail, ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-hover-text-renderer.ytd-thumbnail, ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-button-renderer.ytd-thumbnail, ytd-thumbnail[now-playing] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail, ytd-thumbnail-overlay-loading-preview-renderer[is-preview-loading], ytd-grid-video-renderer a#thumbnail div#mouseover-overlay, ytd-rich-item-renderer a#thumbnail div#mouseover-overlay, ytd-thumbnail-overlay-loading-preview-renderer, ytd-moving-thumbnail-renderer img#thumbnail, .ytAnimatedThumbnailOverlayViewModelHost, animated-thumbnail-overlay-view-model, ytd-moving-thumbnail-renderer yt-icon, ytd-moving-thumbnail-renderer span, ytd-moving-thumbnail-renderer img, ytd-moving-thumbnail-renderer, #mouseover-overlay, ytd-video-preview, div#video-preview, #video-preview, #preview) {
             display: none !important;
         }
@@ -5181,7 +5289,7 @@
                     background: black;
                 }
 
-                ytd-browse[page-subtype="home"] {
+                ytd-browse[page-subtype="home"][role="main"] {
                     .ytChipShapeInactive {
                         background-color: rgb(40, 40, 40);
                     }
@@ -5199,28 +5307,12 @@
 
         html:not([dark]) {
             &.CentAnni-style-pure-bg {
-                ytd-browse[page-subtype="home"] .ytChipShapeChip:hover {
+                ytd-browse[page-subtype="home"][role="main"] .ytChipShapeChip:hover {
                     background-color: rgba(0, 0, 0, .2);
                 }
             }
 
             &.is-watch-page {
-                .CentAnni-playback-speed-button:active,
-                .CentAnni-playback-speed-display:active {
-                    background-color: rgb(205, 205, 205) !important;
-                }
-
-                .CentAnni-tabView-tab {
-                    background-color: rgba(0, 0, 0, .05);
-                    color: #0f0f0f;
-                }
-
-                .CentAnni-tabView-tab:hover,
-                .CentAnni-playback-speed-button:last-child::before,
-                .CentAnni-playback-speed-button:nth-child(2)::after {
-                    background: rgba(0, 0, 0, .1);
-                }
-
                 ytd-watch-flexy[theater] .CentAnni-tabView-tab.active {
                     background: rgba(0, 0, 0, .2);
                     outline: 1px solid rgba(0, 0, 0, .5);
@@ -5231,16 +5323,8 @@
                     color: white;
                 }
 
-                .CentAnni-tabView {
-                    border: 1px solid rgba(0, 0, 0, .1);
-                }
-
                 #CentAnni-playback-speed-control > div > svg > path {
                     fill: black;
-                }
-
-                #tab-2 {
-                    border-top: 1px solid rgba(0, 0, 0, .1);
                 }
             }
         }
@@ -5276,14 +5360,6 @@
             }
         }
 
-        html:not([dark]).CentAnni-video-tabView ytd-watch-flexy {
-            #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
-            #related.ytd-watch-flexy {
-                border: 1px solid rgba(0, 0, 0, .1);
-                border-top: none;
-            }
-        }
-
         /* selection color */
         html.CentAnni-style-selection-color ::selection {
             color: contrast-color(var(--selectionColor));
@@ -5300,7 +5376,7 @@
             --ytd-margin-0x: 0px;
         }
 
-        /* cinema mode */
+        /* cinema mode btn */
         #CentAnni-cinema-mode-btn {
             position: fixed;
             bottom: 10px;
@@ -5314,21 +5390,75 @@
             z-index: 2027;
             cursor: pointer;
             background: var(--yt-base-background);
-            border: 1px solid rgba(255, 0, 0, .5);
+            border: 1px solid rgb(255 0 0 / .5);
 
             &:hover {
                 background-color: var(--yt-base-background-secondary);
             }
+
+            html.CentAnni-cinema-mode & {
+                border-color: rgba(0, 255, 0, .7);
+            }
+
+            html:not(.is-watch-page) &,
+            html.is-watch-page:has(#ytd-player .html5-video-player.ended-mode) &,
+            html.is-watch-page:has(ytd-watch-flexy:is([hidden], [default-layout], [fullscreen], [is-vertical-video_])) & {
+                display: none;
+            }
         }
 
-        .CentAnni-cinema-mode #CentAnni-cinema-mode-btn {
-            border-color: rgba(0, 255, 0, .7);
-        }
+        ytd-browse[page-subtype="channels"][role="main"] {
+            width: 100%;
+            min-width: 0;
+            max-width: 100%;
+            overflow-x: clip;
+            overflow-y: visible;
 
-        html:not(.is-watch-page) #CentAnni-cinema-mode-btn,
-        html.is-watch-page:has(#ytd-player .html5-video-player.ended-mode) #CentAnni-cinema-mode-btn,
-        html.is-watch-page:has(ytd-watch-flexy:is([hidden], [default-layout], [fullscreen], [is-vertical-video_])) #CentAnni-cinema-mode-btn {
-            display: none;
+            #page-header-banner {
+                display: grid;
+                min-width: 0;
+                width: 100%;
+            }
+
+            #page-header-banner-sizer,
+            #CentAnni-default-channel-page-btn {
+                grid-area: 1 / 1;
+                min-width: 0;
+            }
+
+            #page-header-banner-sizer {
+                width: 100%;
+            }
+
+            #CentAnni-default-channel-page-btn {
+                position: sticky;
+                top: 61px;
+                align-self: start;
+                justify-self: end;
+                margin: 11px 16px 5px 0;
+                padding: 0;
+                opacity: .3;
+                height: 40px;
+                width: 40px;
+                font-size: 18px;
+                border-radius: 50%;
+                z-index: 2000;
+                cursor: pointer;
+                transition: opacity .2s ease-out, background-color .2s ease-out;
+                background: var(--yt-base-background);
+                border: 1px solid rgb(250 250 250 / .5);
+
+                &:hover {
+                    opacity: 1;
+                    background-color: var(--yt-base-background-secondary);
+                }
+
+                #page-header > & {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                }
+            }
         }
 
         html.CentAnni-cinema-mode.is-watch-page:has(ytd-watch-flexy[theater]:not([hidden], [fullscreen], [is-vertical-video_]) #ytd-player .html5-video-player:not(.unstarted-mode, .ended-mode)) {
@@ -5444,7 +5574,7 @@
         }
 
         /* favorites watch later list */
-        html.yt-watch-later ytd-browse[page-subtype="playlist"] ytd-playlist-video-renderer {
+        html.yt-watch-later ytd-browse[page-subtype="playlist"][role="main"] ytd-playlist-video-renderer {
             &:has(a:is(wl-gold)):not(:has(ytd-thumbnail-overlay-resume-playback-renderer):not(:has(.ytBadgeShapeThumbnailLive))) {
                 #index-container {
                     background-color: gold;
@@ -5758,6 +5888,7 @@
         watchLaterGold: '',
         watchLaterSilver: '',
         watchLaterBronze: '',
+        channelDefaultPages: {},
         channelPlaybackSpeeds: {}
     };
 
@@ -6053,7 +6184,7 @@
 
         const existingModal = document.getElementById('yt-alchemy-settings-modal');
         if (existingModal) {
-            existingModal.style.display = 'flex';
+            existingModal.classList.add('active');
             docBody.style.overflow = 'hidden';
             setupModalHandlers(existingModal);
             return;
@@ -6062,7 +6193,7 @@
         // create modal elements
         const modal = document.createElement('div');
         modal.id = 'yt-alchemy-settings-modal';
-        modal.classList.add('CentAnni-overlay');
+        modal.classList.add('CentAnni-overlay', 'active');
 
         const modalContent = document.createElement('div');
         modalContent.classList.add('CentAnni-modal-content');
@@ -6277,9 +6408,9 @@
             try {
                 USER_CONFIG = { ...DEFAULT_CONFIG };
                 await GM.setValue('USER_CONFIG', USER_CONFIG);
-                showNotification('Settings have been reset to default!');
-                window.closeAlchemySettingsModal();
-                setTimeout(() => location.reload(), 900);
+                window.closeAlchemySettingsModal(true);
+                showNotification('Settings have been reset to default!', true);
+                setTimeout(() => location.reload(), 1000);
             } catch (error) {
                 showNotification('Error resetting settings to default!');
                 console.error("YouTubeAlchemy: Error resetting settings to default:", error);
@@ -6290,7 +6421,7 @@
         cancelButton.type = 'button';
         cancelButton.textContent = 'Cancel';
         cancelButton.classList.add('btn-style-settings');
-        cancelButton.onclick = () => { window.closeAlchemySettingsModal(); };
+        cancelButton.onclick = () => window.closeAlchemySettingsModal();
 
         exportImportContainer.appendChild(exportButton);
         exportImportContainer.appendChild(importButton);
@@ -6404,8 +6535,9 @@
                 document.removeEventListener('click', closeModalOverlayClickHandler);
             };
 
-            window.closeAlchemySettingsModal = () => {
-                modal.style.display = 'none';
+            window.closeAlchemySettingsModal = (reload = false) => {
+                if (reload) modal.classList.add('reload');
+                modal.classList.remove('active');
                 docBody.style.overflow = '';
                 cleanupModalEventListeners();
             };
@@ -8071,9 +8203,9 @@
         // save updated config
         try {
             await GM.setValue('USER_CONFIG', USER_CONFIG);
-            window.closeAlchemySettingsModal();
-            showNotification('Settings have been updated!');
-            setTimeout(() => location.reload(), 900);
+            window.closeAlchemySettingsModal(true);
+            showNotification('Settings have been updated!', true);
+            setTimeout(() => location.reload(), 1000);
         } catch (error) {
             showNotification('Error saving settings!');
             console.error("YouTubeAlchemy: Error saving user configuration:", error);
@@ -8122,8 +8254,9 @@
                     if (typeof importedConfig === 'object' && importedConfig !== null) {
                         USER_CONFIG = { ...DEFAULT_CONFIG, ...importedConfig };
                         GM.setValue('USER_CONFIG', USER_CONFIG);
-                        showNotification('Settings have been imported.');
-                        setTimeout(() => location.reload(), 900);
+                        window.closeAlchemySettingsModal(true);
+                        showNotification('Settings have been imported.', true);
+                        setTimeout(() => location.reload(), 1000);
                     } else {
                         showNotification('Invalid JSON format!');
                     }
@@ -8276,10 +8409,42 @@
         showNotification(`Saved ${speed}x for ${channelHandle}.`);
     }
 
+    // helper to save a default page for channels
+    async function saveChannelDefaultPage() {
+        if (!channelHandleURL || !isChannelPage) return;
+
+        const currentChannelPage = window.location.pathname.match(/^\/(?:@[^/]+|channel\/[^/]+)(?:\/([^/]+))?/)?.[1] || 'featured';
+        const saved = Object.entries(USER_CONFIG.channelDefaultPages).map(([c, p]) => `${c}: ${p}`).join(' | ');
+        const input = window.prompt(`Save ${currentChannelPage} as the default page for ${channelHandleURL}?\n\nType "reset" to remove the saved page for this channel.\nType "DELETE ALL" to remove all saved values.\n\n— Saved Pages —\n${saved || 'None'}`);
+
+        if (input === null) return;
+        if (input === 'reset') {
+            delete USER_CONFIG.channelDefaultPages[channelHandleURL];
+            await GM.setValue('USER_CONFIG', USER_CONFIG);
+            showNotification(`Reset channel page for ${channelHandleURL}.`);
+            return;
+        }
+        if (input === 'DELETE ALL') {
+            USER_CONFIG.channelDefaultPages = {};
+            await GM.setValue('USER_CONFIG', USER_CONFIG);
+            showNotification(`Deleted all saved channel pages.`);
+            return;
+        }
+        if (currentChannelPage === USER_CONFIG.defaultChannelPage) {
+            showNotification(`${currentChannelPage} is already the default channel page.`);
+            return;
+        }
+
+        USER_CONFIG.channelDefaultPages[channelHandleURL] = currentChannelPage;
+        await GM.setValue('USER_CONFIG', USER_CONFIG);
+        showNotification(`Saved ${currentChannelPage} for ${channelHandleURL}.`);
+    }
+
     // function to display a notification for settings change or reset
-    function showNotification(message) {
+    function showNotification(message, reload = false) {
         const overlay = document.createElement('div');
-        overlay.classList.add('CentAnni-overlay');
+        if (reload) { overlay.classList.add('reload'); notificationTimer = 5000; }
+        overlay.classList.add('CentAnni-overlay', 'active');
 
         const modal = document.createElement('div');
         modal.classList.add('CentAnni-notification');
@@ -8288,7 +8453,7 @@
         overlay.appendChild(modal);
         docBody.appendChild(overlay);
 
-        setTimeout(() => overlay.remove(), 1000);
+        setTimeout(() => { overlay.classList.remove('active'); setTimeout(() => overlay.remove(), 200); }, notificationTimer);
     }
 
     // function to add the transcript exporter buttons
@@ -9118,7 +9283,7 @@
         const tabs = [
             'Info',
             ...(!isLive ? ['Comments'] : []),
-            ...(hasPlaylistPanel ? ['Playlist'] : []),
+            ...((hasPlaylistPanel || !USER_CONFIG.hideQueueBtn) ? ['Playlist'] : []),
             ...(hasDonationPanel ? ['Donation'] : []),
             'Videos',
             ...((!isLive && hasChapterPanel) ? ['Chapters'] : []),
@@ -9338,9 +9503,7 @@
 
         containerChapterTitle.appendChild(label);
         containerChapterTitle.appendChild(titleElement);
-
-        const existingContainerChapterTitle = document.getElementById('CentAnni-chapter-title');
-        existingContainerChapterTitle ? existingContainerChapterTitle.replaceWith(containerChapterTitle) : normalContainer.appendChild(containerChapterTitle);
+        normalContainer.appendChild(containerChapterTitle);
 
         let fullscreenTimeout = null;
         updateTitleContainer = () => {
@@ -9359,7 +9522,7 @@
 
         moveChapterTitleBack = () => {
             if (parent && titleElement) parent.appendChild(titleElement);
-            containerChapterTitle.classList.add("disabled");
+            containerChapterTitle.remove();
             updateTitleContainer = null;
             moveChapterTitleBack = null;
         };
@@ -9689,8 +9852,9 @@
 
             // display the speed
             const speedDisplay = document.createElement("span");
+            speedDisplay.tabIndex = 0;
             speedDisplay.id = "CentAnni-speed-display";
-            speedDisplay.className = `${BTN_CLASS} CentAnni-playback-speed-display`;
+            speedDisplay.className = `${BTN_CLASS} CentAnni-playback-speed-display CentAnni-btn-feedback-shape`;
             speedDisplay.textContent = `${video.playbackRate}x`;
             speedDisplay.title = 'Set a custom playback speed for this channel';
             speedDisplay.onclick = () => saveChannelPlaybackSpeeds(video);
@@ -9698,8 +9862,9 @@
             // create minus and plus buttons
             const createButton = (change) => {
                 const button = document.createElement("button");
+                button.tabIndex = 0;
                 button.textContent = change > 0 ? "+" : "-";
-                button.className = `${BTN_CLASS} CentAnni-playback-speed-button`;
+                button.className = `${BTN_CLASS} CentAnni-playback-speed-button CentAnni-btn-feedback-shape`;
                 button.onclick = () => {
                     newUserRate = video.playbackRate + change;
                     setSpeed();
@@ -10663,7 +10828,7 @@
     function homeColorCodeVideos() {
         let homePageObserver = null;
 
-        const homePage = document.querySelector('ytd-browse[page-subtype="home"]:not([hidden])');
+        const homePage = document.querySelector('ytd-browse[page-subtype="home"][role="main"]:not([hidden])');
         if (!homePage) return;
 
         // define age categories and regex
@@ -10905,7 +11070,7 @@
 
     // mark last seen video on subscription page
     async function markLastSeenVideo() {
-        const subscriptionPage = document.querySelector('ytd-browse[page-subtype="subscriptions"]:not([hidden])');
+        const subscriptionPage = document.querySelector('ytd-browse[page-subtype="subscriptions"][role="main"]:not([hidden])');
         const videoElement = subscriptionPage?.querySelector('ytd-rich-item-renderer[rendered-from-rich-grid] .lockup.ytd-rich-item-renderer');
 
         // wait for content to load
@@ -10977,10 +11142,10 @@
 
     // add trashcan icon to playlists to easily remove videos
     function playlistRemovalButtons() {
-        const savePlaylistBtn = document.querySelector('ytd-browse[page-subtype="playlist"] :is(toggle-button-view-model, ytd-toggle-button-renderer):not([hidden])');
+        const savePlaylistBtn = document.querySelector('ytd-browse[page-subtype="playlist"][role="main"] :is(toggle-button-view-model, ytd-toggle-button-renderer):not([hidden])');
         if (savePlaylistBtn) return;
 
-        const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"]:not([hidden])');
+        const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"][role="main"]:not([hidden])');
         if (!playlistPage) return;
 
         const playlistContainer = playlistPage.querySelector('ytd-playlist-video-list-renderer > #contents');
@@ -11114,7 +11279,7 @@
 
     // add button to remove watched videos from watch later playlist
     function watchLaterRemoveBtn() {
-        const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"]:not([hidden])');
+        const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"][role="main"]:not([hidden])');
         const wrapper = playlistPage?.querySelector('.metadata-buttons-wrapper.ytd-playlist-header-renderer');
         const wrapperText = playlistPage?.querySelector('.metadata-text-wrapper.ytd-playlist-header-renderer');
         const menuRendererText = wrapperText?.querySelector('ytd-playlist-byline-renderer');
@@ -11148,7 +11313,7 @@
                 waitForElement('#confirm-button > yt-button-shape > button', (confirmButton) => {
                     confirmButton.click();
                     showNotification('Videos removed from Watch Later playlist.');
-                    if (USER_CONFIG.playlistLinks) setTimeout(() => location.reload(), 900);
+                    if (USER_CONFIG.playlistLinks) setTimeout(() => location.reload(), 800);
                     docElement.classList.remove('CentAnni-playlist-remove-btn-hide-menus');
                 });
             });
@@ -11181,7 +11346,7 @@
 
     // move watch later header btn
     const moveWlChipBar = () => {
-        const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"]:not([hidden])');
+        const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"][role="main"]:not([hidden])');
         wlHeader = playlistPage.querySelector('#header.ytd-item-section-renderer');
         wlSidebar = playlistPage.querySelector('.thumbnail-and-metadata-wrapper.ytd-playlist-header-renderer');
         wlSection = playlistPage.querySelector('ytd-item-section-renderer');
@@ -11202,7 +11367,7 @@
             }
         }
 
-        const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"]:not([hidden])');
+        const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"][role="main"]:not([hidden])');
         if (!playlistPage) return;
 
         function processVideos() {
@@ -11469,8 +11634,8 @@
             const playlistActionMenu = watchFlexyElement.querySelector('#playlist-action-menu .top-level-buttons') || watchFlexyElement.querySelector('#playlist-action-menu');
             if (!playlistActionMenu) return null;
 
-            const BTN_CLASS = watchFlexyElement.querySelector('#secondary #top-level-buttons-computed button')?.className ?? '';
-            const ICON_CLASS = watchFlexyElement.querySelector('#secondary #top-level-buttons-computed button > div')?.className ?? '';
+            const BTN_CLASS = watchFlexyElement.querySelector('#secondary #playlist:not([playlist-type="TLPQ"]) #top-level-buttons-computed button')?.className ?? 'ytSpecButtonShapeNextHost ytSpecButtonShapeNextText ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeM ytSpecButtonShapeNextIconOnlyDefault ytSpecButtonShapeNextEnableBackdropFilterExperiment';
+            const ICON_CLASS = watchFlexyElement.querySelector('#secondary #playlist:not([playlist-type="TLPQ"]) #top-level-buttons-computed button > div')?.className ?? 'ytSpecButtonShapeNextIcon ytSpecButtonShapeNextElevatedContent';
 
             const directionContainer = document.createElement('div');
             directionContainer.id = 'CentAnni-playlist-direction-container';
@@ -12032,14 +12197,17 @@
         } else docElement.classList.remove('CentAnni-close-live-chat');
     }
 
-    // redirect channel page to videos
+    // redirect channel home to default
     function channelRedirect() {
-        window.location.href = window.location.href.replace(/\/$/, '') + `/${USER_CONFIG.defaultChannelPage}`;
+        const channelPage = USER_CONFIG.channelDefaultPages[channelHandleURL] || USER_CONFIG.defaultChannelPage;
+        window.location.href = window.location.href.replace(/\/$/, '') + `/${channelPage}`;
+        return;
     }
 
     // redirect shorts to video page
     function redirectShortsToVideoPage() {
         window.location.href = window.location.href.replace('/shorts/', '/watch?v=');
+        return;
     }
 
     // expand video description
@@ -12053,10 +12221,21 @@
         cinemaModeActive = true;
         const btn = document.createElement('button');
         btn.id = 'CentAnni-cinema-mode-btn';
-        btn.title = `Toggle Cinema Mode`;
+        btn.title = 'Toggle Cinema Mode';
         btn.textContent = '🎬';
         btn.onclick = () => docElement.classList.toggle('CentAnni-cinema-mode');
         document.body.appendChild(btn);
+    }
+
+    // btn to save the current page as a channel's default
+    function defaultChannelPageBtn() {
+        if (document.getElementById('CentAnni-default-channel-page-btn')) return;
+        const btn = document.createElement('button');
+        btn.id = 'CentAnni-default-channel-page-btn';
+        btn.title = 'Save Default Channel Page';
+        btn.textContent = '💾';
+        btn.onclick = saveChannelDefaultPage;
+        (document.getElementById('page-header-banner') || document.getElementById('page-header') || document.body).appendChild(btn);
     }
 
     // function to hide watched videos based on percentage
@@ -12064,11 +12243,11 @@
         markWatchedVideosObserver?.disconnect();
 
         const location =
-            (isHomePage && USER_CONFIG.videosHideWatchedHome && !USER_CONFIG.videosHideWatched && document.querySelector('ytd-browse[page-subtype="home"]:not([hidden]) #contents')) ||
-            (isSubscriptionsPage && USER_CONFIG.videosHideWatchedSubscriptions && document.querySelector('ytd-browse[page-subtype="subscriptions"]:not([hidden]) ytd-rich-grid-renderer > #contents')) ||
+            (isHomePage && USER_CONFIG.videosHideWatchedHome && !USER_CONFIG.videosHideWatched && document.querySelector('ytd-browse[page-subtype="home"][role="main"]:not([hidden]) #contents')) ||
+            (isSubscriptionsPage && USER_CONFIG.videosHideWatchedSubscriptions && document.querySelector('ytd-browse[page-subtype="subscriptions"][role="main"]:not([hidden]) ytd-rich-grid-renderer > #contents')) ||
             (isWatchPage && USER_CONFIG.videosHideWatchedVideo && document.querySelector('ytd-watch-flexy:not([hidden]) #secondary #related #items')) ||
-            (isChannelPage && USER_CONFIG.videosHideWatchedChannels && document.querySelector('ytd-browse[page-subtype="channels"]:not([hidden]) #contents')) ||
-            (isPlaylistPage && USER_CONFIG.videosHideWatchedPlaylist && document.querySelector('ytd-browse[page-subtype="playlist"]:not([hidden]) ytd-playlist-video-list-renderer > #contents')) ||
+            (isChannelPage && USER_CONFIG.videosHideWatchedChannels && document.querySelector('ytd-browse[page-subtype="channels"][role="main"]:not([hidden]) #contents')) ||
+            (isPlaylistPage && USER_CONFIG.videosHideWatchedPlaylist && document.querySelector('ytd-browse[page-subtype="playlist"][role="main"]:not([hidden]) ytd-playlist-video-list-renderer > #contents')) ||
             (isSearchPage && USER_CONFIG.videosHideWatchedSearch && document.querySelector('ytd-search:not([hidden]) ytd-section-list-renderer > #contents'));
         if (!location) return;
 
@@ -12106,14 +12285,14 @@
         if (!chipText) return;
 
         runInPage(function (targetChipText) {
-            const chip = [...document.querySelectorAll('ytd-browse[page-subtype="home"]:not([hidden]) #header #chips yt-chip-cloud-chip-renderer')].find(chip => chip.querySelector('.ytChipShapeChip')?.textContent?.trim() === targetChipText);
+            const chip = [...document.querySelectorAll('ytd-browse[page-subtype="home"][role="main"]:not([hidden]) #header #chips yt-chip-cloud-chip-renderer')].find(chip => chip.querySelector('.ytChipShapeChip')?.textContent?.trim() === targetChipText);
             chip?.onTap?.();
         }, chipText);
     };
 
     // restore feed filter chip on the homepage and suggested videos
     async function restoreLastSelectedChip() {
-        const homePage = document.querySelector('ytd-browse[page-subtype="home"]:not([hidden])');
+        const homePage = document.querySelector('ytd-browse[page-subtype="home"][role="main"]:not([hidden])');
         const feedFilterContainer = isHomePage ? homePage?.querySelector('#header #chips') : watchFlexyElement.querySelector('#related #chips');
         if (!feedFilterContainer) return;
         let firstRun = true;
@@ -12247,7 +12426,7 @@
         hasChapterPanel = !!chapterPanel;
 
         // playlist panel check
-        if (isPlaylistVideoPage) {
+        if (isPlaylistVideoPage || !USER_CONFIG.hideQueueBtn) {
             const playlistVideoItem = watchFlexyElement.querySelector('ytd-playlist-panel-video-renderer[id="playlist-items"]');
             playlistPanel = watchFlexyElement.querySelector('ytd-playlist-panel-renderer[id="playlist"]');
             hasPlaylistPanel = !!(playlistVideoItem && playlistPanel);
@@ -12585,6 +12764,7 @@
     let donationPanel = null;
     let isChannelPage = false;
     let isChannelHome = false;
+    let channelHandleURL = null;
     let isMusicVideo = false;
     let initialCloseLiveChat = null;
     let isTheaterMode = null;
@@ -12630,6 +12810,7 @@
     let speedNotificationElement = null;
     let speedKeysMapped = false;
     let hideNotificationTimeout;
+    let notificationTimer = 800;
     let toggleKey = '', increaseKey = '', decreaseKey = '';
     let defaultKeys = new Set();
     let specialKeys = Object.create(null);
@@ -12711,16 +12892,17 @@
             createButtons('settings');
             const browseFeatures = [
                 [isShortPage, shortsPlaybackControl],
-                [USER_CONFIG.plWLBtn && isWatchLater, watchLaterRemoveBtn],
-                [USER_CONFIG.compactLayout && isWatchLater, moveWlChipBar],
-                [USER_CONFIG.playlistLinks && isPlaylistPage, handlePlaylistLinks],
-                [USER_CONFIG.lastSeenVideo && isSubscriptionsPage, markLastSeenVideo],
-                [USER_CONFIG.colorCodeVideosEnabled && isHomePage, homeColorCodeVideos],
-                [USER_CONFIG.playbackSpeed && isShortPage, createPlaybackSpeedController],
-                [USER_CONFIG.channelRSSBtn && isChannelPage, () => requestIdleCallback(addRSSFeedButton)],
-                [USER_CONFIG.feedFilterChips && isHomePage, () => requestIdleCallback(restoreLastSelectedChip)],
-                [USER_CONFIG.channelPlaylistBtn && isChannelPage, () => requestIdleCallback(addPlaylistButtons)],
-                [USER_CONFIG.playlistTrashCan && isPlaylistPage, () => requestIdleCallback(playlistRemovalButtons)]
+                [isWatchLater && USER_CONFIG.plWLBtn, watchLaterRemoveBtn],
+                [isWatchLater && USER_CONFIG.compactLayout, moveWlChipBar],
+                [isPlaylistPage && USER_CONFIG.playlistLinks, handlePlaylistLinks],
+                [isSubscriptionsPage && USER_CONFIG.lastSeenVideo, markLastSeenVideo],
+                [isHomePage && USER_CONFIG.colorCodeVideosEnabled, homeColorCodeVideos],
+                [isShortPage && USER_CONFIG.playbackSpeed, createPlaybackSpeedController],
+                [isChannelPage && USER_CONFIG.defaultChannelPage !== 'home', defaultChannelPageBtn],
+                [isChannelPage && USER_CONFIG.channelRSSBtn, () => requestIdleCallback(addRSSFeedButton)],
+                [isHomePage && USER_CONFIG.feedFilterChips, () => requestIdleCallback(restoreLastSelectedChip)],
+                [isChannelPage && USER_CONFIG.channelPlaylistBtn, () => requestIdleCallback(addPlaylistButtons)],
+                [isPlaylistPage && USER_CONFIG.playlistTrashCan, () => requestIdleCallback(playlistRemovalButtons)]
             ];
             for (const [flag, callback] of browseFeatures) if (flag) callback();
             if (USER_CONFIG.hideMiniPlayer) document.querySelector('.ytp-miniplayer-close-button')?.click();
@@ -12802,8 +12984,9 @@
             isSubscriptionsPage = pn === '/feed/subscriptions';
             isChannelPage = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)/.test(pn);
             isChannelHome = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)$/.test(pn);
-            if (USER_CONFIG.defaultChannelPage !== 'home' && isChannelHome) { channelRedirect(); return; }
-            if (USER_CONFIG.redirectShorts && isShortPage) { redirectShortsToVideoPage(); return; }
+            if (isChannelPage) channelHandleURL = pn.match(/^\/@([^/]+)/)?.[1];
+            if (isChannelHome && USER_CONFIG.defaultChannelPage !== 'home') channelRedirect();
+            if (isShortPage && USER_CONFIG.redirectShorts) redirectShortsToVideoPage();
             if (isWatchPage || isShortPage) {
                 lastVideoID = videoID;
                 videoID = sp.get('v');
