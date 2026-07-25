@@ -10,16 +10,18 @@ body:
           required: true
         - label: The issue persists with the default settings, or I have identified the specific setting that causes it.
           required: true
-        - label: I disabled all other browser extensions and userscripts to rule out conflicts.
+        - label: I've disabled all other browser extensions and userscripts to rule out conflicts.
           required: true
         - label: I've read the [Minimum Browser Requirements](https://github.com/TimMacy/YouTubeAlchemy#-installation--minimum-browser-requirements) and confirmed that my setup meets all applicable requirements.
+          required: true
+        - label: I've searched the [existing issues](https://github.com/TimMacy/YouTubeAlchemy/issues) and confirmed that this bug hasn't already been reported.
           required: true
         - label: I understand that YouTube's A/B tests and site-specific changes may break features that cannot be fixed until those changes roll out more broadly.
           required: true
   - type: textarea
     id: description
     attributes:
-      label: Describe the Bug
+      label: Describe the bug
       placeholder: Provide a clear description of the bug, including the expected behavior and steps to reproduce the issue.
     validations:
       required: true
@@ -36,13 +38,13 @@ body:
   - type: input
     attributes:
       label: Operating System
-      placeholder: "e.g., macOS, Windows"
+      placeholder: "e.g., macOS 27, Windows"
     validations:
       required: true
   - type: input
     attributes:
       label: Browser
-      placeholder: "e.g., Safari 26, Chrome Version 150 (Official Build) (arm64)"
+      placeholder: "e.g., Safari 27, Chrome Version 150 (Official Build) (arm64)"
     validations:
       required: true
   - type: input
@@ -54,13 +56,13 @@ body:
   - type: input
     attributes:
       label: Setting
-      placeholder: "What specific setting causes the issue?"
+      placeholder: "Default settings or the specific setting that causes the issue."
     validations:
-      required: false
+      required: true
   - type: upload
     id: screenshots
     attributes:
-      label: Upload screenshots
+      label: Screenshots
       description: Add screenshots to help demonstrate the problem.
     validations:
       required: false
