@@ -1,0 +1,21 @@
+name: Ask a Question
+description: Ask a question about this project.
+labels: [question]
+body:
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      options:
+        - label: I'm neither requesting a feature nor reporting a bug.
+          required: true
+        - label: I've read the [README](https://github.com/TimMacy/YouTubeAlchemy#youtube-alchemy-), and it doesn't contain the answer.
+          required: true
+        - label: I've searched the [existing issues](https://github.com/TimMacy/YouTubeAlchemy/issues) and confirmed that my question hasn't already been answered.
+          required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      placeholder: State your question clearly and include screenshots if applicable.
+    validations:
+      required: true
