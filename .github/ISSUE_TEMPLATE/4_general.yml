@@ -1,0 +1,21 @@
+name: General
+description: Submit a topic that doesn't fit the other templates.
+body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I'm neither reporting a bug, requesting a feature, nor asking a question.
+          required: true
+        - label: I've read the [README](https://github.com/TimMacy/YouTubeAlchemy#youtube-alchemy-).
+          required: true
+        - label: I've checked the [existing issues](https://github.com/TimMacy/YouTubeAlchemy/issues).
+          required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      placeholder: Describe your topic clearly and include screenshots if applicable.
+    validations:
+      required: true
