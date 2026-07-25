@@ -10,7 +10,7 @@ body:
           required: true
         - label: I've read the [README](https://github.com/TimMacy/YouTubeAlchemy#youtube-alchemy-) and confirmed that the requested feature doesn't already exist.
           required: true
-        - label: I searched the [existing issues](https://github.com/TimMacy/YouTubeAlchemy/issues) and confirmed that this feature has not already been requested.
+        - label: I've searched the [existing issues](https://github.com/TimMacy/YouTubeAlchemy/issues) and confirmed that this feature hasn't already been requested.
           required: true
   - type: textarea
     id: description
@@ -22,7 +22,7 @@ body:
   - type: upload
     id: screenshots
     attributes:
-      label: Upload screenshots
+      label: Screenshots
       description: Add screenshots to help demonstrate the problem the feature would solve.
     validations:
       required: false
