@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.8-white.svg" alt="Version: 11.8"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.10-white.svg" alt="Version: 11.10"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -155,10 +155,10 @@ Offers various options to customize the layout and functionality of YouTube.
     - 240p
     - 144p
   - Title Case Selection:
-    - uppercase
-    - lowercase
-    - capitalize
-    - normal-case (default)
+    - Original (default)
+    - Uppercase
+    - Lowercase
+    - Capitalize
   - Font Size
   - Number of Videos per Row
   - Sidebar Width
@@ -184,6 +184,7 @@ Offers various options to customize the layout and functionality of YouTube.
 <p align="center"><strong>Features</strong></p>
 
   - Auto Theater Mode
+    - Optional exceptions: Vertical Video, Large Window, and Playlist Page
   - Auto-Exit Fullscreen When Video Ends
   - Cinema Mode
     - Adds a button to the bottom right in theater mode. Once activated, all UI elements are hidden while the mouse is outside the page.
@@ -262,7 +263,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Show "Picture-in-Picture" Button
   - Move "Save" Button into Menu
   - Hide "Autoplay" Button When Disabled
-  - Hide "Play Next" Button
+  - Hide "Previous" and "Play Next" Buttons
   - Hide "Airplay" Button
   - Hide "Ask" Button
   - Hide "Share" Button
@@ -402,6 +403,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **11.10**: bug fixes and improvements; reordered "Tab View" buttons; feature changed: "Auto Theater Mode" now allows exceptions for "Vertical Video", "Large Window", and "Playlist Page"; new feature: "Add 'Add to Queue' Button to Watch Later Playlist | Needs Mini Player to Work"
 - **11.8**: adjustments for YouTube DOM changes, bug fixes, and improvements; new feature: added "Save Default Channel Page" button on channel banners to set a different "Default Channel Page" for individual channels
 - **11.7**: adjustments for YouTube DOM changes, bug fixes, and improvements; feature changed: "'Videos' Tab as Default on Channel Pages" is now a drop-down menu "Default Channel Page"
 - **11.5**: adjustments for YouTube DOM changes and bug fixes; re-added feature: "Legacy Transcript Panel Language"
