@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      11.8
+// @version      11.10
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 11.8 - YouTube Alchemy                    *
+*                    Version: 11.10 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -484,7 +484,7 @@
             opacity: 0;
             position: absolute;
             z-index: 2100;
-            top: 115%;
+            top: calc(100% + 10px);
             left: 0;
             width: 100%;
             max-height: 60dvh;
@@ -566,6 +566,7 @@
         .number-input-label span {
             display: flex;
             align-items: center;
+            align-self: center;
             font-family: "Roboto", "Arial", sans-serif;
             font-size: 1.4em;
             line-height: 1.5em;
@@ -578,13 +579,13 @@
             user-select: none;
             white-space: pre-line;
 
-            &:hover {
-                text-decoration: underline;
-            }
-
             #CentAnni-main-settings-form & {
                 accent-color: var(--ChatGPT-color);
             }
+        }
+
+        .checkbox-label:hover {
+            text-decoration: underline;
         }
 
         .checkbox-container {
@@ -596,6 +597,28 @@
             height: 12px;
             cursor: pointer;
             margin: 3px 10px 3px 2px;
+        }
+
+        @supports (corner-shape: squircle) {
+            .sub-panel,
+            .CentAnni-modal-content {
+                border-radius: 16px !important;
+                corner-shape: superellipse(2);
+            }
+
+            .input-field-url,
+            .btn-style-settings,
+            .select-file-naming,
+            .container-button-input,
+            .chatgpt-prompt-textarea {
+                border-radius: 4px;
+                corner-shape: superellipse(2);
+            }
+
+            .dropdown-list {
+                border-radius: 0 0 16px 16px;
+                corner-shape: superellipse(2);
+            }
         }
 
         .playback-speed-keys {
@@ -1298,28 +1321,41 @@
             flex: 1;
         }
 
-        .playback-speed-container {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-        }
+        #custom-css-form {
+            .playback-speed-container {
+                display: flex;
+                gap: 10px;
+                margin: 10px 0;
 
-        #custom-css-form .playback-speed-container .checkbox-container {
-            max-width: calc(55% - 5px);
-            margin: 0;
-            align-content: center;
-            flex: 0 0 auto;
-        }
+                .checkbox-container {
+                    max-width: calc(55% - 5px);
+                    margin: 0;
+                    align-content: center;
+                    flex: 0 0 auto;
+                }
 
-        #custom-css-form .playback-speed-container .number-input-container {
-            max-width: calc(45% - 5px);
-            margin: 0;
-            align-self: center;
-            flex: 1 0 auto;
-        }
+                .number-input-container {
+                    max-width: calc(45% - 5px);
+                    margin: 0;
+                    align-self: center;
+                    flex: 1 0 auto;
+                }
 
-        #custom-css-form .playback-speed-container .number-input-label {
-            display: flex;
+                .number-input-label {
+                    display: flex;
+                }
+            }
+
+            .CentAnni-container-theater-mode {
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+                margin-bottom: -10px;
+
+                span.checkbox-label {
+                    pointer-events: none;
+                }
+            }
         }
 
         #color-code-videos-form .checkbox-container {
@@ -2081,7 +2117,7 @@
             }
 
             #related.ytd-watch-flexy,
-            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer {
+            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy {
                 position: absolute;
                 width: var(--ytd-watch-flexy-sidebar-width);
                 top: calc(50px + var(--topHeaderMargin));
@@ -2111,7 +2147,7 @@
                 }
             }
 
-            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description] {
+            ytd-watch-flexy:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id=engagement-panel-structured-description] {
                 background: transparent;
                 padding-left: 10px;
             }
@@ -2167,7 +2203,7 @@
                         #playlist,
                         ytd-comments,
                         #related.ytd-watch-flexy,
-                        #panels ytd-engagement-panel-section-list-renderer,
+                        #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy,
                         ytd-playlist-panel-renderer[collapsible] .header.ytd-playlist-panel-renderer {
                             height: 0;
                             padding-top: 0 !important;
@@ -2325,9 +2361,10 @@
                             overflow: hidden;
 
                             > div {
-                                height: 70% !important;
-                                width: 85%;
-                                margin-left: 0 !important;
+                                height: 100% !important;
+                                width: 100% !important;
+                                margin: 0 !important;
+                                aspect-ratio: auto !important;
                             }
                         }
                     }
@@ -2370,7 +2407,7 @@
 
                     #primary #playlist,
                     #related.ytd-watch-flexy,
-                    #panels ytd-engagement-panel-section-list-renderer {
+                    #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy {
                         max-height: 50dvh !important;
                         width: 90dvw !important;
                         margin: 0 !important;
@@ -2493,7 +2530,7 @@
                 padding: 0 !important;
             }
 
-            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-searchable-transcript] #footer #menu.ytd-engagement-panel-title-header-renderer {
+            ytd-watch-flexy #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id=engagement-panel-searchable-transcript] #footer #menu.ytd-engagement-panel-title-header-renderer {
                 margin-left: auto;
             }
 
@@ -2785,13 +2822,13 @@
             .ytLockupMetadataViewModelMoveLockupOverflowMenuToBottomRight .ytLockupMetadataViewModelMenuButton:after,
             ytd-watch-flexy ytd-engagement-panel-section-list-renderer[target-id^="shopping_panel_for_entry_point_"],
             .ytLockupMetadataViewModelMoveLockupOverflowMenuToBottomRight .ytLockupMetadataViewModelMenuButton:before,
-            ytd-watch-flexy[theater] #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create],
+            ytd-watch-flexy[theater] #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id=engagement-panel-clip-create],
             ytd-watch-flexy #expandable-metadata ytd-expandable-metadata-renderer[is-watch] #collapsed-title.ytd-expandable-metadata-renderer,
             ytd-watch-flexy:not([fullscreen]) ytd-structured-description-content-renderer[engagement-panel] ytd-video-description-header-renderer.ytd-structured-description-content-renderer {
                 display: none;
             }
 
-            #panels ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-clip-create] {
+            #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id=engagement-panel-clip-create] {
                 z-index: 2000;
             }
 
@@ -3484,6 +3521,7 @@
                 .ytp-popup,
                 .ytp-volume-area,
                 .ytp-next-button,
+                .ytp-prev-button,
                 .ytp-play-button,
                 .ytp-time-wrapper,
                 .ytp-right-controls,
@@ -3513,7 +3551,6 @@
             .ytp-scrubber-container,
             .ytProgressBarPlayheadProgressBarPlayheadDot {
                 display: none;
-                pointer-events: none;
             }
         }
 
@@ -3999,16 +4036,6 @@
                     border-bottom-right-radius: 40px !important;
                 }
 
-                .ytp-delhi-modern .ytp-chrome-controls .ytp-next-button:not(.ytp-miniplayer-button-container>*).ytp-playlist-ui {
-                    border-radius: 50%;
-                    margin-left: 3px;
-                    width: 40px;
-                }
-
-                .ytp-delhi-modern .ytp-chrome-controls .ytp-next-button:not(.ytp-miniplayer-button-container>*).ytp-playlist-ui > svg {
-                    padding: 0 10px;
-                }
-
                 .ytwYouChatChipsDataChip,
                 .ytChatUserTurnViewModelTextContainer {
                     border-radius: 0 7px 0 0;
@@ -4354,8 +4381,8 @@
             }
 
             ytd-browse[page-subtype="channels"][role="main"] {
-                ytd-tabbed-page-header.grid-5-columns #page-header.ytd-tabbed-page-header,
-                ytd-tabbed-page-header.grid-5-columns[has-inset-banner] #page-header-banner.ytd-tabbed-page-header {
+                ytd-tabbed-page-header #page-header-banner.ytd-tabbed-page-header,
+                ytd-tabbed-page-header.grid-5-columns #page-header.ytd-tabbed-page-header {
                     padding: 0 !important;
                 }
 
@@ -4755,7 +4782,7 @@
 
                 #playlist,
                 #related,
-                &:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer {
+                &:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy {
                     top: 50px !important;
                 }
 
@@ -4768,7 +4795,7 @@
                     padding-top: 0;
                 }
 
-                &[default-layout][flexy-small-window_]:not([is-vertical-video_]) :is(.CentAnni-tabView, #related, #panels ytd-engagement-panel-section-list-renderer) {
+                &[default-layout][flexy-small-window_]:not([is-vertical-video_]) :is(.CentAnni-tabView, #related, #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy, .ytd-playlist-panel-renderer#container) {
                     border-right: none;
                 }
 
@@ -4886,31 +4913,43 @@
                 border-radius: 12px;
         }
 
-        .CentAnni-style-pl-trashcan {
-            .CentAnni-style-playlist-remove-btn {
+        :is(.CentAnni-style-pl-trashcan, .CentAnni-style-pl-queue) {
+            .CentAnni-container-playlist-btns {
                 display: flex;
+                flex-direction: row;
                 align-items: center;
-                justify-content: center;
-                height: 50px;
-                width: 50px;
-                border: 1px dashed red;
-                background-color: transparent;
-                cursor: pointer;
-                margin: 12px 24px 4px 12px;
-                padding: 0;
-                transition: background-color .2s, transform .15s;
-                font-size: 2rem;
-                position: relative;
-                z-index: 250;
-                border-radius: 0;
+                margin: 12px 24px 5px 12px;
+                gap: 24px;
 
-                &:hover {
-                    background-color: darkred;
+                .CentAnni-style-playlist-remove-btn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 50px;
+                    width: 50px;
+                    border: 1px dashed red;
+                    background-color: transparent;
+                    cursor: pointer;
+                    padding: 0;
+                    transition: background-color .2s, transform .15s;
+                    font-size: 2rem;
+                    position: relative;
+                    z-index: 250;
+                    border-radius: 0;
+
+                    &:hover {
+                        background-color: darkred;
+                    }
+
+                    &:active {
+                        background-color: darkred;
+                        transform: scale(.9);
+                    }
                 }
 
-                &:active {
-                    background-color: darkred;
-                    transform: scale(.9);
+                .CentAnni-style-playlist-addToQueue-btn {
+                    display: flex;
+                    flex: 0 0 auto;
                 }
             }
 
@@ -4993,14 +5032,8 @@
         }
 
         .CentAnni-style-hide-playnext-btn {
-            a.ytp-next-button {
+            .ytp-left-controls :is(.ytp-prev-button, .ytp-next-button) {
                 display: none;
-            }
-
-            &.tabView-tab-6 {
-                a.ytp-next-button {
-                    display: inline-block;
-                }
             }
         }
 
@@ -5230,7 +5263,6 @@
         .CentAnni-style-hide-videos-btn :is(#related.ytd-watch-flexy, .CentAnni-tabView-tab[data-tab="tab-3"]),
         .CentAnni-style-hide-end-cards :is(.ytp-ce-element, .ytp-ce-hide-button-container.ytp-ce-element-show),
         .CentAnni-style-search-hide-right-sidebar #container.ytd-search ytd-secondary-search-container-renderer,
-        .CentAnni-pl-Direct-Btns ytd-watch-flexy #movie_player > div.ytp-chrome-bottom a.ytp-prev-button.ytp-button,
         .CentAnni-style-hide-explore-section ytd-rich-section-renderer:has(.ytdChipsShelfWithVideoShelfRendererHost),
         .CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen #CentAnni-remaining-time-container,
         .CentAnni-style-no-ambient :is(#cinematic-container, #cinematics-container, #cinematics-full-bleed-container),
@@ -5755,6 +5787,7 @@
         lastSeenVideoColorLight: '#9400D3',
         playlistLinks: false,
         playlistTrashCan: false,
+        playlistQueueBtn: false,
         plWLBtn: false,
         commentsNewFirst: false,
         defaultTranscriptLanguage: 'auto',
@@ -5828,6 +5861,9 @@
         closeChatWindow: false,
         displayFullTitle: false,
         autoTheaterMode: false,
+        autoTheaterModeNotVerticalVideo: false,
+        autoTheaterModeNotLargeWindow: false,
+        autoTheaterModeNotPL: false,
         autoExitFullscreen: false,
         enableCinemaMode: false,
         maxVidSize: false,
@@ -6122,10 +6158,10 @@
         homeDisableHover: { class: 'CentAnni-style-home-disable-hover', pages: () => isHomePage || isChannelPage || isSubscriptionsPage },
         // watch later page
         plWLBtn: { class: 'CentAnni-hide-watched-wl', pages: () => isWatchLater },
+        playlistQueueBtn: { class: 'CentAnni-style-pl-queue', pages: () => isWatchLater },
         compactLayout: { class: 'CentAnni-style-watched-later-header', pages: () => isWatchLater },
         // playlist page
         playlistTrashCan: { class: 'CentAnni-style-pl-trashcan', pages: () => isPlaylistPage },
-        playlistDirectionBtns: { class: 'CentAnni-pl-Direct-Btns', pages: () => isPlaylistVideoPage },
         // search page
         hideLatestPosts: { class: 'CentAnni-style-hide-latest-posts', pages: () => isSearchPage },
         hideRightSidebarSearch: { class: 'CentAnni-style-search-hide-right-sidebar', pages: () => isSearchPage },
@@ -6698,10 +6734,10 @@
 
             // title text transform
             form.appendChild(createSelectField('Title Case:', 'label-Text-Transform', 'textTransform', USER_CONFIG.textTransform, {
-                'uppercase': 'uppercase - THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.',
-                'lowercase': 'lowercase - the quick brown fox jumps over the lazy dog.',
-                'capitalize': 'capitalize - The Quick Brown Fox Jumps Over The Lazy Dog.',
-                'none': 'none (default) - The quick brown fox jumps over the lazy dog.'
+                'none': 'Original (default) - The quick brown fox jumps over the lazy dog.',
+                'uppercase': 'Uppercase - THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.',
+                'lowercase': 'Lowercase - the quick brown fox jumps over the lazy dog.',
+                'capitalize': 'Capitalize - The Quick Brown Fox Jumps Over The Lazy Dog.'
             }));
 
             // font size
@@ -6809,8 +6845,18 @@
             form.appendChild(features);
 
             // auto theater mode
+            const container = document.createElement('div');
+            container.className = 'CentAnni-container-theater-mode';
             const autoTheaterMode = createCheckboxField('Auto Theater Mode (default: off)', 'autoTheaterMode', USER_CONFIG.autoTheaterMode);
-            form.appendChild(autoTheaterMode);
+            const autoTheaterModeSpan = document.createElement('span');
+            autoTheaterModeSpan.textContent = 'Unless';
+            autoTheaterModeSpan.className = "checkbox-label";
+            const autoTheaterModeNotVerticalVideo = createCheckboxField('Vertical Video (default: off)', 'autoTheaterModeNotVerticalVideo', USER_CONFIG.autoTheaterModeNotVerticalVideo);
+            const autoTheaterModeNotLargeWindow = createCheckboxField('Large Window (default: off)', 'autoTheaterModeNotLargeWindow', USER_CONFIG.autoTheaterModeNotLargeWindow);
+            const autoTheaterModeNotPL = createCheckboxField('Playlist Page (default: off)', 'autoTheaterModeNotPL', USER_CONFIG.autoTheaterModeNotPL);
+
+            container.append(autoTheaterMode, autoTheaterModeSpan, autoTheaterModeNotVerticalVideo, autoTheaterModeNotLargeWindow, autoTheaterModeNotPL);
+            form.appendChild(container);
 
             // auto exit fullscreen on video end
             const autoExitFullscreen = createCheckboxField('Auto-Exit Fullscreen When Video Ends (default: off)', 'autoExitFullscreen', USER_CONFIG.autoExitFullscreen);
@@ -6885,6 +6931,10 @@
             // show trash can icon on owned playlists
             const playlistTrashCan = createCheckboxField('Show Trash Can Icon on Owned Playlists to Quickly Remove Videos (default: off)', 'playlistTrashCan', USER_CONFIG.playlistTrashCan);
             form.appendChild(playlistTrashCan);
+
+            // add video to queue btn to watch later
+            const playlistQueueBtn = createCheckboxField('Add "Add to Queue" Button to the Watch Later Playlist  | Needs Mini Player to Work (default: off)', 'playlistQueueBtn', USER_CONFIG.playlistQueueBtn);
+            form.appendChild(playlistQueueBtn);
 
             // remove watched videos from watch later
             const plWLBtn = createCheckboxField('Add "Remove Watched Videos" and "Toggle Watched" Buttons to the Watch Later Playlist (default: off)', 'plWLBtn', USER_CONFIG.plWLBtn);
@@ -7134,7 +7184,7 @@
             form.appendChild(hideAutoplayBtn);
 
             // hide play next button
-            const hidePlayNextButton = createCheckboxField('Hide "Play Next" Button (default: off)', 'hidePlayNextButton', USER_CONFIG.hidePlayNextButton);
+            const hidePlayNextButton = createCheckboxField('Hide "Previous" and "Play Next" Buttons (default: off)', 'hidePlayNextButton', USER_CONFIG.hidePlayNextButton);
             form.appendChild(hidePlayNextButton);
 
             // hide airplay button
@@ -8101,6 +8151,9 @@
             USER_CONFIG.noFrostedGlass = subPanelCustomCSS.elements.noFrostedGlass.checked;
             USER_CONFIG.removeScrubber = subPanelCustomCSS.elements.removeScrubber.checked;
             USER_CONFIG.autoTheaterMode = subPanelCustomCSS.elements.autoTheaterMode.checked;
+            USER_CONFIG.autoTheaterModeNotVerticalVideo = subPanelCustomCSS.elements.autoTheaterModeNotVerticalVideo.checked;
+            USER_CONFIG.autoTheaterModeNotLargeWindow = subPanelCustomCSS.elements.autoTheaterModeNotLargeWindow.checked;
+            USER_CONFIG.autoTheaterModeNotPL = subPanelCustomCSS.elements.autoTheaterModeNotPL.checked;
             USER_CONFIG.autoExitFullscreen = subPanelCustomCSS.elements.autoExitFullscreen.checked;
             USER_CONFIG.enableCinemaMode = subPanelCustomCSS.elements.enableCinemaMode.checked;
             USER_CONFIG.maxVidSize = subPanelCustomCSS.elements.maxVidSize.checked;
@@ -8110,6 +8163,7 @@
             USER_CONFIG.playlistDirectionBtns = subPanelCustomCSS.elements.playlistDirectionBtns.checked;
             USER_CONFIG.playlistLinks = subPanelCustomCSS.elements.playlistLinks.checked;
             USER_CONFIG.playlistTrashCan = subPanelCustomCSS.elements.playlistTrashCan.checked;
+            USER_CONFIG.playlistQueueBtn = subPanelCustomCSS.elements.playlistQueueBtn.checked;
             USER_CONFIG.plWLBtn = subPanelCustomCSS.elements.plWLBtn.checked;
             USER_CONFIG.commentsNewFirst = subPanelCustomCSS.elements.commentsNewFirst.checked;
             USER_CONFIG.hideFundraiser = subPanelCustomCSS.elements.hideFundraiser.checked;
@@ -8935,7 +8989,7 @@
     }
 
     // helper to exit fullscreen
-    const exitFullscreen = () => { if (!playerElement.classList.contains('countdown-running')) fullscreenBtn?.click(); };
+    const exitFullscreen = () => { if (!playerElement.classList.contains('countdown-running') && (!watchFlexyElement.hasAttribute('playlist') || !watchFlexyElement.querySelector('ytd-playlist-panel-video-renderer[selected].ytd-playlist-panel-renderer')?.nextElementSibling)) fullscreenBtn?.click(); };
 
     // exit fullscreen when tabView is disabled
     function exitFullscreenNoTabView() {
@@ -9059,7 +9113,6 @@
         let hasLiveChat = false;
         currentActiveTab = null;
         let mastheadWidthTimer;
-        let isFirstRun = true;
         let tabElements = [];
         let subheaderDiv;
         let isDefault;
@@ -9116,7 +9169,7 @@
             watchFlexyElement.removeAttribute('split-scroll');
             watchFlexyElement.removeAttribute('show-fixed-side-menu');
             watchFlexyElement.removeAttribute('fixed-default-panels');
-            if (isDefault && currentActiveTab === 'tab-1') videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+            if (isDefault && currentActiveTab === 'tab-1') setTabPanelState('tab-1', true);
         };
         const watchFlexyAttrsObserver = new MutationObserver(() => removeWatchFlexyAttrs());
         const startWatchFlexyAttrsObs = () => watchFlexyAttrsObserver.observe(watchFlexyElement, { attributes: true, attributeFilter: ['split-scroll', 'show-fixed-side-menu'] });
@@ -9131,12 +9184,13 @@
             }));
         };
 
-        // determine the default tab -- priority: transcript > chapters > comments > info
+        // determine the default tab -- priority: transcript > chapters > comments > playlists > info
         function determineActiveTab() {
             let activeTabId = 'tab-1';
-            if (USER_CONFIG.autoOpenTranscript) { const tab5 = watchFlexyElement.querySelector('[data-tab="tab-5"]'); if (tab5) return 'tab-5'; }
-            if (USER_CONFIG.autoOpenChapters) { const tab4 = watchFlexyElement.querySelector('[data-tab="tab-4"]'); if (tab4) return 'tab-4'; }
-            if (USER_CONFIG.autoOpenComments) { const tab2 = watchFlexyElement.querySelector('[data-tab="tab-2"]'); if (tab2) return 'tab-2'; }
+            if (USER_CONFIG.autoOpenTranscript && !isLive && hasTranscriptPanel) return 'tab-5';
+            if (USER_CONFIG.autoOpenChapters && !isLive && hasChapterPanel) return 'tab-4';
+            if (USER_CONFIG.autoOpenComments && !isLive) return 'tab-2';
+            if (hasPlaylistPanel || (checkPlaylistPanel && !document.getElementById('playlist')?.hasAttribute('hidden'))) return 'tab-6';
             return activeTabId;
         }
 
@@ -9151,14 +9205,6 @@
         function updateTabView() {
             isDefault = watchFlexyElement.hasAttribute('default-layout');
 
-            // if no mode change do nothing
-            if ((!isDefault && isTheaterMode === true) || (isDefault && isTheaterMode === false)) {
-                if (isFirstRun && isTheaterMode) {
-                    if (subheaderDiv) subheaderDiv.onclick = handleTabViewTabClick;
-                    isFirstRun = false;
-                } else if (isFirstRun && !isTheaterMode) isFirstRun = false;
-            }
-
             if (!isDefault) {
                 isTheaterMode = true;
 
@@ -9170,17 +9216,12 @@
 
                 if (subheaderDiv) subheaderDiv.onclick = handleTabViewTabClick;
             } else {
-                isTheaterMode = false;
-
                 if (lastActiveTab) activateTab(lastActiveTab);
                 else activateTab(determineActiveTab());
-
-                if (currentActiveTab === 'tab-1') videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-                else if (currentActiveTab === 'tab-4') openChapters();
-                else if (currentActiveTab === 'tab-5') transcriptLoaded ? openTranscript() : runYTE();
-                else if (currentActiveTab === 'tab-6' && hasPlaylistPanel && playlistSelectedVideo) scrollSelectedVideoPL();
+                isDefault === isTheaterMode ? requestAnimationFrame(() => requestAnimationFrame(() => setTabPanelState(currentActiveTab, true))) : setTabPanelState(currentActiveTab, true);
 
                 subheaderDiv.onclick = null;
+                isTheaterMode = false;
 
                 if (USER_CONFIG.maxPanelHeight && !setMastheadWidth) updateMastheadWidth();
             }
@@ -9191,14 +9232,14 @@
             const panel = activePanel[currentActiveTab];
             if (isDefault && (currentActiveTab === 'tab-4' || currentActiveTab === 'tab-5') && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED')
                 currentActiveTab === 'tab-4' ? runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"], ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED") : openTranscript();
-            else if (USER_CONFIG.preventBackgroundExecution && isDefault && currentActiveTab === 'tab-1' && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED') videoInfo.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
+            else if (USER_CONFIG.preventBackgroundExecution && isDefault && currentActiveTab === 'tab-1' && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED') setTabPanelState('tab-1', true);
             if (hasLiveChat && isSingleColumn) toggleYouTubeColumns();
         };
         const fullscreenListener = () => {
             isFullscreen = watchFlexyElement.hasAttribute('fullscreen');
 
             if (isFullscreen) {
-                if (USER_CONFIG.autoExitFullscreen && !isPlaylistVideoPage) document.addEventListener('yt-autonav-pause-player-ended', exitFullscreen);
+                if (USER_CONFIG.autoExitFullscreen) document.addEventListener('yt-autonav-pause-player-ended', exitFullscreen);
                 if (USER_CONFIG.tabViewChapters && hasChapterPanel && updateTitleContainer) requestAnimationFrame(() => requestAnimationFrame(() => updateTitleContainer?.()));
             }
             else {
@@ -9263,7 +9304,7 @@
         }
 
         // grab info and more video panels
-        const videoInfo = watchFlexyElement.querySelector(infoSel);
+        let videoInfo = null;
         const videoMore = watchFlexyElement.querySelector('#related.ytd-watch-flexy');
 
         // create the main tabView container
@@ -9283,11 +9324,11 @@
         const tabs = [
             'Info',
             ...(!isLive ? ['Comments'] : []),
-            ...((hasPlaylistPanel || !USER_CONFIG.hideQueueBtn) ? ['Playlist'] : []),
-            ...(hasDonationPanel ? ['Donation'] : []),
-            'Videos',
             ...((!isLive && hasChapterPanel) ? ['Chapters'] : []),
             ...((!isLive && hasTranscriptPanel) ? ['Transcript'] : []),
+            ...(hasDonationPanel ? ['Donation'] : []),
+            ...((hasPlaylistPanel || checkPlaylistPanel) ? ['Playlist'] : []),
+            'Videos',
         ];
 
         // define the IDs
@@ -9338,7 +9379,8 @@
         // update panel visibility based on active tab
         async function setTabPanelState(tabId, show) {
             if (tabId === 'tab-1') {
-                videoInfo?.setAttribute('visibility', show ? 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED' : 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
+                if (!videoInfo?.isConnected) videoInfo = watchFlexyElement.querySelector(infoSel);
+                videoInfo.setAttribute('visibility', show ? 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED' : 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN');
                 return;
             }
 
@@ -9429,7 +9471,7 @@
                 // activate button and show content and panel
                 tabLink.classList.add('active');
                 contentSectionById[tabId]?.classList.add('active');
-                setTabPanelState(tabId, true);
+                if (!isTheaterMode) setTabPanelState(tabId, true);
             };
 
             tabElements.push({ element: tabLink });
@@ -10358,19 +10400,11 @@
         video.addEventListener('ended', handleEnded);
 
         // chapters container
+        let progressBarWidthMissing = true;
         let previousProgressBarWidth = 0;
         let previousChaptersLength = 0;
         let cachedMaskImage = null;
         let resizeTimer;
-        let widthObserver;
-
-        const cleanupWidthObserver = () => {
-            if (widthObserver) {
-                widthObserver.disconnect();
-                clearTimeout(widthObserver.fallback);
-                widthObserver = null;
-            }
-        };
 
         const updateLayout = () => {
             const progressBarRect = progressBarContainer.getBoundingClientRect();
@@ -10379,19 +10413,9 @@
 
             if (!progressBarWidth) {
                 cachedMaskImage = null;
-                if (!widthObserver) {
-                    widthObserver = new MutationObserver(() => {
-                        if (progressBarContainer.getBoundingClientRect().width) {
-                            cleanupWidthObserver();
-                            updateLayout();
-                        }
-                    });
-                    widthObserver.observe(progressBarContainer, { attributes: true, childList: true, subtree: true });
-                    widthObserver.fallback = setTimeout(() => cleanupWidthObserver(), 7000);
-                }
                 return;
             }
-            if (widthObserver) { cleanupWidthObserver(); }
+            progressBarWidthMissing = false;
 
             // calculate position relative to the player container
             const playerRect = player.getBoundingClientRect();
@@ -10480,7 +10504,7 @@
         };
 
         // handle animation frame
-        const handlePlay = () => { if (!animationFrameId) animationFrameId = video.requestVideoFrameCallback(animateProgress); };
+        const handlePlay = () => { if (progressBarWidthMissing) updateLayout(); if (!animationFrameId) animationFrameId = video.requestVideoFrameCallback(animateProgress); };
         const handlePause = () => { if (animationFrameId) { video.cancelVideoFrameCallback(animationFrameId); animationFrameId = null; } };
         video.addEventListener('playing', handlePlay);
         video.addEventListener('pause', handlePause);
@@ -10499,7 +10523,6 @@
             updateSegmentsOpacity = null;
             clearTimeout(resizeTimer);
             checkingChapters = null;
-            cleanupWidthObserver();
             startDiv.remove();
             endDiv.remove();
             bar.remove();
@@ -11142,14 +11165,12 @@
 
     // add trashcan icon to playlists to easily remove videos
     function playlistRemovalButtons() {
-        const savePlaylistBtn = document.querySelector('ytd-browse[page-subtype="playlist"][role="main"] :is(toggle-button-view-model, ytd-toggle-button-renderer):not([hidden])');
-        if (savePlaylistBtn) return;
-
         const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"][role="main"]:not([hidden])');
-        if (!playlistPage) return;
+        const savePlaylistBtn = playlistPage?.querySelector(':is(toggle-button-view-model, ytd-toggle-button-renderer):not([hidden])');
+        const playlistContainer = playlistPage?.querySelector('ytd-playlist-video-list-renderer > #contents');
+        if (savePlaylistBtn || !playlistPage || !playlistContainer) return;
 
-        const playlistContainer = playlistPage.querySelector('ytd-playlist-video-list-renderer > #contents');
-        if (!playlistContainer) return;
+        const BTN_CLASS = document.querySelector('.shuffle-button a')?.className ?? '';
 
         // watch for playlist changes
         const playlistObserver = new MutationObserver(mutations => {
@@ -11181,19 +11202,40 @@
             const metaContainer = videoEl.querySelector('#meta');
             if (!metaContainer) return;
 
-            const removeBtn = document.createElement('button');
-            removeBtn.className = 'CentAnni-style-playlist-remove-btn';
-            removeBtn.title = 'Remove from Playlist';
-            removeBtn.textContent = '🗑️';
-            removeBtn.onclick = (event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                if (removeBtn.classList.contains('removing')) return;
-                removeBtn.classList.add('removing');
-                simulateVideoRemoval(videoEl)
-                    .finally(() => { removeBtn.classList.remove('removing'); });
-            };
-            metaContainer.appendChild(removeBtn);
+            const container = document.createElement('div');
+            container.className = 'CentAnni-container-playlist-btns';
+
+            if (USER_CONFIG.playlistTrashCan) {
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'CentAnni-style-playlist-remove-btn';
+                removeBtn.title = 'Remove from Playlist';
+                removeBtn.textContent = '🗑️';
+                removeBtn.onclick = (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    if (removeBtn.classList.contains('removing')) return;
+                    removeBtn.classList.add('removing');
+                    simulateVideoRemoval(videoEl)
+                        .finally(() => { removeBtn.classList.remove('removing'); });
+                };
+                container.appendChild(removeBtn);
+            }
+
+            // adding 'Add to queue' button
+            if (isWatchLater && runAddQueueBtn) {
+                const addToQueue = document.createElement('button');
+                addToQueue.tabIndex = 0;
+                addToQueue.className = `${BTN_CLASS} CentAnni-style-playlist-addToQueue-btn CentAnni-btn-feedback-shape`;
+                addToQueue.textContent = 'Add to Queue';
+                addToQueue.onclick = (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    simulateVideoRemoval(videoEl, true);
+                };
+                container.appendChild(addToQueue);
+            }
+
+            metaContainer.appendChild(container);
             videoEl.setAttribute('data-centanni-playlist-video-processed', 'true');
         }
 
@@ -11203,13 +11245,11 @@
         }
 
         function cleanupRemoveButtons() {
-            document.querySelectorAll('.CentAnni-style-playlist-remove-btn').forEach(btn => btn.remove());
-            document.querySelectorAll('ytd-playlist-video-renderer[data-centanni-playlist-video-processed]').forEach(videoEl => {
-                videoEl.removeAttribute('data-centanni-playlist-video-processed');
-            });
+            document.querySelectorAll('.CentAnni-style-playlist-remove-btn, .CentAnni-style-playlist-addToQueue-btn').forEach(btn => btn.remove());
+            document.querySelectorAll('ytd-playlist-video-renderer[data-centanni-playlist-video-processed]').forEach(videoEl => videoEl.removeAttribute('data-centanni-playlist-video-processed'));
         }
 
-        function simulateVideoRemoval(videoEl) {
+        function simulateVideoRemoval(videoEl, addToQueue = false) {
             return new Promise((resolve) => {
                 const menuBtn = videoEl.querySelector('#button');
                 if (!menuBtn) {
@@ -11230,9 +11270,17 @@
 
                         for (const item of menuItems) {
                             const formattedString = item.querySelector('yt-formatted-string');
-                            if ((formattedString && formattedString.textContent.includes('Remove from')) || item.querySelector('svg path[d^="M19 3h-4V2a1"]')) {
-                                removeOption = item;
-                                break;
+                            if (addToQueue) {
+                                if ((formattedString && formattedString.textContent.includes('Add to queue')) || item.querySelector('svg path[d^="M2 2.864v6"]')) {
+                                    item.click();
+                                    removeOption = false;
+                                    break;
+                                }
+                            } else {
+                                if ((formattedString && formattedString.textContent.includes('Remove from')) || item.querySelector('svg path[d^="M19 3h-4V2a1"]')) {
+                                    removeOption = item;
+                                    break;
+                                }
                             }
                         }
 
@@ -11323,16 +11371,18 @@
         // btn remove watched videos
         const btnRemove = document.createElement('button');
         btnRemove.id = 'CentAnni-remove-watched-btn';
-        btnRemove.className = `${BTN_CLASS}`;
+        btnRemove.className = `${BTN_CLASS} CentAnni-btn-feedback-shape`;
         btnRemove.textContent = 'Remove Watched Videos';
+        btnRemove.tabIndex = 0;
         btnRemove.onclick = handleBtnClick;
         wrapper.insertBefore(btnRemove, menuRenderer.nextSibling);
 
         // btn toggle watched videos
         const btnToggle = document.createElement('button');
         btnToggle.id = 'CentAnni-toggle-watched-btn';
-        btnToggle.className = `${BTN_CLASS}`;
+        btnToggle.className = `${BTN_CLASS} CentAnni-btn-feedback-shape`;
         btnToggle.textContent = 'Toggle Watched';
+        btnToggle.tabIndex = 0;
         btnToggle.onclick = () => docElement.classList.toggle('CentAnni-hide-watched-wl');
         wrapperText.insertBefore(btnToggle, menuRendererText.nextSibling);
 
@@ -11650,9 +11700,7 @@
                 const button = document.createElement('button');
                 button.className = `${BTN_CLASS} CentAnni-playlist-direction-btn`;
                 if (reverseDirection === isUpButton) button.classList.add('active');
-                button.title = isUpButton
-                    ? 'Play Videos Ascending'
-                    : 'Play Videos Descending (YouTube Default)';
+                button.title = isUpButton ? 'Play Videos Ascending' : 'Play Videos Descending (YouTube Default)';
 
                 const iconDiv = document.createElement('div');
                 iconDiv.className = ICON_CLASS;
@@ -11787,8 +11835,9 @@
 
         // clean up
         cleanupPlaylistDirection = () => {
+            document.removeEventListener('yt-autonav-pause-player-ended', handleVideoEnd);
             document.removeEventListener('keydown', handleKeyboardShortcut, true);
-            nextButton.removeEventListener('click', nextButtonClickHandler, true);
+            nextButton?.removeEventListener('click', nextButtonClickHandler, true);
             upButton.onclick = null;
             downButton.onclick = null;
             nextBtnObserver?.disconnect();
@@ -12361,7 +12410,7 @@
                 [USER_CONFIG.playbackSpeed && USER_CONFIG.playbackSpeedBtns, cleanupPlaybackSpeedBtns],
                 [USER_CONFIG.videoTabView && USER_CONFIG.tabViewChapters && hasChapterPanel, moveChapterTitleBack],
                 [!USER_CONFIG.videoTabView && USER_CONFIG.autoExitFullscreen && !isPlaylistVideoPage, cleanupExitFullscreenNoTabView],
-                [USER_CONFIG.videoTabView && USER_CONFIG.preventBackgroundExecution && !USER_CONFIG.autoTheaterMode, cleanupInfoObserver],
+                [USER_CONFIG.videoTabView && USER_CONFIG.preventBackgroundExecution && !USER_CONFIG.autoTheaterMode, cleanupInfoObserver]
             ];
             for (const [flag, callback] of cleanUpVideo) if (flag) callback?.();
 
@@ -12369,13 +12418,13 @@
         } else {
             const cleanUp = [
                 [isShortPage, cleanupShortsPlaybackControl],
-                [USER_CONFIG.plWLBtn && isWatchLater, cleanupWatchLaterRemoveBtn],
-                [USER_CONFIG.playlistLinks && isPlaylistPage, cleanupHandlePlaylistLinks],
-                [USER_CONFIG.playbackSpeed && isShortPage, cleanupPlaybackSpeedController],
-                [USER_CONFIG.feedFilterChips && isHomePage, cleanupRestoreLastSelectedChip],
-                [USER_CONFIG.playlistTrashCan && isPlaylistPage, cleanupPlaylistRemovalButtons],
-                [USER_CONFIG.compactLayout && isWatchLater && headerMoved, moveWlChipBarCleanUp],
-                [USER_CONFIG.lastSeenVideo && isSubscriptionsPage, () => videoElementObserver.disconnect()],
+                [isWatchLater && USER_CONFIG.plWLBtn, cleanupWatchLaterRemoveBtn],
+                [isPlaylistPage && USER_CONFIG.playlistLinks, cleanupHandlePlaylistLinks],
+                [isShortPage && USER_CONFIG.playbackSpeed, cleanupPlaybackSpeedController],
+                [isHomePage && USER_CONFIG.feedFilterChips, cleanupRestoreLastSelectedChip],
+                [isWatchLater && USER_CONFIG.compactLayout && headerMoved, moveWlChipBarCleanUp],
+                [isSubscriptionsPage && USER_CONFIG.lastSeenVideo, () => videoElementObserver.disconnect()],
+                [isPlaylistPage && USER_CONFIG.playlistTrashCan || isWatchLater && runAddQueueBtn, cleanupPlaylistRemovalButtons]
             ];
             for (const [flag, callback] of cleanUp) if (flag) callback?.();
         }
@@ -12418,21 +12467,23 @@
         // music video check
         isMusicVideo = !!docElement.querySelector('meta[itemprop="genre"][content="Music"]');
 
-        // theater mode check
+        // theater mode, vertical video, and large window check
         isTheaterMode = watchFlexyElement.hasAttribute('theater');
+        isLargeWindow = watchFlexyElement.hasAttribute('flexy-large-window_');
+        isVerticalVideo = watchFlexyElement.hasAttribute('is-vertical-video_');
+        if (USER_CONFIG.autoTheaterMode) enterTheaterMode = !isTheaterMode && !(USER_CONFIG.autoTheaterModeNotLargeWindow && isLargeWindow) && !(USER_CONFIG.autoTheaterModeNotPL && isPlaylistVideoPage) && !(USER_CONFIG.autoTheaterModeNotVerticalVideo && isVerticalVideo);
 
         // chapter panel check
         chapterPanel = watchFlexyElement.querySelector('ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-description-chapters], ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-macro-markers-auto-chapters]');
         hasChapterPanel = !!chapterPanel;
 
         // playlist panel check
-        if (isPlaylistVideoPage || !USER_CONFIG.hideQueueBtn) {
+        if (isPlaylistVideoPage || checkPlaylistPanel) {
             const playlistVideoItem = watchFlexyElement.querySelector('ytd-playlist-panel-video-renderer[id="playlist-items"]');
             playlistPanel = watchFlexyElement.querySelector('ytd-playlist-panel-renderer[id="playlist"]');
             hasPlaylistPanel = !!(playlistVideoItem && playlistPanel);
             playlistSelectedVideo = watchFlexyElement.querySelector('ytd-playlist-panel-video-renderer[selected]');
         } else hasPlaylistPanel = false;
-        docElement.classList.toggle('tabView-tab-6', hasPlaylistPanel);
 
         // transcript panel check
         useSearchableTranscript = USER_CONFIG.useLegacyTranscriptPanel;
@@ -12767,7 +12818,10 @@
     let channelHandleURL = null;
     let isMusicVideo = false;
     let initialCloseLiveChat = null;
+    let enterTheaterMode = false;
     let isTheaterMode = null;
+    let isVerticalVideo = null;
+    let isLargeWindow = null;
     let hasChapterPanel = null;
     let chapterPanel = null;
     let hasTranscriptPanel = null;
@@ -12829,6 +12883,8 @@
     const showPlaybackSpeed = USER_CONFIG.playbackSpeed;
     const ChatGPTLabel = USER_CONFIG.targetChatGPTLabel;
     const NotebookLMLabel = USER_CONFIG.targetNotebookLMLabel;
+    const runAddQueueBtn = USER_CONFIG.playlistQueueBtn && !USER_CONFIG.hideMiniPlayer;
+    const checkPlaylistPanel = !USER_CONFIG.hideQueueBtn || runAddQueueBtn;
     const transcriptSearchableSegmentSel = 'ytd-transcript-segment-renderer';
     const transcriptButtonSel = '#panels ytd-video-description-transcript-section-renderer button';
     const transcriptListSel = 'yt-section-list-renderer[data-target-id="PAmodern_transcript_view"]';
@@ -12836,11 +12892,11 @@
     const transcriptSearchableSel = '#panels ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]';
     const transcriptSegmentSel = 'transcript-segment-view-model.ytwTranscriptSegmentViewModelHost, .ytwTranscriptSegmentViewModelHost';
     const infoSel = 'ytd-engagement-panel-section-list-renderer[target-id=engagement-panel-structured-description]';
+    const prBaSel = '.ytp-chrome-bottom > .ytp-progress-bar-container';
     const menuSel = '#primary #top-row #top-level-buttons-computed';
+    const chapSel = '.ytp-chrome-bottom .ytp-chapters-container';
     const fsCnSel = '#movie_player > div.ytp-chrome-bottom';
-    const prBaSel = '.ytp-progress-bar-container';
     const prBeSel = '#columns #primary #below';
-    const chapSel = '.ytp-chapters-container';
     const cmtsSel = 'ytd-comments#comments';
     const vidPSel = '.html5-video-player';
     const videoTargets = [infoSel, menuSel, cmtsSel, vidPSel, chapSel, prBaSel, fsCnSel, prBeSel];
@@ -12848,6 +12904,51 @@
     const videoPageContainer = '#page-manager > ytd-watch-flexy[role=main]:not([hidden])';
     const browseContainer = '#page-manager > :is(ytd-browse, ytd-search, ytd-shorts):not([hidden])[role="main"]';
     const scriptPolicy = window.trustedTypes && trustedTypes.createPolicy('CentAnniAlchemy', { createScript: s => s });
+
+    // create arrays with enabled features
+    const runFeatures = features => { for (const [flags, callback] of features) if (!flags || flags()) callback(); };
+    const createEnabledFeatures = features => features.filter(([enabled]) => enabled).map(([, flags, callback]) => [flags, callback]);
+    const videoFeatures = createEnabledFeatures([
+        [USER_CONFIG.defaultQuality !== 'auto', null, runSetVideoQuality],
+        [USER_CONFIG.autoTheaterMode, () => enterTheaterMode, toggleTheaterMode],
+        [USER_CONFIG.playbackSpeed, null, videoPlaybackSpeed],
+        [USER_CONFIG.progressBar, () => !isLive, keepProgressBarVisible],
+        [USER_CONFIG.displayRemainingTime, () => !isLive, remainingTime],
+        [USER_CONFIG.commentsNewFirst, () => !isLive, sortCommentsNewFirst],
+        [USER_CONFIG.expandVideoDescription && !USER_CONFIG.videoTabView, null, clickDescriptionBtn],
+        [USER_CONFIG.autoOpenChapters && !USER_CONFIG.videoTabView, () => hasChapterPanel, openChapters],
+        [USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView, () => hasTranscriptPanel, clickTranscriptBtn],
+        [USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto', null, setLanguage],
+        [!USER_CONFIG.videoTabView && (USER_CONFIG.autoOpenChapters || USER_CONFIG.autoOpenTranscript), () => (USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel), scrollToTop],
+        [USER_CONFIG.hideEndscreen, null, () => setTimeout(() => { getThumbnailUrl((url) => { docElement.style.setProperty('--video-url', url); }); }, 1000)],
+        [USER_CONFIG.playlistDirectionBtns, () => isPlaylistVideoPage, () => requestIdleCallback(playlistDirection)],
+        [USER_CONFIG.feedFilterChipsWatch, null, () => requestIdleCallback(restoreLastSelectedChip)],
+        [USER_CONFIG.maxVidSize || USER_CONFIG.compactLayoutVideo, null, maxVideoSize],
+        [USER_CONFIG.videoTabView, null, () => initialRun ? requestIdleCallback(tabView) : tabView()],
+        [USER_CONFIG.closeChatWindow, null, () => initialRun ? requestIdleCallback(chatWindowCheck) : setTimeout(chatWindowCheck, 1000)],
+        [USER_CONFIG.enableCinemaMode, () => !cinemaModeActive, cinemaMode],
+        [USER_CONFIG.hideProdTxt, null, hideProductsSpan],
+        [USER_CONFIG.subtitlesWhenMuted, null, () => requestIdleCallback(ccOnMute)],
+        [USER_CONFIG.subtitlesWhenRewind, null, () => requestIdleCallback(ccOnRewind)],
+        [!USER_CONFIG.videoTabView && USER_CONFIG.autoExitFullscreen, () => !isPlaylistVideoPage, exitFullscreenNoTabView],
+        [USER_CONFIG.playbackSpeed || USER_CONFIG.progressBar || USER_CONFIG.displayRemainingTime, null, () => requestIdleCallback(videoObserver)]
+    ]);
+
+    const browseFeatures = createEnabledFeatures([
+        [!USER_CONFIG.redirectShorts, () => isShortPage, shortsPlaybackControl],
+        [USER_CONFIG.plWLBtn, () => isWatchLater, watchLaterRemoveBtn],
+        [USER_CONFIG.compactLayout, () => isWatchLater, moveWlChipBar],
+        [USER_CONFIG.playlistLinks, () => isPlaylistPage, handlePlaylistLinks],
+        [USER_CONFIG.lastSeenVideo, () => isSubscriptionsPage, markLastSeenVideo],
+        [USER_CONFIG.colorCodeVideosEnabled, () => isHomePage, homeColorCodeVideos],
+        [!USER_CONFIG.redirectShorts && USER_CONFIG.playbackSpeed, () => isShortPage, createPlaybackSpeedController],
+        [USER_CONFIG.defaultChannelPage !== 'home', () => isChannelPage, defaultChannelPageBtn],
+        [USER_CONFIG.channelRSSBtn, () => isChannelPage, () => requestIdleCallback(addRSSFeedButton)],
+        [USER_CONFIG.feedFilterChips, () => isHomePage, () => requestIdleCallback(restoreLastSelectedChip)],
+        [USER_CONFIG.channelPlaylistBtn, () => isChannelPage, () => requestIdleCallback(addPlaylistButtons)],
+        [USER_CONFIG.playlistTrashCan || runAddQueueBtn, () => isPlaylistPage, () => requestIdleCallback(playlistRemovalButtons)],
+        [USER_CONFIG.hideMiniPlayer, null, () => document.querySelector('.ytp-miniplayer-close-button')?.click()]
+    ]);
 
     // initiate the script
     async function initializeAlchemy() {
@@ -12857,32 +12958,7 @@
 
         if (isWatchPage) {
             updateVideoContext();
-            const videoFeatures = [
-                [USER_CONFIG.defaultQuality !== 'auto', runSetVideoQuality],
-                [USER_CONFIG.autoTheaterMode && !isTheaterMode, toggleTheaterMode],
-                [USER_CONFIG.playbackSpeed, videoPlaybackSpeed],
-                [USER_CONFIG.progressBar && !isLive, keepProgressBarVisible],
-                [USER_CONFIG.displayRemainingTime && !isLive, remainingTime],
-                [USER_CONFIG.commentsNewFirst && !isLive, sortCommentsNewFirst],
-                [USER_CONFIG.expandVideoDescription && !USER_CONFIG.videoTabView, clickDescriptionBtn],
-                [USER_CONFIG.autoOpenChapters && !USER_CONFIG.videoTabView && hasChapterPanel, openChapters],
-                [USER_CONFIG.autoOpenTranscript && !USER_CONFIG.videoTabView && hasTranscriptPanel, clickTranscriptBtn],
-                [(USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto'), setLanguage],
-                [!USER_CONFIG.videoTabView && ((USER_CONFIG.autoOpenChapters && hasChapterPanel) || (USER_CONFIG.autoOpenTranscript && hasTranscriptPanel)), scrollToTop],
-                [USER_CONFIG.hideEndscreen, () => setTimeout(() => { getThumbnailUrl((url) => { docElement.style.setProperty('--video-url', url); }); }, 1000)],
-                [USER_CONFIG.playlistDirectionBtns && isPlaylistVideoPage, () => requestIdleCallback(playlistDirection)],
-                [USER_CONFIG.feedFilterChipsWatch, () => requestIdleCallback(restoreLastSelectedChip)],
-                [USER_CONFIG.maxVidSize || USER_CONFIG.compactLayoutVideo, maxVideoSize],
-                [USER_CONFIG.videoTabView, () => initialRun ? requestIdleCallback(tabView) : tabView()],
-                [USER_CONFIG.closeChatWindow, () => initialRun ? requestIdleCallback(chatWindowCheck) : setTimeout(chatWindowCheck, 1000)],
-                [USER_CONFIG.enableCinemaMode && !cinemaModeActive, cinemaMode],
-                [USER_CONFIG.hideProdTxt, hideProductsSpan],
-                [USER_CONFIG.subtitlesWhenMuted, () => requestIdleCallback(ccOnMute)],
-                [USER_CONFIG.subtitlesWhenRewind, () => requestIdleCallback(ccOnRewind)],
-                [!USER_CONFIG.videoTabView && USER_CONFIG.autoExitFullscreen && !isPlaylistVideoPage, exitFullscreenNoTabView],
-                [USER_CONFIG.playbackSpeed || USER_CONFIG.progressBar || USER_CONFIG.displayRemainingTime, () => requestIdleCallback(videoObserver)]
-            ];
-            for (const [flag, callback] of videoFeatures) if (flag) callback();
+            runFeatures(videoFeatures);
 
             // transcript exporter
             if (!USER_CONFIG.YouTubeTranscriptExporter) createButtons('settings');
@@ -12890,23 +12966,9 @@
             else requestIdleCallback(() => setTimeout(runYTE, 250));
         } else {
             createButtons('settings');
-            const browseFeatures = [
-                [isShortPage, shortsPlaybackControl],
-                [isWatchLater && USER_CONFIG.plWLBtn, watchLaterRemoveBtn],
-                [isWatchLater && USER_CONFIG.compactLayout, moveWlChipBar],
-                [isPlaylistPage && USER_CONFIG.playlistLinks, handlePlaylistLinks],
-                [isSubscriptionsPage && USER_CONFIG.lastSeenVideo, markLastSeenVideo],
-                [isHomePage && USER_CONFIG.colorCodeVideosEnabled, homeColorCodeVideos],
-                [isShortPage && USER_CONFIG.playbackSpeed, createPlaybackSpeedController],
-                [isChannelPage && USER_CONFIG.defaultChannelPage !== 'home', defaultChannelPageBtn],
-                [isChannelPage && USER_CONFIG.channelRSSBtn, () => requestIdleCallback(addRSSFeedButton)],
-                [isHomePage && USER_CONFIG.feedFilterChips, () => requestIdleCallback(restoreLastSelectedChip)],
-                [isChannelPage && USER_CONFIG.channelPlaylistBtn, () => requestIdleCallback(addPlaylistButtons)],
-                [isPlaylistPage && USER_CONFIG.playlistTrashCan, () => requestIdleCallback(playlistRemovalButtons)]
-            ];
-            for (const [flag, callback] of browseFeatures) if (flag) callback();
-            if (USER_CONFIG.hideMiniPlayer) document.querySelector('.ytp-miniplayer-close-button')?.click();
+            runFeatures(browseFeatures);
         }
+
         initialRun = false;
         locationUpdated = false;
     }
@@ -13027,7 +13089,6 @@
     document.addEventListener('yt-navigate-finish', handleYouTubeNavigation); // default
     document.addEventListener('yt-page-data-updated', handleYouTubeNavigation); // backup
     document.addEventListener('yt-page-data-fetched', handleYouTubeNavigation); // backup
-    document.addEventListener('yt-service-request-completed', handleYouTubeNavigation); // redundancy
     if (USER_CONFIG.playbackSpeed) document.addEventListener('yt-player-updated', initialSpeed); // set playback speed
     if (USER_CONFIG.preventAutoplay) { document.addEventListener('yt-player-updated', pauseYouTubeVideo); window.addEventListener('load', pauseYouTubeVideo); } // prevent autoplay
     if (USER_CONFIG.chronologicalNotifications) { document.addEventListener('yt-update-unseen-notification-count', () => setTimeout(() => requestIdleCallback(chronoNotifications, { timeout: 250 }), 100)); } // sort notifications chronologically
