@@ -1,0 +1,21 @@
+name: Close Stale Issues
+on:
+  schedule:
+    - cron: "14 16 * * *"
+
+permissions:
+  issues: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v11.0.0
+        with:
+          stale-issue-message: "This issue has been automatically marked as stale and will be closed if no further activity occurs."
+          close-issue-message: "This issue was automatically closed because it remained inactive."
+
+          days-before-stale: 70
+          days-before-close: 7
+
+          exempt-issue-assignees: 'TimMacy'
