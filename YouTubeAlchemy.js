@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 200+ options accessible via settings panels. Key features include: tab view, playback speed control, video quality selection, export transcripts, prevent autoplay, hide Shorts, disable play-on-hover, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      11.10
+// @version      11.11
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 11.10 - YouTube Alchemy                   *
+*                    Version: 11.11 - YouTube Alchemy                   *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2083,15 +2083,15 @@
             }
 
             #donation-shelf,
-            .CentAnni-tabView-content-hidden,
-            .CentAnni-tabView-content-nascosta {
+            .CentAnni-tabView-content-nascosta,
+            ytd-watch-flexy:not([fullscreen]) .CentAnni-tabView-content-hidden {
                 opacity: 0;
                 visibility: hidden;
             }
 
             #donation-shelf,
-            .CentAnni-tabView-content-hidden,
-            [target-id="PAyouchat"] .chatInputViewModelPromoButton {
+            [target-id="PAyouchat"] .chatInputViewModelPromoButton,
+            ytd-watch-flexy:not([fullscreen]) .CentAnni-tabView-content-hidden {
                 display: none;
             }
 
@@ -2374,85 +2374,11 @@
                         -webkit-line-clamp: 4;
                         max-height: unset;
                     }
-                }
 
-                /* single columns */
-                &:not([is-two-columns_]) {
-                    #columns.ytd-watch-flexy {
-                        flex-direction: column;
-                    }
-
-                    .CentAnni-tabView {
-                        margin-top: 12px;
-                        width: 90dvw;
-                    }
-
-                    .CentAnni-tabView-content {
-                        max-height: 50dvh !important;
-                    }
-
-                    #primary ytd-watch-metadata {
-                        height: calc(var(--ytd-watch-flexy-space-below-player) - 22px);
-                        overflow-x: hidden;
-                    }
-
-                    #secondary.ytd-watch-flexy {
-                        display: flex;
-                        margin: 0;
-                        padding: 0;
-                        justify-content: center;
-                        align-items: center;
-                        width: 100%;
-                    }
-
-                    #primary #playlist,
-                    #related.ytd-watch-flexy,
-                    #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy {
-                        max-height: 50dvh !important;
-                        width: 90dvw !important;
-                        margin: 0 !important;
-                        left: 50% !important;
-                        transform: translate(-50%, calc(var(--ytd-watch-flexy-space-below-player) + 2px));
-                    }
-
-                    &[theater] {
-                        #primary {
-                            flex-basis: auto;
-                            height: calc(var(--ytd-watch-flexy-space-below-player) - 22px);
-                        }
-
-                        &[full-bleed-player] #secondary.ytd-watch-flexy {
-                            display: flex;
-                            margin: 0;
-                            padding: 0;
-                            justify-content: center;
-                            align-items: center;
-                            width: 100%;
-                        }
-                    }
-
-                    &:not([theater]) {
-                        #chat.ytd-watch-flexy:not([collapsed]) {
-                            max-height: 50dvh !important;
-                        }
-
-                        &[show-expandable-metadata] ytd-watch-metadata {
-                            margin-bottom: 0;
-                        }
-                    }
-
-                    &[default-layout]:not([no-top-margin]):not([reduced-top-margin]) #secondary.ytd-watch-flexy {
-                        padding: 0;
-                    }
-
-                    &:has(#chat:not([collapsed])) {
-                        .CentAnni-tabView {
-                            display: none !important;
-                        }
-
-                        &[theater] #primary {
-                            height: max-content;
-                        }
+                    &[flexy-small-window_] #playlist[playlist-type="TLPQ"] #end-actions {
+                        position: absolute;
+                        right: 0;
+                        transform: translateY(-40px);
                     }
                 }
 
@@ -2776,10 +2702,6 @@
                 display: flex;
             }
 
-            ytd-app:not([scrolling]):has(ytd-watch-flexy:not([is-two-columns_]):not([theater])) {
-                overflow: unset;
-            }
-
             @media (min-width:1200px) {
                 ytd-item-section-renderer[is-grid-view-enabled] #contents.ytd-item-section-renderer,
                 ytd-watch-next-secondary-results-renderer[is-grid-view-enabled] #items.ytd-watch-next-secondary-results-renderer {
@@ -2805,8 +2727,6 @@
             #trailing-button.ytd-playlist-panel-renderer,
             ytd-live-chat-frame[modern-buttons][collapsed],
             #ghost-comment-section.ytd-continuation-item-renderer,
-            ytd-watch-flexy:not([is-two-columns_])[theater] #panels,
-            ytd-watch-flexy:not([is-two-columns_])[theater] #related,
             ytd-engagement-panel-section-list-renderer ytd-merch-shelf-renderer,
             ytd-watch-flexy #top-row.ytd-watch-metadata .contribYtLightShapeHost,
             #secondary:has(#playlist[hidden]) .CentAnni-tabView-tab[data-tab="tab-6"],
@@ -2814,7 +2734,6 @@
             #description > #description-inner > #ytd-watch-info-text > tp-yt-paper-tooltip,
             ytd-watch-flexy:not([fullscreen]) #navigation-button.ytd-rich-list-header-renderer,
             ytd-watch-flexy #expandable-metadata #right-section.ytd-expandable-metadata-renderer,
-            ytd-watch-flexy:not([is-two-columns_]):not([theater]) #expandable-metadata.ytd-watch-flexy,
             ytd-watch-flexy[theater] ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview],
             ytd-watch-flexy:not([fullscreen]) #header.style-scope.ytd-engagement-panel-section-list-renderer,
             #ytd-watch-info-text[view-count-post-number-text][date-text-post-number-text] .CentAnni-info-date,
@@ -3992,6 +3911,10 @@
                 .collections-stack-wiz__collection-stack1--medium {
                     border-radius: 0 !important;
                 }
+
+                #icon-button #interaction .yt-interaction {
+                    border-radius: 50% !important;
+                }
             }
 
             .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-start {
@@ -4081,12 +4004,6 @@
             }
         }
 
-        #playlist[playlist-type="TLPQ"] #end-actions {
-            position: absolute;
-            right: 0;
-            transform: translateY(-40px);
-        }
-
         #CentAnni-channel-btn {
             display: flex;
             align-items: center;
@@ -4097,18 +4014,18 @@
             display: inline-flex;
             align-items: center;
             margin-left: 8px;
-        }
 
-        #CentAnni-playlist-direction-container > span {
-            margin-right: 4px;
-            color: var(--yt-text-primary);
-            font-family: "YouTube Sans", "Roboto", sans-serif;
-            font-size: 1.7rem;
-            line-height: 1.5rem;
-            font-weight: 600;
-            -webkit-font-smoothing: antialiased !important;
-            -moz-osx-font-smoothing: grayscale !important;
-            cursor: default;
+            > span {
+                margin-right: 4px;
+                color: var(--yt-text-primary);
+                font-family: "YouTube Sans", "Roboto", sans-serif;
+                font-size: 1.7rem;
+                line-height: 1.5rem;
+                font-weight: 600;
+                -webkit-font-smoothing: antialiased !important;
+                -moz-osx-font-smoothing: grayscale !important;
+                cursor: default;
+            }
         }
 
         #end-actions.ytd-playlist-panel-renderer {
@@ -4450,7 +4367,7 @@
                     border-radius: 50%;
                 }
 
-                ytd-expandable-tab-renderer[show-input] yt-icon-button.ytd-expandable-tab-renderer {
+                yt-icon-button.ytd-expandable-tab-renderer {
                     margin-right: 8px;
                 }
 
@@ -4834,6 +4751,7 @@
             ytd-transcript-footer-renderer button#button,
             ytd-thumbnail-overlay-toggle-button-renderer svg,
             #button.ytd-menu-renderer yt-icon.ytd-menu-renderer,
+            yt-icon-button.dropdown-trigger.ytd-menu-renderer#button,
             .yt-spec-button-shape-next--size-m .yt-spec-button-shape-next__icon,
             ytd-menu-service-item-renderer[system-icons] yt-icon.ytd-menu-service-item-renderer,
             ytd-menu-service-item-renderer[system-icons] .ytIconWrapperHost.ytd-menu-service-item-renderer,
@@ -4970,22 +4888,17 @@
 
         .CentAnni-close-live-chat {
             #chat-container {
-                z-index: -1 !important;
-                opacity: 0 !important;
-                visibility: hidden;
-                pointer-events: none !important;
-            }
-
-            #panels-full-bleed-container.ytd-watch-flexy {
                 display: none;
             }
 
-            .video-stream.html5-main-video {
-                width: 100%;
-            }
+            ytd-watch-flexy[live-chat-present-and-expanded][theater] {
+                #panels-full-bleed-container {
+                    display: none;
+                }
 
-            #columns.ytd-watch-flexy {
-                padding-right: 0 !important;
+                .ytd-watch-flexy#columns {
+                    padding-right: 0 !important;
+                }
             }
         }
 
@@ -5256,6 +5169,7 @@
         .CentAnni-style-hide-autoplay-btn button.ytp-autonav-toggle:has([aria-checked="false"]),
         .CentAnni-style-hide-reply-btn ytd-comments ytd-comment-engagement-bar #reply-button-end,
         .CentAnni-style-hide-prod-sug :is(#below > #shopping-timely-shelf, ytd-merch-shelf-renderer),
+        HTML.CentAnni-hide-collabpanel :is(ytd-popup-container.ytd-app, tp-yt-iron-overlay-backdrop),
         .CentAnni-style-hide-share-btn-global ytd-macro-markers-list-item-renderer[active] #share-button,
         .CentAnni-style-hide-latest-posts #container.ytd-search ytd-shelf-renderer:has(ytd-post-renderer),
         .CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen #CentAnni-chapter-title,
@@ -6851,9 +6765,9 @@
             const autoTheaterModeSpan = document.createElement('span');
             autoTheaterModeSpan.textContent = 'Unless';
             autoTheaterModeSpan.className = "checkbox-label";
-            const autoTheaterModeNotVerticalVideo = createCheckboxField('Vertical Video (default: off)', 'autoTheaterModeNotVerticalVideo', USER_CONFIG.autoTheaterModeNotVerticalVideo);
-            const autoTheaterModeNotLargeWindow = createCheckboxField('Large Window (default: off)', 'autoTheaterModeNotLargeWindow', USER_CONFIG.autoTheaterModeNotLargeWindow);
-            const autoTheaterModeNotPL = createCheckboxField('Playlist Page (default: off)', 'autoTheaterModeNotPL', USER_CONFIG.autoTheaterModeNotPL);
+            const autoTheaterModeNotVerticalVideo = createCheckboxField('Vertical Video', 'autoTheaterModeNotVerticalVideo', USER_CONFIG.autoTheaterModeNotVerticalVideo);
+            const autoTheaterModeNotLargeWindow = createCheckboxField('Large Window', 'autoTheaterModeNotLargeWindow', USER_CONFIG.autoTheaterModeNotLargeWindow);
+            const autoTheaterModeNotPL = createCheckboxField('Playlist Page', 'autoTheaterModeNotPL', USER_CONFIG.autoTheaterModeNotPL);
 
             container.append(autoTheaterMode, autoTheaterModeSpan, autoTheaterModeNotVerticalVideo, autoTheaterModeNotLargeWindow, autoTheaterModeNotPL);
             form.appendChild(container);
@@ -7003,7 +6917,7 @@
             form.appendChild(layoutChanges);
 
             // tab view on video page
-            const videoTabView = createCheckboxField('Tab View on Video Pages (default: on)', 'videoTabView', USER_CONFIG.videoTabView);
+            const videoTabView = createCheckboxField('Tab View on Video Pages | Only Works with Two-Columns Layout (default: on)', 'videoTabView', USER_CONFIG.videoTabView);
             form.appendChild(videoTabView);
 
             // toggle theater mode w/ active tab
@@ -8656,22 +8570,54 @@
     }
 
     // function to get video information
-    async function getVideoInfo() {
+    async function getVideoInfo(playbackspeed = false) {
+        let channelName;
+        let isCollaborators = false;
+        if (!playbackspeed) channelName = watchFlexyElement.querySelector('#channel-name a')?.textContent.trim();
+        if (!channelName) {
+            const popupContainer = document.querySelector('ytd-app ytd-popup-container.ytd-app');
+            const attributedChannel = watchFlexyElement.querySelector('#attributed-channel-name a');
+            if (popupContainer && attributedChannel) {
+                docElement.classList.add('CentAnni-hide-collabpanel');
+                attributedChannel.click();
+
+                await new Promise(resolve => {
+                    if (popupContainer.querySelector('.ytListItemViewModelHost')) return resolve();
+
+                    const CollabPanelObserver = new MutationObserver(() => {
+                        if (!popupContainer.querySelector('.ytListItemViewModelHost')) return;
+                        clearTimeout(CollabPanelObserver.timer);
+                        CollabPanelObserver.disconnect();
+                        resolve();
+                    });
+
+                    CollabPanelObserver.observe(popupContainer, { childList: true, subtree: true });
+                    CollabPanelObserver.timer = setTimeout(() => { CollabPanelObserver.disconnect(); resolve(); }, 500);
+                });
+
+                const videoCollab = [...document.querySelectorAll('.ytListItemViewModelHost')].map(element => playbackspeed ? element.querySelector('.ytListItemViewModelSubtitle')?.textContent.match(/@([^\s\u2066-\u2069]+)/)?.[1] : element.querySelector('a')?.textContent.trim()).filter(Boolean);
+
+                if (playbackspeed) channelName = videoCollab;
+                else {
+                    const collabFormatted = videoCollab.length > 2 ? videoCollab.slice(0, -1).join(', ') + ', and ' + videoCollab.at(-1) : videoCollab.join(' and ');
+                    channelName = collabFormatted || attributedChannel?.textContent.trim() || 'N/A';
+                }
+                isCollaborators = true;
+
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    docBody.click();
+                    requestAnimationFrame(() => requestAnimationFrame(() => docElement.classList.remove('CentAnni-hide-collabpanel')));
+                }));
+            } else channelName = 'N/A';
+        }
+
+        if (playbackspeed) return { channelName };
+
         const ytTitle = watchFlexyElement.querySelector('h1.ytd-watch-metadata yt-formatted-string')?.textContent.trim() || 'N/A';
-        let channelName = watchFlexyElement.querySelector('#channel-name a')?.textContent.trim();
         const uploadDate = watchFlexyElement.querySelector('#info-strings yt-formatted-string')?.textContent.trim() || 'N/A';
         const videoURL = window.location.href;
 
-        if (!channelName) {
-            watchFlexyElement.querySelector('#attributed-channel-name a')?.click();
-            await new Promise(r => setTimeout(r, 500));
-            const videoCollaborators = [...document.querySelectorAll('.ytListItemViewModelHost a')].map(a => a.textContent.trim()).filter(Boolean);
-            const collaboratorsFormatted = videoCollaborators.length > 2 ? videoCollaborators.slice(0, -1).join(', ') + ', and ' + videoCollaborators.at(-1) : videoCollaborators.join(' and ');
-            channelName = collaboratorsFormatted ? collaboratorsFormatted : watchFlexyElement.querySelector('#attributed-channel-name a')?.textContent.trim() || 'N/A';
-            docBody.click();
-        }
-
-        return { ytTitle, channelName, uploadDate, videoURL };
+        return { ytTitle, channelName, uploadDate, videoURL, isCollaborators };
     }
 
     function getTranscriptPanel() {
@@ -8758,10 +8704,10 @@
     // helper to determine word count
     const getSummaryWordTarget = (transcript) => {
         const l = transcript.length;
-        if (l < 5000) return 100;
-        if (l < 12000) return 150;
-        if (l < 25000) return 200;
-        if (l < 45000) return 300;
+        if (l < 6000) return 100;
+        if (l < 11000) return 150;
+        if (l < 24000) return 200;
+        if (l < 44000) return 300;
         if (l < 90000) return 400;
         return 500;
     };
@@ -8769,19 +8715,20 @@
     // function to select and copy the transcript into the clipboard
     async function selectAndCopyTranscript(target) {
         const transcriptText = getTranscriptText();
-        const { ytTitle, channelName, uploadDate, videoURL } = await getVideoInfo();
+        const { ytTitle, channelName, uploadDate, videoURL, isCollaborators } = await getVideoInfo();
 
         let finalText = '';
         let targetUrl = '';
+        const author = isCollaborators ? 'Collaborators' : 'Channel';
 
         if (target === 'ChatGPT') {
             const summaryWordCount = getSummaryWordTarget(transcriptText);
             const prompt = USER_CONFIG.ChatGPTPrompt.replace("summaryWordCount", summaryWordCount).replace(/paragraphCount/g, summaryWordCount >= 400 ? "Two-Paragraph" : "One-Paragraph");
 
-            finalText = `YouTube Transcript:\n${transcriptText.trimStart()}\n\n\nAdditional Information about the YouTube Video:\nTitle: ${ytTitle}\nChannel: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nTask Instructions:\n${prompt}`;
+            finalText = `YouTube Transcript:\n${transcriptText.trimStart()}\n\n\nAdditional Information about the YouTube Video:\nTitle: ${ytTitle}\n${author}: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nTask Instructions:\n${prompt}`;
             targetUrl = USER_CONFIG.targetChatGPTUrl;
         } else {
-            finalText = `Information about the YouTube Video:\nTitle: ${ytTitle}\nChannel: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nYouTube Transcript:\n${transcriptText.trimStart()}`;
+            finalText = `Information about the YouTube Video:\nTitle: ${ytTitle}\n${author}: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nYouTube Transcript:\n${transcriptText.trimStart()}`;
             targetUrl = USER_CONFIG.targetNotebookLMUrl;
         }
 
@@ -8798,8 +8745,9 @@
     // function to get the formatted transcript with video details for the text file
     async function getFormattedTranscript() {
         const transcriptText = getTranscriptText();
-        const { ytTitle, channelName, uploadDate, videoURL } = await getVideoInfo();
-        const finalText = `Information about the YouTube Video:\nTitle: ${ytTitle}\nChannel: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nYouTube Transcript:\n${transcriptText.trimStart()}`;
+        const { ytTitle, channelName, uploadDate, videoURL, isCollaborators } = await getVideoInfo();
+        const author = isCollaborators ? 'Collaborators' : 'Channel';
+        const finalText = `Information about the YouTube Video:\nTitle: ${ytTitle}\n${author}: ${channelName}\nUpload Date: ${uploadDate}\nURL: ${videoURL}\n\n\nYouTube Transcript:\n${transcriptText.trimStart()}`;
 
         return { finalText, ytTitle, channelName, uploadDate };
     }
@@ -9106,11 +9054,23 @@
 
     function tabView() {
         if (!watchFlexyElement) return;
+        // reset single to two colums for live chat windows, otherwise return if window is below 1,000
+        const checkYouTubeColumns = (setYouTubeColumns = false) => {
+            if (watchFlexyElement.hasAttribute('is-single-column')) {
+                if (window.innerWidth >= 1000) {
+                    watchFlexyElement.removeAttribute('is-single-column');
+                    watchFlexyElement.setAttribute('is-two-columns_', '');
+                } else if (!setYouTubeColumns) {
+                    docElement.classList.remove('CentAnni-video-tabView');
+                    return true;
+                }
+            }
+            return false;
+        }; if (checkYouTubeColumns()) return;
+
         let setMastheadWidth = false;
-        let isSingleColumn = false;
         let lastActiveTab = null;
         transcriptLoaded = false;
-        let hasLiveChat = false;
         currentActiveTab = null;
         let mastheadWidthTimer;
         let tabElements = [];
@@ -9126,8 +9086,8 @@
                 docElement.style.setProperty('--sidebarWidth', sidebarWidth);
             }
 
-            const columnsRight = watchFlexyElement.querySelector('#columns').getBoundingClientRect().right;
-            const hasRightSpace = document.documentElement.clientWidth - columnsRight > .5;
+            const columnsRight = watchFlexyElement.querySelector('#secondary').getBoundingClientRect().right;
+            const hasRightSpace = docElement.clientWidth - columnsRight > .5;
             if (hasRightSpace) docElement.style.setProperty('--mastheadWidth', `${watchFlexyElement.querySelector('#primary').getBoundingClientRect().right}px`);
             else docElement.style.removeProperty('--mastheadWidth');
 
@@ -9153,16 +9113,6 @@
             get() { return nativeScrollTop.get.call(this); },
             set() {}
         });
-
-        // force two-column layout for live chat videos when viewport width is 1000+
-        const toggleYouTubeColumns = () => {
-            const videos = watchFlexyElement.querySelector('ytd-item-section-renderer[is-grid-view-enabled], ytd-watch-next-secondary-results-renderer[is-grid-view-enabled]');
-            if (watchFlexyElement.hasAttribute('is-single-column') && videos && window.innerWidth >= 1000) {
-                watchFlexyElement.removeAttribute('is-single-column');
-                watchFlexyElement.setAttribute('is-two-columns_', '');
-                videos.removeAttribute('is-grid-view-enabled');
-            }
-        };
 
         // fixed side menu and split scroll fix
         const removeWatchFlexyAttrs = () => {
@@ -9227,39 +9177,34 @@
             }
         }
 
-        // handle mode change -- fullscreen and theater/default layout
-        const handleFullscreenChange = () => {
-            const panel = activePanel[currentActiveTab];
-            if (isDefault && (currentActiveTab === 'tab-4' || currentActiveTab === 'tab-5') && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED')
-                currentActiveTab === 'tab-4' ? runInPage(() => (document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"], ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-auto-chapters"]')).visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED") : openTranscript();
-            else if (USER_CONFIG.preventBackgroundExecution && isDefault && currentActiveTab === 'tab-1' && panel?.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED') setTabPanelState('tab-1', true);
-            if (hasLiveChat && isSingleColumn) toggleYouTubeColumns();
-        };
-        const fullscreenListener = () => {
+        // handle fullscreen change
+        const fullscreenCheck = () => {
             isFullscreen = watchFlexyElement.hasAttribute('fullscreen');
 
             if (isFullscreen) {
                 if (USER_CONFIG.autoExitFullscreen) document.addEventListener('yt-autonav-pause-player-ended', exitFullscreen);
-                if (USER_CONFIG.tabViewChapters && hasChapterPanel && updateTitleContainer) requestAnimationFrame(() => requestAnimationFrame(() => updateTitleContainer?.()));
+                if (USER_CONFIG.tabViewChapters && hasChapterPanel && updateTitleContainer) requestAnimationFrame(() => requestAnimationFrame(() => updateTitleContainer()));
             }
             else {
                 document.removeEventListener('yt-autonav-pause-player-ended', exitFullscreen);
                 requestAnimationFrame(() => requestAnimationFrame(() => {
+                    checkYouTubeColumns(true);
+                    updateTabView();
+                    if (USER_CONFIG.maxPanelHeight) checkMastheadWidth();
                     if (USER_CONFIG.tabViewChapters && hasChapterPanel && updateTitleContainer) updateTitleContainer();
-                    handleFullscreenChange();
                 }));
             }
         };
 
         document.addEventListener('yt-set-theater-mode-enabled', updateTabView);
-        document.addEventListener('fullscreenchange', fullscreenListener);
+        document.addEventListener('fullscreenchange', fullscreenCheck);
         if (USER_CONFIG.maxPanelHeight) window.addEventListener('resize', checkMastheadWidth);
 
         //  clean up
         cleanupTabView = () => {
             subheaderDiv.onclick = null;
             window.removeEventListener('resize', checkMastheadWidth);
-            document.removeEventListener('fullscreenchange', fullscreenListener);
+            document.removeEventListener('fullscreenchange', fullscreenCheck);
             document.removeEventListener('yt-set-theater-mode-enabled', updateTabView);
             document.removeEventListener('yt-autonav-pause-player-ended', exitFullscreen);
             const activeTabId = currentActiveTab || (isTheaterMode ? lastActiveTab : null);
@@ -9484,10 +9429,7 @@
         newDiv.appendChild(headerDiv);
         contentSections.forEach(section => newDiv.appendChild(section));
 
-        // restore two-column layout when live chat forces single column and remove split-scroll
-        hasLiveChat = watchFlexyElement.hasAttribute('should-stamp-chat');
-        isSingleColumn = watchFlexyElement.hasAttribute('is-single-column');
-        if (hasLiveChat && isSingleColumn) toggleYouTubeColumns();
+        // remove split-scroll
         removeWatchFlexyAttrs();
         startWatchFlexyAttrsObs();
 
@@ -9498,32 +9440,8 @@
 
         // initiation
         updateTabView();
+        if (isFullscreen) fullscreenCheck();
         if (USER_CONFIG.tabViewChapters && hasChapterPanel) requestIdleCallback(() => chapterTitles());
-        if (isFullscreen) fullscreenListener();
-
-        infoPanelObserver?.disconnect();
-        if (USER_CONFIG.preventBackgroundExecution && !USER_CONFIG.autoTheaterMode && isDefault && currentActiveTab === 'tab-1') {
-            requestIdleCallback(() => {
-                const panelCheck = watchFlexyElement.querySelector(infoSel);
-                if (!panelCheck) return;
-                cleanupInfoObserver = () => {
-                    infoPanelObserver?.disconnect();
-                    clearTimeout(infoPanelObserver?.timer);
-                    infoPanelObserver = null;
-                    cleanupInfoObserver = null;
-                };
-
-                infoPanelObserver = new MutationObserver(() => {
-                    if (panelCheck.getAttribute('visibility') === 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN' && isDefault && currentActiveTab === 'tab-1')
-                        panelCheck.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-                });
-
-                if (panelCheck.getAttribute('visibility') === 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN' && isDefault && currentActiveTab === 'tab-1')
-                    panelCheck.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
-                infoPanelObserver.observe(panelCheck, { attributes: true, attributeFilter: ['visibility'] });
-                infoPanelObserver.timer = setTimeout(cleanupInfoObserver, 5000);
-            });
-        }
     }
 
     // add chapter titles under videos
@@ -9560,7 +9478,7 @@
                 if (isFullscreen) fullscreenTimeout = setTimeout(moveElement, 3000);
                 else moveElement();
             }
-        };
+        }; if (isFullscreen) updateTitleContainer();
 
         moveChapterTitleBack = () => {
             if (parent && titleElement) parent.appendChild(titleElement);
@@ -9655,7 +9573,7 @@
 
     // find the YouTube video
     const findMainVideo = () => {
-        if (!mainVideo || !mainVideo.isConnected || mainVideo.readyState === 0) {
+        if (!mainVideo?.isConnected || mainVideo.readyState === 0) {
             mainVideo = watchFlexyElement?.querySelector('video.html5-main-video');
             if (isShortPage) mainVideo = document.querySelector('ytd-shorts video.html5-main-video');
         }
@@ -9687,6 +9605,21 @@
         });
         mainVideoObserver.observe(videoContainer, { childList: true, subtree: true, });
     }
+
+    // helper to get channel playback speed for collaborators
+    const collabPlaybackSpeedCheck = async () => {
+        const { channelName } = await getVideoInfo(true);
+        const savedSpeeds = channelName.map(name => USER_CONFIG.channelPlaybackSpeeds[name]).filter(Boolean);
+        const savedSpeed = savedSpeeds.length ? Math.min(...savedSpeeds) : null;
+        if (savedSpeed) {
+            defaultSpeed = savedSpeed;
+            newUserRate = defaultSpeed;
+
+            speedNotification = false;
+            onRateChange(true);
+            speedNotification = true;
+        }
+    };
 
     // playback speed icon
     const playbackSpeedIconTemplate = (() => {
@@ -9738,13 +9671,13 @@
 
         let speedDisplay = null;
         function updateSpeedDisplay() {
-            if (!speedDisplay || !speedDisplay.isConnected) speedDisplay = document.getElementById("CentAnni-speed-display");
+            if (!speedDisplay?.isConnected) speedDisplay = document.getElementById("CentAnni-speed-display");
             if (speedDisplay && video) speedDisplay.textContent = `${video.playbackRate}x`;
         }
 
         // set playback speed and update display
         function setSpeed(notif = true) {
-            if (!video || !video.isConnected || video.readyState === 0) {
+            if (!video?.isConnected || video.readyState === 0) {
                 findMainVideo();
                 if (!mainVideo) return;
                 if (video !== mainVideo) {
@@ -9770,7 +9703,7 @@
         // initial speed setting
         function initializeSpeed() {
             if (isShortPage) { newUserRate = lastUserRate !== null ? lastUserRate : defaultSpeed; }
-            else if ((USER_CONFIG.VerifiedArtist && isMusicVideo) || isLive) newUserRate = 1;
+            else if (isLive || (USER_CONFIG.VerifiedArtist && isMusicVideo)) newUserRate = 1;
             else newUserRate = defaultSpeed;
             video.defaultPlaybackRate = newUserRate;
 
@@ -9780,10 +9713,11 @@
         }
 
         // handle rate change events
-        onRateChange = () => {
-            if (!video || !video.isConnected || video.readyState === 0) setSpeed(false);
+        onRateChange = (collabSpeed = false) => {
+            if (!video?.isConnected || video.readyState === 0) setSpeed(false);
+            if (collabSpeed === true) setSpeed();
             if (ignoreRateChange) { ignoreRateChange = false; return; }
-            else if (Math.abs(video.playbackRate - lastUserRate) > 0.2) video.playbackRate = lastUserRate;
+            if (Math.abs(video.playbackRate - lastUserRate) > .2) video.playbackRate = lastUserRate;
         };
 
         // keyboard control handler
@@ -9932,7 +9866,7 @@
 
             speedBtnObserver = new MutationObserver(() => {
                 const btnCheck = document.getElementById(speedID);
-                if (!btnCheck || !btnCheck.isConnected) createPlaybackSpeedBtns();
+                if (!btnCheck?.isConnected) createPlaybackSpeedBtns();
             });
 
             speedBtnObserver.observe(btnContainer, { childList: true });
@@ -9943,7 +9877,7 @@
     // playback speed notification
     function showSpeedNotification(speed) {
         if (!isWatchPage && !isShortPage) return;
-        if (!speedNotificationElement || !speedNotificationElement.isConnected) {
+        if (!speedNotificationElement?.isConnected) {
             speedNotificationElement = document.createElement('div');
             speedNotificationElement.id = 'CentAnni-playback-speed-popup';
             docBody.appendChild(speedNotificationElement);
@@ -10764,8 +10698,7 @@
     // check if YT Guide is open/close
     const guideCheck = (e) => {
         const guideToggle = e.type === 'yt-guide-toggle';
-        const YTGuide = document.getElementById('guide');
-        guideClosed = YTGuide.hasAttribute('opened');
+        guideClosed = document.getElementById('guide')?.hasAttribute('opened');
         if (!guideToggle) guideClosed = !guideClosed;
         for (const [flag, className] of guideClassEntries) docElement.classList.toggle(className, !guideClosed);
 
@@ -10777,7 +10710,7 @@
 
     // open/close YT Guide
     const openGuide = () => {
-        if (!guideButton || !guideButton.isConnected) guideButton = mastheadElement.querySelector('#guide-button');
+        if (!guideButton?.isConnected) guideButton = mastheadElement.querySelector('#guide-button');
         guideButton.click();
     };
 
@@ -11676,7 +11609,7 @@
                 validDataVideoBelow = result.isValid;
             }
 
-            const success = reverseDirection ? validDataVideoAbove : validDataVideoBelow;
+            const success = reverseDirection ? currentVideoIndex === 0 || validDataVideoAbove : validDataVideoBelow;
             return success;
         }
 
@@ -11864,6 +11797,7 @@
             const selectedItem = watchFlexyElement.querySelector('ytd-playlist-panel-video-renderer[selected]');
             nextButton = watchFlexyElement.querySelector('.ytp-next-button');
             if (selectedItem && nextButton) {
+                playlistSelectedVideo = selectedItem;
                 if (getPlaylistInfo()) {
                     observer.disconnect();
                     observeNextButtonReady(upNextBtn);
@@ -12131,7 +12065,7 @@
                     dropdownFallback = null;
                 }
             });
-            dropdownObserver.observe(document.documentElement, { childList: true, subtree: true });
+            dropdownObserver.observe(docElement, { childList: true, subtree: true });
 
             dropdownFallback = setTimeout(() => {
                 if (dropdownObserver) {
@@ -12498,10 +12432,8 @@
         // playback speed channel check
         if (USER_CONFIG.playbackSpeed) {
             channelHandle = watchFlexyElement.querySelector('#channel-name a')?.getAttribute('href')?.slice(2);
-            const savedSpeed = USER_CONFIG.channelPlaybackSpeeds[channelHandle];
-            if (savedSpeed) defaultSpeed = savedSpeed;
-            else defaultSpeed = USER_CONFIG.playbackSpeedValue;
-            newUserRate = defaultSpeed;
+            defaultSpeed = USER_CONFIG.channelPlaybackSpeeds[channelHandle] || USER_CONFIG.playbackSpeedValue;
+            if (!channelHandle) collabPlaybackSpeedCheck();
         }
     }
 
@@ -12773,7 +12705,6 @@
     let muteObserver;
     let speedBtnObserver;
     let mainVideoObserver;
-    let infoPanelObserver;
     let videoElementObserver;
     let sponsorBlockTimeObserver;
     let initialRun = true;
