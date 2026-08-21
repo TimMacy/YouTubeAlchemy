@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.11-white.svg" alt="Version: 11.11"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.12-white.svg" alt="Version: 11.12"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -372,7 +372,7 @@ Offers various options to customize the layout and functionality of YouTube.
 
 ## 🌐 Supported Languages
 The script works with YouTube UI set to the following languages: Chinese, Czech, Danish, Dutch, English, Finnish, French, German, Greek, Hebrew, Hindi, Hungarian, Indonesian, Italian, Japanese, Korean, Norwegian, Polish, Portuguese, Romanian, Spanish, Swedish, Ukrainian, and Vietnamese.<br>
-_Support is a work in progress. Other languages may have limited functionality._
+_Support is a work in progress. Languages may have limited functionality. If a selected audio, subtitle, or transcript language isn't available, the Secondary Language option will be tried._
 
 <br>
 
@@ -403,6 +403,7 @@ _Support is a work in progress. Other languages may have limited functionality._
 <br>
 
 ## 📜 Changelog
+- **11.12**: bug fixes and improvements; "Tab View": preventing playlist panel from collapsing, hide "Videos" tab when videos are missing, added observer to catch when YouTube removes chapter or transcript panels after navigating; new feature: Secondary Language (if a selected audio, subtitle, or transcript language isn't available, the Secondary Language option will be tried)
 - **11.11**: bug fixes (#56) and improvements; feature changed: exported transcripts now distinguish between "Channel" and "Collaborators"
 - **11.10**: bug fixes and improvements; reordered "Tab View" buttons; feature changed: "Auto Theater Mode" now allows exceptions for "Vertical Video", "Large Window", and "Playlist Page"; new feature: "Add 'Add to Queue' Button to Watch Later Playlist | Needs Mini Player to Work"
 - **11.8**: adjustments for YouTube DOM changes, bug fixes, and improvements; new feature: added "Save Default Channel Page" button on channel banners to set a different "Default Channel Page" for individual channels
