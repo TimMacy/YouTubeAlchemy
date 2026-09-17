@@ -1,7 +1,7 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-11.12-white.svg" alt="Version: 11.12"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-12.0-white.svg" alt="Version: 12.0"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
-This toolkit enhances YouTube by customizing the layout and adding more than 200 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
+This toolkit enhances YouTube by customizing the layout and adding more than 250 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
 <br clear="left"/>
 <p align="right">
 <a href="https://chromewebstore.google.com/detail/youtube-alchemy/midnnobjjobpnnblnckmnkhegbnlmgkn"><img width="22%" alt="Chrome Browser Extension for YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/d5abfdaa-ca15-4820-b533-85af1332ce4e"></a> <a href="https://addons.mozilla.org/en-US/firefox/addon/youtube-alchemy/"><img width="22%" alt="Firefox Browser Extension for YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/025b7be1-c945-4bde-8ad3-35c8f6c6a07f"></a> <a href="https://microsoftedge.microsoft.com/addons/detail/youtube-alchemy/mbjafaicjkndopmhdapofpcemhkflmob"><img width="22%" alt="Microsoft Edge Add-ons Store Browser Extension for YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/4b711841-869d-4cb4-a64e-f8ccc6dee2ea"></a>
@@ -34,7 +34,7 @@ YouTube Alchemy operates completely client-side with no external dependencies. I
   - **Features & Styles Panel**: Access key features like **tab view**, **playback speed**, **remove 'Important' section and sort all notifications chronologically**, **video quality**, **direction buttons for playlists**, prevent autoplay, hide Shorts, **set default audio, subtitle, and transcript languages**, **disable play on hover**, **square design**, **auto-theater mode**, auto-close chat windows, number of videos per row, modify or hide various UI elements, and much more.
   - **Color Code Videos Panel**: Apply customizable borders to videos on the Home page, reflecting their age and status, and highlight the last uploaded video on the Subscriptions page with optional auto-scroll.
 
-<p align="center"><img width="100%" alt="YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/be8b77cd-2b65-41a8-ac1c-72b936d52358" /></p>
+<p align="center"><img width="100%" alt="YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/ec73efaf-4385-49a8-ace4-b8ed9eb42f7c" /></p>
 <p align="center">
   <img width="49.5%" alt="YouTube Alchemy Tab View" title="YouTube Alchemy Tab View" src="https://github.com/user-attachments/assets/8809307f-cad2-433f-ba6c-44ab54f9c787" /><img width="1%" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" /><img width="49.5%" alt="Read Aloud Speedster by Tim Macy" title="Read Aloud Speedster by Tim Macy" src="https://github.com/user-attachments/assets/ac496cf1-f07c-4299-a85d-af0ffe655f5e" />
 </p>
@@ -97,7 +97,7 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
 
 
 ## 🔗 Header Links
-Up to ten links can be added next to the YouTube logo. An empty 'Link Text' field won't insert the link into the header. If the Guide is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.
+Up to ten links can be added next to the YouTube logo. An empty "Link X Text" field won't insert the link into the header. If the Guide is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.
 
 <p align="center"><img width="50%" alt="Header Links" src="https://github.com/user-attachments/assets/f8be4335-2d6e-4e73-9c17-ad308bc7e362" /></p>
 
@@ -114,6 +114,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Audio Language
   - Subtitle Language
   - Transcript Language
+  - Secondary Language
   - Language Options:
     - Auto (default)
     - Chinese (简体)
@@ -162,8 +163,9 @@ Offers various options to customize the layout and functionality of YouTube.
   - Font Size
   - Number of Videos per Row
   - Sidebar Width
+  - Chat Container Width in Fullscreen
   - Search Bar Position
-  - Minimum Space Below Player in Default Layout When Tab View and Compact Layout Are Enabled
+  - Minimum Space Below Player in Default Layout When Tab View Is Enabled
 
 <br>
 <p align="center"><strong>Playback Speed</strong></p>
@@ -171,7 +173,8 @@ Offers various options to customize the layout and functionality of YouTube.
   - Set Playback Speed for VODs
     - from 0.25x to 17x with 0.25x increments
     - defaults to 1x for live videos
-    - works with Shorts
+    - miniplayer support
+    - Shorts support
     - key toggles (changeable):
       - A (or <): -0.25x
       - S: toggle 1x/set speed
@@ -203,6 +206,8 @@ Offers various options to customize the layout and functionality of YouTube.
   - Add Direction Buttons to Playlist Panels
   - Open Playlist Videos Without Being in a Playlist When Clicking the Thumbnail or Title
   - Show Trash Can Icon on Owned Playlists to Quickly Remove Videos
+  - Add "Add to Queue" Button to the Watch Later Playlist
+  - Hide Videos After Clicking the "Add to Queue" Button
   - Add "Remove Watched Videos" and "Toggle Watched" Buttons to the Watch Later Playlist
   - Sort Comments to "Newest First"
   - Automatically Open Chapter Panels
@@ -242,25 +247,25 @@ Offers various options to customize the layout and functionality of YouTube.
 <br>
 <p align="center"><strong>Modify or Hide UI Elements</strong></p>
 
+  - Display Full Titles
+  - Show "Picture-in-Picture" Button
+  - No Frosted Glass Effect
+  - Pure Black-and-White Background
+  - Less Intrusive Bottom Gradient
+  - Small Subscribed Button Under Videos—Displays Only the Notification Icon
+  - Choose Progress Bar Color
+  - Keep Country Code Visible and Choose Color
+  - Custom Selection Color for Light and Dark Mode
   - Hide "Voice Search" Button
   - Hide "Create" Button
   - Hide "Notification" Button
   - Hide Notification Badge
   - Hide Own Avatar in the Header
   - Hide YouTube Brand Text in the Header
-  - Keep Country Code Visible and Choose Color
-  - Small Subscribed Button Under Videos—Displays Only the Notification Icon
   - Hide the Join Button Under Videos and on Channel Pages
-  - Display Full Titles
-  - Custom Selection Color for Light and Dark Mode
-  - Choose Progress Bar Color
-  - Pure Black-and-White Background
-  - No Frosted Glass Effect
   - Hide Video Scrubber
   - Hide Video End Cards
   - Hide End Screens
-  - Less Intrusive Bottom Gradient
-  - Show "Picture-in-Picture" Button
   - Move "Save" Button into Menu
   - Hide "Autoplay" Button When Disabled
   - Hide "Previous" and "Play Next" Buttons
@@ -364,7 +369,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - On Subscriptions Page
     - Adds a customizable border to the last uploaded video to highlight it on subsequent visits, with the option to auto-scroll to it.
   - On Watch Later Page
-    - Highlight unwatched videos from favorite channels, categorized in gold, silver, and bronze.
+    - Highlight unwatched videos from favorite channels, categorized in gold, silver, bronze, crimson, and lime.
 
 <p align="center"><img width="60%" alt="Color Code Videos" src="https://github.com/user-attachments/assets/d675f1f1-58ed-4a9f-a7c2-6991181bdabf" /></p>
 
@@ -403,6 +408,7 @@ _Support is a work in progress. Languages may have limited functionality. If a s
 <br>
 
 ## 📜 Changelog
+- **12.0**: bug fixes, improvements, performance optimizations, and adjustments for YouTube DOM changes; playback speed now supports miniplayer; "Default Channel Page" and "Header Links" now use YouTube's SPA navigation; SponsorBlock time calculation fix for videos with chapters; feature changed: "Add to Queue" button now provides visual feedback; new features: Hide Videos After Clicking the "Add to Queue" Button; set a "Chat Container Width in Fullscreen"
 - **11.12**: bug fixes and improvements; "Tab View": preventing playlist panel from collapsing, hide "Videos" tab when videos are missing, added observer to catch when YouTube removes chapter or transcript panels after navigating; new feature: Secondary Language (if a selected audio, subtitle, or transcript language isn't available, the Secondary Language option will be tried)
 - **11.11**: bug fixes (#56) and improvements; feature changed: exported transcripts now distinguish between "Channel" and "Collaborators"
 - **11.10**: bug fixes and improvements; reordered "Tab View" buttons; feature changed: "Auto Theater Mode" now allows exceptions for "Vertical Video", "Large Window", and "Playlist Page"; new feature: "Add 'Add to Queue' Button to Watch Later Playlist | Needs Mini Player to Work"
@@ -468,7 +474,7 @@ _Support is a work in progress. Languages may have limited functionality. If a s
 - **9.1**: bug fixes and improvements. when "Hide End Screens" is enabled, the new suggested videos are hidden in fullscreen, and scrolling is disabled as well. new feature: Compact Version for Remaining Time ("Elapsed / Total | Remaining" plus playback speed if the playback speed controls are disabled or when in fullscreen.)
 - **9.0.2**: bug fixes
 - **9.0.1**: bug fixes
-- **9.0**: adjustments for the latest YouTube changes (Liquid Glass | ytp-delhi-modern), bug fixes, and improvements. new features: Minimum Space Below Player in Default Layout When Tab View and Compact Layout Are Enabled, Choose Playback Speed Buttons
+- **9.0**: adjustments for the latest YouTube changes (Liquid Glass | ytp-delhi-modern), bug fixes, and improvements. new features: Minimum Space Below Player in Default Layout When Tab View Is Enabled, Choose Playback Speed Buttons
 - **8.10.2**: bug fixes for YouTube Shorts
 - **8.10.1**: bug fixes
 - **8.10**: new feature: Add Additional Playback Speed Buttons
