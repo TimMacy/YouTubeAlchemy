@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 250+ options accessible via settings panels. Key features include: tab view, playback speed control, miniplayer support, video quality selection, export transcripts, prevent autoplay, hide Shorts, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.0
+// @version      12.0.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 12.0 - YouTube Alchemy                    *
+*                    Version: 12.0.1 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1387,15 +1387,15 @@
                 color: rgb(200, 25, 25) !important;
             }
 
-            &.CentAnni-guide-btn {
-                display: inline-block;
-                font-size: 25px;
-                padding: 0 0.5px 5.5px 0;
-                height: 34.7826086957px;
-                width: 32px;
+            &.CentAnni-guide-icon {
+                width: 40px;
+                height: 40px;
+                margin-left: -4px;
                 border-radius: 50%;
+                align-items: center;
+                display: inline-flex;
+                justify-content: center;
                 color: ghostwhite !important;
-                transform: scale(1.25, 1.15);
 
                 &:hover {
                     background-color: rgba(255 255 255 / .2);
@@ -3863,6 +3863,7 @@
                 overflow: hidden;
             }
 
+            #start yt-icon.ytd-logo,
             #masthead-container #logo-icon {
                 padding: 0;
             }
@@ -3871,8 +3872,8 @@
                 display: block !important;
             }
 
-            #start yt-icon.ytd-logo {
-                padding: 0;
+            .CentAnni-guide-icon {
+                margin: 0;
             }
         }
 
@@ -5658,7 +5659,7 @@
                 color: #030303;
             }
 
-            .CentAnni-buttons-left.CentAnni-guide-btn {
+            .CentAnni-buttons-left.CentAnni-guide-icon {
                 color: #0f0f0f !important;
 
                 &:hover {
@@ -6008,7 +6009,7 @@
         buttonLeft9Url: '/@Formula1/videos',
         buttonLeft10Text: '',
         buttonLeft10Url: '/@OpenAI/playlists',
-        mButtonText: '☰',
+        mButtonText: 'default',
         mButtonDisplay: false,
         colorCodeVideosEnabled: true,
         homeDisableHover: false,
@@ -6936,7 +6937,7 @@
             const checkboxField = createCheckboxField('Hide and Auto-Close the Guide', 'mButtonDisplay', USER_CONFIG.mButtonDisplay);
             sidebarContainer.appendChild(checkboxField);
 
-            const inputField = createInputField('Guide Replacement Icon', 'mButtonText', USER_CONFIG.mButtonText, 'label-mButtonText', '☰');
+            const inputField = createInputField('Guide Replacement Icon', 'mButtonText', USER_CONFIG.mButtonText, 'label-mButtonText', `type "default" to use YouTube's icon`);
             sidebarContainer.appendChild(inputField);
 
             form.appendChild(sidebarContainer);
@@ -11315,6 +11316,20 @@
         window.location.href = url.href;
     };
 
+    // guide icon copy from YouTube
+    const guideIcon = (() => {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('fill', 'currentColor');
+        svg.setAttribute('height', '24');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('width', '24');
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M20 5H4a1 1 0 000 2h16a1 1 0 100-2Zm0 6H4a1 1 0 000 2h16a1 1 0 100-2Zm0 6H4a1 1 0 000 2h16a1 1 0 000-2Z');
+        svg.appendChild(path);
+        return svg;
+    })();
+    function createGuideIcon() { return guideIcon.cloneNode(true); }
+
     // check if YT Guide is open/close and trigger CSS
     const guideCheck = () => {
         const guide = document.getElementById('guide');
@@ -11386,7 +11401,10 @@
                 if (config.type === 'button') {
                     if (USER_CONFIG.mButtonDisplay) {
                         element = createButton(config.text, config.onClick);
-                        if (config.text === DEFAULT_CONFIG.mButtonText) element.classList.add('CentAnni-guide-btn', 'CentAnni-btn-feedback-shape');
+                        if (['default', '☰', ''].includes(config.text)) {
+                            element.replaceChildren(createGuideIcon());
+                            element.classList.add('CentAnni-guide-icon', 'CentAnni-btn-feedback-shape');
+                        }
                     }
                 } else if (config.type === 'link') element = createLink(config.text, config.url);
                 if (element) startElement.appendChild(element);
