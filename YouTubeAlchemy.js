@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 250+ options accessible via settings panels. Key features include: tab view, playback speed control, miniplayer support, video quality selection, export transcripts, prevent autoplay, hide Shorts, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.0.1
+// @version      12.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 12.0.1 - YouTube Alchemy                  *
+*                    Version: 12.1 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1815,9 +1815,9 @@
                 z-index: 1;
             }
 
-            .ytp-ad-persistent-progress-bar-container,
-            .ytp-autohide .ytp-chrome-bottom .ytp-load-progress,
-            .ytp-autohide .ytp-chrome-bottom .ytp-play-progress {
+            .ytp-autohide:is(.playing-mode, .ended-mode) .ytp-chrome-bottom .ytp-load-progress,
+            .ytp-autohide:is(.playing-mode, .ended-mode) .ytp-chrome-bottom .ytp-play-progress,
+            .ytp-autohide:is(.playing-mode, .ended-mode) .ytp-ad-persistent-progress-bar-container {
                 opacity: 0 !important;
             }
 
@@ -1905,11 +1905,6 @@
             ytd-watch-flexy[role="main"]:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) .ytp-chrome-bottom .ytp-progress-bar-container {
                 bottom: var(--yt-delhi-bottom-controls-height, 72px) !important;
                 height: 6px !important;
-            }
-
-            ytd-watch-flexy[role="main"]:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) .ytp-chrome-bottom .ytp-load-progress,
-            ytd-watch-flexy[role="main"]:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) .ytp-chrome-bottom .ytp-play-progress {
-                display: block !important;
             }
 
             ytd-watch-flexy[role="main"]:not([fullscreen]) #ytd-player .html5-video-player.ytp-autohide:not(.playing-mode, .ended-mode) .ytp-chrome-bottom .ytp-progress-list {
@@ -2280,6 +2275,7 @@
 
                 #ytd-watch-info-text:not([view-count-post-number-text][date-text-post-number-text]) & {
                     margin-left: 7px;
+                    margin-right: 0;
                 }
             }
 
@@ -5522,34 +5518,34 @@
         .CentAnni-style-hide-miniplayer :is(ytd-miniplayer, #ytd-player .ytp-miniplayer-button),
         .CentAnni-style-hide-autoplay-btn button.ytp-autonav-toggle:has([aria-checked="false"]),
         .CentAnni-style-hide-reply-btn ytd-comments ytd-comment-engagement-bar #reply-button-end,
+        .CentAnni-hide-collabpanel :is(ytd-popup-container.ytd-app, tp-yt-iron-overlay-backdrop),
         .CentAnni-style-hide-prod-sug :is(#below > #shopping-timely-shelf, ytd-merch-shelf-renderer),
-        HTML.CentAnni-hide-collabpanel :is(ytd-popup-container.ytd-app, tp-yt-iron-overlay-backdrop),
         .CentAnni-style-hide-share-btn-global ytd-macro-markers-list-item-renderer[active] #share-button,
         .CentAnni-style-hide-latest-posts #container.ytd-search ytd-shelf-renderer:has(ytd-post-renderer),
         .CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen #CentAnni-chapter-title,
         .CentAnni-style-hide-comments-btn :is(ytd-comments#comments, .CentAnni-tabView-tab[data-tab="tab-2"]),
         .CentAnni-style-hide-videos-btn :is(#related.ytd-watch-flexy, .CentAnni-tabView-tab[data-tab="tab-3"]),
         .CentAnni-style-hide-end-cards :is(.ytp-ce-element, .ytp-ce-hide-button-container.ytp-ce-element-show),
+        .CentAnni-playlist-remove-btn-hide-menus :is(ytd-popup-container.ytd-app, tp-yt-iron-overlay-backdrop),
         .CentAnni-style-search-hide-right-sidebar #container.ytd-search ytd-secondary-search-container-renderer,
         .CentAnni-style-hide-explore-section ytd-rich-section-renderer:has(.ytdChipsShelfWithVideoShelfRendererHost),
         .CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen #CentAnni-remaining-time-container,
         .CentAnni-style-no-ambient :is(#cinematic-container, #cinematics-container, #cinematics-full-bleed-container),
-        .CentAnni-style-hide-posts-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-section-renderer:has(ytd-post-renderer),
         .CentAnni-style-hide-fundraiser :is(#donation-shelf, ytd-badge-supported-renderer:has([aria-label="Fundraiser"])),
         .CentAnni-style-hide-create-btn :is(#masthead-skeleton-icons :first-child, #end ytd-button-renderer.ytd-masthead),
-        .CentAnni-style-hide-most-relevant ytd-browse[page-subtype="subscriptions"][role="main"] ytd-rich-section-renderer:not(:has([is-shorts])),
+        .CentAnni-style-hide-posts-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-section-renderer:has(ytd-post-renderer),
         .yt-watch-later .metadata-text-wrapper.ytd-playlist-header-renderer yt-formatted-string.ytd-playlist-byline-renderer:not(:has(*)),
         .CentAnni-style-hide-pay-to-watch :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-video-renderer):has(.badge-style-type-ypc),
+        .CentAnni-style-hide-most-relevant ytd-browse[page-subtype="subscriptions"][role="main"] ytd-rich-section-renderer:not(:has([is-shorts])),
         .CentAnni-style-hide-notification-btn :is(#masthead-skeleton-icons :nth-child(2), #masthead-container #end ytd-notification-topbar-button-renderer),
         .CentAnni-style-hide-free-with-ads :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-rich-section-renderer):has([aria-label="Free with ads"]),
-        .CentAnni-style-hide-playlists-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="start_radio=1"]),
         .CentAnni-style-hide-ask-btn #teaser-carousel:has(path[d^="M480"]) :is(.ytCarouselItemViewModelHost:has(path[d^="M480"]), .ytCarouselTitleViewModelNavigation),
-        .CentAnni-playlist-remove-btn-hide-menus :is(tp-yt-iron-overlay-backdrop.opened, ytd-popup-container > tp-yt-paper-dialog, ytd-popup-container > tp-yt-iron-dropdown),
+        .CentAnni-style-hide-playlists-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="start_radio=1"]),
         .CentAnni-hide-watched-wl ytd-browse[page-subtype="playlist"][role="main"] ytd-playlist-video-renderer:has(ytd-thumbnail:not([is-live-video]) .ytwThumbnailOverlayResumePlaybackRendererHost),
         .CentAnni-style-hide-episodes-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]):not(:has(a[href*="start_radio=1"])),
         .CentAnni-style-hide-queue-btn :is(:is(button, ytd-thumbnail-overlay-toggle-button-renderer)[aria-label="Add to queue"], :is(.ytListItemViewModelHost, ytd-menu-service-item-renderer):has(path[d^="M2 2"])),
-        .CentAnni-style-hide-watched-videos ytd-browse[page-subtype="home"][role="main"] :is(ytd-rich-item-renderer:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer)),
         .CentAnni-style-hide-share-btn-global :is(yt-button-view-model, yt-list-item-view-model, .ytp-fullscreen-quick-actions button-view-model, tp-yt-paper-item.ytd-menu-service-item-renderer):has([aria-label="Share"], path[d^="M10 3"]),
+        .CentAnni-style-hide-watched-videos ytd-browse[page-subtype="home"][role="main"] :is(ytd-rich-item-renderer:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer)),
         .CentAnni-style-hide-join-btn :is(ytd-watch-flexy[role="main"] #sponsor-button.ytd-video-owner-renderer:not(:empty), ytd-browse[page-subtype="channels"][role="main"] .ytFlexibleActionsViewModelAction:not(:has(a[href*="community"], yt-subscribe-button-view-model, #CentAnni-channel-btn))),
         .CentAnni-style-hide-watched-videos-global :is(yt-lockup-view-model:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-rich-item-renderer:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer), ytd-grid-video-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer)),
         .CentAnni-style-disable-play-on-hover :is(ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-toggle-button-renderer.ytd-thumbnail, ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail, ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-endorsement-renderer.ytd-thumbnail, ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-hover-text-renderer.ytd-thumbnail, ytd-thumbnail[is-preview-loading] ytd-thumbnail-overlay-button-renderer.ytd-thumbnail, ytd-thumbnail[now-playing] ytd-thumbnail-overlay-time-status-renderer.ytd-thumbnail, ytd-thumbnail-overlay-loading-preview-renderer[is-preview-loading], ytd-grid-video-renderer a#thumbnail div#mouseover-overlay, ytd-rich-item-renderer a#thumbnail div#mouseover-overlay, ytd-thumbnail-overlay-loading-preview-renderer, ytd-moving-thumbnail-renderer img#thumbnail, .ytAnimatedThumbnailOverlayViewModelHost, animated-thumbnail-overlay-view-model, ytd-moving-thumbnail-renderer yt-icon, ytd-moving-thumbnail-renderer span, ytd-moving-thumbnail-renderer img, ytd-moving-thumbnail-renderer, #mouseover-overlay, ytd-video-preview, div#video-preview, #video-preview, #preview) {
@@ -9759,7 +9755,7 @@
             }
 
             if (tabId === 'tab-5') {
-                if (!transcriptLoaded && isDefault) await runYTE();
+                if (show && !transcriptLoaded && isDefault) await runYTE();
                 if (!transcriptPanel?.isConnected) return;
                 if (show) openTranscript();
                 else closeTranscriptPanel();
@@ -10161,7 +10157,8 @@
 
     // playback speed functions
     function initialSpeed() {
-        const posMiniPlayer = !isWatchPage && !isShortPage;
+        const pn = window.location.pathname;
+        const posMiniPlayer = pn !== '/watch' && !pn.startsWith('/shorts/');
         if (!posMiniPlayer) document.removeEventListener('yt-player-updated', initialSpeed);
         if (USER_CONFIG.hideMiniPlayer && posMiniPlayer) document.querySelector('.ytp-miniplayer-close-button')?.click();
         if (!USER_CONFIG.playbackSpeed || (USER_CONFIG.hideMiniPlayer && posMiniPlayer)) return;
@@ -11937,8 +11934,7 @@
             docElement.classList.add('CentAnni-playlist-remove-btn-hide-menus');
             menuButton.click();
 
-            const dPaths = ['M12 1C5', 'M12 3c'];
-            const selector = dPaths.map(d => `ytd-popup-container > tp-yt-iron-dropdown a:has(svg path[d^="${d}"])`).join(',');
+            const selector = 'ytd-popup-container > tp-yt-iron-dropdown a:has(svg path[d^="M12 1C5"])';
             waitForElement(selector, (removeLink) => {
                 removeLink.click();
                 waitForElement('#confirm-button > yt-button-shape > button', (confirmButton) => {
@@ -13390,15 +13386,14 @@
     let muteObserver;
     let speedBtnObserver;
     let mainVideoObserver;
+    let cleanupPageObserver;
     let watchPageCSSObserver;
     let cleanupWatchPageCSS;
     let videoElementObserver;
     let sponsorBlockTimeObserver;
     let initialRun = true;
-    let locationUpdated = false;
-    let handledYTNavigation = false;
+    let handledYTNavigation = true;
     let currentURL = null;
-    let xianURL = null;
     let videoID = null;
     let lastVideoID = null;
     let isHomePage = false;
@@ -13578,6 +13573,11 @@
 
     // initiate the script
     async function initializeAlchemy() {
+        docElement.classList.toggle('is-watch-page', isWatchPage);
+        docElement.classList.toggle('yt-watch-later', isWatchLater);
+        if (USER_CONFIG.defaultChannelPage !== 'home') docElement.classList.toggle('CentAnni-channel-banner', isChannelPage);
+        for (const [flag, entry] of pageClassEntries) if (!entry.pages()) docElement.classList.remove(entry.class);
+
         updateCachedElements();
         buttonsLeftHeader();
 
@@ -13607,18 +13607,22 @@
         if (newURL !== currentURL) {
             currentURL = newURL;
             // console.log("YouTubeAlchemy: Only One Survived");
-            if (pageObserver) pageObserver.disconnect();
-            if (!cssSettingsApplied) loadCSSsettings();
-            if (!locationUpdated) updateLocation();
-            if (!isWatchPage) cleanupWatchPageCSS?.();
             if (!docBody) docBody = document.body;
+            if (!cssSettingsApplied) loadCSSsettings();
+            if (cleanupPageObserver) cleanupPageObserver();
+            if (!handledYTNavigation) handleYTNavigation();
             chronoNotificationRunning = false;
             initialCloseLiveChat = true;
-            locationUpdated = false;
+            updateLocation();
 
             if (USER_CONFIG.preventBackgroundExecution) { await awaitVisibility(); }
             if (USER_CONFIG.videosHideWatchedGlobalJS !== 0 && !USER_CONFIG.videosHideWatchedGlobal) markWatchedVideos();
 
+            // toggle CSS based on page -- continues in initializeAlchemy
+            for (const [flag, entry] of pageClassEntries) if (entry.pages()) docElement.classList.add(entry.class);
+            if (!isWatchPage) cleanupWatchPageCSS?.();
+
+            // YT Guide
             if (!guideCheckActive) guideCheck();
             if (USER_CONFIG.mButtonDisplay && guideOpened) toggleGuide();
 
@@ -13640,63 +13644,56 @@
                 });
             }
 
-            const init = () => { if (pageObserver) { pageObserver.disconnect(); pageObserver = null; } setTimeout(() => initialRun ? initializeAlchemy() : requestIdleCallback(initializeAlchemy, { timeout: 1950 }), 50); };
-            const t = setTimeout(init, 5000);
+            const init = () => { cleanupPageObserver?.(); setTimeout(() => initialRun ? initializeAlchemy() : requestIdleCallback(initializeAlchemy, { timeout: 1950 }), 50); };
+            cleanupPageObserver = () => {
+                clearTimeout(pageObserver?.timer);
+                pageObserver?.disconnect();
+                cleanupPageObserver = null;
+            };
 
             let remaining = new Set();
             for (const s of tar) if (!ctn.querySelector(s)) remaining.add(s);
-            if (!remaining.size) { clearTimeout(t); init(); return; }
+            if (!remaining.size) { init(); return; }
             pageObserver = new MutationObserver(rs => {
                 for (const r of rs) for (const n of r.addedNodes) {
                     if (n.nodeType !== 1) continue;
                     for (const s of remaining) if (n.matches(s) || n.querySelector(s)) remaining.delete(s);
-                    if (!remaining.size) { clearTimeout(t); init(); return; }
+                    if (!remaining.size) { init(); return; }
                 }
             });
             pageObserver.observe(ctn, { childList: true, subtree: true });
+            pageObserver.timer = setTimeout(init, 5000);
         }
     }
 
     // helper to determine the location and trigger CSS
     const updateLocation = () => {
         const xinURL = window.location.href;
-        if (xinURL !== xianURL) {
-            xianURL = xinURL;
+        const urlObj = new URL(xinURL);
+        const pn = urlObj.pathname;
+        const sp = urlObj.searchParams;
 
-            const urlObj = new URL(xinURL);
-            const pn = urlObj.pathname;
-            const sp = urlObj.searchParams;
+        isHomePage = pn === '/';
+        isVideoPage = pn === '/watch';
+        isSearchPage = pn === '/results';
+        isPlaylistPage = pn === '/playlist';
+        isPlaylistVideoPage = sp.has('list');
+        isLiveStream = pn.startsWith('/live/');
+        isWatchLater = sp.get('list') === 'WL';
+        isShortPage = pn.startsWith('/shorts/');
+        isWatchPage = isVideoPage || isLiveStream;
+        isSubscriptionsPage = pn === '/feed/subscriptions';
+        isChannelPage = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)/.test(pn);
+        isChannelHome = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)$/.test(pn);
+        if (isChannelPage) channelHandleURL = pn.match(/^\/@([^/]+)/)?.[1];
+        if (isChannelHome && USER_CONFIG.defaultChannelPage !== 'home') return channelRedirect();
+        if (isShortPage && USER_CONFIG.redirectShorts) return redirectShortsToVideoPage();
+        if (isWatchPage || isShortPage) {
+            lastVideoID = videoID;
+            videoID = sp.get('v');
 
-            isHomePage = pn === '/';
-            isVideoPage = pn === '/watch';
-            isSearchPage = pn === '/results';
-            isPlaylistPage = pn === '/playlist';
-            isPlaylistVideoPage = sp.has('list');
-            isLiveStream = pn.startsWith('/live/');
-            isWatchLater = sp.get('list') === 'WL';
-            isShortPage = pn.startsWith('/shorts/');
-            isWatchPage = isVideoPage || isLiveStream;
-            isSubscriptionsPage = pn === '/feed/subscriptions';
-            isChannelPage = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)/.test(pn);
-            isChannelHome = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)$/.test(pn);
-            if (isChannelPage) channelHandleURL = pn.match(/^\/@([^/]+)/)?.[1];
-            if (isChannelHome && USER_CONFIG.defaultChannelPage !== 'home') return channelRedirect();
-            if (isShortPage && USER_CONFIG.redirectShorts) return redirectShortsToVideoPage();
-            if (isWatchPage || isShortPage) {
-                lastVideoID = videoID;
-                videoID = sp.get('v');
-
-                if (isLiveStream || isShortPage) videoID = pn.split('/').pop();
-                if (USER_CONFIG.closeChatWindow) docElement.classList.add('CentAnni-close-live-chat');
-            }
-
-            // toggle CSS based on current page
-            docElement.classList.toggle('is-watch-page', isWatchPage);
-            docElement.classList.toggle('yt-watch-later', isWatchLater);
-            if (USER_CONFIG.defaultChannelPage !== 'home') docElement.classList.toggle('CentAnni-channel-banner', isChannelPage);
-            for (const [flag, entry] of pageClassEntries) docElement.classList.toggle(entry.class, entry.pages());
-
-            locationUpdated = true;
+            if (isLiveStream || isShortPage) videoID = pn.split('/').pop();
+            if (USER_CONFIG.closeChatWindow) docElement.classList.add('CentAnni-close-live-chat');
         }
     };
 
@@ -13715,9 +13712,6 @@
     }
 
     // event listeners
-    updateLocation();
-    document.addEventListener('yt-update-title', updateLocation); // page CSS
-    document.addEventListener('yt-page-type-changed', updateLocation); // backup
     document.addEventListener('yt-navigate-start', handleYTNavigation); // reset
     document.addEventListener('yt-navigate-cache', handleYTNavigation); // reset
     document.addEventListener('yt-navigate-finish', handleYouTubeNavigation); // main trigger
