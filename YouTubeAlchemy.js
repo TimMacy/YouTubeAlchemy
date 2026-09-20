@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 250+ options accessible via settings panels. Key features include: tab view, playback speed control, miniplayer support, video quality selection, export transcripts, prevent autoplay, hide Shorts, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.1.1
+// @version      12.1.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 12.1.1 - YouTube Alchemy                  *
+*                    Version: 12.1.2 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -1220,7 +1220,7 @@
             opacity: .8 !important;
         }
 
-        .transcript-preload {
+        .transcript-preloading #panels.ytd-watch-flexy ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"]:is([target-id="PAmodern_transcript_view"], [target-id="engagement-panel-searchable-transcript"], :not([target-id])) {
             position: fixed !important;
             top: var(--ytd-masthead-height, var(--ytd-toolbar-height, 56px)) !important;
             max-height: var(--ytd-watch-flexy-panel-max-height, 500px) !important;
@@ -8895,9 +8895,9 @@
         }
     }
 
-    async function runYTE() {
+    async function runYTE(viaTabView = false) {
         try {
-            await preLoadTranscript();
+            await preLoadTranscript(false, viaTabView);
             !USER_CONFIG.YouTubeTranscriptExporter ? createButtons('settings') : createButtons('all');
         }
         catch (error) {
@@ -8919,7 +8919,7 @@
             copy: { id: 'transcript-copy-button', text: USER_CONFIG.buttonIcons.copy, clickHandler: handleCopyClick, tooltip: 'Copy transcript to clipboard', ariaLabel: 'Copy transcript to clipboard' },
             chatgpt: { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy transcript with a prompt and open ${ChatGPTLabel}`, ariaLabel: `Copy transcript to clipboard with a prompt and open ${ChatGPTLabel}` },
             notebooklm: { id: 'transcript-NotebookLM-button', text: USER_CONFIG.buttonIcons.NotebookLM, clickHandler: handleNotebookLMClick, tooltip: `Copy transcript and open ${NotebookLMLabel}`, ariaLabel: `Copy transcript to clipboard and open ${NotebookLMLabel}` },
-            lazyload: { id: 'transcript-lazy-button', text: USER_CONFIG.buttonIcons.lazyLoad, clickHandler: runYTE, tooltip: 'Load the transcript', ariaLabel: 'Load the transcript' },
+            lazyload: { id: 'transcript-lazy-button', text: USER_CONFIG.buttonIcons.lazyLoad, clickHandler: () => runYTE(), tooltip: 'Load the transcript', ariaLabel: 'Load the transcript' },
             error: { id: 'transcript-error-button', text: '⚠️', clickHandler: transcriptError, tooltip: 'Retry loading transcript', ariaLabel: 'Retry loading transcript' }
         };
 
@@ -8950,7 +8950,6 @@
                 panel: () => watchFlexyElement.querySelector(transcriptSearchableSel),
                 root: panel => panel?.querySelector(transcriptSearchableContainerSel),
                 readySel: transcriptSearchableSegmentSel,
-                preloadSel: transcriptSearchableSel,
                 timeout: 10000,
                 elements: root => root.children,
                 chapterTitleElement: element => element.tagName === 'YTD-TRANSCRIPT-SECTION-HEADER-RENDERER' ? element.querySelector('h2 > span') : null,
@@ -8963,7 +8962,6 @@
             panel: () => watchFlexyElement.querySelector(`#panels ${transcriptListSel}`)?.closest('ytd-engagement-panel-section-list-renderer') || null,
             root: panel => panel?.querySelector(transcriptListSel),
             readySel: transcriptSegmentSel,
-            preloadSel: '#panels ytd-engagement-panel-section-list-renderer[target-id="PAmodern_transcript_view"], #panels ytd-engagement-panel-section-list-renderer:not([target-id])',
             timeout: 5000,
             elements: root => root.querySelectorAll('macro-markers-panel-item-view-model'),
             chapterTitleElement: element => element.querySelector('timeline-chapter-view-model .ytwTimelineChapterViewModelTitle'),
@@ -9049,12 +9047,11 @@
         return transcriptPanel;
     }
 
-    function openTranscript(preload = false) {
+    function openTranscript() {
         const panel = getTranscriptPanel();
         if (!panel) return null;
 
         transcriptPanel = panel;
-        if (preload) panel.classList.add("transcript-preload");
         panel.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
         panel.visibility = "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED";
         return panel;
@@ -9209,7 +9206,7 @@
     }
 
     // function to preload the transcript
-    function preLoadTranscript(tryOtherPanel = false) {
+    function preLoadTranscript(tryOtherPanel = false, viaTabView = false) {
         return new Promise((resolve, reject) => {
             const mode = getTranscriptMode();
             endElement.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
@@ -9242,27 +9239,19 @@
             let transcriptObserver;
             let fallbackTimer;
 
+            if (!viaTabView) docElement.classList.add("transcript-preloading");
             if (!tryOtherPanel) wasClosed = initialPanel?.getAttribute("visibility") !== "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED";
             if (!transcriptLoaded && !USER_CONFIG.YouTubeTranscriptExporter) wasClosed = false;
-            const preloadPanels = new Set();
 
-            if (initialPanel) {
-                openTranscript(true);
-                preloadPanels.add(initialPanel);
-            } else {
-                watchFlexyElement.querySelectorAll(mode.preloadSel).forEach(panel => {
-                    panel.classList.add("transcript-preload");
-                    preloadPanels.add(panel);
-                });
-                transcriptBtn.click();
-            }
+            if (initialPanel) openTranscript();
+            else transcriptBtn.click();
 
             const cleanup = (failed, retrying = false) => {
                 if (fallbackTimer) clearTimeout(fallbackTimer);
                 transcriptObserver?.disconnect();
                 wrapper?.remove();
                 if (wasClosed) closeTranscriptPanel(transcriptPanel);
-                preloadPanels.forEach(panel => panel.classList.remove("transcript-preload"));
+                docElement.classList.remove("transcript-preloading");
                 if (!retrying) failed ? showNotificationError("Transcript failed to load") : transcriptLoaded = true;
                 if (transcriptLoaded) {
                     if (currentActiveTab !== 'tab-5') transcriptPanel.querySelector('#visibility-button button')?.click();
@@ -9277,10 +9266,6 @@
 
             const checkFirstItem = () => {
                 const panel = getTranscriptPanel();
-                if (panel) {
-                    panel.classList.add("transcript-preload");
-                    preloadPanels.add(panel);
-                }
                 if (!isTranscriptReady(panel)) return false;
                 handleTranscriptReady();
                 return true;
@@ -9296,7 +9281,7 @@
                     if (!tryOtherPanel) {
                         cleanup(true, true);
                         useSearchableTranscript = !useSearchableTranscript;
-                        preLoadTranscript(true).then(resolve).catch(reject);
+                        preLoadTranscript(true, viaTabView).then(resolve).catch(reject);
                     } else {
                         console.error("YouTubeAlchemy: The transcript took too long to load. Reload this page to try again.");
                         cleanup(true);
@@ -9306,12 +9291,6 @@
             }, mode.timeout);
 
             transcriptObserver = new MutationObserver(() => {
-                if (!initialPanel) {
-                    watchFlexyElement.querySelectorAll(mode.preloadSel).forEach(panel => {
-                        panel.classList.add("transcript-preload");
-                        preloadPanels.add(panel);
-                    });
-                }
                 if (!checkFirstItem()) return;
                 transcriptObserver.disconnect();
                 resolve();
@@ -9755,7 +9734,7 @@
             }
 
             if (tabId === 'tab-5') {
-                if (show && !transcriptLoaded && isDefault) await runYTE();
+                if (show && !transcriptLoaded && isDefault) await runYTE(true);
                 if (!transcriptPanel?.isConnected) return;
                 if (show) openTranscript();
                 else closeTranscriptPanel();
