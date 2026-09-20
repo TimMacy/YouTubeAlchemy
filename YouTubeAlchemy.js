@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 250+ options accessible via settings panels. Key features include: tab view, playback speed control, miniplayer support, video quality selection, export transcripts, prevent autoplay, hide Shorts, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.1
+// @version      12.1.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 12.1 - YouTube Alchemy                    *
+*                    Version: 12.1.1 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -9488,7 +9488,7 @@
 
         const itemsArray = [...transcriptPanel.querySelectorAll('tp-yt-paper-item')];
         const target = itemsArray.find(el => el.textContent.trim().toLowerCase().startsWith(transcriptInLanguage)) || (secondaryInLanguage && transcriptInLanguage !== secondaryInLanguage && itemsArray.find(el => el.textContent.trim().toLowerCase().startsWith(secondaryInLanguage)));
-        target ? target.click() : console.error('YouTubeAlchemy: Transcript Language not found');
+        target ? target.click() : console.log('YouTubeAlchemy: Transcript Language not found');
 
     }
 
@@ -12118,7 +12118,7 @@
         document.querySelectorAll('.CentAnni-pl-btn').forEach(el => el.remove());
 
         const ytdBrowse = document.querySelector('ytd-browse[role="main"]');
-        const channelID = ytdBrowse.data?.metadata?.channelMetadataRenderer?.externalId;
+        const channelID = ytdBrowse?.data?.metadata?.channelMetadataRenderer?.externalId;
         if (!channelID) return;
 
         const allVideosURL = `/playlist?list=UU${channelID.slice(2)}`;
@@ -12986,7 +12986,11 @@
     function handleYTNavigation() {
         if (handledYTNavigation) return;
         handledYTNavigation = true;
+
+        chronoNotificationRunning = false;
+        initialCloseLiveChat = true;
         initialRun = false;
+
         if (isWatchPage) {
             const cleanUpVideo = [
                 [USER_CONFIG.videoTabView, cleanupTabView],
@@ -13607,18 +13611,15 @@
         if (newURL !== currentURL) {
             currentURL = newURL;
             // console.log("YouTubeAlchemy: Only One Survived");
+            if (USER_CONFIG.preventBackgroundExecution) await awaitVisibility();
             if (!docBody) docBody = document.body;
             if (!cssSettingsApplied) loadCSSsettings();
             if (cleanupPageObserver) cleanupPageObserver();
             if (!handledYTNavigation) handleYTNavigation();
-            chronoNotificationRunning = false;
-            initialCloseLiveChat = true;
-            updateLocation();
-
-            if (USER_CONFIG.preventBackgroundExecution) { await awaitVisibility(); }
-            if (USER_CONFIG.videosHideWatchedGlobalJS !== 0 && !USER_CONFIG.videosHideWatchedGlobal) markWatchedVideos();
+            if (updateLocation()) return;
 
             // toggle CSS based on page -- continues in initializeAlchemy
+            if (USER_CONFIG.videosHideWatchedGlobalJS !== 0 && !USER_CONFIG.videosHideWatchedGlobal) markWatchedVideos();
             for (const [flag, entry] of pageClassEntries) if (entry.pages()) docElement.classList.add(entry.class);
             if (!isWatchPage) cleanupWatchPageCSS?.();
 
@@ -13686,8 +13687,8 @@
         isChannelPage = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)/.test(pn);
         isChannelHome = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)$/.test(pn);
         if (isChannelPage) channelHandleURL = pn.match(/^\/@([^/]+)/)?.[1];
-        if (isChannelHome && USER_CONFIG.defaultChannelPage !== 'home') return channelRedirect();
-        if (isShortPage && USER_CONFIG.redirectShorts) return redirectShortsToVideoPage();
+        if (isChannelHome && USER_CONFIG.defaultChannelPage !== 'home') { channelRedirect(); return true; }
+        if (isShortPage && USER_CONFIG.redirectShorts) { redirectShortsToVideoPage(); return true; }
         if (isWatchPage || isShortPage) {
             lastVideoID = videoID;
             videoID = sp.get('v');
