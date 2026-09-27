@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-12.1.2-white.svg" alt="Version: 12.1.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-12.2-white.svg" alt="Version: 12.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 250 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -230,6 +230,7 @@ Offers various options to customize the layout and functionality of YouTube.
   - Tab View on Video Page
   - Toggle Theater Mode by Clicking the Active Tab
   - Show Chapters Under Videos, Only Works with Tab View Enabled
+  - Show Next Playlist Video Video in Default View, Only Works with Tab View Enabled
   - Max Panel Height in Default View, Only Works with Tab View Enabled
   - Disable Animation When Switching Between Theater mode and Default view
   - Disable Ambient Mode
@@ -395,12 +396,15 @@ _Support is a work in progress. Languages may have limited functionality. If a s
 </p>
 
 1. **Install or open a userscript manager**.
-   A userscript manager is required, such as [Userscripts for Safari](https://itunes.apple.com/us/app/userscripts/id1463298887), [Tampermonkey](https://www.tampermonkey.net/) (available for [Chrome](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo), [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd), [Safari](https://apps.apple.com/us/app/tampermonkey/id1482490089), [Opera Next](https://addons.opera.com/en/extensions/details/tampermonkey-beta/), and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)), or [Violentmonkey](https://violentmonkey.github.io) (available for [Chrome](https://chromewebstore.google.com/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/violentmonkey/), and [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao)).
+   A userscript manager is required, such as [Tampermonkey](https://www.tampermonkey.net/) (available for [Chrome](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo), [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd), [Safari](https://apps.apple.com/us/app/tampermonkey/id1482490089), [Opera Next](https://addons.opera.com/en/extensions/details/tampermonkey-beta/), and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)) or [Violentmonkey](https://violentmonkey.github.io) (available for [Chrome](https://chromewebstore.google.com/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/violentmonkey/), and [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao)).
 2. **Install** [YouTubeAlchemy.js](https://github.com/TimMacy/YouTubeAlchemy/blob/main/YouTubeAlchemy.js).
 <br>
 
 > [!IMPORTANT]
 > **Important for Safari Users**: This script requires the requestIdleCallback Web API. Activate it under: Settings → Advanced → enable 'Show features for web developers' → Feature Flags → search for 'requestIdleCallback' and ensure it's checked.
+
+> [!IMPORTANT]
+> The userscript requires access to YouTube's JavaScript context and will not work in an isolated execution context.
 
 > [!NOTE]
 > This script is primarily designed for desktop browsers; compatibility and functionality on mobile or touch devices may vary.
@@ -408,6 +412,7 @@ _Support is a work in progress. Languages may have limited functionality. If a s
 <br>
 
 ## 📜 Changelog
+- **12.2**: bug fixes and improvements; removed "total: " from remaining time; updated persistent progress bar background for better visibility; feature change: "Open Links in the Same Tab" now includes the option "Unless Active Playlist"; added aria-label support for sliders, color picker fields, and buttons; new features: "Use Browser Default Dropdown Menus"; "Show Next Playlist Video Video in Default View"
 - **12.1.2**: fix transcript panel visible during preloading
 - **12.1.1**: bug fixes
 - **12.1**: bug fixes and improvements
