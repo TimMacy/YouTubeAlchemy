@@ -12786,7 +12786,7 @@
     // redirect channel home to default
     function channelRedirect() {
         const channelPage = USER_CONFIG.channelDefaultPages[channelHandleURL] || USER_CONFIG.defaultChannelPage;
-        navigateYouTube(`/@${channelHandleURL}/${channelPage}`);
+        channelHandleURL ? navigateYouTube(`/@${channelHandleURL}/${channelPage}`) : navigateYouTube(window.location.href.replace(/\/$/, '') + `/${channelPage}`);
     }
 
     // redirect shorts to video page
@@ -12808,7 +12808,7 @@
 
     // btn to save the current page as a channel's default
     function defaultChannelPageBtn() {
-        if (document.getElementById('CentAnni-default-channel-page-btn')) return;
+        if (!channelHandleURL || document.getElementById('CentAnni-default-channel-page-btn')) return;
         const btn = document.createElement('button');
         btn.id = 'CentAnni-default-channel-page-btn';
         btn.title = 'Save Default Channel Page';
@@ -13624,9 +13624,9 @@
         const sp = urlObj.searchParams;
         const pn = urlObj.pathname;
 
-        isChannelPage = /^\/@[^/]+/.test(pn);
-        isChannelHome = /^\/@[^/]+$/.test(pn);
         isShortPage = pn.startsWith('/shorts/');
+        isChannelPage = /^\/(?:@[^/]+|channel\/[^/]+)/.test(pn);
+        isChannelHome = /^\/(?:@[^/]+|channel\/[^/]+)$/.test(pn);
         if (isChannelPage) channelHandleURL = pn.match(/^\/@([^/]+)/)?.[1];
         if (isShortPage && USER_CONFIG.redirectShorts) { redirectShortsToVideoPage(); return true; }
         if (isChannelHome && USER_CONFIG.defaultChannelPage !== 'home') { channelRedirect(); return true; }
