@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 250+ options accessible via settings panels. Key features include: tab view, playback speed control, miniplayer support, video quality selection, export transcripts, prevent autoplay, hide Shorts, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.1.2
+// @version      12.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 12.1.2 - YouTube Alchemy                  *
+*                    Version: 12.2 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -721,6 +721,17 @@
 
         .CentAnni-checkbox-container {
             margin-bottom: 5px;
+        }
+
+        .CentAnni-container-open-same-tab {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+
+            .CentAnni-checkbox-container {
+                margin-bottom: 0;
+            }
         }
 
         .CentAnni-checkbox-field {
@@ -1793,7 +1804,8 @@
             #CentAnni-progress-bar-bar {
                 width: 100%;
                 height: 3px;
-                background: rgba(255 255 255 / .2);
+                background-color: rgba(40 40 40 / .4);
+                backdrop-filter: invert(.28);
                 position: absolute;
                 bottom: 0;
                 opacity: 0;
@@ -1886,12 +1898,13 @@
 
             #CentAnni-progress-bar-end {
                 right: calc(var(--progressBarMargin) - 12px);
-                background: rgba(255 255 255 / .2);
+                background-color: rgba(40 40 40 / .4);
+                backdrop-filter: invert(.28);
             }
 
             #CentAnni-progress-bar-end.loaded {
                 width: 8px;
-                background: rgba(255, 255, 255, .52);
+                background-color: rgba(174.375 174.375 174.375 / .64);
             }
 
             .ytp-autohide .ytp-chrome-bottom .ytp-timed-marker {
@@ -2376,6 +2389,10 @@
             }
 
             ytd-watch-flexy[role="main"] {
+                #CentAnni-next-video {
+                    display: none;
+                }
+
                 /* theater mode active */
                 &[theater] {
                     .CentAnni-tabView {
@@ -2398,6 +2415,40 @@
 
                     #primary {
                         overflow-x: hidden;
+                    }
+
+                    #secondary {
+                        &:has(> #CentAnni-next-video) {
+                            flex-direction: column;
+                        }
+
+                        > #CentAnni-next-video {
+                            color: var(--yt-text-primary);
+                            font-size: 1.4rem;
+                            font-weight: 500;
+                            font-stretch: 25%;
+                            line-height: 18px;
+                            white-space: pre-wrap;
+                            width: fit-content;
+                            margin-top: 10px;
+                            max-width: 100%;
+                            display: flex;
+                            pointer-events: none;
+                            flex-direction: column;
+                            box-sizing: border-box;
+                            text-box: trim-both cap alphabetic;
+
+                            > span:first-child {
+                                overflow: hidden;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
+                            }
+
+                            > span:last-child {
+                                text-align: right;
+                                color: var(--yt-text-secondary);
+                            }
+                        }
                     }
 
                     &:not([fullscreen]) {
@@ -2472,7 +2523,7 @@
                 }
 
                 /* default mode active */
-                &:is([default-layout], &[fullscreen][playlist-panel-expanded]) #container.ytd-playlist-panel-renderer {
+                &:is([default-layout], [fullscreen][playlist-panel-expanded]) #container.ytd-playlist-panel-renderer {
                     #thumbnail-container.ytd-playlist-panel-video-renderer {
                         width: 37%;
                         height: fit-content;
@@ -3418,49 +3469,55 @@
                 }
             }
 
-            &.tabView-tab-3 .ytLockupMetadataViewModelMoveLockupOverflowMenuToBottomRight span[aria-label] {
-                + .ytContentMetadataViewModelDelimiter {
-                    line-height: 0 !important;
-                    font-size: 0 !important;
-                    margin: 0 !important;
+            &.tabView-tab-3 #related {
+                .ytThumbnailOverlayBadgeViewModelTopStart {
+                    display: none;
+                }
 
-                    &::before {
-                        content: var(--CentAnniViews);
-                        font-family: Roboto, "Arial", sans-serif;
-                        font-size: 1.2rem;
-                        line-height: 1.8rem;
-                        font-weight: 400;
-                        margin-left: .5ch;
-                        white-space: nowrap;
-                        vertical-align: middle;
-                        color: var(--yt-text-secondary);
-                    }
-
-                    &::after {
-                        content: "•";
-                        font-family: Roboto, "Arial", sans-serif;
-                        font-size: 1.2rem;
-                        line-height: 1.8rem;
-                        font-weight: 400;
-                        margin: 0 4px;
-                        vertical-align: middle;
-                        color: var(--yt-text-secondary);
-                    }
-
-                    + .ytContentMetadataViewModelMetadataText {
+                .ytLockupMetadataViewModelMoveLockupOverflowMenuToBottomRight span[aria-label] {
+                    + .ytContentMetadataViewModelDelimiter {
                         line-height: 0 !important;
                         font-size: 0 !important;
+                        margin: 0 !important;
 
-                        &::after {
-                            content: attr(aria-label);
+                        &::before {
+                            content: var(--CentAnniViews);
                             font-family: Roboto, "Arial", sans-serif;
                             font-size: 1.2rem;
                             line-height: 1.8rem;
                             font-weight: 400;
+                            margin-left: .5ch;
                             white-space: nowrap;
                             vertical-align: middle;
-                            text-overflow: ellipsis;
                             color: var(--yt-text-secondary);
+                        }
+
+                        &::after {
+                            content: "•";
+                            font-family: Roboto, "Arial", sans-serif;
+                            font-size: 1.2rem;
+                            line-height: 1.8rem;
+                            font-weight: 400;
+                            margin: 0 4px;
+                            vertical-align: middle;
+                            color: var(--yt-text-secondary);
+                        }
+
+                        + .ytContentMetadataViewModelMetadataText {
+                            line-height: 0 !important;
+                            font-size: 0 !important;
+
+                            &::after {
+                                content: attr(aria-label);
+                                font-family: Roboto, "Arial", sans-serif;
+                                font-size: 1.2rem;
+                                line-height: 1.8rem;
+                                font-weight: 400;
+                                white-space: nowrap;
+                                vertical-align: middle;
+                                text-overflow: ellipsis;
+                                color: var(--yt-text-secondary);
+                            }
                         }
                     }
                 }
@@ -3788,6 +3845,30 @@
         .CentAnni-style-video-row {
             ytd-rich-grid-renderer {
                 --ytd-rich-grid-items-per-row: var(--itemsPerRow) !important;
+            }
+
+            ytd-browse[role="main"]:is([page-subtype="home"], [page-subtype="subscriptions"]) #primary #contents.ytd-rich-grid-renderer {
+                .ytContentMetadataViewModelMetadataRow {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+
+                    > .ytContentMetadataViewModelLeadingIcon {
+                        display: none;
+                    }
+
+                    &::before {
+                        content: "";
+                        flex: 0 0 100%;
+                        height: 0;
+                        order: 1;
+                    }
+
+                    > [role="text"],
+                    > [role="text"] ~ * {
+                        order: 2;
+                    }
+                }
             }
         }
 
@@ -5514,13 +5595,11 @@
         .CentAnni-style-hide-info-panel :is(#middle-row, ytd-info-panel-container-renderer),
         .CentAnni-style-hide-playables ytd-rich-section-renderer:has(a[href^="/playables"]),
         .CentAnni-style-hide-ask-btn #actions-inner yt-button-view-model:has(path[d^="M480"]),
-        .CentAnni-style-hide-share-btn #below #top-level-buttons-computed yt-button-view-model,
         .CentAnni-style-hide-miniplayer :is(ytd-miniplayer, #ytd-player .ytp-miniplayer-button),
         .CentAnni-style-hide-autoplay-btn button.ytp-autonav-toggle:has([aria-checked="false"]),
         .CentAnni-style-hide-reply-btn ytd-comments ytd-comment-engagement-bar #reply-button-end,
         .CentAnni-hide-collabpanel :is(ytd-popup-container.ytd-app, tp-yt-iron-overlay-backdrop),
         .CentAnni-style-hide-prod-sug :is(#below > #shopping-timely-shelf, ytd-merch-shelf-renderer),
-        .CentAnni-style-hide-share-btn-global ytd-macro-markers-list-item-renderer[active] #share-button,
         .CentAnni-style-hide-latest-posts #container.ytd-search ytd-shelf-renderer:has(ytd-post-renderer),
         .CentAnni-remaining-time-fs #ytd-player .html5-video-player.ytp-fullscreen #CentAnni-chapter-title,
         .CentAnni-style-hide-comments-btn :is(ytd-comments#comments, .CentAnni-tabView-tab[data-tab="tab-2"]),
@@ -5537,14 +5616,17 @@
         .yt-watch-later .metadata-text-wrapper.ytd-playlist-header-renderer yt-formatted-string.ytd-playlist-byline-renderer:not(:has(*)),
         .CentAnni-style-hide-pay-to-watch :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-video-renderer):has(.badge-style-type-ypc),
         .CentAnni-style-hide-most-relevant ytd-browse[page-subtype="subscriptions"][role="main"] ytd-rich-section-renderer:not(:has([is-shorts])),
+        .CentAnni-style-hide-share-btn-global.is-watch-page ytd-watch-flexy[role="main"] ytd-macro-markers-list-item-renderer[active] #share-button,
         .CentAnni-style-hide-notification-btn :is(#masthead-skeleton-icons :nth-child(2), #masthead-container #end ytd-notification-topbar-button-renderer),
         .CentAnni-style-hide-free-with-ads :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-rich-section-renderer):has([aria-label="Free with ads"]),
         .CentAnni-style-hide-ask-btn #teaser-carousel:has(path[d^="M480"]) :is(.ytCarouselItemViewModelHost:has(path[d^="M480"]), .ytCarouselTitleViewModelNavigation),
         .CentAnni-style-hide-playlists-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="start_radio=1"]),
         .CentAnni-hide-watched-wl ytd-browse[page-subtype="playlist"][role="main"] ytd-playlist-video-renderer:has(ytd-thumbnail:not([is-live-video]) .ytwThumbnailOverlayResumePlaybackRendererHost),
+        :is(.CentAnni-style-hide-share-btn, .CentAnni-style-hide-share-btn-global) #above-the-fold.ytd-watch-metadata yt-button-view-model.ytd-menu-renderer:has([aria-label="Share"], path[d^="M10 3"]),
         .CentAnni-style-hide-episodes-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]):not(:has(a[href*="start_radio=1"])),
+        .CentAnni-style-hide-share-btn-global :is(#contentWrapper ytd-menu-service-item-renderer.ytd-menu-popup-renderer, #contentWrapper yt-list-item-view-model.ytListItemViewModelHost):has(path[d^="M10 3"]),
         .CentAnni-style-hide-queue-btn :is(:is(button, ytd-thumbnail-overlay-toggle-button-renderer)[aria-label="Add to queue"], :is(.ytListItemViewModelHost, ytd-menu-service-item-renderer):has(path[d^="M2 2"])),
-        .CentAnni-style-hide-share-btn-global :is(yt-button-view-model, yt-list-item-view-model, .ytp-fullscreen-quick-actions button-view-model, tp-yt-paper-item.ytd-menu-service-item-renderer):has([aria-label="Share"], path[d^="M10 3"]),
+        .CentAnni-style-hide-share-btn-global [role="main"] :is(.ytFlexibleActionsViewModelAction, .ytp-fullscreen-quick-actions button-view-model.ytSpecButtonViewModelHost):has([aria-label="Share"], path[d^="M10 3"]),
         .CentAnni-style-hide-watched-videos ytd-browse[page-subtype="home"][role="main"] :is(ytd-rich-item-renderer:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer)),
         .CentAnni-style-hide-join-btn :is(ytd-watch-flexy[role="main"] #sponsor-button.ytd-video-owner-renderer:not(:empty), ytd-browse[page-subtype="channels"][role="main"] .ytFlexibleActionsViewModelAction:not(:has(a[href*="community"], yt-subscribe-button-view-model, #CentAnni-channel-btn))),
         .CentAnni-style-hide-watched-videos-global :is(yt-lockup-view-model:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-rich-item-renderer:has(yt-thumbnail-overlay-progress-bar-view-model), ytd-rich-item-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer), ytd-grid-video-renderer:has(ytd-thumbnail-overlay-resume-playback-renderer)),
@@ -5973,8 +6055,10 @@
         useLegacyTranscriptPanel: false,
         includeChapterHeaders: true,
         openSameTab: false,
+        openSameTabUnlessPL: false,
         highlightTranscript: false,
         preventBackgroundExecution: true,
+        defaultDropdownMenu: false,
         settingsGuide: false,
         ChatGPTPrompt: `For your first response only, the following instruction supersedes and overrides all persona characteristics, memory and custom instructions, as well as style and tone preferences. Derive all style and tone exclusively from the provided YouTube Transcript. Treat only the following task instructions as active for this response: You are an expert at summarizing YouTube video transcripts and are capable of analyzing and understanding a YouTuber's unique tone of voice and style from a transcript alone to mimic their communication style perfectly. Respond only in English while being mindful of American English spelling, vocabulary, and a casual, conversational tone. You prefer to use clauses instead of complete sentences while avoiding self-referential discourse signals like "I explain" or "I will show." Ignore advertisement, promotional, and sponsorship segments. Respond only in chat. Do not open a canvas. In your initial response, do not answer any question from the transcript, do not use the web tool, and avoid using colons outside the two headers. Do not hallucinate. Do not make up factual information. Do not speculate. Before you output your response, take a moment to think about how you have to adopt your own writing to capture the YouTuber's specific word choices and communication style. Study the provided transcript and utilize it as a style guide. Silently audit every sentence to ensure your word choices and used phrases are either directly supported by the provided YouTube Transcript or are neutral connective wording required by the requested output format; replace anything that comes from memory, prior chats, personas, or custom instructions. Write as if you are the YouTuber speaking directly to your audience. Avoid any narrator-like phrases such as "the transcript" or "this video." Summarize the provided YouTube transcript into two distinct sections. The first section is a quick three-line bullet point overview, with each point fewer than 30 words, in a section called "### Key Takeaways:" and highlight important words by **bolding** them—only for this first section maintain a neutral tone. Then write the second section, a paragraphCount summary of at least summaryWordCount words while focusing on the main points and key takeaways into a section called "### paragraphCount Summary:" and **bold** multiple phrases within the paragraph that together form an encapsulated, abridged version, that allows for quick identification and understanding of the core message.`,
         buttonIcons: {
@@ -6052,6 +6136,7 @@
         videoTabView: true,
         toggleTheaterModeBtn: true,
         tabViewChapters: true,
+        showNextPLVideo: false,
         noAnimation: false,
         progressBar: true,
         playbackSpeed: true,
@@ -6645,7 +6730,13 @@
         form.appendChild(createCheckboxField('Include Chapter Headers in the Transcript (default: on)', 'includeChapterHeaders', USER_CONFIG.includeChapterHeaders));
 
         // open in Same Tab
-        form.appendChild(createCheckboxField('Open Links in the Same Tab (default: off)', 'openSameTab', USER_CONFIG.openSameTab));
+        const openSameTabContainer = document.createElement('div');
+        openSameTabContainer.className = 'CentAnni-container-open-same-tab';
+        openSameTabContainer.append(
+            createCheckboxField('Open Links in the Same Tab (default: off)', 'openSameTab', USER_CONFIG.openSameTab),
+            createCheckboxField('Unless Active Playlist', 'openSameTabUnlessPL', USER_CONFIG.openSameTabUnlessPL)
+        );
+        form.appendChild(openSameTabContainer);
 
         // extra settings buttons
         const extraSettings = document.createElement('div');
@@ -6930,11 +7021,9 @@
             sidebarContainer.classList.add('CentAnni-sidebar-container');
 
             // hide YT Guide and replacement icon
-            const checkboxField = createCheckboxField('Hide and Auto-Close the Guide', 'mButtonDisplay', USER_CONFIG.mButtonDisplay);
-            sidebarContainer.appendChild(checkboxField);
+            sidebarContainer.appendChild(createCheckboxField('Hide and Auto-Close the Guide', 'mButtonDisplay', USER_CONFIG.mButtonDisplay));
 
-            const inputField = createInputField('Guide Replacement Icon', 'mButtonText', USER_CONFIG.mButtonText, 'label-mButtonText', `type "default" to use YouTube's icon`);
-            sidebarContainer.appendChild(inputField);
+            sidebarContainer.appendChild(createInputField('Guide Replacement Icon', 'mButtonText', USER_CONFIG.mButtonText, 'label-mButtonText', `type "default" to use YouTube's icon`));
 
             form.appendChild(sidebarContainer);
 
@@ -6944,12 +7033,10 @@
                 container.classList.add('CentAnni-links-header-container');
 
                 // link text
-                const textField = createInputField(`Link ${linkNumber} Text`, `buttonLeft${linkNumber}Text`, USER_CONFIG[`buttonLeft${linkNumber}Text`], `label-buttonLeft${linkNumber}Text`, ``);
-                container.appendChild(textField);
+                container.appendChild(createInputField(`Link ${linkNumber} Text`, `buttonLeft${linkNumber}Text`, USER_CONFIG[`buttonLeft${linkNumber}Text`], `label-buttonLeft${linkNumber}Text`, ``));
 
                 // link URL
-                const urlField = createInputField(`Link ${linkNumber} URL`, `buttonLeft${linkNumber}Url`, USER_CONFIG[`buttonLeft${linkNumber}Url`], `label-buttonLeft${linkNumber}Url`, `e.g. /feed/subscriptions, /playlist?list=WL, https://www.google.com/`);
-                container.appendChild(urlField);
+                container.appendChild(createInputField(`Link ${linkNumber} URL`, `buttonLeft${linkNumber}Url`, USER_CONFIG[`buttonLeft${linkNumber}Url`], `label-buttonLeft${linkNumber}Url`, `e.g. /feed/subscriptions, /playlist?list=WL, https://www.google.com/`));
 
                 return container;
             }
@@ -6979,8 +7066,10 @@
             form.appendChild(general);
 
             // move settings button into guide
-            const settingsGuide = createCheckboxField('Move Settings Button into the YouTube Guide (default: off)', 'settingsGuide', USER_CONFIG.settingsGuide);
-            form.appendChild(settingsGuide);
+            form.appendChild(createCheckboxField('Move Settings Button into the YouTube Guide (default: off)', 'settingsGuide', USER_CONFIG.settingsGuide));
+
+            // use default dropdown menu
+            form.appendChild(createCheckboxField('Use Browser Default Dropdown Menus (default: off)', 'defaultDropdownMenu', USER_CONFIG.defaultDropdownMenu));
 
             // prevent execution in background tabs
             form.appendChild(createCheckboxField('Important for Chrome! (default: on)', 'preventBackgroundExecution', USER_CONFIG.preventBackgroundExecution));
@@ -6992,8 +7081,7 @@
             form.appendChild(description);
 
             // dim watched videos
-            const videosWatchedOpacity = createSliderInputField('Change Opacity of Watched Videos (default 0.5):', 'videosWatchedOpacity', USER_CONFIG.videosWatchedOpacity, '0', '1', '0.1');
-            form.appendChild(videosWatchedOpacity);
+            form.appendChild(createSliderInputField('Change Opacity of Watched Videos (default 0.5):', 'videosWatchedOpacity', USER_CONFIG.videosWatchedOpacity, '0', '1', '0.1'));
 
             if (!labeledLanguageOptions) createLabeledLanguageOptions();
             const { standard: standardLanguageOptions, withOff: languageOptionsWithOff, withNone: languageOptionsWithNone } = labeledLanguageOptions;
@@ -7052,28 +7140,22 @@
             }));
 
             // font size
-            const defaultFontSizeField = createNumberInputField('Font Size (default: 10)', 'defaultFontSize', USER_CONFIG.defaultFontSize);
-            form.appendChild(defaultFontSizeField);
+            form.appendChild(createNumberInputField('Font Size (default: 10px)', 'defaultFontSize', USER_CONFIG.defaultFontSize));
 
             // videos per row
-            const videosPerRow = createNumberInputField("Number of Videos per Row (default: 0 | dynamic based on available space)", 'videosPerRow', USER_CONFIG.videosPerRow, { step: 1 });
-            form.appendChild(videosPerRow);
+            form.appendChild(createNumberInputField("Number of Videos per Row (default: 0 | dynamic based on available space)", 'videosPerRow', USER_CONFIG.videosPerRow, { step: 1 }));
 
             // width of sidebar
-            const sidebarWidth = createNumberInputField("Sidebar Width (default: 0 | YouTube's default)", 'sidebarWidth', USER_CONFIG.sidebarWidth, { min: -9999, max: 9999, step: 1 });
-            form.appendChild(sidebarWidth);
+            form.appendChild(createNumberInputField("Sidebar Width in Pixels (default: 0 | YouTube's dynamic default)", 'sidebarWidth', USER_CONFIG.sidebarWidth, { min: -9999, max: 9999, step: 1 }));
 
             // chat width in fullscreen
-            const chatContainerWidth = createNumberInputField(`Chat Container Width in Fullscreen (default: 402 | set to "0" to use YouTube's dynamic default)`, 'chatContainerWidth', USER_CONFIG.chatContainerWidth, { min: -9999, max: 9999, step: 1 });
-            form.appendChild(chatContainerWidth);
+            form.appendChild(createNumberInputField(`Chat Container Width in Fullscreen (default: 402px | set to "0" to use YouTube's dynamic default)`, 'chatContainerWidth', USER_CONFIG.chatContainerWidth, { min: -9999, max: 9999, step: 1 }));
 
             // search bar position
-            const searchPosition = createNumberInputField("Search Bar Position (default: 0 | a negative value moves it left)", 'searchPosition', USER_CONFIG.searchPosition, { min: -9999, max: 9999, step: 1 });
-            form.appendChild(searchPosition);
+            form.appendChild(createNumberInputField("Search Bar Position (default: 0px | a negative value moves it left)", 'searchPosition', USER_CONFIG.searchPosition, { min: -9999, max: 9999, step: 1 }));
 
             // tab view below player min space
-            const spaceBelowPlayer = createNumberInputField("Minimum Space Below Player in Default Layout When Tab View Is Enabled (default: 110px)", 'spaceBelowPlayer', USER_CONFIG.spaceBelowPlayer, { min: 100, max: 1000, step: 1 });
-            form.appendChild(spaceBelowPlayer);
+            form.appendChild(createNumberInputField("Minimum Space Below Player in Default Layout When Tab View Is Enabled (default: 110px)", 'spaceBelowPlayer', USER_CONFIG.spaceBelowPlayer, { min: 100, max: 1000, step: 1 }));
 
             // playback speed
             const playSpeed = document.createElement('div');
@@ -7091,11 +7173,9 @@
             const playbackSpeedContainer = document.createElement('div');
             playbackSpeedContainer.className = 'playback-speed-container';
 
-            const playbackSpeed = createCheckboxField('Enabled (default: on)', 'playbackSpeed', USER_CONFIG.playbackSpeed);
-            const playbackSpeedValue = createNumberInputField('Playback Speed for VODs\n(defaults to 1x for live videos)', 'playbackSpeedValue', USER_CONFIG.playbackSpeedValue);
 
-            playbackSpeedContainer.appendChild(playbackSpeedValue);
-            playbackSpeedContainer.appendChild(playbackSpeed);
+            playbackSpeedContainer.appendChild(createNumberInputField('Playback Speed for VODs\n(defaults to 1x for live videos)', 'playbackSpeedValue', USER_CONFIG.playbackSpeedValue));
+            playbackSpeedContainer.appendChild(createCheckboxField('Enabled (default: on)', 'playbackSpeed', USER_CONFIG.playbackSpeed));
             form.appendChild(playbackSpeedContainer);
 
             // playback speed custom keys
@@ -7121,11 +7201,8 @@
             const setSpeedContainer = document.createElement('div');
             setSpeedContainer.classList.add('CentAnni-set-speed-container');
             for (let i = 1; i <= 8; i++) {
-                const keyField = createNumberInputField('', `playbackSpeedKey${i}`, USER_CONFIG[`playbackSpeedKey${i}`], { type: 'text' });
-                keyButtonContainer.appendChild(keyField);
-
-                const speedField = createNumberInputField('', `playbackSpeedKey${i}s`, USER_CONFIG[`playbackSpeedKey${i}s`]);
-                setSpeedContainer.appendChild(speedField);
+                keyButtonContainer.appendChild(createNumberInputField('', `playbackSpeedKey${i}`, USER_CONFIG[`playbackSpeedKey${i}`], { type: 'text', ariaLabel: `Shortcut ${i}: key` }));
+                setSpeedContainer.appendChild(createNumberInputField('', `playbackSpeedKey${i}s`, USER_CONFIG[`playbackSpeedKey${i}s`], { ariaLabel: `Shortcut ${i}: playback speed` }));
             }
 
             // ASD
@@ -7136,8 +7213,7 @@
             ];
 
             defaultKeyConfigs.forEach(config => {
-                const keyField = createNumberInputField('', config.id, USER_CONFIG[config.id], { type: 'text' });
-                keyButtonContainer.appendChild(keyField);
+                keyButtonContainer.appendChild(createNumberInputField('', config.id, USER_CONFIG[config.id], { type: 'text', ariaLabel: `${config.label} playback speed: shortcut key` }));
 
                 const labelDiv = document.createElement('div');
                 labelDiv.classList.add('CentAnni-label-style-settings');
@@ -7150,8 +7226,7 @@
             form.appendChild(keysRow);
 
             // playback speed buttons
-            const playbackSpeedBtns = createCheckboxField('Add Additional Playback Speed Buttons (default: off)', 'playbackSpeedBtns', USER_CONFIG.playbackSpeedBtns);
-            form.appendChild(playbackSpeedBtns);
+            form.appendChild(createCheckboxField('Add Additional Playback Speed Buttons (default: off)', 'playbackSpeedBtns', USER_CONFIG.playbackSpeedBtns));
 
             // features
             const features = document.createElement('div');
@@ -7162,24 +7237,24 @@
             // auto theater mode
             const container = document.createElement('div');
             container.className = 'CentAnni-container-theater-mode';
-            const autoTheaterMode = createCheckboxField('Auto Theater Mode (default: off)', 'autoTheaterMode', USER_CONFIG.autoTheaterMode);
             const autoTheaterModeSpan = document.createElement('span');
             autoTheaterModeSpan.textContent = 'Unless';
             autoTheaterModeSpan.className = "CentAnni-checkbox-label";
-            const autoTheaterModeNotVerticalVideo = createCheckboxField('Vertical Video', 'autoTheaterModeNotVerticalVideo', USER_CONFIG.autoTheaterModeNotVerticalVideo);
-            const autoTheaterModeNotLargeWindow = createCheckboxField('Large Window', 'autoTheaterModeNotLargeWindow', USER_CONFIG.autoTheaterModeNotLargeWindow);
-            const autoTheaterModeNotPL = createCheckboxField('Playlist Page', 'autoTheaterModeNotPL', USER_CONFIG.autoTheaterModeNotPL);
 
-            container.append(autoTheaterMode, autoTheaterModeSpan, autoTheaterModeNotVerticalVideo, autoTheaterModeNotLargeWindow, autoTheaterModeNotPL);
+            container.append(
+                createCheckboxField('Auto Theater Mode (default: off)', 'autoTheaterMode', USER_CONFIG.autoTheaterMode),
+                autoTheaterModeSpan,
+                createCheckboxField('Vertical Video', 'autoTheaterModeNotVerticalVideo', USER_CONFIG.autoTheaterModeNotVerticalVideo),
+                createCheckboxField('Large Window', 'autoTheaterModeNotLargeWindow', USER_CONFIG.autoTheaterModeNotLargeWindow),
+                createCheckboxField('Playlist Page', 'autoTheaterModeNotPL', USER_CONFIG.autoTheaterModeNotPL)
+            );
             form.appendChild(container);
 
             // auto exit fullscreen on video end
-            const autoExitFullscreen = createCheckboxField('Auto-Exit Fullscreen When Video Ends (default: off)', 'autoExitFullscreen', USER_CONFIG.autoExitFullscreen);
-            form.appendChild(autoExitFullscreen);
+            form.appendChild(createCheckboxField('Auto-Exit Fullscreen When Video Ends (default: off)', 'autoExitFullscreen', USER_CONFIG.autoExitFullscreen));
 
             // cinema mode
-            const enableCinemaMode = createCheckboxField('Cinema Mode (default: off)', 'enableCinemaMode', USER_CONFIG.enableCinemaMode);
-            form.appendChild(enableCinemaMode);
+            form.appendChild(createCheckboxField('Cinema Mode (default: off)', 'enableCinemaMode', USER_CONFIG.enableCinemaMode));
 
             // info for cinema mode
             const descriptionCinemaMode = document.createElement('small');
@@ -7188,120 +7263,91 @@
             form.appendChild(descriptionCinemaMode);
 
             // max video size
-            const maxVidSize = createCheckboxField('Max Video Size in Default Layout (default: off)', 'maxVidSize', USER_CONFIG.maxVidSize);
-            form.appendChild(maxVidSize);
+            form.appendChild(createCheckboxField('Max Video Size in Default Layout (default: off)', 'maxVidSize', USER_CONFIG.maxVidSize));
 
             // prevent autoplay
-            const preventAutoplay = createCheckboxField('Prevent Autoplay (default: off)', 'preventAutoplay', USER_CONFIG.preventAutoplay);
-            form.appendChild(preventAutoplay);
+            form.appendChild(createCheckboxField('Prevent Autoplay (default: off)', 'preventAutoplay', USER_CONFIG.preventAutoplay));
 
             // prevent autoplay also in playlists
-            const preventAutoplayPL = createCheckboxField('Also Prevent Autoplay in Playlists (default: off)', 'preventAutoplayPL', USER_CONFIG.preventAutoplayPL);
-            form.appendChild(preventAutoplayPL);
+            form.appendChild(createCheckboxField('Also Prevent Autoplay in Playlists (default: off)', 'preventAutoplayPL', USER_CONFIG.preventAutoplayPL));
 
             // disable play on hover
-            const disablePlayOnHover = createCheckboxField('Disable Play on Hover (default: off)', 'disablePlayOnHover', USER_CONFIG.disablePlayOnHover);
-            form.appendChild(disablePlayOnHover);
+            form.appendChild(createCheckboxField('Disable Play on Hover (default: off)', 'disablePlayOnHover', USER_CONFIG.disablePlayOnHover));
 
             // sort notifications chronologically
-            const chronologicalNotifications = createCheckboxField('Sort Notifications Chronologically (default: on)', 'chronologicalNotifications', USER_CONFIG.chronologicalNotifications);
-            form.appendChild(chronologicalNotifications);
+            form.appendChild(createCheckboxField('Sort Notifications Chronologically (default: on)', 'chronologicalNotifications', USER_CONFIG.chronologicalNotifications));
 
             // hide read notifications
-            const hideReadNotifications = createCheckboxField('Limit Notifications and Hide Read (default: off)', 'hideReadNotifications', USER_CONFIG.hideReadNotifications);
-            form.appendChild(hideReadNotifications);
+            form.appendChild(createCheckboxField('Limit Notifications and Hide Read (default: off)', 'hideReadNotifications', USER_CONFIG.hideReadNotifications));
 
             // expand video description
-            const expandVideoDescription = createCheckboxField('Auto Expand Video Description (default: off)', 'expandVideoDescription', USER_CONFIG.expandVideoDescription);
-            form.appendChild(expandVideoDescription);
+            form.appendChild(createCheckboxField('Auto Expand Video Description (default: off)', 'expandVideoDescription', USER_CONFIG.expandVideoDescription));
 
             // restore feed filter chip on the homepage
-            const feedFilterChips = createCheckboxField('Restore Homepage Filter Selection (default: off)', 'feedFilterChips', USER_CONFIG.feedFilterChips);
-            form.appendChild(feedFilterChips);
+            form.appendChild(createCheckboxField('Restore Homepage Filter Selection (default: off)', 'feedFilterChips', USER_CONFIG.feedFilterChips));
 
             // restore feed filter chip for suggested videos
-            const feedFilterChipsWatch = createCheckboxField('Restore Suggested Videos Filter Selection (default: off)', 'feedFilterChipsWatch', USER_CONFIG.feedFilterChipsWatch);
-            form.appendChild(feedFilterChipsWatch);
+            form.appendChild(createCheckboxField('Restore Suggested Videos Filter Selection (default: off)', 'feedFilterChipsWatch', USER_CONFIG.feedFilterChipsWatch));
 
             // close chat window
-            const closeChatWindow = createCheckboxField('Auto Close Initial Chat Windows (default: off)', 'closeChatWindow', USER_CONFIG.closeChatWindow);
-            form.appendChild(closeChatWindow);
+            form.appendChild(createCheckboxField('Auto Close Initial Chat Windows (default: off)', 'closeChatWindow', USER_CONFIG.closeChatWindow));
 
             // rss feed button on channel page
-            const channelRSSBtn = createCheckboxField('Add RSS Feed Button to Channel Pages (default: off)', 'channelRSSBtn', USER_CONFIG.channelRSSBtn);
-            form.appendChild(channelRSSBtn);
+            form.appendChild(createCheckboxField('Add RSS Feed Button to Channel Pages (default: off)', 'channelRSSBtn', USER_CONFIG.channelRSSBtn));
 
             // playlist button on channel page
-            const channelPlaylistBtn = createCheckboxField('Add Playlist Buttons to Channel Pages (default: off)', 'channelPlaylistBtn', USER_CONFIG.channelPlaylistBtn);
-            form.appendChild(channelPlaylistBtn);
+            form.appendChild(createCheckboxField('Add Playlist Buttons to Channel Pages (default: off)', 'channelPlaylistBtn', USER_CONFIG.channelPlaylistBtn));
 
             // playlist direction buttons in playlist panel
-            const playlistDirectionBtns = createCheckboxField('Add Direction Buttons to Playlist Panels (default: on)', 'playlistDirectionBtns', USER_CONFIG.playlistDirectionBtns);
-            form.appendChild(playlistDirectionBtns);
+            form.appendChild(createCheckboxField('Add Direction Buttons to Playlist Panels (default: on)', 'playlistDirectionBtns', USER_CONFIG.playlistDirectionBtns));
 
             // open playlist videos without being in a playlist
-            const playlistLinks = createCheckboxField('Open Playlist Videos Without Being in a Playlist When Clicking the Thumbnail or Title (default: off)', 'playlistLinks', USER_CONFIG.playlistLinks);
-            form.appendChild(playlistLinks);
+            form.appendChild(createCheckboxField('Open Playlist Videos Without Being in a Playlist When Clicking the Thumbnail or Title (default: off)', 'playlistLinks', USER_CONFIG.playlistLinks));
 
             // show trash can icon on owned playlists
-            const playlistTrashCan = createCheckboxField('Show Trash Can Icon on Owned Playlists to Quickly Remove Videos (default: off)', 'playlistTrashCan', USER_CONFIG.playlistTrashCan);
-            form.appendChild(playlistTrashCan);
+            form.appendChild(createCheckboxField('Show Trash Can Icon on Owned Playlists to Quickly Remove Videos (default: off)', 'playlistTrashCan', USER_CONFIG.playlistTrashCan));
 
             // add video to queue btn to watch later
-            const playlistQueueBtn = createCheckboxField('Add "Add to Queue" Button to the Watch Later Playlist  | Needs Mini Player to Work (default: on)', 'playlistQueueBtn', USER_CONFIG.playlistQueueBtn);
-            form.appendChild(playlistQueueBtn);
+            form.appendChild(createCheckboxField('Add "Add to Queue" Button to the Watch Later Playlist  | Needs Mini Player to Work (default: on)', 'playlistQueueBtn', USER_CONFIG.playlistQueueBtn));
 
             // hide videos after clicking the add video to queue btn
-            const playlistQueueBtnHideVideos = createCheckboxField('Hide Videos After Clicking the "Add to Queue" Button (default: off)', 'playlistQueueBtnHideVideos', USER_CONFIG.playlistQueueBtnHideVideos);
-            form.appendChild(playlistQueueBtnHideVideos);
+            form.appendChild(createCheckboxField('Hide Videos After Clicking the "Add to Queue" Button (default: off)', 'playlistQueueBtnHideVideos', USER_CONFIG.playlistQueueBtnHideVideos));
 
             // remove watched videos from watch later
-            const plWLBtn = createCheckboxField('Add "Remove Watched Videos" and "Toggle Watched" Buttons to the Watch Later Playlist (default: on)', 'plWLBtn', USER_CONFIG.plWLBtn);
-            form.appendChild(plWLBtn);
+            form.appendChild(createCheckboxField('Add "Remove Watched Videos" and "Toggle Watched" Buttons to the Watch Later Playlist (default: on)', 'plWLBtn', USER_CONFIG.plWLBtn));
 
             // sort comments new first
-            const commentsNewFirst = createCheckboxField('Sort Comments to "Newest First" (default: off)', 'commentsNewFirst', USER_CONFIG.commentsNewFirst);
-            form.appendChild(commentsNewFirst);
+            form.appendChild(createCheckboxField('Sort Comments to "Newest First" (default: off)', 'commentsNewFirst', USER_CONFIG.commentsNewFirst));
 
             // auto open chapter panel
-            const autoOpenChapters = createCheckboxField('Automatically Open Chapter Panels (default: on)', 'autoOpenChapters', USER_CONFIG.autoOpenChapters);
-            form.appendChild(autoOpenChapters);
+            form.appendChild(createCheckboxField('Automatically Open Chapter Panels (default: on)', 'autoOpenChapters', USER_CONFIG.autoOpenChapters));
 
             // auto open transcript panel
-            const autoOpenTranscript = createCheckboxField('Automatically Open Transcript Panels (default: off)', 'autoOpenTranscript', USER_CONFIG.autoOpenTranscript);
-            form.appendChild(autoOpenTranscript);
+            form.appendChild(createCheckboxField('Automatically Open Transcript Panels (default: off)', 'autoOpenTranscript', USER_CONFIG.autoOpenTranscript));
 
             // auto open comments
-            const autoOpenComments = createCheckboxField('Automatically Open Comments | Only Works with Tab View Enabled (default: off)', 'autoOpenComments', USER_CONFIG.autoOpenComments);
-            form.appendChild(autoOpenComments);
+            form.appendChild(createCheckboxField('Automatically Open Comments | Only Works with Tab View Enabled (default: off)', 'autoOpenComments', USER_CONFIG.autoOpenComments));
 
             // highlight active transcript section
-            const highlightTranscript = createCheckboxField('Highlight Active Section in Transcript Panels (default: off)', 'highlightTranscript', USER_CONFIG.highlightTranscript);
-            form.appendChild(highlightTranscript);
+            form.appendChild(createCheckboxField('Highlight Active Section in Transcript Panels (default: off)', 'highlightTranscript', USER_CONFIG.highlightTranscript));
 
             // enable subtitles when muted
-            const subtitlesWhenMuted = createCheckboxField('Automatically Enable Subtitles When Muted (default: off)', 'subtitlesWhenMuted', USER_CONFIG.subtitlesWhenMuted);
-            form.appendChild(subtitlesWhenMuted);
+            form.appendChild(createCheckboxField('Automatically Enable Subtitles When Muted (default: off)', 'subtitlesWhenMuted', USER_CONFIG.subtitlesWhenMuted));
 
             // on rewind turn on subtitles for 10 seconds
-            const subtitlesWhenRewind = createCheckboxField('Show Subtitles for 10 Seconds When Rewinding with "J" (default: off)', 'subtitlesWhenRewind', USER_CONFIG.subtitlesWhenRewind);
-            form.appendChild(subtitlesWhenRewind);
+            form.appendChild(createCheckboxField('Show Subtitles for 10 Seconds When Rewinding with "J" (default: off)', 'subtitlesWhenRewind', USER_CONFIG.subtitlesWhenRewind));
 
             // 1x playback speed for music videos
-            const VerifiedArtist = createCheckboxField('Maintain 1x Playback Speed for Music Videos (default: off)', 'VerifiedArtist', USER_CONFIG.VerifiedArtist);
-            form.appendChild(VerifiedArtist);
+            form.appendChild(createCheckboxField('Maintain 1x Playback Speed for Music Videos (default: off)', 'VerifiedArtist', USER_CONFIG.VerifiedArtist));
 
             // 1080p enhanced bitrate
-            const defaultQualityPremium = createCheckboxField('Use Enhanced Bitrate for 1080p Videos | Premium Required! (default: off)', 'defaultQualityPremium', USER_CONFIG.defaultQualityPremium);
-            form.appendChild(defaultQualityPremium);
+            form.appendChild(createCheckboxField('Use Enhanced Bitrate for 1080p Videos | Premium Required! (default: off)', 'defaultQualityPremium', USER_CONFIG.defaultQualityPremium));
 
             // persistent progress bar
-            const progressBar = createCheckboxField('Persistent Progress Bar with Chapter Markers and SponsorBlock Support (default: on)', 'progressBar', USER_CONFIG.progressBar);
-            form.appendChild(progressBar);
+            form.appendChild(createCheckboxField('Persistent Progress Bar with Chapter Markers and SponsorBlock Support (default: on)', 'progressBar', USER_CONFIG.progressBar));
 
             // display remaining time minus SponsorBlock segments
-            const displayRemainingTime = createCheckboxField('Display Remaining Time Under Videos Adjusted for Playback Speed (default: on)', 'displayRemainingTime', USER_CONFIG.displayRemainingTime);
-            form.appendChild(displayRemainingTime);
+            form.appendChild(createCheckboxField('Display Remaining Time Under Videos Adjusted for Playback Speed (default: on)', 'displayRemainingTime', USER_CONFIG.displayRemainingTime));
 
             // info for remaining time minus segments
             const descriptionRemainingTime = document.createElement('small');
@@ -7309,11 +7355,9 @@
             descriptionRemainingTime.classList.add('CentAnni-info-text');
             form.appendChild(descriptionRemainingTime);
 
-            const showRemainingCompact = createCheckboxField('Compact Version for Remaining Time (default: off)', 'showRemainingCompact', USER_CONFIG.showRemainingCompact);
-            form.appendChild(showRemainingCompact);
+            form.appendChild(createCheckboxField('Compact Version for Remaining Time (default: off)', 'showRemainingCompact', USER_CONFIG.showRemainingCompact));
 
-            const fsRemainingTime = createCheckboxField('Hide Remaining Time and Chapters in Fullscreen (default: off)', 'fsRemainingTime', USER_CONFIG.fsRemainingTime);
-            form.appendChild(fsRemainingTime);
+            form.appendChild(createCheckboxField('Hide Remaining Time and Chapters in Fullscreen (default: off)', 'fsRemainingTime', USER_CONFIG.fsRemainingTime));
 
             // layout changes
             const layoutChanges = document.createElement('div');
@@ -7322,68 +7366,55 @@
             form.appendChild(layoutChanges);
 
             // tab view on video page
-            const videoTabView = createCheckboxField('Tab View on Video Pages | Only Works with Two-Columns Layout (default: on)', 'videoTabView', USER_CONFIG.videoTabView);
-            form.appendChild(videoTabView);
+            form.appendChild(createCheckboxField('Tab View on Video Pages | Only Works with Two-Columns Layout (default: on)', 'videoTabView', USER_CONFIG.videoTabView));
 
             // toggle theater mode w/ active tab
-            const toggleTheaterModeBtn = createCheckboxField('Toggle Theater Mode by Clicking the Active Tab (default: on)', 'toggleTheaterModeBtn', USER_CONFIG.toggleTheaterModeBtn);
-            form.appendChild(toggleTheaterModeBtn);
+            form.appendChild(createCheckboxField('Toggle Theater Mode by Clicking the Active Tab (default: on)', 'toggleTheaterModeBtn', USER_CONFIG.toggleTheaterModeBtn));
 
             // show chapters - only in tab view
-            const tabViewChapters = createCheckboxField('Show Chapters Under Videos | Only Works with Tab View Enabled (default: on)', 'tabViewChapters', USER_CONFIG.tabViewChapters);
-            form.appendChild(tabViewChapters);
+            form.appendChild(createCheckboxField('Show Chapters Under Videos | Only Works with Tab View Enabled (default: on)', 'tabViewChapters', USER_CONFIG.tabViewChapters));
+
+            // show next pl video - only in tab view
+            form.appendChild(createCheckboxField('Show Next Playlist Video Video in Default View | Only Works with Tab View Enabled (default: off)', 'showNextPLVideo', USER_CONFIG.showNextPLVideo));
 
             // max secondary panel height
-            const maxPanelHeight = createCheckboxField('Max Panel Height in Default View  | Only Works with Tab View Enabled (default: off)', 'maxPanelHeight', USER_CONFIG.maxPanelHeight);
-            form.appendChild(maxPanelHeight);
+            form.appendChild(createCheckboxField('Max Panel Height in Default View  | Only Works with Tab View Enabled (default: off)', 'maxPanelHeight', USER_CONFIG.maxPanelHeight));
 
             // no animation switch theater and default view
-            const noAnimation = createCheckboxField('Disable Animation When Switching Between Theater mode and Default view (default: off)', 'noAnimation', USER_CONFIG.noAnimation);
-            form.appendChild(noAnimation);
+            form.appendChild(createCheckboxField('Disable Animation When Switching Between Theater mode and Default view (default: off)', 'noAnimation', USER_CONFIG.noAnimation));
 
             // disable ambient mode
-            const noAmbientMode = createCheckboxField('Disable Ambient Mode (default: off)', 'noAmbientMode', USER_CONFIG.noAmbientMode);
-            form.appendChild(noAmbientMode);
+            form.appendChild(createCheckboxField('Disable Ambient Mode (default: off)', 'noAmbientMode', USER_CONFIG.noAmbientMode));
 
             // disable video zoom
-            const noVideoZoom = createCheckboxField('Disable Video Zoom (default: off)', 'noVideoZoom', USER_CONFIG.noVideoZoom);
-            form.appendChild(noVideoZoom);
+            form.appendChild(createCheckboxField('Disable Video Zoom (default: off)', 'noVideoZoom', USER_CONFIG.noVideoZoom));
 
             // compact layout
-            const compactLayout = createCheckboxField('Compact Layout (default: off)', 'compactLayout', USER_CONFIG.compactLayout);
-            form.appendChild(compactLayout);
+            form.appendChild(createCheckboxField('Compact Layout (default: off)', 'compactLayout', USER_CONFIG.compactLayout));
 
             // compact layout video page
-            const compactLayoutVideo = createCheckboxField('Compact Video Page Layout (default: off)', 'compactLayoutVideo', USER_CONFIG.compactLayoutVideo);
-            form.appendChild(compactLayoutVideo);
+            form.appendChild(createCheckboxField('Compact Video Page Layout (default: off)', 'compactLayoutVideo', USER_CONFIG.compactLayoutVideo));
 
             // square and compact search bar
-            const squareSearchBar = createCheckboxField('Square and Compact Search Bar (default: off)', 'squareSearchBar', USER_CONFIG.squareSearchBar);
-            form.appendChild(squareSearchBar);
+            form.appendChild(createCheckboxField('Square and Compact Search Bar (default: off)', 'squareSearchBar', USER_CONFIG.squareSearchBar));
 
             // square design
-            const squareDesign = createCheckboxField('Square Design (default: off)', 'squareDesign', USER_CONFIG.squareDesign);
-            form.appendChild(squareDesign);
+            form.appendChild(createCheckboxField('Square Design (default: off)', 'squareDesign', USER_CONFIG.squareDesign));
 
             // square avatars
-            const squareAvatars = createCheckboxField('Square Avatars (default: off)', 'squareAvatars', USER_CONFIG.squareAvatars);
-            form.appendChild(squareAvatars);
+            form.appendChild(createCheckboxField('Square Avatars (default: off)', 'squareAvatars', USER_CONFIG.squareAvatars));
 
             // hide comment section
-            const hideCommentsSection = createCheckboxField('Hide Comments Section (default: off)', 'hideCommentsSection', USER_CONFIG.hideCommentsSection);
-            form.appendChild(hideCommentsSection);
+            form.appendChild(createCheckboxField('Hide Comments Section (default: off)', 'hideCommentsSection', USER_CONFIG.hideCommentsSection));
 
             // hide related video section
-            const hideVideosSection = createCheckboxField('Hide Suggested Videos (default: off)', 'hideVideosSection', USER_CONFIG.hideVideosSection);
-            form.appendChild(hideVideosSection);
+            form.appendChild(createCheckboxField('Hide Suggested Videos (default: off)', 'hideVideosSection', USER_CONFIG.hideVideosSection));
 
             // hide shorts
-            const hideShorts = createCheckboxField('Hide Shorts (default: off)', 'hideShorts', USER_CONFIG.hideShorts);
-            form.appendChild(hideShorts);
+            form.appendChild(createCheckboxField('Hide Shorts (default: off)', 'hideShorts', USER_CONFIG.hideShorts));
 
             // redirect shorts
-            const redirectShorts = createCheckboxField('Redirect Shorts to Standard Video Pages (default: off)', 'redirectShorts', USER_CONFIG.redirectShorts);
-            form.appendChild(redirectShorts);
+            form.appendChild(createCheckboxField('Redirect Shorts to Standard Video Pages (default: off)', 'redirectShorts', USER_CONFIG.redirectShorts));
 
             // modify or hide ui elements
             const uielements = document.createElement('div');
@@ -7392,223 +7423,164 @@
             form.appendChild(uielements);
 
             // display full title
-            const displayFullTitle = createCheckboxField('Display Full Titles (default: off)', 'displayFullTitle', USER_CONFIG.displayFullTitle);
-            form.appendChild(displayFullTitle);
+            form.appendChild(createCheckboxField('Display Full Titles (default: off)', 'displayFullTitle', USER_CONFIG.displayFullTitle));
 
             // show PIP btn
-            const showPipBtn = createCheckboxField('Show "Picture-in-Picture" Button (default: on)', 'showPipBtn', USER_CONFIG.showPipBtn);
-            form.appendChild(showPipBtn);
+            form.appendChild(createCheckboxField('Show "Picture-in-Picture" Button (default: on)', 'showPipBtn', USER_CONFIG.showPipBtn));
 
             // no frosted glass
-            const noFrostedGlass = createCheckboxField('No Frosted Glass Effect (default: off)', 'noFrostedGlass', USER_CONFIG.noFrostedGlass);
-            form.appendChild(noFrostedGlass);
+            form.appendChild(createCheckboxField('No Frosted Glass Effect (default: off)', 'noFrostedGlass', USER_CONFIG.noFrostedGlass));
 
             // pure b/w bg
-            const pureBWBackground = createCheckboxField('Pure Black-and-White Background (default: off)', 'pureBWBackground', USER_CONFIG.pureBWBackground);
-            form.appendChild(pureBWBackground);
+            form.appendChild(createCheckboxField('Pure Black-and-White Background (default: off)', 'pureBWBackground', USER_CONFIG.pureBWBackground));
 
             // bottom gradient lower height and different bg image
-            const gradientBottom = createCheckboxField('Less Intrusive Bottom Gradient (default: off)', 'gradientBottom', USER_CONFIG.gradientBottom);
-            form.appendChild(gradientBottom);
+            form.appendChild(createCheckboxField('Less Intrusive Bottom Gradient (default: off)', 'gradientBottom', USER_CONFIG.gradientBottom));
 
             // small subscribed button
-            const smallSubscribeButton = createCheckboxField('Small Subscribed Button Under Videos | Displays Only the Notification Icon (default: off)', 'smallSubscribeButton', USER_CONFIG.smallSubscribeButton);
-            form.appendChild(smallSubscribeButton);
+            form.appendChild(createCheckboxField('Small Subscribed Button Under Videos | Displays Only the Notification Icon (default: off)', 'smallSubscribeButton', USER_CONFIG.smallSubscribeButton));
 
             // color picker progress bar - toggle | color picker
             const progressbarColorPicker = document.createElement('div');
             progressbarColorPicker.classList.add('CentAnni-videos-colorpicker-container', 'CentAnni-selection-color-container');
-
-            const playProgressColor = createCheckboxField('Custom Color for on Hover Progress Bar (default: off)', 'playProgressColor', USER_CONFIG.playProgressColor);
-            progressbarColorPicker.appendChild(playProgressColor);
-
-            const progressbarColorPickerColor = createColorPicker('Progress Bar Color', 'progressbarColorPicker');
-            progressbarColorPicker.appendChild(progressbarColorPickerColor);
-
+            progressbarColorPicker.appendChild(createCheckboxField('Custom Color for on Hover Progress Bar (default: off)', 'playProgressColor', USER_CONFIG.playProgressColor));
+            progressbarColorPicker.appendChild(createColorPicker('Progress Bar Color', 'progressbarColorPicker'));
             form.appendChild(progressbarColorPicker);
 
             // color picker country code - toggle | color picker
             const visibleCountryCodeColor = document.createElement('div');
             visibleCountryCodeColor.classList.add('CentAnni-videos-colorpicker-container', 'CentAnni-selection-color-container');
 
-            const visibleCountryCode = createCheckboxField('Keep Country Code Visible When Hiding Brand Text (default: off)', 'visibleCountryCode', USER_CONFIG.visibleCountryCode);
-            visibleCountryCodeColor.appendChild(visibleCountryCode);
+            visibleCountryCodeColor.appendChild(createCheckboxField('Keep Country Code Visible When Hiding Brand Text (default: off)', 'visibleCountryCode', USER_CONFIG.visibleCountryCode));
 
-            const visibleCountryCodePicker = createColorPicker('Country Code Text Color', 'visibleCountryCodeColor');
-            visibleCountryCodeColor.appendChild(visibleCountryCodePicker);
+            visibleCountryCodeColor.appendChild(createColorPicker('Country Code Text Color', 'visibleCountryCodeColor'));
 
             form.appendChild(visibleCountryCodeColor);
 
             // custom selection color - toggle | light mode | dark mode
             const selectionColorContainer = document.createElement('div');
             selectionColorContainer.classList.add('CentAnni-videos-colorpicker-container', 'CentAnni-selection-color-container');
-
-            const selectionColor = createCheckboxField('Custom Selection Color (default: off)', 'selectionColor', USER_CONFIG.selectionColor);
-            selectionColorContainer.appendChild(selectionColor);
-
-            const lightModeColorPicker = createColorPicker('Light Mode', 'lightModeSelectionColor');
-            selectionColorContainer.appendChild(lightModeColorPicker);
-
-            const darkModeColorPicker = createColorPicker('Dark Mode', 'darkModeSelectionColor');
-            selectionColorContainer.appendChild(darkModeColorPicker);
-
+            selectionColorContainer.appendChild(createCheckboxField('Custom Selection Color (default: off)', 'selectionColor', USER_CONFIG.selectionColor));
+            selectionColorContainer.appendChild(createColorPicker('Light Mode', 'lightModeSelectionColor', 'Selection Color: Light Mode'));
+            selectionColorContainer.appendChild(createColorPicker('Dark Mode', 'darkModeSelectionColor', 'Selection Color: Dark Mode'));
             form.appendChild(selectionColorContainer);
 
             // hide voice search button
-            const hideVoiceSearch = createCheckboxField('Hide "Voice Search" Button (default: off)', 'hideVoiceSearch', USER_CONFIG.hideVoiceSearch);
-            form.appendChild(hideVoiceSearch);
+            form.appendChild(createCheckboxField('Hide "Voice Search" Button (default: off)', 'hideVoiceSearch', USER_CONFIG.hideVoiceSearch));
 
             // hide create button
-            const hideCreateButton = createCheckboxField('Hide "Create" Button (default: off)', 'hideCreateButton', USER_CONFIG.hideCreateButton);
-            form.appendChild(hideCreateButton);
+            form.appendChild(createCheckboxField('Hide "Create" Button (default: off)', 'hideCreateButton', USER_CONFIG.hideCreateButton));
 
             // hide notification button
-            const hideNotificationBtn = createCheckboxField('Hide "Notification" Button (default: off)', 'hideNotificationBtn', USER_CONFIG.hideNotificationBtn);
-            form.appendChild(hideNotificationBtn);
+            form.appendChild(createCheckboxField('Hide "Notification" Button (default: off)', 'hideNotificationBtn', USER_CONFIG.hideNotificationBtn));
 
             // hide notification count
-            const hideNotificationBadge = createCheckboxField('Hide Notification Badge (default: off)', 'hideNotificationBadge', USER_CONFIG.hideNotificationBadge);
-            form.appendChild(hideNotificationBadge);
+            form.appendChild(createCheckboxField('Hide Notification Badge (default: off)', 'hideNotificationBadge', USER_CONFIG.hideNotificationBadge));
 
             // hide avatar
-            const hideOwnAvatar = createCheckboxField('Hide Own Avatar in the Header (default: off)', 'hideOwnAvatar', USER_CONFIG.hideOwnAvatar);
-            form.appendChild(hideOwnAvatar);
+            form.appendChild(createCheckboxField('Hide Own Avatar in the Header (default: off)', 'hideOwnAvatar', USER_CONFIG.hideOwnAvatar));
 
             // hide YouTube brand text within the header
-            const hideBrandText = createCheckboxField('Hide YouTube Brand Text in the Header (default: off)', 'hideBrandText', USER_CONFIG.hideBrandText);
-            form.appendChild(hideBrandText);
+            form.appendChild(createCheckboxField('Hide YouTube Brand Text in the Header (default: off)', 'hideBrandText', USER_CONFIG.hideBrandText));
 
             // hide join button
-            const hideJoinButton = createCheckboxField('Hide the Join Button Under Videos and on Channel Pages (default: off)', 'hideJoinButton', USER_CONFIG.hideJoinButton);
-            form.appendChild(hideJoinButton);
+            form.appendChild(createCheckboxField('Hide the Join Button Under Videos and on Channel Pages (default: off)', 'hideJoinButton', USER_CONFIG.hideJoinButton));
 
             // hide video scrubber
-            const removeScrubber = createCheckboxField('Hide Video Scrubber (default: off)', 'removeScrubber', USER_CONFIG.removeScrubber);
-            form.appendChild(removeScrubber);
+            form.appendChild(createCheckboxField('Hide Video Scrubber (default: off)', 'removeScrubber', USER_CONFIG.removeScrubber));
 
             // hide video end cards
-            const hideEndCards = createCheckboxField('Hide Video End Cards (default: off)', 'hideEndCards', USER_CONFIG.hideEndCards);
-            form.appendChild(hideEndCards);
+            form.appendChild(createCheckboxField('Hide Video End Cards (default: off)', 'hideEndCards', USER_CONFIG.hideEndCards));
 
             // hide end screens
-            const hideEndscreen = createCheckboxField('Hide End Screens (default: off)', 'hideEndscreen', USER_CONFIG.hideEndscreen);
-            form.appendChild(hideEndscreen);
+            form.appendChild(createCheckboxField('Hide End Screens (default: off)', 'hideEndscreen', USER_CONFIG.hideEndscreen));
 
             // move save btn into menu
-            const moveSaveBtn = createCheckboxField('Move "Save" Button into Menu (default: off)', 'moveSaveBtn', USER_CONFIG.moveSaveBtn);
-            form.appendChild(moveSaveBtn);
+            form.appendChild(createCheckboxField('Move "Save" Button into Menu (default: off)', 'moveSaveBtn', USER_CONFIG.moveSaveBtn));
 
             // hide the disabled autoplay button
-            const hideAutoplayBtn = createCheckboxField('Hide "Autoplay" Button When Disabled (default: off)', 'hideAutoplayBtn', USER_CONFIG.hideAutoplayBtn);
-            form.appendChild(hideAutoplayBtn);
+            form.appendChild(createCheckboxField('Hide "Autoplay" Button When Disabled (default: off)', 'hideAutoplayBtn', USER_CONFIG.hideAutoplayBtn));
 
             // hide play next button
-            const hidePlayNextButton = createCheckboxField('Hide "Previous" and "Play Next" Buttons (default: off)', 'hidePlayNextButton', USER_CONFIG.hidePlayNextButton);
-            form.appendChild(hidePlayNextButton);
+            form.appendChild(createCheckboxField('Hide "Previous" and "Play Next" Buttons (default: off)', 'hidePlayNextButton', USER_CONFIG.hidePlayNextButton));
 
             // hide airplay button
-            const hideAirplayButton = createCheckboxField('Hide "Airplay" Button (default: off)', 'hideAirplayButton', USER_CONFIG.hideAirplayButton);
-            form.appendChild(hideAirplayButton);
+            form.appendChild(createCheckboxField('Hide "Airplay" Button (default: off)', 'hideAirplayButton', USER_CONFIG.hideAirplayButton));
 
             // hide ask btn
-            const hideAskButton = createCheckboxField('Hide "Ask" Button (default: off)', 'hideAskButton', USER_CONFIG.hideAskButton);
-            form.appendChild(hideAskButton);
+            form.appendChild(createCheckboxField('Hide "Ask" Button (default: off)', 'hideAskButton', USER_CONFIG.hideAskButton));
 
             // hide share btn global
-            const hideShareBtnGlobal = createCheckboxField('Hide "Share" Button (default: off)', 'hideShareBtnGlobal', USER_CONFIG.hideShareBtnGlobal);
-            form.appendChild(hideShareBtnGlobal);
+            form.appendChild(createCheckboxField('Hide "Share" Button (default: off)', 'hideShareBtnGlobal', USER_CONFIG.hideShareBtnGlobal));
 
             // hide share button
-            const hideShareButton = createCheckboxField('Hide "Share" Button Only Under Videos (default: off)', 'hideShareButton', USER_CONFIG.hideShareButton);
-            form.appendChild(hideShareButton);
+            form.appendChild(createCheckboxField('Hide "Share" Button Only Under Videos (default: off)', 'hideShareButton', USER_CONFIG.hideShareButton));
 
             // hide add comment
-            const hideAddComment = createCheckboxField('Hide "Add Comment" Textfield (default: off)', 'hideAddComment', USER_CONFIG.hideAddComment);
-            form.appendChild(hideAddComment);
+            form.appendChild(createCheckboxField('Hide "Add Comment" Textfield (default: off)', 'hideAddComment', USER_CONFIG.hideAddComment));
 
             // hide reply comment button
-            const hideReplyButton = createCheckboxField('Hide Comment "Reply" Button (default: off)', 'hideReplyButton', USER_CONFIG.hideReplyButton);
-            form.appendChild(hideReplyButton);
+            form.appendChild(createCheckboxField('Hide Comment "Reply" Button (default: off)', 'hideReplyButton', USER_CONFIG.hideReplyButton));
 
             // hide blue info panel under video
-            const hideInfoPanel = createCheckboxField('Hide Blue Info Panels (default: off)', 'hideInfoPanel', USER_CONFIG.hideInfoPanel);
-            form.appendChild(hideInfoPanel);
+            form.appendChild(createCheckboxField('Hide Blue Info Panels (default: off)', 'hideInfoPanel', USER_CONFIG.hideInfoPanel));
 
             // hide fundraiser
-            const hideFundraiser = createCheckboxField('Hide Fundraiser Icons and Panels (default: off)', 'hideFundraiser', USER_CONFIG.hideFundraiser);
-            form.appendChild(hideFundraiser);
+            form.appendChild(createCheckboxField('Hide Fundraiser Icons and Panels (default: off)', 'hideFundraiser', USER_CONFIG.hideFundraiser));
 
             // hide hashtags under video
-            const hideHashtags = createCheckboxField('Hide Hashtags Under Videos (default: off)', 'hideHashtags', USER_CONFIG.hideHashtags);
-            form.appendChild(hideHashtags);
+            form.appendChild(createCheckboxField('Hide Hashtags Under Videos (default: off)', 'hideHashtags', USER_CONFIG.hideHashtags));
 
             // hide product span
-            const hideProdTxt = createCheckboxField('Hide "X products" Text Under Videos (default: off)', 'hideProdTxt', USER_CONFIG.hideProdTxt);
-            form.appendChild(hideProdTxt);
+            form.appendChild(createCheckboxField('Hide "X products" Text Under Videos (default: off)', 'hideProdTxt', USER_CONFIG.hideProdTxt));
 
             // hide product suggestion under videos
-            const hideProdSug = createCheckboxField('Hide Product Suggestion Under Videos (default: off)', 'hideProdSug', USER_CONFIG.hideProdSug);
-            form.appendChild(hideProdSug);
+            form.appendChild(createCheckboxField('Hide Product Suggestion Under Videos (default: off)', 'hideProdSug', USER_CONFIG.hideProdSug));
 
             // hide ad slot
-            const hideAdSlots = createCheckboxField('Hide Ad Slots on the Home Page (default: off)', 'hideAdSlots', USER_CONFIG.hideAdSlots);
-            form.appendChild(hideAdSlots);
+            form.appendChild(createCheckboxField('Hide Ad Slots on the Home Page (default: off)', 'hideAdSlots', USER_CONFIG.hideAdSlots));
 
             // hide pay to watch
-            const hidePayToWatch = createCheckboxField('Hide "Pay to Watch" Featured Videos (default: off)', 'hidePayToWatch', USER_CONFIG.hidePayToWatch);
-            form.appendChild(hidePayToWatch);
+            form.appendChild(createCheckboxField('Hide "Pay to Watch" Featured Videos (default: off)', 'hidePayToWatch', USER_CONFIG.hidePayToWatch));
 
             // hide free with ads
-            const hideFreeWithAds = createCheckboxField('Hide "Free with ads" Videos (default: off)', 'hideFreeWithAds', USER_CONFIG.hideFreeWithAds);
-            form.appendChild(hideFreeWithAds);
+            form.appendChild(createCheckboxField('Hide "Free with ads" Videos (default: off)', 'hideFreeWithAds', USER_CONFIG.hideFreeWithAds));
 
             // hide members only
-            const hideMembersOnly = createCheckboxField('Hide Members Only Featured Videos (default: off)', 'hideMembersOnly', USER_CONFIG.hideMembersOnly);
-            form.appendChild(hideMembersOnly);
+            form.appendChild(createCheckboxField('Hide Members Only Featured Videos (default: off)', 'hideMembersOnly', USER_CONFIG.hideMembersOnly));
 
             // hide playables
-            const hidePlayables = createCheckboxField('Hide "YouTube Playables" (default: off)', 'hidePlayables', USER_CONFIG.hidePlayables);
-            form.appendChild(hidePlayables);
+            form.appendChild(createCheckboxField('Hide "YouTube Playables" (default: off)', 'hidePlayables', USER_CONFIG.hidePlayables));
 
             // hide news on home
-            const hideNewsHome = createCheckboxField('Hide "Breaking News" on the Home Page (default: off)', 'hideNewsHome', USER_CONFIG.hideNewsHome);
-            form.appendChild(hideNewsHome);
+            form.appendChild(createCheckboxField('Hide "Breaking News" on the Home Page (default: off)', 'hideNewsHome', USER_CONFIG.hideNewsHome));
 
             // hide mix playlists on home
-            const hidePlaylistsHome = createCheckboxField('Hide Mix-Playlists on the Home Page (default: off)', 'hidePlaylistsHome', USER_CONFIG.hidePlaylistsHome);
-            form.appendChild(hidePlaylistsHome);
+            form.appendChild(createCheckboxField('Hide Mix-Playlists on the Home Page (default: off)', 'hidePlaylistsHome', USER_CONFIG.hidePlaylistsHome));
 
             // hide episode playlists on home
-            const hideEpisodesHome = createCheckboxField('Hide Episode-Playlists on the Home Page (default: off)', 'hideEpisodesHome', USER_CONFIG.hideEpisodesHome);
-            form.appendChild(hideEpisodesHome);
+            form.appendChild(createCheckboxField('Hide Episode-Playlists on the Home Page (default: off)', 'hideEpisodesHome', USER_CONFIG.hideEpisodesHome));
 
             // hide latest posts on home
-            const hideLatestPostsHome = createCheckboxField('Hide "Latest YouTube posts" on the Home Page (default: off)', 'hideLatestPostsHome', USER_CONFIG.hideLatestPostsHome);
-            form.appendChild(hideLatestPostsHome);
+            form.appendChild(createCheckboxField('Hide "Latest YouTube posts" on the Home Page (default: off)', 'hideLatestPostsHome', USER_CONFIG.hideLatestPostsHome));
 
             // hide more topics section
-            const hideExploreSection = createCheckboxField('Hide "Explore more topics" (default: off)', 'hideExploreSection', USER_CONFIG.hideExploreSection);
-            form.appendChild(hideExploreSection);
+            form.appendChild(createCheckboxField('Hide "Explore more topics" (default: off)', 'hideExploreSection', USER_CONFIG.hideExploreSection));
 
             // hide right sidebar search
-            const hideRightSidebarSearch = createCheckboxField('Hide Right Sidebar on Search Pages (default: off)', 'hideRightSidebarSearch', USER_CONFIG.hideRightSidebarSearch);
-            form.appendChild(hideRightSidebarSearch);
+            form.appendChild(createCheckboxField('Hide Right Sidebar on Search Pages (default: off)', 'hideRightSidebarSearch', USER_CONFIG.hideRightSidebarSearch));
 
             // hide latest post from . . .
-            const hideLatestPosts = createCheckboxField('Hide "Latest posts from . . ." on Search Pages (default: off)', 'hideLatestPosts', USER_CONFIG.hideLatestPosts);
-            form.appendChild(hideLatestPosts);
+            form.appendChild(createCheckboxField('Hide "Latest posts from . . ." on Search Pages (default: off)', 'hideLatestPosts', USER_CONFIG.hideLatestPosts));
 
             // hide Most relevant on subscriptions page
-            const hideMostRelevant = createCheckboxField('Hide "Most relevant" on Subscriptions Page (default: off)', 'hideMostRelevant', USER_CONFIG.hideMostRelevant);
-            form.appendChild(hideMostRelevant);
+            form.appendChild(createCheckboxField('Hide "Most relevant" on Subscriptions Page (default: off)', 'hideMostRelevant', USER_CONFIG.hideMostRelevant));
 
             // hide queue button
-            const hideQueueBtn = createCheckboxField('Hide "Add to queue" Button (default: off)', 'hideQueueBtn', USER_CONFIG.hideQueueBtn);
-            form.appendChild(hideQueueBtn);
+            form.appendChild(createCheckboxField('Hide "Add to queue" Button (default: off)', 'hideQueueBtn', USER_CONFIG.hideQueueBtn));
 
             // hide mini player
-            const hideMiniPlayer = createCheckboxField('Hide Mini Player (default: off)', 'hideMiniPlayer', USER_CONFIG.hideMiniPlayer);
-            form.appendChild(hideMiniPlayer);
+            form.appendChild(createCheckboxField('Hide Mini Player (default: off)', 'hideMiniPlayer', USER_CONFIG.hideMiniPlayer));
 
             // hide watched videos globally
             const hideWatchedGlobal = document.createElement('div');
@@ -7617,12 +7589,10 @@
             form.appendChild(hideWatchedGlobal);
 
             // css version
-            const videosHideWatchedGlobal = createCheckboxField('Hide Watched Videos Regardless of Progress Everywhere (default: off)', 'videosHideWatchedGlobal', USER_CONFIG.videosHideWatchedGlobal);
-            form.appendChild(videosHideWatchedGlobal);
+            form.appendChild(createCheckboxField('Hide Watched Videos Regardless of Progress Everywhere (default: off)', 'videosHideWatchedGlobal', USER_CONFIG.videosHideWatchedGlobal));
 
             // hide watched only on home
-            const videosHideWatched = createCheckboxField('Hide Watched Videos Regardless of Progress Only on the Home Page (default: off)', 'videosHideWatched', USER_CONFIG.videosHideWatched);
-            form.appendChild(videosHideWatched);
+            form.appendChild(createCheckboxField('Hide Watched Videos Regardless of Progress Only on the Home Page (default: off)', 'videosHideWatched', USER_CONFIG.videosHideWatched));
 
             // info for hiding watched videos
             const descriptionHideWatchedVideos = document.createElement('small');
@@ -7631,32 +7601,25 @@
             form.appendChild(descriptionHideWatchedVideos);
 
             // js version
-            const videosHideWatchedGlobalJS = createNumberInputField("Percent Watched to Hide Videos (default: 0 | disabled)", 'videosHideWatchedGlobalJS', USER_CONFIG.videosHideWatchedGlobalJS, { max: 100, step: 1 });
-            form.appendChild(videosHideWatchedGlobalJS);
+            form.appendChild(createNumberInputField("Percent Watched to Hide Videos (default: 0 | disabled)", 'videosHideWatchedGlobalJS', USER_CONFIG.videosHideWatchedGlobalJS, { max: 100, step: 1 }));
 
             // hide percentage watched on home page
-            const videosHideWatchedHome = createCheckboxField('Hide X Percentage Watched Videos on the Home Page (default: on)', 'videosHideWatchedHome', USER_CONFIG.videosHideWatchedHome);
-            form.appendChild(videosHideWatchedHome);
+            form.appendChild(createCheckboxField('Hide X Percentage Watched Videos on the Home Page (default: on)', 'videosHideWatchedHome', USER_CONFIG.videosHideWatchedHome));
 
             // hide percentage watched on sub page
-            const videosHideWatchedSubscriptions = createCheckboxField('Hide X Percentage Watched Videos on the Subscription Page (default: off)', 'videosHideWatchedSubscriptions', USER_CONFIG.videosHideWatchedSubscriptions);
-            form.appendChild(videosHideWatchedSubscriptions);
+            form.appendChild(createCheckboxField('Hide X Percentage Watched Videos on the Subscription Page (default: off)', 'videosHideWatchedSubscriptions', USER_CONFIG.videosHideWatchedSubscriptions));
 
             // hide percentage watched on channel page
-            const videosHideWatchedChannels = createCheckboxField('Hide X Percentage Watched Videos on Channel Pages (default: off)', 'videosHideWatchedChannels', USER_CONFIG.videosHideWatchedChannels);
-            form.appendChild(videosHideWatchedChannels);
+            form.appendChild(createCheckboxField('Hide X Percentage Watched Videos on Channel Pages (default: off)', 'videosHideWatchedChannels', USER_CONFIG.videosHideWatchedChannels));
 
             // hide percentage watched on pl
-            const videosHideWatchedPlaylist = createCheckboxField('Hide X Percentage Watched Videos on Playlists (default: off)', 'videosHideWatchedPlaylist', USER_CONFIG.videosHideWatchedPlaylist);
-            form.appendChild(videosHideWatchedPlaylist);
+            form.appendChild(createCheckboxField('Hide X Percentage Watched Videos on Playlists (default: off)', 'videosHideWatchedPlaylist', USER_CONFIG.videosHideWatchedPlaylist));
 
             // hide percentage watched on videos
-            const videosHideWatchedVideo = createCheckboxField('Hide X Percentage Watched Videos on Video Pages (default: on)', 'videosHideWatchedVideo', USER_CONFIG.videosHideWatchedVideo);
-            form.appendChild(videosHideWatchedVideo);
+            form.appendChild(createCheckboxField('Hide X Percentage Watched Videos on Video Pages (default: on)', 'videosHideWatchedVideo', USER_CONFIG.videosHideWatchedVideo));
 
             // hide percentage watched on search
-            const videosHideWatchedSearch = createCheckboxField('Hide X Percentage Watched Videos on Search Pages (default: off)', 'videosHideWatchedSearch', USER_CONFIG.videosHideWatchedSearch);
-            form.appendChild(videosHideWatchedSearch);
+            form.appendChild(createCheckboxField('Hide X Percentage Watched Videos on Search Pages (default: off)', 'videosHideWatchedSearch', USER_CONFIG.videosHideWatchedSearch));
 
             // YT Guide
             const leftnavbar = document.createElement('div');
@@ -7665,16 +7628,13 @@
             form.appendChild(leftnavbar);
 
             // hide home button
-            const lnbHideHomeBtn = createCheckboxField('Hide "Home" Button (default: off)', 'lnbHideHomeBtn', USER_CONFIG.lnbHideHomeBtn);
-            form.appendChild(lnbHideHomeBtn);
+            form.appendChild(createCheckboxField('Hide "Home" Button (default: off)', 'lnbHideHomeBtn', USER_CONFIG.lnbHideHomeBtn));
 
             // hide subscriptions button
-            const lnbHideSubscriptionsBtn = createCheckboxField('Hide "Subscriptions" Button (default: off)', 'lnbHideSubscriptionsBtn', USER_CONFIG.lnbHideSubscriptionsBtn);
-            form.appendChild(lnbHideSubscriptionsBtn);
+            form.appendChild(createCheckboxField('Hide "Subscriptions" Button (default: off)', 'lnbHideSubscriptionsBtn', USER_CONFIG.lnbHideSubscriptionsBtn));
 
             // restore order: home > you > subs
-            const lnbRestoreOrder = createCheckboxField('Restore Order: Home > You > Subscriptions (default: off)', 'lnbRestoreOrder', USER_CONFIG.lnbRestoreOrder);
-            form.appendChild(lnbRestoreOrder);
+            form.appendChild(createCheckboxField('Restore Order: Home > You > Subscriptions (default: off)', 'lnbRestoreOrder', USER_CONFIG.lnbRestoreOrder));
 
             // Spacer-5
             const spacer5Home = document.createElement('div');
@@ -7682,48 +7642,37 @@
             form.appendChild(spacer5Home);
 
             // hide you section
-            const lnbHideYouSection = createCheckboxField('Hide "You" Section (default: off)', 'lnbHideYouSection', USER_CONFIG.lnbHideYouSection);
-            form.appendChild(lnbHideYouSection);
+            form.appendChild(createCheckboxField('Hide "You" Section (default: off)', 'lnbHideYouSection', USER_CONFIG.lnbHideYouSection));
 
             // hide you button
-            const lnbHideYouBtn = createCheckboxField('Hide "You" Button (default: off)', 'lnbHideYouBtn', USER_CONFIG.lnbHideYouBtn);
-            form.appendChild(lnbHideYouBtn);
+            form.appendChild(createCheckboxField('Hide "You" Button (default: off)', 'lnbHideYouBtn', USER_CONFIG.lnbHideYouBtn));
 
             // hide your channel button
-            const lnbHideUrChannelBtn = createCheckboxField('Hide "Your Channel" Button (default: off)', 'lnbHideUrChannelBtn', USER_CONFIG.lnbHideUrChannelBtn);
-            form.appendChild(lnbHideUrChannelBtn);
+            form.appendChild(createCheckboxField('Hide "Your Channel" Button (default: off)', 'lnbHideUrChannelBtn', USER_CONFIG.lnbHideUrChannelBtn));
 
             // hide history button
-            const lnbHideHistoryBtn = createCheckboxField('Hide "History" Button (default: off)', 'lnbHideHistoryBtn', USER_CONFIG.lnbHideHistoryBtn);
-            form.appendChild(lnbHideHistoryBtn);
+            form.appendChild(createCheckboxField('Hide "History" Button (default: off)', 'lnbHideHistoryBtn', USER_CONFIG.lnbHideHistoryBtn));
 
             // hide playlists button
-            const lnbHidePlaylistsBtn = createCheckboxField('Hide "Playlists" Button (default: off)', 'lnbHidePlaylistsBtn', USER_CONFIG.lnbHidePlaylistsBtn);
-            form.appendChild(lnbHidePlaylistsBtn);
+            form.appendChild(createCheckboxField('Hide "Playlists" Button (default: off)', 'lnbHidePlaylistsBtn', USER_CONFIG.lnbHidePlaylistsBtn));
 
             // hide videos button
-            const lnbHideVideosBtn = createCheckboxField('Hide "Your Videos" Button (default: off)', 'lnbHideVideosBtn', USER_CONFIG.lnbHideVideosBtn);
-            form.appendChild(lnbHideVideosBtn);
+            form.appendChild(createCheckboxField('Hide "Your Videos" Button (default: off)', 'lnbHideVideosBtn', USER_CONFIG.lnbHideVideosBtn));
 
             // hide courses button
-            const lnbHideCoursesBtn = createCheckboxField('Hide "Your Courses" Button (default: off)', 'lnbHideCoursesBtn', USER_CONFIG.lnbHideCoursesBtn);
-            form.appendChild(lnbHideCoursesBtn);
+            form.appendChild(createCheckboxField('Hide "Your Courses" Button (default: off)', 'lnbHideCoursesBtn', USER_CONFIG.lnbHideCoursesBtn));
 
             // hide your podcasts button
-            const lnbHideYPodcastsBtn = createCheckboxField('Hide "Your Podcasts" Button (default: off)', 'lnbHideYPodcastsBtn', USER_CONFIG.lnbHideYPodcastsBtn);
-            form.appendChild(lnbHideYPodcastsBtn);
+            form.appendChild(createCheckboxField('Hide "Your Podcasts" Button (default: off)', 'lnbHideYPodcastsBtn', USER_CONFIG.lnbHideYPodcastsBtn));
 
             // hide watch later button
-            const lnbHideWlBtn = createCheckboxField('Hide "Watch Later" Button (default: off)', 'lnbHideWlBtn', USER_CONFIG.lnbHideWlBtn);
-            form.appendChild(lnbHideWlBtn);
+            form.appendChild(createCheckboxField('Hide "Watch Later" Button (default: off)', 'lnbHideWlBtn', USER_CONFIG.lnbHideWlBtn));
 
             // hide liked videos button
-            const lnbHideLikedVideosBtn = createCheckboxField('Hide "Liked Videos" Button (default: off)', 'lnbHideLikedVideosBtn', USER_CONFIG.lnbHideLikedVideosBtn);
-            form.appendChild(lnbHideLikedVideosBtn);
+            form.appendChild(createCheckboxField('Hide "Liked Videos" Button (default: off)', 'lnbHideLikedVideosBtn', USER_CONFIG.lnbHideLikedVideosBtn));
 
             // hide downloads button
-            const lnbHideDLBtn = createCheckboxField('Hide "Downloads" Button (default: off)', 'lnbHideDLBtn', USER_CONFIG.lnbHideDLBtn);
-            form.appendChild(lnbHideDLBtn);
+            form.appendChild(createCheckboxField('Hide "Downloads" Button (default: off)', 'lnbHideDLBtn', USER_CONFIG.lnbHideDLBtn));
 
             // Spacer-5
             const spacer5Subscriptions = document.createElement('div');
@@ -7731,16 +7680,13 @@
             form.appendChild(spacer5Subscriptions);
 
             // hide subscriptions section
-            const lnbHideSubscriptionsSection = createCheckboxField('Hide "Subscriptions" Section (default: off)', 'lnbHideSubscriptionsSection', USER_CONFIG.lnbHideSubscriptionsSection);
-            form.appendChild(lnbHideSubscriptionsSection);
+            form.appendChild(createCheckboxField('Hide "Subscriptions" Section (default: off)', 'lnbHideSubscriptionsSection', USER_CONFIG.lnbHideSubscriptionsSection));
 
             // hide subscriptions title
-            const lnbHideSubscriptionsTitle = createCheckboxField('Hide "Subscriptions" Title (default: off)', 'lnbHideSubscriptionsTitle', USER_CONFIG.lnbHideSubscriptionsTitle);
-            form.appendChild(lnbHideSubscriptionsTitle);
+            form.appendChild(createCheckboxField('Hide "Subscriptions" Title (default: off)', 'lnbHideSubscriptionsTitle', USER_CONFIG.lnbHideSubscriptionsTitle));
 
             // hide more button
-            const lnbHideMoreBtn = createCheckboxField('Hide "Show More" Button (default: off)', 'lnbHideMoreBtn', USER_CONFIG.lnbHideMoreBtn);
-            form.appendChild(lnbHideMoreBtn);
+            form.appendChild(createCheckboxField('Hide "Show More" Button (default: off)', 'lnbHideMoreBtn', USER_CONFIG.lnbHideMoreBtn));
 
             // Spacer-5
             const spacer5Explore = document.createElement('div');
@@ -7748,56 +7694,43 @@
             form.appendChild(spacer5Explore);
 
             // hide explore section
-            const lnbHideExploreSection = createCheckboxField('Hide "Explore" Section (default: off)', 'lnbHideExploreSection', USER_CONFIG.lnbHideExploreSection);
-            form.appendChild(lnbHideExploreSection);
+            form.appendChild(createCheckboxField('Hide "Explore" Section (default: off)', 'lnbHideExploreSection', USER_CONFIG.lnbHideExploreSection));
 
             // hide explore title
-            const lnbHideExploreTitle = createCheckboxField('Hide "Explore" Title (default: off)', 'lnbHideExploreTitle', USER_CONFIG.lnbHideExploreTitle);
-            form.appendChild(lnbHideExploreTitle);
+            form.appendChild(createCheckboxField('Hide "Explore" Title (default: off)', 'lnbHideExploreTitle', USER_CONFIG.lnbHideExploreTitle));
 
             // hide trending button
-            const lnbHideTrendingBtn = createCheckboxField('Hide "Trending" Button (default: off)', 'lnbHideTrendingBtn', USER_CONFIG.lnbHideTrendingBtn);
-            form.appendChild(lnbHideTrendingBtn);
+            form.appendChild(createCheckboxField('Hide "Trending" Button (default: off)', 'lnbHideTrendingBtn', USER_CONFIG.lnbHideTrendingBtn));
 
             // hide music button
-            const lnbHideMusicBtn = createCheckboxField('Hide "Music" Button (default: off)', 'lnbHideMusicBtn', USER_CONFIG.lnbHideMusicBtn);
-            form.appendChild(lnbHideMusicBtn);
+            form.appendChild(createCheckboxField('Hide "Music" Button (default: off)', 'lnbHideMusicBtn', USER_CONFIG.lnbHideMusicBtn));
 
             // hide movies button
-            const lnbHideMoviesBtn = createCheckboxField('Hide "Movies & TV" Button (default: off)', 'lnbHideMoviesBtn', USER_CONFIG.lnbHideMoviesBtn);
-            form.appendChild(lnbHideMoviesBtn);
+            form.appendChild(createCheckboxField('Hide "Movies & TV" Button (default: off)', 'lnbHideMoviesBtn', USER_CONFIG.lnbHideMoviesBtn));
 
             // hide live button
-            const lnbHideLiveBtn = createCheckboxField('Hide "Live" Button (default: off)', 'lnbHideLiveBtn', USER_CONFIG.lnbHideLiveBtn);
-            form.appendChild(lnbHideLiveBtn);
+            form.appendChild(createCheckboxField('Hide "Live" Button (default: off)', 'lnbHideLiveBtn', USER_CONFIG.lnbHideLiveBtn));
 
             // hide gaming button
-            const lnbHideGamingBtn = createCheckboxField('Hide "Gaming" Button (default: off)', 'lnbHideGamingBtn', USER_CONFIG.lnbHideGamingBtn);
-            form.appendChild(lnbHideGamingBtn);
+            form.appendChild(createCheckboxField('Hide "Gaming" Button (default: off)', 'lnbHideGamingBtn', USER_CONFIG.lnbHideGamingBtn));
 
             // hide news button
-            const lnbHideNewsBtn = createCheckboxField('Hide "News" Button (default: off)', 'lnbHideNewsBtn', USER_CONFIG.lnbHideNewsBtn);
-            form.appendChild(lnbHideNewsBtn);
+            form.appendChild(createCheckboxField('Hide "News" Button (default: off)', 'lnbHideNewsBtn', USER_CONFIG.lnbHideNewsBtn));
 
             // hide sports button
-            const lnbHideSportsBtn = createCheckboxField('Hide "Sports" Button (default: off)', 'lnbHideSportsBtn', USER_CONFIG.lnbHideSportsBtn);
-            form.appendChild(lnbHideSportsBtn);
+            form.appendChild(createCheckboxField('Hide "Sports" Button (default: off)', 'lnbHideSportsBtn', USER_CONFIG.lnbHideSportsBtn));
 
             // hide learning button
-            const lnbHideLearningBtn = createCheckboxField('Hide "Learning" Button (default: off)', 'lnbHideLearningBtn', USER_CONFIG.lnbHideLearningBtn);
-            form.appendChild(lnbHideLearningBtn);
+            form.appendChild(createCheckboxField('Hide "Learning" Button (default: off)', 'lnbHideLearningBtn', USER_CONFIG.lnbHideLearningBtn));
 
             // hide fashion & beauty button
-            const lnbHideFashionBtn = createCheckboxField('Hide "Fashion & Beauty" Button (default: off)', 'lnbHideFashionBtn', USER_CONFIG.lnbHideFashionBtn);
-            form.appendChild(lnbHideFashionBtn);
+            form.appendChild(createCheckboxField('Hide "Fashion & Beauty" Button (default: off)', 'lnbHideFashionBtn', USER_CONFIG.lnbHideFashionBtn));
 
             // hide playables button
-            const lnbHidePlayablesBtn = createCheckboxField('Hide "Playables" Button (default: off)', 'lnbHidePlayablesBtn', USER_CONFIG.lnbHidePlayablesBtn);
-            form.appendChild(lnbHidePlayablesBtn);
+            form.appendChild(createCheckboxField('Hide "Playables" Button (default: off)', 'lnbHidePlayablesBtn', USER_CONFIG.lnbHidePlayablesBtn));
 
             // hide podcasts button
-            const lnbHidePodcastsBtn = createCheckboxField('Hide "Podcasts" Button (default: off)', 'lnbHidePodcastsBtn', USER_CONFIG.lnbHidePodcastsBtn);
-            form.appendChild(lnbHidePodcastsBtn);
+            form.appendChild(createCheckboxField('Hide "Podcasts" Button (default: off)', 'lnbHidePodcastsBtn', USER_CONFIG.lnbHidePodcastsBtn));
 
             // Spacer-5
             const spacer5More = document.createElement('div');
@@ -7805,28 +7738,22 @@
             form.appendChild(spacer5More);
 
             // hide more section
-            const lnbHideMoreSection = createCheckboxField('Hide "More from YouTube" Section (default: off)', 'lnbHideMoreSection', USER_CONFIG.lnbHideMoreSection);
-            form.appendChild(lnbHideMoreSection);
+            form.appendChild(createCheckboxField('Hide "More from YouTube" Section (default: off)', 'lnbHideMoreSection', USER_CONFIG.lnbHideMoreSection));
 
             // hide more title
-            const lnbHideMoreTitle = createCheckboxField('Hide "More from YouTube" Title (default: off)', 'lnbHideMoreTitle', USER_CONFIG.lnbHideMoreTitle);
-            form.appendChild(lnbHideMoreTitle);
+            form.appendChild(createCheckboxField('Hide "More from YouTube" Title (default: off)', 'lnbHideMoreTitle', USER_CONFIG.lnbHideMoreTitle));
 
             // hide youtube premium button
-            const lnbHideYtPremiumBtn = createCheckboxField('Hide "YouTube Premium" Button (default: off)', 'lnbHideYtPremiumBtn', USER_CONFIG.lnbHideYtPremiumBtn);
-            form.appendChild(lnbHideYtPremiumBtn);
+            form.appendChild(createCheckboxField('Hide "YouTube Premium" Button (default: off)', 'lnbHideYtPremiumBtn', USER_CONFIG.lnbHideYtPremiumBtn));
 
             // hide youtube studio button
-            const lnbHideYtStudioBtn = createCheckboxField('Hide "YouTube Studio" Button (default: off)', 'lnbHideYtStudioBtn', USER_CONFIG.lnbHideYtStudioBtn);
-            form.appendChild(lnbHideYtStudioBtn);
+            form.appendChild(createCheckboxField('Hide "YouTube Studio" Button (default: off)', 'lnbHideYtStudioBtn', USER_CONFIG.lnbHideYtStudioBtn));
 
             // hide youtube music button
-            const lnbHideYtMusicBtn = createCheckboxField('Hide "YouTube Music" Button (default: off)', 'lnbHideYtMusicBtn', USER_CONFIG.lnbHideYtMusicBtn);
-            form.appendChild(lnbHideYtMusicBtn);
+            form.appendChild(createCheckboxField('Hide "YouTube Music" Button (default: off)', 'lnbHideYtMusicBtn', USER_CONFIG.lnbHideYtMusicBtn));
 
             // hide youtube kids button
-            const lnbHideYtKidsBtn = createCheckboxField('Hide "YouTube Kids" Button (default: off)', 'lnbHideYtKidsBtn', USER_CONFIG.lnbHideYtKidsBtn);
-            form.appendChild(lnbHideYtKidsBtn);
+            form.appendChild(createCheckboxField('Hide "YouTube Kids" Button (default: off)', 'lnbHideYtKidsBtn', USER_CONFIG.lnbHideYtKidsBtn));
 
             // Spacer-5
             const spacer5Penultimate = document.createElement('div');
@@ -7834,24 +7761,19 @@
             form.appendChild(spacer5Penultimate);
 
             // hide penultimate section
-            const lnbHidePenultimateSection = createCheckboxField('Hide Penultimate Section (default: off)', 'lnbHidePenultimateSection', USER_CONFIG.lnbHidePenultimateSection);
-            form.appendChild(lnbHidePenultimateSection);
+            form.appendChild(createCheckboxField('Hide Penultimate Section (default: off)', 'lnbHidePenultimateSection', USER_CONFIG.lnbHidePenultimateSection));
 
             // hide settings button
-            const lnbHideSettingsBtn = createCheckboxField('Hide "Settings" Button (default: off)', 'lnbHideSettingsBtn', USER_CONFIG.lnbHideSettingsBtn);
-            form.appendChild(lnbHideSettingsBtn);
+            form.appendChild(createCheckboxField('Hide "Settings" Button (default: off)', 'lnbHideSettingsBtn', USER_CONFIG.lnbHideSettingsBtn));
 
             // hide report history button
-            const lnbHideReportHistoryBtn = createCheckboxField('Hide "Report History" Button (default: off)', 'lnbHideReportHistoryBtn', USER_CONFIG.lnbHideReportHistoryBtn);
-            form.appendChild(lnbHideReportHistoryBtn);
+            form.appendChild(createCheckboxField('Hide "Report History" Button (default: off)', 'lnbHideReportHistoryBtn', USER_CONFIG.lnbHideReportHistoryBtn));
 
             // hide help button
-            const lnbHideHelpBtn = createCheckboxField('Hide "Help" Button (default: off)', 'lnbHideHelpBtn', USER_CONFIG.lnbHideHelpBtn);
-            form.appendChild(lnbHideHelpBtn);
+            form.appendChild(createCheckboxField('Hide "Help" Button (default: off)', 'lnbHideHelpBtn', USER_CONFIG.lnbHideHelpBtn));
 
             // hide feedback button
-            const lnbHideFeedbackBtn = createCheckboxField('Hide "Send Feedback" Button (default: off)', 'lnbHideFeedbackBtn', USER_CONFIG.lnbHideFeedbackBtn);
-            form.appendChild(lnbHideFeedbackBtn);
+            form.appendChild(createCheckboxField('Hide "Send Feedback" Button (default: off)', 'lnbHideFeedbackBtn', USER_CONFIG.lnbHideFeedbackBtn));
 
             // Spacer-5
             const spacer5Footer = document.createElement('div');
@@ -7859,8 +7781,7 @@
             form.appendChild(spacer5Footer);
 
             // hide footer
-            const lnbHideFooter = createCheckboxField('Hide Footer (default: off)', 'lnbHideFooter', USER_CONFIG.lnbHideFooter);
-            form.appendChild(lnbHideFooter);
+            form.appendChild(createCheckboxField('Hide Footer (default: off)', 'lnbHideFooter', USER_CONFIG.lnbHideFooter));
 
             return form;
         }
@@ -7887,16 +7808,13 @@
             form.appendChild(infoColorCodeVideosHome);
 
             // activate color code videos on home
-            const colorCodeVideosEnabled = createCheckboxField('Color Code Videos Based on Age and Status (default: on)', 'colorCodeVideosEnabled', USER_CONFIG.colorCodeVideosEnabled);
-            form.appendChild(colorCodeVideosEnabled);
+            form.appendChild(createCheckboxField('Color Code Videos Based on Age and Status (default: on)', 'colorCodeVideosEnabled', USER_CONFIG.colorCodeVideosEnabled));
 
             // disable hover effect
-            const homeDisableHover = createCheckboxField('Disable Hover Effect (default: off)', 'homeDisableHover', USER_CONFIG.homeDisableHover);
-            form.appendChild(homeDisableHover);
+            form.appendChild(createCheckboxField('Disable Hover Effect (default: off)', 'homeDisableHover', USER_CONFIG.homeDisableHover));
 
             // opacity picker for old videos
-            const videosOldContainer = createSliderInputField('Change Opacity of Videos Uploaded More than 1 Year Ago:', 'videosOldOpacity', USER_CONFIG.videosOldOpacity, '0', '1', '0.1');
-            form.appendChild(videosOldContainer);
+            form.appendChild(createSliderInputField('Change Opacity of Videos Uploaded More than 1 Year Ago:', 'videosOldOpacity', USER_CONFIG.videosOldOpacity, '0', '1', '0.1'));
 
             // color pickers for different video ages
             const videosAgeContainer = document.createElement('div');
@@ -7915,6 +7833,7 @@
 
             colorPickerConfigs.forEach(config => {
                 const row = createColorPicker(config.label, config.id);
+                row.querySelector('input').setAttribute('aria-label', `${config.label} Dark Mode`);
 
                 const darkModeSpan = document.createElement('span');
                 darkModeSpan.classList.add('CentAnni-label-style-settings');
@@ -7923,6 +7842,7 @@
 
                 const lightPickerRow = createColorPicker('Light Mode', config.id + 'Light');
                 const lightPicker = lightPickerRow.querySelector('input');
+                lightPicker.setAttribute('aria-label', `${config.label} Light Mode`);
                 const lightModeLabel = lightPickerRow.querySelector('span');
 
                 row.insertBefore(lightPicker, row.firstChild);
@@ -7949,6 +7869,7 @@
             lastSeenVideoColor.classList.add('CentAnni-videos-colorpicker-container');
 
             const rowLSV = createColorPicker('Last Uploaded Video:', 'lastSeenVideoColor');
+            rowLSV.querySelector('input').setAttribute('aria-label', 'Last Uploaded Video: Dark Mode');
 
             const darkModeSpanLSV = document.createElement('span');
             darkModeSpanLSV.classList.add('CentAnni-label-style-settings');
@@ -7957,6 +7878,7 @@
 
             const lightPickerRowLSV = createColorPicker('Light Mode', 'lastSeenVideoColorLight');
             const lightPickerLSV = lightPickerRowLSV.querySelector('input');
+            lightPickerLSV.setAttribute('aria-label', 'Last Uploaded Video: Light Mode');
             const lightModeLabelLSV = lightPickerRowLSV.querySelector('span');
 
             rowLSV.insertBefore(lightPickerLSV, rowLSV.firstChild);
@@ -7966,12 +7888,10 @@
             form.appendChild(lastSeenVideoColor);
 
             // last seen video
-            const lastSeenVideo = createCheckboxField('Color Code Last Uploaded Video (default: on)', 'lastSeenVideo', USER_CONFIG.lastSeenVideo);
-            form.appendChild(lastSeenVideo);
+            form.appendChild(createCheckboxField('Color Code Last Uploaded Video (default: on)', 'lastSeenVideo', USER_CONFIG.lastSeenVideo));
 
             // scroll to last seen video
-            const lastSeenVideoScroll = createCheckboxField('Auto-Scroll to Last Uploaded Video (default: off)', 'lastSeenVideoScroll', USER_CONFIG.lastSeenVideoScroll);
-            form.appendChild(lastSeenVideoScroll);
+            form.appendChild(createCheckboxField('Auto-Scroll to Last Uploaded Video (default: off)', 'lastSeenVideoScroll', USER_CONFIG.lastSeenVideoScroll));
 
             // on watch later page
             const colorCodeVideosOnWatchLater = document.createElement('div');
@@ -8060,6 +7980,14 @@
         }
 
         container.appendChild(hiddenSelect);
+
+        if (USER_CONFIG.defaultDropdownMenu) {
+            select.remove();
+            hiddenSelect.classList.remove('CentAnni-hidden-select');
+            hiddenSelect.id = selectId;
+            label.htmlFor = selectId;
+            return container;
+        }
 
         const dropdownList = document.createElement('div');
         dropdownList.id = listId;
@@ -8163,6 +8091,7 @@
             numberInput.max = options.max || 20;
             numberInput.step = options.step || .25;
         }
+        if (options.ariaLabel) numberInput.setAttribute('aria-label', options.ariaLabel);
         numberInput.classList.add('number-input-field');
         label.appendChild(numberInput);
 
@@ -8198,6 +8127,7 @@
         slider.step = step;
         slider.value = settingValue;
         slider.name = settingKey;
+        slider.setAttribute('aria-label', labelText);
         sliderContainer.appendChild(slider);
 
         const rightLabel = document.createElement('span');
@@ -8239,7 +8169,7 @@
     }
 
     // helper function to create color pickers
-    function createColorPicker(labelText, configKey) {
+    function createColorPicker(labelText, configKey, ariaLabel = labelText) {
         const row = document.createElement('div');
         row.classList.add('CentAnni-videos-colorpicker-row');
 
@@ -8247,6 +8177,7 @@
         colorPicker.type = 'color';
         colorPicker.value = USER_CONFIG[configKey];
         colorPicker.name = configKey;
+        colorPicker.setAttribute('aria-label', ariaLabel);
         row.appendChild(colorPicker);
 
         const label = document.createElement('span');
@@ -8306,6 +8237,7 @@
         USER_CONFIG.useLegacyTranscriptPanel = form.elements.useLegacyTranscriptPanel.checked;
         USER_CONFIG.includeChapterHeaders = form.elements.includeChapterHeaders.checked;
         USER_CONFIG.openSameTab = form.elements.openSameTab.checked;
+        USER_CONFIG.openSameTabUnlessPL = form.elements.openSameTabUnlessPL.checked;
         USER_CONFIG.ChatGPTPrompt = form.elements.ChatGPTPrompt.value;
 
         // initialize buttonIcons if not already
@@ -8356,6 +8288,7 @@
         if (subPanelCustomCSS) {
             USER_CONFIG.settingsGuide = subPanelCustomCSS.elements.settingsGuide.checked;
             USER_CONFIG.preventBackgroundExecution = subPanelCustomCSS.elements.preventBackgroundExecution.checked;
+            USER_CONFIG.defaultDropdownMenu = subPanelCustomCSS.elements.defaultDropdownMenu.checked;
             USER_CONFIG.defaultChannelPage = subPanelCustomCSS.elements.defaultChannelPage.value;
             USER_CONFIG.textTransform = subPanelCustomCSS.elements.textTransform.value;
             USER_CONFIG.defaultFontSize = parseFloat(subPanelCustomCSS.elements.defaultFontSize.value);
@@ -8398,6 +8331,7 @@
             USER_CONFIG.videoTabView = subPanelCustomCSS.elements.videoTabView.checked;
             USER_CONFIG.toggleTheaterModeBtn = subPanelCustomCSS.elements.toggleTheaterModeBtn.checked;
             USER_CONFIG.tabViewChapters = subPanelCustomCSS.elements.tabViewChapters.checked;
+            USER_CONFIG.showNextPLVideo = subPanelCustomCSS.elements.showNextPLVideo.checked;
             USER_CONFIG.noAnimation = subPanelCustomCSS.elements.noAnimation.checked;
             USER_CONFIG.hideCommentsSection = subPanelCustomCSS.elements.hideCommentsSection.checked;
             USER_CONFIG.hideVideosSection = subPanelCustomCSS.elements.hideVideosSection.checked;
@@ -9156,7 +9090,7 @@
             else {
                 const label = target === 'NotebookLM' ? NotebookLMLabel : ChatGPTLabel;
                 showNotification(`Transcript copied. Opening ${label} . . .`);
-                setTimeout(() => { USER_CONFIG.openSameTab ? window.open(targetUrl, '_self') : window.open(targetUrl, '_blank', 'noopener,noreferrer'); }, 150);
+                setTimeout(() => { USER_CONFIG.openSameTab && !(USER_CONFIG.openSameTabUnlessPL && watchFlexyElement.hasAttribute('playlist')) ? window.open(targetUrl, '_self') : window.open(targetUrl, '_blank', 'noopener,noreferrer'); }, 150);
             }
         });
     }
@@ -9504,6 +9438,7 @@
         let mastheadWidthTimer;
         let tabElements = [];
         let subheaderDiv;
+        let nextVidInfo;
         let isDefault;
         let dateSpan;
 
@@ -9553,6 +9488,25 @@
         const watchFlexyAttrsObserver = new MutationObserver(() => removeWatchFlexyAttrs());
         const startWatchFlexyAttrsObs = () => watchFlexyAttrsObserver.observe(watchFlexyElement, { attributes: true, attributeFilter: ['split-scroll', 'show-fixed-side-menu'] });
 
+        // show next playlist video in theater mode
+        const getNextPLVideo = async () => {
+            const nextVideoID = playerElement.getPlaylist()[playerElement.getPlaylistIndex() + 1];
+            const data = await fetch(`/oembed?url=https://www.youtube.com/watch?v=${nextVideoID}&format=json`).then(r => r.json());
+            if (data?.title && data?.author_name) {
+                nextVidInfo = document.createElement('span');
+                nextVidInfo.id = 'CentAnni-next-video';
+
+                const title = document.createElement('span');
+                title.textContent = `${data.title}`;
+
+                const author = document.createElement('span');
+                author.textContent = data.author_name;
+
+                nextVidInfo.append(title, author);
+                secondaryElement.append(nextVidInfo);
+            }
+        };
+
         // scroll to selected video in playlist panel
         const scrollSelectedVideoPL = () => {
             requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -9569,7 +9523,7 @@
             if (USER_CONFIG.autoOpenTranscript && !isLive && hasTranscriptPanel) return 'tab-5';
             if (USER_CONFIG.autoOpenChapters && !isLive && hasChapterPanel) return 'tab-4';
             if (USER_CONFIG.autoOpenComments && !isLive) return 'tab-2';
-            if (hasPlaylistPanel || (checkPlaylistPanel && !document.getElementById('playlist')?.hasAttribute('hidden'))) return 'tab-6';
+            if (hasPlaylistPanel || (checkPlaylistPanel && watchFlexyElement.hasAttribute('playlist'))) return 'tab-6';
             return activeTabId;
         }
 
@@ -9647,7 +9601,6 @@
                     dateSpan = document.createElement('span');
                     dateSpan.classList.add('CentAnni-info-date', 'bold', 'style-scope', 'yt-formatted-string');
                     dateSpan.textContent = `(${dateString})`;
-
                     infoTime?.append(dateSpan);
                 }
             }
@@ -9786,6 +9739,7 @@
             const tabLink = document.createElement('a');
             tabLink.classList.add('CentAnni-tabView-tab');
             tabLink.textContent = tabText;
+            tabLink.ariaLabel = `Show ${tabText} tab in tab view`;
             tabLink.href = `#${tabId}`;
             tabLink.dataset.tab = tabId;
 
@@ -9855,6 +9809,7 @@
             });
             tabElements = [];
             dateSpan?.remove();
+            nextVidInfo?.remove();
             Object.defineProperty(HTMLHtmlElement.prototype, "scrollTop", nativeScrollTop);
             cleanupTabView = null;
         };
@@ -9866,6 +9821,7 @@
         document.addEventListener('yt-set-theater-mode-enabled', updateTabView);
         if (USER_CONFIG.maxPanelHeight) window.addEventListener('resize', checkMastheadWidth);
         if (USER_CONFIG.tabViewChapters && hasChapterPanel) requestIdleCallback(() => chapterTitles());
+        if (USER_CONFIG.showNextPLVideo && watchFlexyElement.hasAttribute('playlist')) getNextPLVideo();
     }
 
     // add chapter titles under videos
@@ -10182,7 +10138,10 @@
         let speedDisplay = null;
         function updateSpeedDisplay() {
             if (!speedDisplay?.isConnected) speedDisplay = document.getElementById("CentAnni-speed-display");
-            if (speedDisplay && video) speedDisplay.textContent = `${video.playbackRate}x`;
+            if (speedDisplay && video) {
+                speedDisplay.textContent = `${video.playbackRate}x`;
+                speedDisplay.ariaLabel = `Set a custom playback speed for this channel. Current speed: ${video.playbackRate}x`;
+            }
         }
 
         // set playback speed and update display
@@ -10338,12 +10297,13 @@
             controlDiv.appendChild(iconDiv);
 
             // display the speed
-            const speedDisplay = document.createElement("span");
+            const speedDisplay = document.createElement("button");
             speedDisplay.tabIndex = 0;
             speedDisplay.id = "CentAnni-speed-display";
             speedDisplay.className = `${BTN_CLASS} CentAnni-playback-speed-display CentAnni-btn-feedback-shape`;
             speedDisplay.textContent = `${video.playbackRate}x`;
             speedDisplay.title = 'Set a custom playback speed for this channel';
+            speedDisplay.ariaLabel = `Set a custom playback speed for this channel. Current speed: ${video.playbackRate}x`;
             speedDisplay.onclick = () => saveChannelPlaybackSpeeds(video);
 
             // create minus and plus buttons
@@ -10351,6 +10311,8 @@
                 const button = document.createElement("button");
                 button.tabIndex = 0;
                 button.textContent = change > 0 ? "+" : "-";
+                button.title = change > 0 ? "Increase playback speed" : "Decrease playback speed";
+                button.ariaLabel = change > 0 ? "Increase playback speed" : "Decrease playback speed";
                 button.className = `${BTN_CLASS} CentAnni-playback-speed-button CentAnni-btn-feedback-shape`;
                 button.onclick = () => {
                     newUserRate = video.playbackRate + change;
@@ -10603,7 +10565,7 @@
             // build display format
             const displayFormat = (() => {
                 if (USER_CONFIG.showRemainingCompact) return (elapsed, total, watched, remaining, playbackDisplay) => `${elapsed} / ${total} | -${remaining} ${playbackDisplay}`;
-                else return (elapsed, total, watched, remaining, playbackDisplay) => `total: ${total} | elapsed: ${elapsed}${!USER_CONFIG.progressBar ? ` – watched: ${watched}` : ''} – remaining: ${remaining} ${playbackDisplay}`;
+                else return (elapsed, total, watched, remaining, playbackDisplay) => `${total} | elapsed: ${elapsed}${!USER_CONFIG.progressBar ? ` – watched: ${watched}` : ''} – remaining: ${remaining} ${playbackDisplay}`;
             })();
 
             // update UI depending on playback speed and once per second
@@ -11407,7 +11369,7 @@
         const categoryEntries = Object.entries(categories);
         const { upcoming, streamed } = categories;
         const targetContainer = homePage?.querySelector('ytd-rich-grid-renderer > #contents') || homePage;
-        const streamedMetaSelectors = '.ytContentMetadataViewModelMetadataRow:not(:has(a, yt-badge-view-model)) span.ytContentMetadataViewModelMetadataText:last-of-type:not(:has(*))';
+        const streamedMetaSelector = '.ytLockupMetadataViewModelMetadata .ytContentMetadataViewModelMetadataTextLastPart[aria-label]';
         const liveSelector = '.ytBadgeShapeThumbnailLive';
         const notifyMeSelector = '.ytLockupAttachmentsViewModelHost';
         const pendingVideoRetries = new WeakMap();
@@ -11429,8 +11391,8 @@
             try {
                 if (videoContainer.hasAttribute('data-centanni-video-processed')) return;
 
-                const metaBlock = videoContainer.querySelector(streamedMetaSelectors);
-                if (!metaBlock) {
+                const metaBlock = videoContainer.querySelector(streamedMetaSelector);
+                if (!metaBlock && !videoContainer.querySelector(notifyMeSelector)) {
                     scheduleVideoRetry(videoContainer);
                     return;
                 }
@@ -11439,7 +11401,7 @@
                 videoContainer.setAttribute('data-centanni-video-processed', 'true');
 
                 let expectedCategory = null;
-                const textContent = metaBlock.textContent.trim().toLowerCase();
+                const textContent = metaBlock?.getAttribute('aria-label')?.trim().toLowerCase() || '';
                 for (const [className, ages] of categoryEntries) {
                     if (ages.some(age => textContent.includes(age))) {
                         expectedCategory = className;
@@ -11453,10 +11415,10 @@
                 }
                 if (expectedCategory) videoContainer.classList.add(`CentAnni-style-${expectedCategory}-video`);
 
-                const spanElements = videoContainer.querySelectorAll(streamedMetaSelectors);
+                const spanElements = videoContainer.querySelectorAll(streamedMetaSelector);
                 spanElements.forEach(el => {
                     const text = el.textContent;
-                    const textLower = text.toLowerCase();
+                    const textLower = el.getAttribute('aria-label').toLowerCase();
 
                     if (expectedCategory === null && upcoming.some(word => textLower.includes(word)) && !videoContainer.classList.contains('CentAnni-style-upcoming-video'))
                         videoContainer.classList.add('CentAnni-style-upcoming-video');
@@ -11466,6 +11428,7 @@
                         if (!nextEl || !nextEl.classList.contains('CentAnni-style-streamed-span')) {
                             const cloneSpan = document.createElement('span');
                             cloneSpan.className = el.className + ' CentAnni-style-streamed-span';
+                            cloneSpan.setAttribute('aria-label', el.getAttribute('aria-label'));
 
                             const streamedWordSpan = document.createElement('span');
                             streamedWordSpan.className = 'CentAnni-style-streamed-text';
@@ -11547,11 +11510,11 @@
 
             let allCorrect = true;
             for (const video of processedVideos) {
-                const metaBlock = video.querySelector(streamedMetaSelectors);
-                if (!metaBlock) continue;
+                const metaBlock = video.querySelector(streamedMetaSelector);
+                if (!metaBlock && !video.querySelector(notifyMeSelector)) continue;
 
                 let expectedCategory = null;
-                const textContent = metaBlock.textContent.trim().toLowerCase();
+                const textContent = metaBlock?.getAttribute('aria-label')?.trim().toLowerCase() || '';
                 for (const [className, ages] of categoryEntries) {
                     if (ages.some(age => textContent.includes(age))) {
                         expectedCategory = className;
@@ -11563,7 +11526,7 @@
                     if (video.querySelector(liveSelector)) expectedCategory = 'live';
                     else if (video.querySelector(notifyMeSelector)) expectedCategory = 'upcoming';
                 }
-                if (expectedCategory === null && [...video.querySelectorAll(streamedMetaSelectors)].some(el => /Scheduled for/i.test(el.textContent))) expectedCategory = 'upcoming';
+                if (expectedCategory === null && [...video.querySelectorAll(streamedMetaSelector)].some(el => /Scheduled for/i.test(el.getAttribute('aria-label')))) expectedCategory = 'upcoming';
 
                 const expectedClassName = expectedCategory ? `CentAnni-style-${expectedCategory}-video` : null;
 
@@ -11670,7 +11633,7 @@
 
         // helper function to check if a video is live or upcoming
         const isSpecialVideo = (container) => {
-            if (container.querySelector('.ytContentMetadataViewModelDelimiter,.yt-content-metadata-view-model__delimiter')) return false;
+            if (container.querySelector('.ytLockupMetadataViewModelMetadata .ytContentMetadataViewModelLeadingIcon')) return false;
             if (container.querySelector('.ytBadgeShapeThumbnailLive, .ytLockupAttachmentsViewModelHost,.yt-badge-shape--thumbnail-live')) return true;
             return false;
         };
@@ -11763,7 +11726,8 @@
             if (USER_CONFIG.playlistTrashCan) {
                 const removeBtn = document.createElement('button');
                 removeBtn.className = 'CentAnni-style-playlist-remove-btn';
-                removeBtn.title = 'Remove from Playlist';
+                removeBtn.title = 'Remove Video from Playlist';
+                removeBtn.ariaLabel = 'Remove Video from Playlist';
                 removeBtn.textContent = '🗑️';
                 removeBtn.onclick = (event) => {
                     event.stopPropagation();
@@ -11782,6 +11746,8 @@
                 const queueTarget = USER_CONFIG.playlistQueueBtnHideVideos ? videoEl : addToQueue;
                 addToQueue.className = `${BTN_CLASS} CentAnni-style-playlist-addToQueue-btn CentAnni-btn-feedback-shape`;
                 addToQueue.textContent = 'Add to Queue';
+                addToQueue.title = 'Add Video to Queue';
+                addToQueue.ariaLabel = 'Add Video to Queue';
                 addToQueue.tabIndex = 0;
                 addToQueue.onclick = (event) => {
                     event.stopPropagation();
@@ -11931,6 +11897,8 @@
         btnRemove.id = 'CentAnni-remove-watched-btn';
         btnRemove.className = `${BTN_CLASS} CentAnni-btn-feedback-shape`;
         btnRemove.textContent = 'Remove Watched Videos';
+        btnRemove.title = 'Remove all watched videos from the Watch Later playlist';
+        btnRemove.ariaLabel = 'Remove all watched videos from the Watch Later playlist';
         btnRemove.tabIndex = 0;
         btnRemove.onclick = handleBtnClick;
         wrapper.insertBefore(btnRemove, menuRenderer.nextSibling);
@@ -11940,6 +11908,8 @@
         btnToggle.id = 'CentAnni-toggle-watched-btn';
         btnToggle.className = `${BTN_CLASS} CentAnni-btn-feedback-shape`;
         btnToggle.textContent = 'Toggle Watched';
+        btnToggle.title = 'Toggle visibility of watched videos';
+        btnToggle.ariaLabel = 'Toggle visibility of watched videos';
         btnToggle.tabIndex = 0;
         btnToggle.onclick = () => docElement.classList.toggle('CentAnni-hide-watched-wl');
         wrapperText.insertBefore(btnToggle, menuRendererText.nextSibling);
@@ -12842,6 +12812,7 @@
         const btn = document.createElement('button');
         btn.id = 'CentAnni-default-channel-page-btn';
         btn.title = 'Save Default Channel Page';
+        btn.ariaLabel = 'Save the current page as the default page for this channel';
         btn.textContent = '💾';
         btn.onclick = saveChannelDefaultPage;
         (document.getElementById('page-header-banner') || document.getElementById('page-header')).appendChild(btn);
@@ -13650,8 +13621,15 @@
     const updateLocation = () => {
         const xinURL = window.location.href;
         const urlObj = new URL(xinURL);
-        const pn = urlObj.pathname;
         const sp = urlObj.searchParams;
+        const pn = urlObj.pathname;
+
+        isChannelPage = /^\/@[^/]+/.test(pn);
+        isChannelHome = /^\/@[^/]+$/.test(pn);
+        isShortPage = pn.startsWith('/shorts/');
+        if (isChannelPage) channelHandleURL = pn.match(/^\/@([^/]+)/)?.[1];
+        if (isShortPage && USER_CONFIG.redirectShorts) { redirectShortsToVideoPage(); return true; }
+        if (isChannelHome && USER_CONFIG.defaultChannelPage !== 'home') { channelRedirect(); return true; }
 
         isHomePage = pn === '/';
         isVideoPage = pn === '/watch';
@@ -13660,14 +13638,9 @@
         isPlaylistVideoPage = sp.has('list');
         isLiveStream = pn.startsWith('/live/');
         isWatchLater = sp.get('list') === 'WL';
-        isShortPage = pn.startsWith('/shorts/');
         isWatchPage = isVideoPage || isLiveStream;
         isSubscriptionsPage = pn === '/feed/subscriptions';
-        isChannelPage = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)/.test(pn);
-        isChannelHome = /^(\/@[^/]+|\/channel\/[a-zA-Z0-9_\-=.]+)$/.test(pn);
-        if (isChannelPage) channelHandleURL = pn.match(/^\/@([^/]+)/)?.[1];
-        if (isChannelHome && USER_CONFIG.defaultChannelPage !== 'home') { channelRedirect(); return true; }
-        if (isShortPage && USER_CONFIG.redirectShorts) { redirectShortsToVideoPage(); return true; }
+
         if (isWatchPage || isShortPage) {
             lastVideoID = videoID;
             videoID = sp.get('v');
