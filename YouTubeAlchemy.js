@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 250+ options accessible via settings panels. Key features include: tab view, playback speed control, miniplayer support, video quality selection, export transcripts, prevent autoplay, hide Shorts, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.2
+// @version      12.2.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 12.2 - YouTube Alchemy                    *
+*                    Version: 12.2.1 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2419,33 +2419,45 @@
 
                     #secondary {
                         &:has(> #CentAnni-next-video) {
+                            margin-top: 12px;
                             flex-direction: column;
                         }
 
                         > #CentAnni-next-video {
-                            color: var(--yt-text-primary);
-                            font-size: 1.4rem;
+                            display: flex;
+                            max-width: 100%;
+                            margin-top: 7px;
                             font-weight: 500;
+                            font-size: 1.4rem;
                             font-stretch: 25%;
                             line-height: 18px;
-                            white-space: pre-wrap;
                             width: fit-content;
-                            margin-top: 10px;
-                            max-width: 100%;
-                            display: flex;
+                            white-space: nowrap;
+                            align-self: flex-end;
                             pointer-events: none;
                             flex-direction: column;
                             box-sizing: border-box;
                             text-box: trim-both cap alphabetic;
 
-                            > span:first-child {
+                            > span {
                                 overflow: hidden;
-                                white-space: nowrap;
                                 text-overflow: ellipsis;
+                            }
+
+                            > span:first-child {
+                                line-clamp: 2;
+                                text-wrap: pretty;
+                                white-space: normal;
+                                text-align: justify;
+                                display: -webkit-box;
+                                -webkit-line-clamp: 2;
+                                -webkit-box-orient: vertical;
+                                color: var(--yt-text-primary);
                             }
 
                             > span:last-child {
                                 text-align: right;
+                                text-overflow: ellipsis;
                                 color: var(--yt-text-secondary);
                             }
                         }
@@ -3268,6 +3280,10 @@
 
             &:not([dark]) ytd-engagement-panel-section-list-renderer[target-id=PAsearch_preview] {
                 background-color: #f2f2f2;
+            }
+
+            &.CentAnni-style-cinema-mode #CentAnni-next-video {
+                padding-right: 32px;
             }
 
             &.CentAnni-tabView-chapters {
@@ -5544,6 +5560,7 @@
         .CentAnni-style-lnb-hide-help-btn tp-yt-app-drawer#guide #sections a#endpoint[title="Help"],
         .CentAnni-style-lnb-hide-you-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="/feed/you"],
         .CentAnni-style-lnb-hide-gaming-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="/gaming"],
+        .CentAnni-style-lnb-hide-hype-btn tp-yt-app-drawer#guide #sections a#endpoint[href="/feed/hype"],
         .CentAnni-style-lnb-hide-settings-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="/account"],
         .CentAnni-style-lnb-hide-podcasts-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="/podcasts"],
         .CentAnni-style-lnb-hide-yt-premium-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="/premium"],
@@ -5559,7 +5576,9 @@
         .CentAnni-style-lnb-hide-your-podcasts-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="/feed/podcasts"],
         .CentAnni-style-lnb-hide-report-history-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="/reporthistory"],
         .CentAnni-style-lnb-hide-liked-videos-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="/playlist?list=LL"],
+        .CentAnni-style-lnb-hide-memberships-btn tp-yt-app-drawer#guide #sections a#endpoint[href="/channel_memberships"],
         .CentAnni-style-lnb-hide-subscriptions-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="/feed/subscriptions"],
+        .CentAnni-style-lnb-hide-coursesex-btn tp-yt-app-drawer#guide #sections a#endpoint[href="/feed/courses_destination"],
         .CentAnni-style-lnb-hide-yt-music-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="https://music.youtube.com/"],
         .CentAnni-style-lnb-hide-yt-kids-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="https://www.youtubekids.com/"],
         .CentAnni-style-lnb-hide-yt-studio-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="https://studio.youtube.com/"],
@@ -5576,8 +5595,8 @@
         .CentAnni-style-lnb-hide-more-section tp-yt-app-drawer#guide #sections > ytd-guide-section-renderer:has(> #items a#endpoint[href^="https://www.youtubekids.com/"]),
         .CentAnni-style-lnb-hide-your-channel tp-yt-app-drawer#guide #sections > ytd-guide-section-renderer:has(> #items a#endpoint[href^="/feed/you"]) a#endpoint[href^="/@"],
         .CentAnni-style-lnb-hide-subscriptions-title tp-yt-app-drawer#guide #sections ytd-guide-collapsible-section-entry-renderer:has(a#endpoint[href^="/feed/subscriptions"]),
-        .CentAnni-style-lnb-hide-explore-section tp-yt-app-drawer#guide #sections > ytd-guide-section-renderer:has(> #items a#endpoint[href^="/channel/UC4R8DWoMoI7CAwX8_LjQHig"]),
-        .CentAnni-style-lnb-hide-explore-title tp-yt-app-drawer#guide #sections > ytd-guide-section-renderer:has(> #items a#endpoint[href^="/channel/UC4R8DWoMoI7CAwX8_LjQHig"]) > h3 > #guide-section-title,
+        .CentAnni-style-lnb-hide-explore-section tp-yt-app-drawer#guide #sections > ytd-guide-section-renderer:has(> #items a#endpoint[href^="/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ"]),
+        .CentAnni-style-lnb-hide-explore-title tp-yt-app-drawer#guide #sections > ytd-guide-section-renderer:has(> #items a#endpoint[href^="/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ"]) > h3 > #guide-section-title,
         .CentAnni-style-lnb-hide-more-title tp-yt-app-drawer#guide #sections > ytd-guide-section-renderer:has(> #items a#endpoint[href^="https://studio.youtube.com/"]) > h3 > #guide-section-title:not([is-empty]),
         .CentAnni-style-lnb-hide-more-btn tp-yt-app-drawer#guide #sections > ytd-guide-section-renderer:has(> #items a#endpoint[href^="/feed/subscriptions"]) > #items > ytd-guide-collapsible-entry-renderer > #expander-item,
         /* display none */
@@ -6277,15 +6296,18 @@
         lnbHideExploreTitle: false,
         lnbHideTrendingBtn: false,
         lnbHideMusicBtn: false,
+        lnbHideHypeBtn: false,
         lnbHideMoviesBtn: false,
         lnbHideLiveBtn: false,
         lnbHideGamingBtn: false,
         lnbHideNewsBtn: false,
         lnbHideSportsBtn: false,
+        lnbHideCoursesBtnEx: false,
         lnbHideLearningBtn: false,
         lnbHideFashionBtn: false,
         lnbHidePlayablesBtn: false,
         lnbHidePodcastsBtn: false,
+        lnbHideMembershipsBtn: false,
         lnbHideMoreSection: false,
         lnbHideMoreTitle: false,
         lnbHideYtPremiumBtn: false,
@@ -6507,6 +6529,7 @@
         hideHashtags: { class: 'CentAnni-style-hide-hashtags', pages: () => isWatchPage },
         fsRemainingTime: { class: 'CentAnni-remaining-time-fs', pages: () => isWatchPage },
         hideEndCards: { class: 'CentAnni-style-hide-end-cards', pages: () => isWatchPage },
+        enableCinemaMode: { class: 'CentAnni-style-cinema-mode', pages: () => isWatchPage },
         hideEndscreen: { class: 'CentAnni-style-hide-endscreen', pages: () => isWatchPage },
         hideInfoPanel: { class: 'CentAnni-style-hide-info-panel', pages: () => isWatchPage },
         hideShareButton: { class: 'CentAnni-style-hide-share-btn', pages: () => isWatchPage },
@@ -6565,6 +6588,7 @@
         lnbHideMoreBtn: 'CentAnni-style-lnb-hide-more-btn',
         lnbHideHomeBtn: 'CentAnni-style-lnb-hide-home-btn',
         lnbHideHelpBtn: 'CentAnni-style-lnb-hide-help-btn',
+        lnbHideHypeBtn: 'CentAnni-style-lnb-hide-hype-btn',
         lnbRestoreOrder: 'CentAnni-style-lnb-restore-order',
         lnbHideMusicBtn: 'CentAnni-style-lnb-hide-music-btn',
         lnbHideMoviesBtn: 'CentAnni-style-lnb-hide-movies-btn',
@@ -6586,10 +6610,12 @@
         lnbHideFeedbackBtn: 'CentAnni-style-lnb-hide-feedback-btn',
         lnbHideUrChannelBtn: 'CentAnni-style-lnb-hide-your-channel',
         lnbHideYtStudioBtn: 'CentAnni-style-lnb-hide-yt-studio-btn',
+        lnbHideCoursesBtnEx: 'CentAnni-style-lnb-hide-coursesex-btn',
         lnbHidePlaylistsBtn: 'CentAnni-style-lnb-hide-playlists-btn',
         lnbHidePlayablesBtn: 'CentAnni-style-lnb-hide-playables-btn',
         lnbHideExploreTitle: 'CentAnni-style-lnb-hide-explore-title',
         lnbHideYtPremiumBtn: 'CentAnni-style-lnb-hide-yt-premium-btn',
+        lnbHideMembershipsBtn: 'CentAnni-style-lnb-hide-memberships-btn',
         lnbHideYPodcastsBtn: 'CentAnni-style-lnb-hide-your-podcasts-btn',
         lnbHideExploreSection: 'CentAnni-style-lnb-hide-explore-section',
         lnbHideLikedVideosBtn: 'CentAnni-style-lnb-hide-liked-videos-btn',
@@ -7110,7 +7136,7 @@
             });
 
             const descriptionChannelPage = document.createElement('small');
-            descriptionChannelPage.textContent = 'To save a different default page for a channel, navigate to the desired channel page first, then click the 💾 button in the top right corner of the banner.\n\nThis feature is only available when the default channel page is set to something other than Home.';
+            descriptionChannelPage.textContent = 'To save a different default page for a channel, navigate to the desired channel page first, then click the 💾 button in the top right corner of the banner.\n\nThis feature is only available when the default channel page is set to something other than Home and for channels that use YouTube handles.';
             descriptionChannelPage.classList.add('CentAnni-info-text', 'channel-page');
             defaultChannelPage.appendChild(descriptionChannelPage);
             form.appendChild(defaultChannelPage);
@@ -7165,7 +7191,7 @@
 
             // info for playback speed
             const descriptionPlaybackSpeed = document.createElement('small');
-            descriptionPlaybackSpeed.textContent = `To save a custom playback speed for a channel, set the desired speed on a video page first, then click the playback speed display.\n\nKeyboard shortcuts:\n   • "${USER_CONFIG.playbackSpeedDecrease}" or "<" to slow down the video playback rate by 0.25x\n   • "${USER_CONFIG.playbackSpeedToggle}" to toggle between 1x and the saved speed for VODs\n   • "${USER_CONFIG.playbackSpeedIncrease}" or ">" to speed up the video playback rate by 0.25x`;
+            descriptionPlaybackSpeed.textContent = `To save a custom playback speed for a channel, set the desired speed on a video page first, then click the playback speed display.\nThis only works for channel links that use YouTube handles and not with collaborators.\n\nKeyboard shortcuts:\n   • "${USER_CONFIG.playbackSpeedDecrease}" or "<" to slow down the video playback rate by 0.25x\n   • "${USER_CONFIG.playbackSpeedToggle}" to toggle between 1x and the saved speed for VODs\n   • "${USER_CONFIG.playbackSpeedIncrease}" or ">" to speed up the video playback rate by 0.25x`;
             descriptionPlaybackSpeed.classList.add('CentAnni-info-text', 'playback-speed');
             form.appendChild(descriptionPlaybackSpeed);
 
@@ -7705,6 +7731,9 @@
             // hide music button
             form.appendChild(createCheckboxField('Hide "Music" Button (default: off)', 'lnbHideMusicBtn', USER_CONFIG.lnbHideMusicBtn));
 
+            // hide hype button
+            form.appendChild(createCheckboxField('Hide "Hype" Button (default: off)', 'lnbHideHypeBtn', USER_CONFIG.lnbHideHypeBtn));
+
             // hide movies button
             form.appendChild(createCheckboxField('Hide "Movies & TV" Button (default: off)', 'lnbHideMoviesBtn', USER_CONFIG.lnbHideMoviesBtn));
 
@@ -7720,6 +7749,9 @@
             // hide sports button
             form.appendChild(createCheckboxField('Hide "Sports" Button (default: off)', 'lnbHideSportsBtn', USER_CONFIG.lnbHideSportsBtn));
 
+            // hide courses button
+            form.appendChild(createCheckboxField('Hide "Courses" Button (default: off)', 'lnbHideCoursesBtnEx', USER_CONFIG.lnbHideCoursesBtnEx));
+
             // hide learning button
             form.appendChild(createCheckboxField('Hide "Learning" Button (default: off)', 'lnbHideLearningBtn', USER_CONFIG.lnbHideLearningBtn));
 
@@ -7731,6 +7763,9 @@
 
             // hide podcasts button
             form.appendChild(createCheckboxField('Hide "Podcasts" Button (default: off)', 'lnbHidePodcastsBtn', USER_CONFIG.lnbHidePodcastsBtn));
+
+            // hide mberships button
+            form.appendChild(createCheckboxField('Hide "Memberships" Button (default: off)', 'lnbHideMembershipsBtn', USER_CONFIG.lnbHideMembershipsBtn));
 
             // Spacer-5
             const spacer5More = document.createElement('div');
@@ -8452,15 +8487,18 @@
             USER_CONFIG.lnbHideExploreTitle = subPanelCustomCSS.elements.lnbHideExploreTitle.checked;
             USER_CONFIG.lnbHideTrendingBtn = subPanelCustomCSS.elements.lnbHideTrendingBtn.checked;
             USER_CONFIG.lnbHideMusicBtn = subPanelCustomCSS.elements.lnbHideMusicBtn.checked;
+            USER_CONFIG.lnbHideHypeBtn = subPanelCustomCSS.elements.lnbHideHypeBtn.checked;
             USER_CONFIG.lnbHideMoviesBtn = subPanelCustomCSS.elements.lnbHideMoviesBtn.checked;
             USER_CONFIG.lnbHideLiveBtn = subPanelCustomCSS.elements.lnbHideLiveBtn.checked;
             USER_CONFIG.lnbHideGamingBtn = subPanelCustomCSS.elements.lnbHideGamingBtn.checked;
             USER_CONFIG.lnbHideNewsBtn = subPanelCustomCSS.elements.lnbHideNewsBtn.checked;
             USER_CONFIG.lnbHideSportsBtn = subPanelCustomCSS.elements.lnbHideSportsBtn.checked;
+            USER_CONFIG.lnbHideCoursesBtnEx = subPanelCustomCSS.elements.lnbHideCoursesBtnEx.checked;
             USER_CONFIG.lnbHideLearningBtn = subPanelCustomCSS.elements.lnbHideLearningBtn.checked;
             USER_CONFIG.lnbHideFashionBtn = subPanelCustomCSS.elements.lnbHideFashionBtn.checked;
             USER_CONFIG.lnbHidePlayablesBtn = subPanelCustomCSS.elements.lnbHidePlayablesBtn.checked;
             USER_CONFIG.lnbHidePodcastsBtn = subPanelCustomCSS.elements.lnbHidePodcastsBtn.checked;
+            USER_CONFIG.lnbHideMembershipsBtn = subPanelCustomCSS.elements.lnbHideMembershipsBtn.checked;
             USER_CONFIG.lnbHideMoreSection = subPanelCustomCSS.elements.lnbHideMoreSection.checked;
             USER_CONFIG.lnbHideMoreTitle = subPanelCustomCSS.elements.lnbHideMoreTitle.checked;
             USER_CONFIG.lnbHideYtPremiumBtn = subPanelCustomCSS.elements.lnbHideYtPremiumBtn.checked;
@@ -9497,7 +9535,7 @@
                 nextVidInfo.id = 'CentAnni-next-video';
 
                 const title = document.createElement('span');
-                title.textContent = `${data.title}`;
+                title.textContent = data.title;
 
                 const author = document.createElement('span');
                 author.textContent = data.author_name;
@@ -10305,6 +10343,7 @@
             speedDisplay.title = 'Set a custom playback speed for this channel';
             speedDisplay.ariaLabel = `Set a custom playback speed for this channel. Current speed: ${video.playbackRate}x`;
             speedDisplay.onclick = () => saveChannelPlaybackSpeeds(video);
+            if (!channelHandle) speedDisplay.style.pointerEvents = 'none';
 
             // create minus and plus buttons
             const createButton = (change) => {
@@ -13060,7 +13099,7 @@
 
         // playback speed channel check
         if (USER_CONFIG.playbackSpeed) {
-            channelHandle = watchFlexyElement.querySelector('#channel-name a')?.getAttribute('href')?.slice(2);
+            channelHandle = watchFlexyElement.querySelector('#channel-name a[href^="/@"]')?.getAttribute('href')?.slice(2);
             defaultSpeed = USER_CONFIG.channelPlaybackSpeeds[channelHandle] || USER_CONFIG.playbackSpeedValue;
             if (!channelHandle) collabPlaybackSpeedCheck();
         }
