@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 250+ options accessible via settings panels. Key features include: tab view, playback speed control, miniplayer support, video quality selection, export transcripts, prevent autoplay, hide Shorts, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.2.1
+// @version      12.2.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -2355,10 +2355,6 @@
                 &[full-bleed-player] {
                     top: 30px;
                 }
-
-                .ytLockupViewModelHorizontal .ytLockupViewModelContentImage {
-                    width: 44% !important;
-                }
             }
 
             ytd-watch-flexy[role="main"]:not([fullscreen]) #panels ytd-engagement-panel-section-list-renderer.ytd-watch-flexy[target-id=engagement-panel-structured-description] {
@@ -2535,19 +2531,6 @@
                 }
 
                 /* default mode active */
-                &:is([default-layout], [fullscreen][playlist-panel-expanded]) #container.ytd-playlist-panel-renderer {
-                    #thumbnail-container.ytd-playlist-panel-video-renderer {
-                        width: 37%;
-                        height: fit-content;
-                        aspect-ratio: 16 / 9;
-
-                        > ytd-thumbnail.ytd-playlist-panel-video-renderer {
-                            width: 100%;
-                            height: 100%;
-                        }
-                    }
-                }
-
                 &[default-layout] {
                     .CentAnni-tabView-tab.active {
                         background-color: #f1f1f1;
@@ -2884,6 +2867,7 @@
 
             ytd-compact-video-renderer:hover,
             .ytwFactoidRendererColorSampledHost,
+            tp-yt-paper-dialog #close-button:hover,
             #topic-link a#topic-link-container:hover,
             .yt-video-attribute-view-model--clickable:hover,
             .ytVideoAttributeViewModelContentContainer:hover,
@@ -2893,6 +2877,7 @@
             #infocards-section > ytd-compact-infocard-renderer > #content:hover,
             yt-video-attribute-view-model.ytd-horizontal-card-list-renderer:hover,
             #items > ytd-video-description-infocards-section-renderer > #header:hover,
+            tp-yt-paper-dialog ytd-playlist-add-to-option-renderer.ytd-add-to-playlist-renderer:hover,
             ytd-watch-card-compact-video-renderer.ytd-vertical-watch-card-list-renderer:not([is-condensed]):hover,
             #always-shown > ytd-rich-metadata-row-renderer > #contents > ytd-rich-metadata-renderer > #endpoint-link:hover,
             #items > ytd-video-description-infocards-section-renderer > #infocards-section > ytd-compact-infocard-renderer > #content:hover,
@@ -3064,7 +3049,6 @@
             #body.ytd-transcript-renderer,
             .CentAnni-tabView-content-none,
             #below ytd-merch-shelf-renderer,
-            .ytContentMetadataViewModelLeadingIcon,
             #description > #description-interaction,
             #description-placeholder.ytd-watch-metadata,
             #ghost-cards.ytd-continuation-item-renderer,
@@ -3163,6 +3147,19 @@
 
                     #title ytd-badge-supported-renderer:not([hidden]) .ytBadgeShapeDefault[aria-label^="AI"] {
                         transform: translate(-170%, -130%);
+                    }
+
+                    &[playlist-panel-expanded]:is([default-layout], [fullscreen]) #container.ytd-playlist-panel-renderer {
+                        #thumbnail-container.ytd-playlist-panel-video-renderer {
+                            width: 37%;
+                            height: fit-content;
+                            aspect-ratio: 16 / 9;
+
+                            > ytd-thumbnail.ytd-playlist-panel-video-renderer {
+                                width: 100%;
+                                height: 100%;
+                            }
+                        }
                     }
                 }
 
@@ -3486,8 +3483,13 @@
             }
 
             &.tabView-tab-3 #related {
+                .ytContentMetadataViewModelLeadingIcon,
                 .ytThumbnailOverlayBadgeViewModelTopStart {
                     display: none;
+                }
+
+                .ytLockupViewModelHorizontal .ytLockupViewModelContentImage {
+                    width: 44% !important;
                 }
 
                 .ytLockupMetadataViewModelMoveLockupOverflowMenuToBottomRight span[aria-label] {
@@ -7136,7 +7138,7 @@
             });
 
             const descriptionChannelPage = document.createElement('small');
-            descriptionChannelPage.textContent = 'To save a different default page for a channel, navigate to the desired channel page first, then click the 💾 button in the top right corner of the banner.\n\nThis feature is only available when the default channel page is set to something other than Home and for channels that use YouTube handles.';
+            descriptionChannelPage.textContent = 'To save a different default page for a channel, navigate to the desired channel page first, then click the 💾 button in the top right corner of the banner.\n\nThis feature is only available when the default channel page is set to something other than "Home" and for channels that use YouTube handles.';
             descriptionChannelPage.classList.add('CentAnni-info-text', 'channel-page');
             defaultChannelPage.appendChild(descriptionChannelPage);
             form.appendChild(defaultChannelPage);
@@ -7191,7 +7193,7 @@
 
             // info for playback speed
             const descriptionPlaybackSpeed = document.createElement('small');
-            descriptionPlaybackSpeed.textContent = `To save a custom playback speed for a channel, set the desired speed on a video page first, then click the playback speed display.\nThis only works for channel links that use YouTube handles and not with collaborators.\n\nKeyboard shortcuts:\n   • "${USER_CONFIG.playbackSpeedDecrease}" or "<" to slow down the video playback rate by 0.25x\n   • "${USER_CONFIG.playbackSpeedToggle}" to toggle between 1x and the saved speed for VODs\n   • "${USER_CONFIG.playbackSpeedIncrease}" or ">" to speed up the video playback rate by 0.25x`;
+            descriptionPlaybackSpeed.textContent = `To save a custom playback speed for a channel, set the desired speed on a video page first, then click the playback speed display.\nThis only works for channel links that use YouTube handles and not with collaborators. To confirm if a channel uses a handle, check the associated URL from a channel name. It should look like https://www.youtube.com/@youtubecreators\n\nKeyboard shortcuts:\n   • "${USER_CONFIG.playbackSpeedDecrease}" or "<" to slow down the video playback rate by 0.25x\n   • "${USER_CONFIG.playbackSpeedToggle}" to toggle between 1x and the saved speed for VODs\n   • "${USER_CONFIG.playbackSpeedIncrease}" or ">" to speed up the video playback rate by 0.25x`;
             descriptionPlaybackSpeed.classList.add('CentAnni-info-text', 'playback-speed');
             form.appendChild(descriptionPlaybackSpeed);
 
@@ -9747,7 +9749,7 @@
 
             if (tabId === 'tab-3') {
                 if (!videoMore?.isConnected) return;
-                docElement.classList.toggle('tabView-tab-3', show);
+                if (USER_CONFIG.compactLayoutVideo) docElement.classList.toggle('tabView-tab-3', show);
                 if (show) {
                     videoMore.classList.add('CentAnni-tabView-content-attiva');
                     videoMore.classList.remove('CentAnni-tabView-content-nascosta');
