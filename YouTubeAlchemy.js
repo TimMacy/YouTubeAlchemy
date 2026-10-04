@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 250+ options accessible via settings panels. Key features include: tab view, playback speed control, miniplayer support, video quality selection, export transcripts, prevent autoplay, hide Shorts, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.2.2
+// @version      12.3
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 12.2.1 - YouTube Alchemy                  *
+*                    Version: 12.3 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -418,7 +418,7 @@
             background-color: hsl(0, 0%, 10.37%);
         }
 
-        .CentAnni-btn-style-settings {
+        .CentAnni-btn-style-settings-panel {
             padding: 10px;
             cursor: pointer;
             color: whitesmoke;
@@ -443,7 +443,7 @@
             }
         }
 
-        .CentAnni-button-icons {
+        .CentAnni-btn-icons {
             display: block;
             font-family: "Roboto", "Arial", sans-serif;
             font-size: 1.4em;
@@ -464,7 +464,7 @@
             margin: 5px 0 0 0;
         }
 
-        .CentAnni-button-icons.features-text {
+        .CentAnni-btn-icons.features-text {
             margin: 20px 0 -5px 0;
             font-size: 1.7em;
             display: flex;
@@ -749,7 +749,7 @@
             }
 
             .CentAnni-input-field-url,
-            .CentAnni-btn-style-settings,
+            .CentAnni-btn-style-settings-panel,
             .CentAnni-select-file-naming,
             .CentAnni-container-button-input,
             .CentAnni-chatgpt-prompt-textarea {
@@ -862,7 +862,7 @@
             }
         }
 
-        .CentAnni-button-naming {
+        .CentAnni-btn-naming {
             margin: 0;
             text-align: center;
         }
@@ -932,7 +932,7 @@
             transition: opacity 0s;
         }
 
-        .CentAnni-button-container-end {
+        .CentAnni-btn-container-end {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -948,13 +948,13 @@
             user-select: none;
         }
 
-        .CentAnni-button-container-backup {
+        .CentAnni-btn-container-backup {
             display: flex;
             justify-content: end;
             gap: 23.5px;
         }
 
-        .CentAnni-button-container-settings {
+        .CentAnni-btn-container-settings {
             display: flex;
             align-items: center;
             justify-content: end;
@@ -988,7 +988,7 @@
             }
         }
 
-        .CentAnni-button-wrapper {
+        .CentAnni-btn-wrapper {
             margin-right: 8px;
             display: flex;
             background-color: transparent;
@@ -996,13 +996,13 @@
             -moz-osx-font-smoothing: grayscale !important;
         }
 
-        .CentAnni-button-wrapper.disabled,
-        #masthead #end.disabled .CentAnni-button-wrapper:not(.transcript-settings-button) {
+        .CentAnni-btn-wrapper.disabled,
+        #masthead #end.disabled .CentAnni-btn-wrapper:not(.transcript-settings-btn) {
             cursor: not-allowed;
         }
 
-        .CentAnni-button-wrapper.disabled > button,
-        #masthead #end.disabled .CentAnni-button-wrapper:not(.transcript-settings-button) > button {
+        .CentAnni-btn-wrapper.disabled > button,
+        #masthead #end.disabled .CentAnni-btn-wrapper:not(.transcript-settings-btn) > button {
             pointer-events: none;
             opacity: .5;
         }
@@ -1019,12 +1019,12 @@
             }
 
             #guide-wrapper {
-                .CentAnni-button-wrapper {
+                .CentAnni-btn-wrapper {
                     margin-left: auto;
                     margin-right: 12px;
                 }
 
-                .CentAnni-button-tooltip {
+                .CentAnni-btn-tooltip {
                     justify-self: auto;
                     margin-inline: unset;
                     left: anchor(center);
@@ -1032,7 +1032,7 @@
                 }
             }
 
-            #transcript-settings-button {
+            #transcript-settings-btn {
                 width: 40px;
 
                 &:hover {
@@ -1048,11 +1048,11 @@
         }
 
         html:not([dark]) #guide-wrapper {
-            .CentAnni-button-style-settings:hover {
+            .CentAnni-btn-style-settings:hover {
                 color: black;
             }
 
-            .transcript-settings-button {
+            .transcript-settings-btn {
                 &:hover {
                     background-color: rgba(0 0 0 / .2);
                     border-radius: 24px;
@@ -1065,17 +1065,17 @@
             }
         }
 
-        .CentAnni-button-wrapper:not(.transcript-settings-button):hover {
+        .CentAnni-btn-wrapper:not(.transcript-settings-btn):hover {
             background-color: rgba(255 255 255 / .2);
             border-radius: 24px;
         }
 
-        .CentAnni-button-wrapper:not(.transcript-settings-button):active {
+        .CentAnni-btn-wrapper:not(.transcript-settings-btn):active {
             background-color: rgba(255 255 255 / .284);
             border-radius: 24px;
         }
 
-        .CentAnni-button-style {
+        .CentAnni-btn-style {
             width: 40px;
             height: 40px;
             anchor-name: var(--centanni-tooltip-anchor);
@@ -1109,7 +1109,7 @@
             }
         }
 
-        .CentAnni-button-style-settings {
+        .CentAnni-btn-style-settings {
             width: fit-content;
             min-width: 10px;
             color: rgb(170, 170, 170);
@@ -1119,7 +1119,7 @@
             }
         }
 
-        .CentAnni-button-tooltip {
+        .CentAnni-btn-tooltip {
             opacity: 0;
             visibility: hidden;
             background-color: black;
@@ -1146,7 +1146,7 @@
             border-image: linear-gradient(to bottom, white, black);
             border-image-slice: 1;
 
-            + .CentAnni-button-tooltip-arrow {
+            + .CentAnni-btn-tooltip-arrow {
                 opacity: 0;
                 visibility: hidden;
                 position: fixed;
@@ -1163,12 +1163,12 @@
                 background: linear-gradient(135deg, white 0%, white 50%, black 50%, black 100%);
             }
 
-            .CentAnni-button-style:hover + & {
+            .CentAnni-btn-style:hover + & {
                 visibility: visible;
                 opacity: 1;
                 transition-delay: 700ms;
 
-                + .CentAnni-button-tooltip-arrow {
+                + .CentAnni-btn-tooltip-arrow {
                     visibility: visible;
                     opacity: 1;
                     transition-delay: 700ms;
@@ -1360,7 +1360,7 @@
                 margin-right: -10px;
             }
 
-            &:not(:has(.CentAnni-buttons-left)) {
+            &:not(:has(.CentAnni-btns-left)) {
                 min-width: var(--startMastheadWidth);
             }
         }
@@ -1369,7 +1369,7 @@
             width: auto !important;
         }
 
-        .CentAnni-buttons-left {
+        .CentAnni-btns-left {
             font-family: "Roboto", "Arial", sans-serif;
             font-size: 14px;
             font-weight: 500;
@@ -1411,6 +1411,42 @@
                 &:hover {
                     background-color: rgba(255 255 255 / .2);
                 }
+            }
+        }
+
+        #CentAnni-watch-history-btn {
+            opacity: .5;
+            transition: opacity .165s cubic-bezier(.5, 1, .9, 1), color .165s cubic-bezier(.5, 1, .9, 1);
+
+            &:hover {
+                opacity: 1;
+                color: lime !important;
+            }
+
+            &.disabled {
+                opacity: 1;
+                color: crimson !important;
+            }
+
+            &.checking {
+                opacity: 1;
+                color: orange !important;
+                cursor: wait;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                animation: spin 2s linear infinite;
+
+                #masthead[dark] & {
+                    color: yellow !important;
+                }
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
         }
 
@@ -2049,20 +2085,20 @@
                 border-radius: 0;
                 justify-content: center;
                 align-items: center;
-                user-select: none;
                 -webkit-user-select: none;
                 -moz-user-select: none;
                 -ms-user-select: none;
+                user-select: none;
                 box-sizing: content-box !important;
             }
 
             .CentAnni-playback-speed-button {
                 outline: none;
                 cursor: pointer;
-                user-select: none;
                 -webkit-user-select: none;
                 -moz-user-select: none;
                 -ms-user-select: none;
+                user-select: none;
                 box-sizing: content-box !important;
             }
 
@@ -2449,6 +2485,7 @@
                                 -webkit-line-clamp: 2;
                                 -webkit-box-orient: vertical;
                                 color: var(--yt-text-primary);
+                                text-transform: var(--textTransform);
                             }
 
                             > span:last-child {
@@ -3149,7 +3186,7 @@
                         transform: translate(-170%, -130%);
                     }
 
-                    &[playlist-panel-expanded]:is([default-layout], [fullscreen]) #container.ytd-playlist-panel-renderer {
+                    .CentAnni-tabView-content-active#playlist #container.ytd-playlist-panel-renderer {
                         #thumbnail-container.ytd-playlist-panel-video-renderer {
                             width: 37%;
                             height: fit-content;
@@ -3473,10 +3510,10 @@
                     top: var(--CentAnniTabViewHeader);
                 }
 
-                .CentAnni-button-tooltip {
+                .CentAnni-btn-tooltip {
                     top: calc(anchor(bottom) + 5px);
 
-                    + .CentAnni-button-tooltip-arrow {
+                    + .CentAnni-btn-tooltip-arrow {
                         top: calc(anchor(bottom) + 1px);
                     }
                 }
@@ -5147,6 +5184,7 @@
 
             .ytIconWrapperHost,
             .ytp-popup.ytp-settings-menu,
+            #CentAnni-watch-history-btn,
             .yt-list-item-view-model__accessory,
             .guide-icon.ytd-guide-entry-renderer,
             yt-icon.ytd-menu-navigation-item-renderer,
@@ -5580,7 +5618,7 @@
         .CentAnni-style-lnb-hide-liked-videos-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="/playlist?list=LL"],
         .CentAnni-style-lnb-hide-memberships-btn tp-yt-app-drawer#guide #sections a#endpoint[href="/channel_memberships"],
         .CentAnni-style-lnb-hide-subscriptions-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="/feed/subscriptions"],
-        .CentAnni-style-lnb-hide-coursesex-btn tp-yt-app-drawer#guide #sections a#endpoint[href="/feed/courses_destination"],
+        .CentAnni-style-lnb-hide-courses-explore-btn tp-yt-app-drawer#guide #sections a#endpoint[href="/feed/courses_destination"],
         .CentAnni-style-lnb-hide-yt-music-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="https://music.youtube.com/"],
         .CentAnni-style-lnb-hide-yt-kids-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="https://www.youtubekids.com/"],
         .CentAnni-style-lnb-hide-yt-studio-btn tp-yt-app-drawer#guide #sections a#endpoint[href^="https://studio.youtube.com/"],
@@ -5729,12 +5767,12 @@
         }
 
         ytd-masthead:not([dark]):not([page-dark-theme]) {
-            .CentAnni-button-style,
-            .CentAnni-buttons-left {
+            .CentAnni-btn-style,
+            .CentAnni-btns-left {
                 color: #0f0f0f;
             }
 
-            .CentAnni-button-style-settings {
+            .CentAnni-btn-style-settings {
                 color: slategray !important;
 
                 &:hover {
@@ -5742,12 +5780,12 @@
                 }
             }
 
-            .CentAnni-button-wrapper:not(.transcript-settings-button):hover {
+            .CentAnni-btn-wrapper:not(.transcript-settings-btn):hover {
                 background-color: rgba(0 0 0 / .2);
                 border-radius: 24px;
             }
 
-            .CentAnni-button-wrapper:not(.transcript-settings-button):active {
+            .CentAnni-btn-wrapper:not(.transcript-settings-btn):active {
                 background-color: rgba(0 0 0 / .284);
                 border-radius: 24px;
             }
@@ -5758,7 +5796,7 @@
                 color: #030303;
             }
 
-            .CentAnni-buttons-left.CentAnni-guide-icon {
+            .CentAnni-btns-left.CentAnni-guide-icon {
                 color: #0f0f0f !important;
 
                 &:hover {
@@ -6272,6 +6310,7 @@
         autoTheaterModeNotPL: false,
         autoExitFullscreen: false,
         enableCinemaMode: false,
+        toggleWatchHistory: false,
         maxVidSize: false,
         expandVideoDescription: false,
         channelRSSBtn: false,
@@ -6304,7 +6343,7 @@
         lnbHideGamingBtn: false,
         lnbHideNewsBtn: false,
         lnbHideSportsBtn: false,
-        lnbHideCoursesBtnEx: false,
+        lnbHideCoursesBtnExplore: false,
         lnbHideLearningBtn: false,
         lnbHideFashionBtn: false,
         lnbHidePlayablesBtn: false,
@@ -6612,7 +6651,6 @@
         lnbHideFeedbackBtn: 'CentAnni-style-lnb-hide-feedback-btn',
         lnbHideUrChannelBtn: 'CentAnni-style-lnb-hide-your-channel',
         lnbHideYtStudioBtn: 'CentAnni-style-lnb-hide-yt-studio-btn',
-        lnbHideCoursesBtnEx: 'CentAnni-style-lnb-hide-coursesex-btn',
         lnbHidePlaylistsBtn: 'CentAnni-style-lnb-hide-playlists-btn',
         lnbHidePlayablesBtn: 'CentAnni-style-lnb-hide-playables-btn',
         lnbHideExploreTitle: 'CentAnni-style-lnb-hide-explore-title',
@@ -6623,6 +6661,7 @@
         lnbHideLikedVideosBtn: 'CentAnni-style-lnb-hide-liked-videos-btn',
         lnbHideSubscriptionsBtn: 'CentAnni-style-lnb-hide-subscriptions-btn',
         lnbHideReportHistoryBtn: 'CentAnni-style-lnb-hide-report-history-btn',
+        lnbHideCoursesBtnExplore: 'CentAnni-style-lnb-hide-courses-explore-btn',
         lnbHideSubscriptionsTitle: 'CentAnni-style-lnb-hide-subscriptions-title',
         lnbHidePenultimateSection: 'CentAnni-style-lnb-hide-penultimate-section',
         lnbHideSubscriptionsSection: 'CentAnni-style-lnb-hide-subscriptions-section'
@@ -6630,7 +6669,7 @@
 
     // create and show the settings modal
     function showSettingsModal() {
-        const settingsBtn = document.querySelector('.CentAnni-button-wrapper.transcript-settings-button');
+        const settingsBtn = document.querySelector('.CentAnni-btn-wrapper.transcript-settings-btn');
         setTimeout(() => settingsBtn.classList.remove("disabled"), settingsBtn.classList.add("disabled") || 1000);
 
         const existingModal = document.getElementById('yt-alchemy-settings-modal');
@@ -6679,7 +6718,7 @@
         // Button Icons
         const iconsHeader = document.createElement('label');
         iconsHeader.textContent = 'Button Icons:';
-        iconsHeader.classList.add('CentAnni-button-icons');
+        iconsHeader.classList.add('CentAnni-btn-icons');
         form.appendChild(iconsHeader);
 
         const iconsContainer = document.createElement('div');
@@ -6720,7 +6759,7 @@
         // info for button naming
         const buttonNaming = document.createElement('small');
         buttonNaming.textContent = 'Enter "Label | domain.com" in the URL fields to rename the respective labels.';
-        buttonNaming.classList.add('CentAnni-info-text', 'CentAnni-button-naming');
+        buttonNaming.classList.add('CentAnni-info-text', 'CentAnni-btn-naming');
         form.appendChild(buttonNaming);
 
         // NotebookLM URL
@@ -6773,19 +6812,19 @@
         const buttonsLeft = document.createElement('button');
         buttonsLeft.type = 'button';
         buttonsLeft.textContent = 'Header Links';
-        buttonsLeft.classList.add('CentAnni-btn-style-settings');
+        buttonsLeft.classList.add('CentAnni-btn-style-settings-panel');
         buttonsLeft.onclick = () => showSubPanel(createLinksInHeaderContent(), 'linksInHeader');
 
         const customCSSButton = document.createElement('button');
         customCSSButton.type = 'button';
         customCSSButton.textContent = 'Features & Styles';
-        customCSSButton.classList.add('CentAnni-btn-style-settings');
+        customCSSButton.classList.add('CentAnni-btn-style-settings-panel');
         customCSSButton.onclick = () => showSubPanel(createCustomCSSContent(), 'createcustomCSS');
 
         const colorCodeVideos = document.createElement('button');
         colorCodeVideos.type = 'button';
         colorCodeVideos.textContent = 'Color Code Videos';
-        colorCodeVideos.classList.add('CentAnni-btn-style-settings');
+        colorCodeVideos.classList.add('CentAnni-btn-style-settings-panel');
         colorCodeVideos.onclick = () => showSubPanel(createColorCodeVideosContent(), 'colorCodeVideos');
 
         extraSettings.appendChild(buttonsLeft);
@@ -6814,22 +6853,22 @@
 
         // action buttons container
         const buttonContainer = document.createElement('div');
-        buttonContainer.classList.add('CentAnni-button-container-end');
+        buttonContainer.classList.add('CentAnni-btn-container-end');
 
         // export and import button container
         const exportImportContainer = document.createElement('div');
-        exportImportContainer.classList.add('CentAnni-button-container-backup');
+        exportImportContainer.classList.add('CentAnni-btn-container-backup');
 
         const exportButton = document.createElement('button');
         exportButton.type = 'button';
         exportButton.textContent = 'Export Settings';
-        exportButton.classList.add('CentAnni-btn-style-settings');
+        exportButton.classList.add('CentAnni-btn-style-settings-panel');
         exportButton.onclick = exportSettings;
 
         const importButton = document.createElement('button');
         importButton.type = 'button';
         importButton.textContent = 'Import Settings';
-        importButton.classList.add('CentAnni-btn-style-settings');
+        importButton.classList.add('CentAnni-btn-style-settings-panel');
         importButton.onclick = importSettings;
 
         // Copyright
@@ -6846,18 +6885,18 @@
 
         // Save, Reset, and Cancel Buttons
         const buttonContainerSettings = document.createElement('div');
-        buttonContainerSettings.classList.add('CentAnni-button-container-settings');
+        buttonContainerSettings.classList.add('CentAnni-btn-container-settings');
 
         const saveButton = document.createElement('button');
         saveButton.type = 'button';
         saveButton.textContent = 'Save';
-        saveButton.classList.add('CentAnni-btn-style-settings');
+        saveButton.classList.add('CentAnni-btn-style-settings-panel');
         saveButton.onclick = saveSettings;
 
         const resetButton = document.createElement('button');
         resetButton.type = 'button';
         resetButton.textContent = 'Reset to Default';
-        resetButton.classList.add('CentAnni-btn-style-settings');
+        resetButton.classList.add('CentAnni-btn-style-settings-panel');
         resetButton.onclick = async () => {
             const userConfirmed = window.confirm("All settings will be reset to their default values.");
             if (!userConfirmed) { return; }
@@ -6877,7 +6916,7 @@
         const cancelButton = document.createElement('button');
         cancelButton.type = 'button';
         cancelButton.textContent = 'Cancel';
-        cancelButton.classList.add('CentAnni-btn-style-settings');
+        cancelButton.classList.add('CentAnni-btn-style-settings-panel');
         cancelButton.onclick = () => window.closeAlchemySettingsModal();
 
         exportImportContainer.appendChild(exportButton);
@@ -6909,7 +6948,7 @@
             if (!modalContent) { animationTriggered = false; return; }
 
             const textArea = this;
-            const buttons = modalContent.querySelector('.CentAnni-button-container-end');
+            const buttons = modalContent.querySelector('.CentAnni-btn-container-end');
             const startHeight = 50;
             const endHeight = 630;
             const duration = 800;
@@ -7018,7 +7057,7 @@
                 const closeButton = document.createElement('button');
                 closeButton.type = 'button';
                 closeButton.textContent = 'Close';
-                closeButton.classList.add('CentAnni-btn-style-settings');
+                closeButton.classList.add('CentAnni-btn-style-settings-panel');
                 closeButton.onclick = () => { subPanelOverlay.classList.remove('active'); };
                 subPanel.appendChild(closeButton);
 
@@ -7090,7 +7129,7 @@
             // general
             const general = document.createElement('div');
             general.textContent = 'General';
-            general.classList.add('CentAnni-button-icons', 'features-text');
+            general.classList.add('CentAnni-btn-icons', 'features-text');
             form.appendChild(general);
 
             // move settings button into guide
@@ -7188,7 +7227,7 @@
             // playback speed
             const playSpeed = document.createElement('div');
             playSpeed.textContent = 'Playback Speed';
-            playSpeed.classList.add('CentAnni-button-icons', 'features-text');
+            playSpeed.classList.add('CentAnni-btn-icons', 'features-text');
             form.appendChild(playSpeed);
 
             // info for playback speed
@@ -7259,7 +7298,7 @@
             // features
             const features = document.createElement('div');
             features.textContent = 'Features';
-            features.classList.add('CentAnni-button-icons', 'features-text');
+            features.classList.add('CentAnni-btn-icons', 'features-text');
             form.appendChild(features);
 
             // auto theater mode
@@ -7293,6 +7332,15 @@
             // max video size
             form.appendChild(createCheckboxField('Max Video Size in Default Layout (default: off)', 'maxVidSize', USER_CONFIG.maxVidSize));
 
+            // toggle watch history
+            form.appendChild(createCheckboxField('Add Watch History Toggle Button to the Masthead (default: off)', 'toggleWatchHistory', USER_CONFIG.toggleWatchHistory));
+
+            // sort notifications chronologically
+            form.appendChild(createCheckboxField('Sort Notifications Chronologically (default: on)', 'chronologicalNotifications', USER_CONFIG.chronologicalNotifications));
+
+            // hide read notifications
+            form.appendChild(createCheckboxField('Limit Notifications and Hide Read (default: off)', 'hideReadNotifications', USER_CONFIG.hideReadNotifications));
+
             // prevent autoplay
             form.appendChild(createCheckboxField('Prevent Autoplay (default: off)', 'preventAutoplay', USER_CONFIG.preventAutoplay));
 
@@ -7302,23 +7350,11 @@
             // disable play on hover
             form.appendChild(createCheckboxField('Disable Play on Hover (default: off)', 'disablePlayOnHover', USER_CONFIG.disablePlayOnHover));
 
-            // sort notifications chronologically
-            form.appendChild(createCheckboxField('Sort Notifications Chronologically (default: on)', 'chronologicalNotifications', USER_CONFIG.chronologicalNotifications));
-
-            // hide read notifications
-            form.appendChild(createCheckboxField('Limit Notifications and Hide Read (default: off)', 'hideReadNotifications', USER_CONFIG.hideReadNotifications));
-
-            // expand video description
-            form.appendChild(createCheckboxField('Auto Expand Video Description (default: off)', 'expandVideoDescription', USER_CONFIG.expandVideoDescription));
-
             // restore feed filter chip on the homepage
             form.appendChild(createCheckboxField('Restore Homepage Filter Selection (default: off)', 'feedFilterChips', USER_CONFIG.feedFilterChips));
 
             // restore feed filter chip for suggested videos
             form.appendChild(createCheckboxField('Restore Suggested Videos Filter Selection (default: off)', 'feedFilterChipsWatch', USER_CONFIG.feedFilterChipsWatch));
-
-            // close chat window
-            form.appendChild(createCheckboxField('Auto Close Initial Chat Windows (default: off)', 'closeChatWindow', USER_CONFIG.closeChatWindow));
 
             // rss feed button on channel page
             form.appendChild(createCheckboxField('Add RSS Feed Button to Channel Pages (default: off)', 'channelRSSBtn', USER_CONFIG.channelRSSBtn));
@@ -7347,14 +7383,20 @@
             // sort comments new first
             form.appendChild(createCheckboxField('Sort Comments to "Newest First" (default: off)', 'commentsNewFirst', USER_CONFIG.commentsNewFirst));
 
+            // close chat window
+            form.appendChild(createCheckboxField('Automatically Close Initial Chat Windows (default: off)', 'closeChatWindow', USER_CONFIG.closeChatWindow));
+
+            // auto open comments
+            form.appendChild(createCheckboxField('Automatically Open Comments | Only Works with Tab View Enabled (default: off)', 'autoOpenComments', USER_CONFIG.autoOpenComments));
+
+            // expand video description
+            form.appendChild(createCheckboxField('Automatically Expand Video Description (default: off)', 'expandVideoDescription', USER_CONFIG.expandVideoDescription));
+
             // auto open chapter panel
             form.appendChild(createCheckboxField('Automatically Open Chapter Panels (default: on)', 'autoOpenChapters', USER_CONFIG.autoOpenChapters));
 
             // auto open transcript panel
             form.appendChild(createCheckboxField('Automatically Open Transcript Panels (default: off)', 'autoOpenTranscript', USER_CONFIG.autoOpenTranscript));
-
-            // auto open comments
-            form.appendChild(createCheckboxField('Automatically Open Comments | Only Works with Tab View Enabled (default: off)', 'autoOpenComments', USER_CONFIG.autoOpenComments));
 
             // highlight active transcript section
             form.appendChild(createCheckboxField('Highlight Active Section in Transcript Panels (default: off)', 'highlightTranscript', USER_CONFIG.highlightTranscript));
@@ -7390,7 +7432,7 @@
             // layout changes
             const layoutChanges = document.createElement('div');
             layoutChanges.textContent = 'Layout Changes';
-            layoutChanges.classList.add('CentAnni-button-icons', 'features-text');
+            layoutChanges.classList.add('CentAnni-btn-icons', 'features-text');
             form.appendChild(layoutChanges);
 
             // tab view on video page
@@ -7447,7 +7489,7 @@
             // modify or hide ui elements
             const uielements = document.createElement('div');
             uielements.textContent = 'Modify or Hide UI Elements';
-            uielements.classList.add('CentAnni-button-icons', 'features-text');
+            uielements.classList.add('CentAnni-btn-icons', 'features-text');
             form.appendChild(uielements);
 
             // display full title
@@ -7613,7 +7655,7 @@
             // hide watched videos globally
             const hideWatchedGlobal = document.createElement('div');
             hideWatchedGlobal.textContent = 'Hide Watched Videos';
-            hideWatchedGlobal.classList.add('CentAnni-button-icons', 'features-text');
+            hideWatchedGlobal.classList.add('CentAnni-btn-icons', 'features-text');
             form.appendChild(hideWatchedGlobal);
 
             // css version
@@ -7652,7 +7694,7 @@
             // YT Guide
             const leftnavbar = document.createElement('div');
             leftnavbar.textContent = 'Hide UI Elements in the Guide';
-            leftnavbar.classList.add('CentAnni-button-icons', 'features-text');
+            leftnavbar.classList.add('CentAnni-btn-icons', 'features-text');
             form.appendChild(leftnavbar);
 
             // hide home button
@@ -7752,7 +7794,7 @@
             form.appendChild(createCheckboxField('Hide "Sports" Button (default: off)', 'lnbHideSportsBtn', USER_CONFIG.lnbHideSportsBtn));
 
             // hide courses button
-            form.appendChild(createCheckboxField('Hide "Courses" Button (default: off)', 'lnbHideCoursesBtnEx', USER_CONFIG.lnbHideCoursesBtnEx));
+            form.appendChild(createCheckboxField('Hide "Courses" Button (default: off)', 'lnbHideCoursesBtnExplore', USER_CONFIG.lnbHideCoursesBtnExplore));
 
             // hide learning button
             form.appendChild(createCheckboxField('Hide "Learning" Button (default: off)', 'lnbHideLearningBtn', USER_CONFIG.lnbHideLearningBtn));
@@ -7836,7 +7878,7 @@
             // on home page
             const colorCodeVideosOnHome = document.createElement('div');
             colorCodeVideosOnHome.textContent = 'Home Page';
-            colorCodeVideosOnHome.classList.add('CentAnni-button-icons', 'features-text');
+            colorCodeVideosOnHome.classList.add('CentAnni-btn-icons', 'features-text');
             form.appendChild(colorCodeVideosOnHome);
 
             const infoColorCodeVideosHome = document.createElement('small');
@@ -7893,7 +7935,7 @@
             // on subscriptions page
             const colorCodeVideosOnSubscriptions = document.createElement('div');
             colorCodeVideosOnSubscriptions.textContent = 'Subscriptions Page';
-            colorCodeVideosOnSubscriptions.classList.add('CentAnni-button-icons', 'features-text');
+            colorCodeVideosOnSubscriptions.classList.add('CentAnni-btn-icons', 'features-text');
             form.appendChild(colorCodeVideosOnSubscriptions);
 
             const infoColorCodeVideosSubscriptions = document.createElement('small');
@@ -7933,7 +7975,7 @@
             // on watch later page
             const colorCodeVideosOnWatchLater = document.createElement('div');
             colorCodeVideosOnWatchLater.textContent = 'Watch Later Page';
-            colorCodeVideosOnWatchLater.classList.add('CentAnni-button-icons', 'features-text');
+            colorCodeVideosOnWatchLater.classList.add('CentAnni-btn-icons', 'features-text');
             form.appendChild(colorCodeVideosOnWatchLater);
 
             const infoColorCodeVideosOnWatchLater = document.createElement('small');
@@ -8452,6 +8494,7 @@
             USER_CONFIG.autoTheaterModeNotPL = subPanelCustomCSS.elements.autoTheaterModeNotPL.checked;
             USER_CONFIG.autoExitFullscreen = subPanelCustomCSS.elements.autoExitFullscreen.checked;
             USER_CONFIG.enableCinemaMode = subPanelCustomCSS.elements.enableCinemaMode.checked;
+            USER_CONFIG.toggleWatchHistory = subPanelCustomCSS.elements.toggleWatchHistory.checked;
             USER_CONFIG.maxVidSize = subPanelCustomCSS.elements.maxVidSize.checked;
             USER_CONFIG.expandVideoDescription = subPanelCustomCSS.elements.expandVideoDescription.checked;
             USER_CONFIG.channelRSSBtn = subPanelCustomCSS.elements.channelRSSBtn.checked;
@@ -8495,7 +8538,7 @@
             USER_CONFIG.lnbHideGamingBtn = subPanelCustomCSS.elements.lnbHideGamingBtn.checked;
             USER_CONFIG.lnbHideNewsBtn = subPanelCustomCSS.elements.lnbHideNewsBtn.checked;
             USER_CONFIG.lnbHideSportsBtn = subPanelCustomCSS.elements.lnbHideSportsBtn.checked;
-            USER_CONFIG.lnbHideCoursesBtnEx = subPanelCustomCSS.elements.lnbHideCoursesBtnEx.checked;
+            USER_CONFIG.lnbHideCoursesBtnExplore = subPanelCustomCSS.elements.lnbHideCoursesBtnExplore.checked;
             USER_CONFIG.lnbHideLearningBtn = subPanelCustomCSS.elements.lnbHideLearningBtn.checked;
             USER_CONFIG.lnbHideFashionBtn = subPanelCustomCSS.elements.lnbHideFashionBtn.checked;
             USER_CONFIG.lnbHidePlayablesBtn = subPanelCustomCSS.elements.lnbHidePlayablesBtn.checked;
@@ -8827,33 +8870,33 @@
 
                 // button wrapper
                 const buttonWrapper = document.createElement('div');
-                buttonWrapper.classList.add('CentAnni-button-wrapper', id);
+                buttonWrapper.classList.add('CentAnni-btn-wrapper', id);
                 buttonWrapper.style.setProperty('--centanni-tooltip-anchor', `--${id}-tooltip`);
 
                 // buttons
                 const button = document.createElement('button');
                 button.id = id;
                 button.textContent = text;
-                button.classList.add('CentAnni-button-style');
+                button.classList.add('CentAnni-btn-style');
                 button.setAttribute('aria-label', ariaLabel);
-                if (id === 'transcript-settings-button') button.classList.add('CentAnni-button-style-settings');
+                if (id === 'transcript-settings-btn') button.classList.add('CentAnni-btn-style-settings');
 
                 button.onclick = clickHandler;
 
                 // tooltip div
                 const tooltipDiv = document.createElement('div');
                 tooltipDiv.textContent = tooltip;
-                tooltipDiv.classList.add('CentAnni-button-tooltip');
+                tooltipDiv.classList.add('CentAnni-btn-tooltip');
 
                 // tooltip arrow
                 const arrowDiv = document.createElement('div');
-                arrowDiv.classList.add('CentAnni-button-tooltip-arrow');
+                arrowDiv.classList.add('CentAnni-btn-tooltip-arrow');
 
                 // append button elements
                 buttonWrapper.appendChild(button);
                 buttonWrapper.appendChild(tooltipDiv);
                 buttonWrapper.appendChild(arrowDiv);
-                id === 'transcript-settings-button' && USER_CONFIG.settingsGuide && headerElement ? (settingsBtnMoved = buttonWrapper, headerElement.append(buttonWrapper)) : endElement.prepend(buttonWrapper);
+                id === 'transcript-settings-btn' && USER_CONFIG.settingsGuide && headerElement ? (settingsBtnMoved = buttonWrapper, headerElement.append(buttonWrapper)) : endElement.prepend(buttonWrapper);
             });
         } else {
             const observer = new MutationObserver((mutations, obs) => {
@@ -8888,7 +8931,7 @@
 
     function createButtons(buttonType = 'all') {
         const allButtons = {
-            settings: USER_CONFIG.settingsGuide && settingsBtnMoved?.isConnected ? null : { id: 'transcript-settings-button', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy settings', ariaLabel: 'YouTube Alchemy settings' },
+            settings: USER_CONFIG.settingsGuide && settingsBtnMoved?.isConnected ? null : { id: 'transcript-settings-btn', text: USER_CONFIG.buttonIcons.settings, clickHandler: showSettingsModal, tooltip: 'YouTube Alchemy settings', ariaLabel: 'YouTube Alchemy settings' },
             download: { id: 'transcript-download-button', text: USER_CONFIG.buttonIcons.download, clickHandler: handleDownloadClick, tooltip: 'Download transcript as a text file', ariaLabel: 'Download transcript as a text file' },
             copy: { id: 'transcript-copy-button', text: USER_CONFIG.buttonIcons.copy, clickHandler: handleCopyClick, tooltip: 'Copy transcript to clipboard', ariaLabel: 'Copy transcript to clipboard' },
             chatgpt: { id: 'transcript-ChatGPT-button', text: USER_CONFIG.buttonIcons.ChatGPT, clickHandler: handleChatGPTClick, tooltip: `Copy transcript with a prompt and open ${ChatGPTLabel}`, ariaLabel: `Copy transcript to clipboard with a prompt and open ${ChatGPTLabel}` },
@@ -8907,7 +8950,7 @@
                 else { buttonsToCreate = allButtons[buttonType]; buttonsToCreate = buttonsToCreate ? [buttonsToCreate] : []; }
         }
 
-        endElement.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
+        endElement.querySelectorAll('.CentAnni-btn-wrapper').forEach(el => el.remove());
         if (buttonsToCreate.length) buttonLocation(buttonsToCreate, () => createButtons(buttonType));
     }
 
@@ -9183,7 +9226,7 @@
     function preLoadTranscript(tryOtherPanel = false, viaTabView = false) {
         return new Promise((resolve, reject) => {
             const mode = getTranscriptMode();
-            endElement.querySelectorAll('.CentAnni-button-wrapper').forEach(el => el.remove());
+            endElement.querySelectorAll('.CentAnni-btn-wrapper').forEach(el => el.remove());
             if (isLive) {
                 showNotificationError("Live stream, no transcript");
                 reject();
@@ -9311,7 +9354,10 @@
     }
 
     // helper to exit fullscreen
-    const exitFullscreen = () => { if (videoID === playerElement.getPlaylist()?.at(-1) && !playerElement.classList.contains('countdown-running')) playerElement.toggleFullscreen(); };
+    const exitFullscreen = () => {
+        const lastVideoID = playerElement.getPlaylist()?.at(-1);
+        if (!lastVideoID || videoID === lastVideoID && !playerElement.classList.contains('countdown-running')) playerElement.toggleFullscreen();
+    };
 
     // exit fullscreen when tabView is disabled
     function exitFullscreenNoTabView() {
@@ -10093,24 +10139,6 @@
         }
     };
 
-    // playback speed icon
-    const playbackSpeedIconTemplate = (() => {
-        const div = document.createElement('div');
-        div.className = 'CentAnni-playback-speed-icon';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('fill', 'none');
-        svg.setAttribute('height', '24');
-        svg.setAttribute('viewBox', '0 0 24 24');
-        svg.setAttribute('width', '24');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M10,8v8l6-4L10,8L10,8z M6.3,5L5.7,4.2C7.2,3,9,2.2,11,2l0.1,1C9.3,3.2,7.7,3.9,6.3,5z M5,6.3L4.2,5.7C3,7.2,2.2,9,2,11 l1,.1C3.2,9.3,3.9,7.7,5,6.3z M5,17.7c-1.1-1.4-1.8-3.1-2-4.8L2,13c0.2,2,1,3.8,2.2,5.4L5,17.7z M11.1,21c-1.8-0.2-3.4-0.9-4.8-2 l-0.6,.8C7.2,21,9,21.8,11,22L11.1,21z M22,12c0-5.2-3.9-9.4-9-10l-0.1,1c4.6,.5,8.1,4.3,8.1,9s-3.5,8.5-8.1,9l0.1,1 C18.2,21.5,22,17.2,22,12z');
-        path.setAttribute('fill', 'whitesmoke');
-        svg.appendChild(path);
-        div.appendChild(svg);
-        return div;
-    })();
-    function createPlaybackSpeedIcon() { return playbackSpeedIconTemplate.cloneNode(true); }
-
     // check mini player state
     const checkMiniPlayer = () => {
         cleanupMiniPlayer = () => {
@@ -10333,7 +10361,9 @@
             controlDiv.classList.add("CentAnni-playback-control", "top-level-buttons", "style-scope", "ytd-menu-renderer");
 
             // create the SVG icon
-            const iconDiv = createPlaybackSpeedIcon();
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'CentAnni-playback-speed-icon';
+            iconDiv.appendChild(createIcon(playbackSpeedIcon));
             controlDiv.appendChild(iconDiv);
 
             // display the speed
@@ -11295,19 +11325,28 @@
         window.location.href = url.href;
     };
 
-    // guide icon copy from YouTube
-    const guideIcon = (() => {
+    // helper to create SVG icons
+    const createIcon = pathData => {
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('fill', 'currentColor');
         svg.setAttribute('height', '24');
         svg.setAttribute('viewBox', '0 0 24 24');
         svg.setAttribute('width', '24');
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M20 5H4a1 1 0 000 2h16a1 1 0 100-2Zm0 6H4a1 1 0 000 2h16a1 1 0 100-2Zm0 6H4a1 1 0 000 2h16a1 1 0 000-2Z');
+        path.setAttribute('d', pathData);
         svg.appendChild(path);
         return svg;
-    })();
-    function createGuideIcon() { return guideIcon.cloneNode(true); }
+    };
+
+    // icon paths
+    const playlistDirectionIconUp = 'M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z';
+    const playlistDirectionIconDown = 'M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z';
+    const guideIcon = 'M20 5H4a1 1 0 000 2h16a1 1 0 100-2Zm0 6H4a1 1 0 000 2h16a1 1 0 100-2Zm0 6H4a1 1 0 000 2h16a1 1 0 000-2Z';
+    const playlistIcon = 'M3.75 5c-.414 0-.75.336-.75.75s.336.75.75.75h16.5c.414 0 .75-.336.75-.75S20.664 5 20.25 5H3.75Zm0 4c-.414 0-.75.336-.75.75s.336.75.75.75h16.5c.414 0 .75-.336.75-.75S20.664 9 20.25 9H3.75Zm0 4c-.414 0-.75.336-.75.75s.336.75.75.75h8.5c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-8.5Zm8.5 4c.414 0 .75.336.75.75s-.336.75-.75.75h-8.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h8.5Zm3.498-3.572c-.333-.191-.748.05-.748.434v6.276c0 .384.415.625.748.434L22 17l-6.252-3.572Z';
+    const playbackSpeedIcon = 'M10,8v8l6-4L10,8L10,8z M6.3,5L5.7,4.2C7.2,3,9,2.2,11,2l0.1,1C9.3,3.2,7.7,3.9,6.3,5z M5,6.3L4.2,5.7C3,7.2,2.2,9,2,11 l1,.1C3.2,9.3,3.9,7.7,5,6.3z M5,17.7c-1.1-1.4-1.8-3.1-2-4.8L2,13c0.2,2,1,3.8,2.2,5.4L5,17.7z M11.1,21c-1.8-0.2-3.4-0.9-4.8-2 l-0.6,.8C7.2,21,9,21.8,11,22L11.1,21z M22,12c0-5.2-3.9-9.4-9-10l-0.1,1c4.6,.5,8.1,4.3,8.1,9s-3.5,8.5-8.1,9l0.1,1 C18.2,21.5,22,17.2,22,12z';
+    const historyIconOn = 'M12 1a11 11 0 00-7.778 18.778A11.002 11.002 0 0022.163 7.79 11 11 0 0012 1Zm0 2a9 9 0 016.364 2.636A9 9 0 015.636 18.364 9.001 9.001 0 0112 3Zm5 9L9 7.2v9.6l8-4.8Z';
+    const historyIconPause = 'M9 3H7a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2Zm8 0h-2a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2ZM7 19V5h2v14H7Zm8 0V5h2v14h-2Z';
+    const gearPath = 'M12.844 1h-1.687a2 2 0 00-1.962 1.616 3 3 0 01-3.92 2.263 2 2 0 00-2.38.891l-.842 1.46a2 2 0 00.417 2.507 3 3 0 010 4.525 2 2 0 00-.417 2.507l.843 1.46a2 2 0 002.38.892 3.001 3.001 0 013.918 2.263A2 2 0 0011.157 23h1.686a2 2 0 001.963-1.615 3.002 3.002 0 013.92-2.263 2 2 0 002.38-.892l.842-1.46a2 2 0 00-.418-2.507 3 3 0 010-4.526 2 2 0 00.418-2.508l-.843-1.46a2 2 0 00-2.38-.891 3 3 0 01-3.919-2.263A2 2 0 0012.844 1Zm-1.767 2.347a6 6 0 00.08-.347h1.687a4.98 4.98 0 002.407 3.37 4.98 4.98 0 004.122.4l.843 1.46A4.98 4.98 0 0018.5 12a4.98 4.98 0 001.716 3.77l-.843 1.46a4.98 4.98 0 00-4.123.4A4.979 4.979 0 0012.843 21h-1.686a4.98 4.98 0 00-2.408-3.371 4.999 4.999 0 00-4.12-.399l-.844-1.46A4.979 4.979 0 005.5 12a4.98 4.98 0 00-1.715-3.77l.842-1.459a4.98 4.98 0 004.123-.399 4.981 4.981 0 002.327-3.025ZM16 12a4 4 0 11-7.999 0 4 4 0 018 0Zm-4 2a2 2 0 100-4 2 2 0 000 4Z';
 
     // check if YT Guide is open/close and trigger CSS
     const guideCheck = () => {
@@ -11331,13 +11370,13 @@
 
     // sidebar and header links
     function buttonsLeftHeader() {
-        if (!mastheadElement || !startElement || startElement.querySelector('.CentAnni-buttons-left')) return;
+        if (!mastheadElement || !startElement || startElement.querySelector('.CentAnni-btns-left')) return;
 
         // create sidebar button
         function createButton(text, onClick) {
             const btn = document.createElement('button');
             btn.textContent = text;
-            btn.classList.add('CentAnni-buttons-left');
+            btn.classList.add('CentAnni-btns-left');
             btn.onclick = (e) => {
                 e.preventDefault();
                 onClick();
@@ -11349,7 +11388,7 @@
         function createLink(text, url) {
             const link = document.createElement('a');
             link.textContent = text;
-            link.classList.add('CentAnni-buttons-left');
+            link.classList.add('CentAnni-btns-left');
             link.href = url;
             link.onclick = (e) => {
                 if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || link.origin !== location.origin) return;
@@ -11381,7 +11420,7 @@
                     if (USER_CONFIG.mButtonDisplay) {
                         element = createButton(config.text, config.onClick);
                         if (['default', '☰', ''].includes(config.text)) {
-                            element.replaceChildren(createGuideIcon());
+                            element.replaceChildren(createIcon(guideIcon));
                             element.classList.add('CentAnni-guide-icon', 'CentAnni-btn-feedback-shape');
                         }
                     }
@@ -11395,6 +11434,64 @@
             if (btnsLeftHeaderWidth !== smw) await GM.setValue('btnsLeftHeaderWidth', btnsLeftHeaderWidth);
         };
         if (initialRun) requestIdleCallback(() => saveStartHeaderWidth());
+        if (USER_CONFIG.toggleWatchHistory && !document.getElementById('CentAnni-watch-history-btn')) addWatchHistoryButton();
+    }
+
+    // watch history toggle btn
+    async function addWatchHistoryButton() {
+        const targetId = 'history-watch-pause-resume-toggle';
+        const btn = document.createElement('button');
+        btn.id = 'CentAnni-watch-history-btn';
+        btn.type = 'button';
+        btn.classList.add('CentAnni-btns-left', 'CentAnni-guide-icon', 'CentAnni-btn-feedback-shape');
+        btn.disabled = true;
+        startElement.appendChild(btn);
+
+        const findHistoryButton = value => value.contents.twoColumnBrowseResultsRenderer.secondaryContents.browseFeedActionsRenderer.contents.find(value => value.buttonRenderer?.targetId === targetId)?.buttonRenderer;
+
+        const loadHistoryButton = async () => {
+            const response = await fetch(`/feed/history?authuser=${ytcfg.get('SESSION_INDEX') || 0}`, { cache: 'no-store' });
+            const html = await response.text();
+            const match = html.match(/(?:var ytInitialData|window\["ytInitialData"\])\s*=\s*(\{.*?\});<\/script>/s);
+            return findHistoryButton(JSON.parse(match[1]));
+        };
+
+        const updateButton = data => {
+            const disabled = data.icon.iconType === 'PLAY_OUTLINED';
+
+            btn.replaceChildren(createIcon(disabled ? historyIconPause : historyIconOn));
+            btn.classList.toggle('disabled', disabled);
+            btn.classList.remove('checking');
+            btn.title = disabled ? 'Watch history is disabled' : 'Watch history is enabled';
+            btn.disabled = false;
+        };
+
+        btn.onclick = async () => {
+            btn.disabled = true;
+            btn.replaceChildren(createIcon(gearPath));
+            btn.classList.add('checking');
+
+            const data = await loadHistoryButton();
+            const dialog = data.navigationEndpoint.confirmDialogEndpoint.content.confirmDialogRenderer;
+            const endpoint = dialog.confirmButton.buttonRenderer.serviceEndpoint;
+            const response = await new Promise(resolve => {
+                const onRequest = event => {
+                    if (event.detail?.endpoint?.feedbackEndpoint?.feedbackToken !== endpoint.feedbackEndpoint.feedbackToken) return;
+                    appElement.removeEventListener('yt-service-request-sent', onRequest);
+                    resolve(event.detail.ajaxPromise);
+                };
+                appElement.addEventListener('yt-service-request-sent', onRequest);
+                appElement.resolveCommand(endpoint);
+            });
+
+            const result = response.data || response;
+            if (result.feedbackResponses?.some(feedback => feedback.isProcessed)) {
+                const action = result.actions.find(action => action.updateButtonAction?.targetId === targetId).updateButtonAction;
+                updateButton(action.updatedButton.buttonRenderer);
+            }
+        };
+
+        updateButton(await loadHistoryButton());
     }
 
     // color code videos on home
@@ -12135,18 +12232,7 @@
                 navigateYouTube(url);
             };
 
-            const playlistIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            playlistIcon.setAttribute('viewBox', '0 0 24 24');
-            playlistIcon.setAttribute('width', '24');
-            playlistIcon.setAttribute('height', '24');
-            playlistIcon.style.fill = 'currentColor';
-            const iconPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            iconPath.setAttribute('clip-rule', 'evenodd');
-            iconPath.setAttribute('fill-rule', 'evenodd');
-            iconPath.setAttribute('d', 'M3.75 5c-.414 0-.75.336-.75.75s.336.75.75.75h16.5c.414 0 .75-.336.75-.75S20.664 5 20.25 5H3.75Zm0 4c-.414 0-.75.336-.75.75s.336.75.75.75h16.5c.414 0 .75-.336.75-.75S20.664 9 20.25 9H3.75Zm0 4c-.414 0-.75.336-.75.75s.336.75.75.75h8.5c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-8.5Zm8.5 4c.414 0 .75.336.75.75s-.336.75-.75.75h-8.5c-.414 0-.75-.336-.75-.75s.336-.75.75-.75h8.5Zm3.498-3.572c-.333-.191-.748.05-.748.434v6.276c0 .384.415.625.748.434L22 17l-6.252-3.572Z');
-
-            playlistIcon.appendChild(iconPath);
-            buttonLink.appendChild(playlistIcon);
+            buttonLink.appendChild(createIcon(playlistIcon));
             buttonLink.appendChild(document.createTextNode(text));
 
             buttonContainer.appendChild(buttonLink);
@@ -12281,19 +12367,9 @@
                 const iconDiv = document.createElement('div');
                 iconDiv.className = ICON_CLASS;
                 iconDiv.setAttribute('aria-hidden', 'true');
-                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-                svg.setAttribute('height', '24');
-                svg.setAttribute('viewBox', '0 0 24 24');
-                svg.setAttribute('width', '24');
-                svg.setAttribute('focusable', 'false');
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('d', isUpButton
-                    ? 'M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z'
-                    : 'M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z');
 
-                svg.appendChild(path);
-                iconDiv.appendChild(svg);
+                const icon = isUpButton ? playlistDirectionIconUp : playlistDirectionIconDown;
+                iconDiv.appendChild(createIcon(icon));
                 button.appendChild(iconDiv);
 
                 return button;
@@ -12525,8 +12601,8 @@
     };
 
     async function shortsPlaybackControl() {
-        const shortVideo = document.querySelector('ytd-shorts #shorts-player > div.html5-video-container > video');
-        const menuBtn = document.querySelector('ytd-shorts ytd-reel-player-overlay-renderer .ytwReelActionBarViewModelHost');
+        const shortVideo = document.querySelector('ytd-shorts #shorts-player video');
+        const menuBtn = document.querySelector('ytd-shorts .ytwReelActionBarViewModelHost');
         if (!shortVideo || !menuBtn) return;
 
         const savedShortsSetting = 'CentAnni_shortsPlayMode';
@@ -13516,7 +13592,7 @@
     const cmtsSel = 'ytd-comments#comments';
     const vidPSel = '.html5-video-player';
     const videoTargets = [infoSel, menuSel, cmtsSel, vidPSel, chapSel, prBaSel, fsCnSel, prBeSel];
-    const browseTargets = ['#contents img, #reel-video-renderer .action-container > #actions'];
+    const browseTargets = ['#contents img, #reel-video-renderer img.ytSpecAvatarShapeImage'];
     const videoPageContainer = '#page-manager > ytd-watch-flexy[role="main"]:not([hidden])';
     const browseContainer = '#page-manager > :is(ytd-browse, ytd-search, ytd-shorts):not([hidden])[role="main"]';
     const scriptPolicy = window.trustedTypes && trustedTypes.createPolicy('CentAnniAlchemy', { createScript: s => s });
@@ -13572,6 +13648,7 @@
         docElement.classList.toggle('yt-watch-later', isWatchLater);
         if (USER_CONFIG.defaultChannelPage !== 'home') docElement.classList.toggle('CentAnni-channel-banner', isChannelPage);
         for (const [flag, entry] of pageClassEntries) if (!entry.pages()) docElement.classList.remove(entry.class);
+        if (USER_CONFIG.preventBackgroundExecution) await awaitVisibility();
 
         updateCachedElements();
         buttonsLeftHeader();
@@ -13602,7 +13679,6 @@
         if (newURL !== currentURL) {
             currentURL = newURL;
             // console.log("YouTubeAlchemy: Only One Survived");
-            if (USER_CONFIG.preventBackgroundExecution) await awaitVisibility();
             if (!docBody) docBody = document.body;
             if (!cssSettingsApplied) loadCSSsettings();
             if (cleanupPageObserver) cleanupPageObserver();
