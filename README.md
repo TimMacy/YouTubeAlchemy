@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-12.2.2-white.svg" alt="Version: 12.2.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-12.3-white.svg" alt="Version: 12.3"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 250 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -192,15 +192,14 @@ Offers various options to customize the layout and functionality of YouTube.
   - Cinema Mode
     - Adds a button to the bottom right in theater mode. Once activated, all UI elements are hidden while the mouse is outside the page.
   - Max Video Size in Default Layout
+  - Add Watch History Toggle Button to the Masthead
+  - Sort Notifications Chronologically
+  - Limit Notifications and Hide Read
   - Prevent Autoplay
   - Also Prevent Autoplay in Playlists
   - Disable Play on Hover
-  - Sort Notifications Chronologically
-  - Limit Notifications and Hide Read
-  - Auto Expand Video Description
   - Restore Homepage Filter Selection
   - Restore Suggested Videos Filter Selection
-  - Auto Close Initial Chat Windows
   - Add RSS Feed Button to Channel Pages
   - Add Playlist Buttons to Channel Pages
   - Add Direction Buttons to Playlist Panels
@@ -210,9 +209,11 @@ Offers various options to customize the layout and functionality of YouTube.
   - Hide Videos After Clicking the "Add to Queue" Button
   - Add "Remove Watched Videos" and "Toggle Watched" Buttons to the Watch Later Playlist
   - Sort Comments to "Newest First"
+  - Automatically Open Comments, Only Works with Tab View Enabled
+  - Automatically Close Initial Chat Windows
+  - Automatically Expand Video Description
   - Automatically Open Chapter Panels
   - Automatically Open Transcript Panels
-  - Automatically Open Comments, Only Works with Tab View Enabled
   - Highlight Active Section in Transcript Panels
   - Automatically Enable Subtitles When Muted
   - Show Subtitles for 10 Seconds When Rewinding with "J"
@@ -415,6 +416,7 @@ _Support is a work in progress. Languages may have limited functionality. If a s
 <br>
 
 ## 📜 Changelog
+- **12.3**: adjustments for YouTube DOM changes, bug fixes, and improvements; new feature: "Add Watch History Toggle Button to the Masthead"
 - **12.2.2**: adjustments for YouTube DOM changes
 - **12.2.1**: bug fixes and adjustments for YouTube DOM changes; new features: "Hide "Hype" Button", "Hide "Courses" Button", and "Hide "Memberships" Button"
 - **12.2**: bug fixes and improvements; removed "total: " from remaining time; updated persistent progress bar background for better visibility; feature change: "Open Links in the Same Tab" now includes the option "Unless Active Playlist"; added aria-label support for sliders, color picker fields, and buttons; new features: "Use Browser Default Dropdown Menus"; "Show Next Playlist Video Video in Default View"
