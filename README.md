@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-12.3.1-white.svg" alt="Version: 12.3.1"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-12.3.2-white.svg" alt="Version: 12.3.2"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This toolkit enhances YouTube by customizing the layout and adding more than 250 native-feeling features. Designed to be resource-efficient, it leverages YouTube's built-in elements while using event listeners, timeouts, requestAnimationFrame, requestVideoFrameCallback, requestIdleCallback, and mutation observers strategically to minimize overhead. Additionally, a main settings panel and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a userscript or a browser extension.
@@ -97,7 +97,7 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
 
 
 ## 🔗 Header Links
-Up to ten links can be added next to the YouTube logo. An empty "Link X Text" field won't insert the link into the header. If the Guide is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.
+Up to ten links can be added next to the YouTube logo, and an empty "Link X Text" field won't insert the link into the header. YouTube links only require the path (e.g., `/feed/subscriptions` or `/playlist?list=WL`), while other websites need the full URL. If the Guide is hidden, a replacement icon will precede the links and retain the default functionality of opening and closing the Guide.
 
 <p align="center"><img width="50%" alt="Header Links" src="https://github.com/user-attachments/assets/f8be4335-2d6e-4e73-9c17-ad308bc7e362" /></p>
 
@@ -416,7 +416,7 @@ _Support is a work in progress. Languages may have limited functionality. If a s
 <br>
 
 ## 📜 Changelog
-- **12.3.1**: bug fixes; added information in case the "Watch History Toggle Button" fails (⚠️: Watch history request failed)
+- **12.3.2**: bug fixes; added information in case the "Watch History Toggle Button" fails (⚠️: Watch history request failed)
 - **12.3**: adjustments for YouTube DOM changes, bug fixes, and improvements; new feature: "Add Watch History Toggle Button to the Masthead"
 - **12.2.2**: adjustments for YouTube DOM changes
 - **12.2.1**: bug fixes and adjustments for YouTube DOM changes; new features: "Hide "Hype" Button", "Hide "Courses" Button", and "Hide "Memberships" Button"
