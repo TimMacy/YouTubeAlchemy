@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 250+ options accessible via settings panels. Key features include: tab view, playback speed control, miniplayer support, video quality selection, export transcripts, prevent autoplay, hide Shorts, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.3.1
+// @version      12.3.2
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 12.3.1 - YouTube Alchemy                  *
+*                    Version: 12.3.2 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -7086,7 +7086,7 @@
             form.appendChild(subPanelHeader);
 
             const infoLinksHeader = document.createElement('small');
-            infoLinksHeader.textContent = `Up to ten links can be added next to the YouTube logo. An empty "Link X Text" field won't insert the link into the header. If the Guide is hidden, a replacement icon will prepend the links, while retaining the default functionality of opening and closing the sidebar.`;
+            infoLinksHeader.textContent = `Up to ten links can be added next to the YouTube logo, and an empty "Link X Text" field won't insert the link into the header. YouTube links only require the path, while other websites need the full URL. If the Guide is hidden, a replacement icon will precede the links and retain the default functionality of opening and closing the Guide.`;
             infoLinksHeader.classList.add('CentAnni-info-text');
             form.appendChild(infoLinksHeader);
 
@@ -7109,12 +7109,12 @@
                 container.appendChild(createInputField(`Link ${linkNumber} Text`, `buttonLeft${linkNumber}Text`, USER_CONFIG[`buttonLeft${linkNumber}Text`], `label-buttonLeft${linkNumber}Text`, ``));
 
                 // link URL
-                container.appendChild(createInputField(`Link ${linkNumber} URL`, `buttonLeft${linkNumber}Url`, USER_CONFIG[`buttonLeft${linkNumber}Url`], `label-buttonLeft${linkNumber}Url`, `e.g. /feed/subscriptions, /playlist?list=WL, https://www.google.com/`));
+                container.appendChild(createInputField(`Link ${linkNumber} URL`, `buttonLeft${linkNumber}Url`, USER_CONFIG[`buttonLeft${linkNumber}Url`], `label-buttonLeft${linkNumber}Url`, `e.g., /feed/subscriptions, /playlist?list=WL, https://www.google.com/`));
 
                 return container;
             }
 
-            // create input groups for links 1 through 6
+            // create input groups for links 1 through 10
             for (let i = 1; i <= 10; i++) {
                 form.appendChild(createButtonInputGroup(i));
             }
@@ -7238,7 +7238,7 @@
 
             // info for playback speed
             const descriptionPlaybackSpeed = document.createElement('small');
-            descriptionPlaybackSpeed.textContent = `To save a custom playback speed for a channel, set the desired speed on a video page first, then click the playback speed display.\nThis only works for channel links that use YouTube handles and not with collaborators. To confirm if a channel uses a handle, check the associated URL from a channel name. It should look like https://www.youtube.com/@youtubecreators\n\nKeyboard shortcuts:\n   • "${USER_CONFIG.playbackSpeedDecrease}" or "<" to slow down the video playback rate by 0.25x\n   • "${USER_CONFIG.playbackSpeedToggle}" to toggle between 1x and the saved speed for VODs\n   • "${USER_CONFIG.playbackSpeedIncrease}" or ">" to speed up the video playback rate by 0.25x`;
+            descriptionPlaybackSpeed.textContent = `To save a custom playback speed for a channel, set the desired speed on a video page first, then click the playback speed display.\nThis only works for channel links that use YouTube handles and not with collaborators. To confirm if a channel uses a handle, check the associated URL from a channel name. It should look like "https://www.youtube.com/@youtubecreators".\n\nKeyboard shortcuts:\n   • "${USER_CONFIG.playbackSpeedDecrease}" or "<" to slow down the video playback rate by 0.25x\n   • "${USER_CONFIG.playbackSpeedToggle}" to toggle between 1x and the saved speed for VODs\n   • "${USER_CONFIG.playbackSpeedIncrease}" or ">" to speed up the video playback rate by 0.25x`;
             descriptionPlaybackSpeed.classList.add('CentAnni-info-text', 'playback-speed');
             form.appendChild(descriptionPlaybackSpeed);
 
@@ -8345,28 +8345,17 @@
 
         // save sub panels - header links
         if (subPanelLinks) {
-            USER_CONFIG.buttonLeft1Text = subPanelLinks.elements.buttonLeft1Text.value;
-            USER_CONFIG.buttonLeft1Url = subPanelLinks.elements.buttonLeft1Url.value;
-            USER_CONFIG.buttonLeft2Text = subPanelLinks.elements.buttonLeft2Text.value;
-            USER_CONFIG.buttonLeft2Url = subPanelLinks.elements.buttonLeft2Url.value;
-            USER_CONFIG.buttonLeft3Text = subPanelLinks.elements.buttonLeft3Text.value;
-            USER_CONFIG.buttonLeft3Url = subPanelLinks.elements.buttonLeft3Url.value;
-            USER_CONFIG.buttonLeft4Text = subPanelLinks.elements.buttonLeft4Text.value;
-            USER_CONFIG.buttonLeft4Url = subPanelLinks.elements.buttonLeft4Url.value;
-            USER_CONFIG.buttonLeft5Text = subPanelLinks.elements.buttonLeft5Text.value;
-            USER_CONFIG.buttonLeft5Url = subPanelLinks.elements.buttonLeft5Url.value;
-            USER_CONFIG.buttonLeft6Text = subPanelLinks.elements.buttonLeft6Text.value;
-            USER_CONFIG.buttonLeft6Url = subPanelLinks.elements.buttonLeft6Url.value;
-            USER_CONFIG.buttonLeft7Text = subPanelLinks.elements.buttonLeft7Text.value;
-            USER_CONFIG.buttonLeft7Url = subPanelLinks.elements.buttonLeft7Url.value;
-            USER_CONFIG.buttonLeft8Text = subPanelLinks.elements.buttonLeft8Text.value;
-            USER_CONFIG.buttonLeft8Url = subPanelLinks.elements.buttonLeft8Url.value;
-            USER_CONFIG.buttonLeft9Text = subPanelLinks.elements.buttonLeft9Text.value;
-            USER_CONFIG.buttonLeft9Url = subPanelLinks.elements.buttonLeft9Url.value;
-            USER_CONFIG.buttonLeft10Text = subPanelLinks.elements.buttonLeft10Text.value;
-            USER_CONFIG.buttonLeft10Url = subPanelLinks.elements.buttonLeft10Url.value;
-            USER_CONFIG.mButtonText = subPanelLinks.elements.mButtonText.value;
-            USER_CONFIG.mButtonDisplay = subPanelLinks.elements.mButtonDisplay.checked;
+            const { elements } = subPanelLinks;
+
+            for (let i = 1; i <= 10; i++) {
+                USER_CONFIG[`buttonLeft${i}Text`] = elements[`buttonLeft${i}Text`].value;
+
+                const rawUrl = elements[`buttonLeft${i}Url`].value;
+                USER_CONFIG[`buttonLeft${i}Url`] = rawUrl.replace(/^(?:(?:https?:)?\/\/)?(?:www\.)?youtube\.com(?:\/(?!\/)|(?=[?#]|$))/i, '/');
+            }
+
+            USER_CONFIG.mButtonText = elements.mButtonText.value;
+            USER_CONFIG.mButtonDisplay = elements.mButtonDisplay.checked;
         }
 
         // save sub panels - custom css
@@ -11412,18 +11401,9 @@
 
         // adding the buttons
         const buttonsConfig = [
-            { type: 'button', text: USER_CONFIG.mButtonText, onClick: toggleGuide },
-            { type: 'link', text: USER_CONFIG.buttonLeft1Text, url: USER_CONFIG.buttonLeft1Url },
-            { type: 'link', text: USER_CONFIG.buttonLeft2Text, url: USER_CONFIG.buttonLeft2Url },
-            { type: 'link', text: USER_CONFIG.buttonLeft3Text, url: USER_CONFIG.buttonLeft3Url },
-            { type: 'link', text: USER_CONFIG.buttonLeft4Text, url: USER_CONFIG.buttonLeft4Url },
-            { type: 'link', text: USER_CONFIG.buttonLeft5Text, url: USER_CONFIG.buttonLeft5Url },
-            { type: 'link', text: USER_CONFIG.buttonLeft6Text, url: USER_CONFIG.buttonLeft6Url },
-            { type: 'link', text: USER_CONFIG.buttonLeft7Text, url: USER_CONFIG.buttonLeft7Url },
-            { type: 'link', text: USER_CONFIG.buttonLeft8Text, url: USER_CONFIG.buttonLeft8Url },
-            { type: 'link', text: USER_CONFIG.buttonLeft9Text, url: USER_CONFIG.buttonLeft9Url },
-            { type: 'link', text: USER_CONFIG.buttonLeft10Text, url: USER_CONFIG.buttonLeft10Url }
+            { type: 'button', text: USER_CONFIG.mButtonText, onClick: toggleGuide }
         ];
+        for (let i = 1; i <= 10; i++) buttonsConfig.push({ type: 'link', text: USER_CONFIG[`buttonLeft${i}Text`], url: USER_CONFIG[`buttonLeft${i}Url`] });
 
         buttonsConfig.forEach(config => {
             if (config.text && config.text.trim() !== '') {
@@ -11446,9 +11426,9 @@
             if (btnsLeftHeaderWidth !== smw) await GM.setValue('btnsLeftHeaderWidth', btnsLeftHeaderWidth);
         };
 
+        handleActiveHeaderLink();
         if (initialRun) requestIdleCallback(() => saveStartHeaderWidth());
         if (USER_CONFIG.toggleWatchHistory && !document.getElementById('CentAnni-watch-history-btn')) addWatchHistoryButton();
-        startElement.querySelectorAll('a.CentAnni-btns-left').forEach(link => link.classList.toggle('active', link.href === currentURL));
     }
 
     // watch history toggle btn
