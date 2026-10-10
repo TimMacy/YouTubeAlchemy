@@ -3,7 +3,7 @@
 // @description  Toolkit for YouTube with 250+ options accessible via settings panels. Key features include: tab view, playback speed control, miniplayer support, video quality selection, export transcripts, prevent autoplay, hide Shorts, square design, auto-theater mode, number of videos per row, display remaining time adjusted for playback speed and SponsorBlock segments, persistent progress bar with chapter markers and SponsorBlock support, modify or hide various UI elements, and much more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.3.2
+// @version      12.3.3
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 12.3.2 - YouTube Alchemy                  *
+*                    Version: 12.3.3 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -236,11 +236,12 @@
             display: block;
             float: right;
             cursor: pointer;
-            margin: 4px 10px 0 0;
-            font-size: inherit;
+            margin: 5px 10px 0 0;
+            font-size: 1.4em;
             font-weight: 400;
             line-height: inherit;
             color: ghostwhite;
+            text-box: trim-both cap alphabetic;
 
             &:hover {
                 color: red;
@@ -526,8 +527,10 @@
             line-height: 1.5em;
             font-weight: 500;
             color: white;
+            margin-right: auto;
             text-decoration: none;
             transition: color .2s ease-in-out;
+            text-box: trim-both cap alphabetic;
 
             &:hover {
                 color: #369eff;
@@ -870,9 +873,8 @@
 
         .CentAnni-extra-button-container {
             display: flex;
-            justify-content: center;
-            gap: 5%;
             margin: 20px 0;
+            justify-content: space-evenly;
         }
 
         .CentAnni-chatgpt-prompt-textarea {
@@ -935,6 +937,7 @@
 
         .CentAnni-btn-container-end {
             display: flex;
+            position: relative;
             flex-direction: column;
             gap: 10px;
             margin-top: 14px;
@@ -952,7 +955,11 @@
         .CentAnni-btn-container-backup {
             display: flex;
             justify-content: end;
-            gap: 23.5px;
+
+            > button:first-of-type {
+                position: absolute;
+                left: anchor(--centanni-save left);
+            }
         }
 
         .CentAnni-btn-container-settings {
@@ -961,6 +968,9 @@
             justify-content: end;
             gap: 10px;
 
+            > button:first-of-type {
+                anchor-name: --centanni-save;
+            }
         }
 
         #voice-search-button.ytd-masthead {
@@ -1617,6 +1627,10 @@
 
                 span.CentAnni-checkbox-label {
                     pointer-events: none;
+                }
+
+                &.music-videos {
+                    margin-top: -10px;
                 }
             }
         }
@@ -5682,10 +5696,13 @@
         .CentAnni-style-hide-pay-to-watch :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-video-renderer):has(.badge-style-type-ypc),
         .CentAnni-style-hide-most-relevant ytd-browse[page-subtype="subscriptions"][role="main"] ytd-rich-section-renderer:not(:has([is-shorts])),
         .CentAnni-style-hide-share-btn-global.is-watch-page ytd-watch-flexy[role="main"] ytd-macro-markers-list-item-renderer[active] #share-button,
+        .CentAnni-style-hide-music-vid-search ytd-search[page-subtype="search"][role="main"] ytd-video-renderer:has(path[d^="M5.5 1.383V6.88a2.25 2.25"]),
         .CentAnni-style-hide-notification-btn :is(#masthead-skeleton-icons :nth-child(2), #masthead-container #end ytd-notification-topbar-button-renderer),
         .CentAnni-style-hide-free-with-ads :is(ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-rich-section-renderer):has([aria-label="Free with ads"]),
         .CentAnni-style-hide-ask-btn #teaser-carousel:has(path[d^="M480"]) :is(.ytCarouselItemViewModelHost:has(path[d^="M480"]), .ytCarouselTitleViewModelNavigation),
+        .CentAnni-style-hide-music-vid-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-item-renderer.ytd-rich-grid-renderer:has(path[d^="M5.5 1.383V6.88a2.25 2.25"]),
         .CentAnni-style-hide-playlists-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="start_radio=1"]),
+        .CentAnni-style-hide-music-vid-sub ytd-browse[page-subtype="subscriptions"][role="main"] ytd-rich-item-renderer.ytd-rich-grid-renderer:has(path[d^="M5.5 1.383V6.88a2.25 2.25"]),
         .CentAnni-hide-watched-wl ytd-browse[page-subtype="playlist"][role="main"] ytd-playlist-video-renderer:has(ytd-thumbnail:not([is-live-video]) .ytwThumbnailOverlayResumePlaybackRendererHost),
         :is(.CentAnni-style-hide-share-btn, .CentAnni-style-hide-share-btn-global) #above-the-fold.ytd-watch-metadata yt-button-view-model.ytd-menu-renderer:has([aria-label="Share"], path[d^="M10 3"]),
         .CentAnni-style-hide-episodes-home ytd-browse[page-subtype="home"][role="main"] ytd-rich-grid-renderer > #contents > ytd-rich-item-renderer:has(a[href*="list="]):not(:has(a[href*="start_radio=1"])),
@@ -6139,21 +6156,21 @@
         buttonLeft2Text: 'WatchLater',
         buttonLeft2Url: '/playlist?list=WL',
         buttonLeft3Text: '',
-        buttonLeft3Url: '/@BBCNews',
+        buttonLeft3Url: '',
         buttonLeft4Text: '',
         buttonLeft4Url: '',
         buttonLeft5Text: '',
         buttonLeft5Url: '',
         buttonLeft6Text: '',
-        buttonLeft6Url: '/@MarkRober/videos',
+        buttonLeft6Url: '/@MarkRober',
         buttonLeft7Text: 'EarthCam',
-        buttonLeft7Url: '/@EarthCam/streams',
+        buttonLeft7Url: '/@earthcam/streams',
         buttonLeft8Text: '',
-        buttonLeft8Url: '/@FIAWEC/videos',
+        buttonLeft8Url: '',
         buttonLeft9Text: '',
-        buttonLeft9Url: '/@Formula1/videos',
+        buttonLeft9Url: '',
         buttonLeft10Text: '',
-        buttonLeft10Url: '/@OpenAI/playlists',
+        buttonLeft10Url: '',
         mButtonText: 'default',
         mButtonDisplay: false,
         colorCodeVideosEnabled: true,
@@ -6269,6 +6286,9 @@
         moveSaveBtn: false,
         hideShorts: false,
         redirectShorts: false,
+        hideMusicVidHome: false,
+        hideMusicVidSub: false,
+        hideMusicVidSearch: false,
         hideCommentsSection: false,
         hideVideosSection: false,
         hideAdSlots: false,
@@ -6386,10 +6406,11 @@
 
     // load user configuration or use defaults
     let storedConfig = {};
+    let userSaveFailed = false;
     try {
         storedConfig = await GM.getValue('USER_CONFIG', {});
     } catch (error) {
-        showNotification('Error loading user save!');
+        userSaveFailed = true;
         console.error("YouTubeAlchemy: Error loading user configuration:", error);
     }
 
@@ -6599,6 +6620,7 @@
         // subscription page
         lastSeenVideo: { class: 'CentAnni-style-last-seen-video', pages: () => isSubscriptionsPage },
         hideMostRelevant: { class: 'CentAnni-style-hide-most-relevant', pages: () => isSubscriptionsPage },
+        hideMusicVidSub: { class: 'CentAnni-style-hide-music-vid-sub', pages: () => isSubscriptionsPage },
         videosPerRow: { class: 'CentAnni-style-video-row', pages: () => isHomePage || isSubscriptionsPage || isChannelPage },
         // home page
         hideNewsHome: { class: 'CentAnni-style-hide-news-home', pages: () => isHomePage },
@@ -6607,6 +6629,7 @@
         hideFreeWithAds: { class: 'CentAnni-style-hide-free-with-ads', pages: () => isHomePage },
         hideLatestPostsHome: { class: 'CentAnni-style-hide-posts-home', pages: () => isHomePage },
         hideEpisodesHome: { class: 'CentAnni-style-hide-episodes-home', pages: () => isHomePage },
+        hideMusicVidHome: { class: 'CentAnni-style-hide-music-vid-home', pages: () => isHomePage },
         videosHideWatched: { class: 'CentAnni-style-hide-watched-videos', pages: () => isHomePage },
         hidePlaylistsHome: { class: 'CentAnni-style-hide-playlists-home', pages: () => isHomePage },
         hideExploreSection: { class: 'CentAnni-style-hide-explore-section', pages: () => isHomePage },
@@ -6621,6 +6644,7 @@
         playlistTrashCan: { class: 'CentAnni-style-pl-trashcan', pages: () => isPlaylistPage },
         // search page
         hideLatestPosts: { class: 'CentAnni-style-hide-latest-posts', pages: () => isSearchPage },
+        hideMusicVidSearch: { class: 'CentAnni-style-hide-music-vid-search', pages: () => isSearchPage },
         hideRightSidebarSearch: { class: 'CentAnni-style-search-hide-right-sidebar', pages: () => isSearchPage },
     }; const pageClassEntries = Object.entries(pageClassMap).filter(([flag]) => USER_CONFIG[flag]);
 
@@ -6886,9 +6910,6 @@
         copyright.title = 'Copyright © 2024–2026 Tim Macy';
         copyright.classList.add('CentAnni-copyright');
 
-        const spacer = document.createElement('div');
-        spacer.style = 'flex: 1;';
-
         // Save, Reset, and Cancel Buttons
         const buttonContainerSettings = document.createElement('div');
         buttonContainerSettings.classList.add('CentAnni-btn-container-settings');
@@ -6929,7 +6950,6 @@
         exportImportContainer.appendChild(importButton);
 
         buttonContainerSettings.appendChild(copyright);
-        buttonContainerSettings.appendChild(spacer);
         buttonContainerSettings.appendChild(saveButton);
         buttonContainerSettings.appendChild(resetButton);
         buttonContainerSettings.appendChild(cancelButton);
@@ -7308,20 +7328,20 @@
             form.appendChild(features);
 
             // auto theater mode
-            const container = document.createElement('div');
-            container.className = 'CentAnni-container-theater-mode';
+            const autoTheaterModeSpanContainer = document.createElement('div');
+            autoTheaterModeSpanContainer.className = 'CentAnni-container-theater-mode';
             const autoTheaterModeSpan = document.createElement('span');
             autoTheaterModeSpan.textContent = 'Unless';
             autoTheaterModeSpan.className = "CentAnni-checkbox-label";
 
-            container.append(
+            autoTheaterModeSpanContainer.append(
                 createCheckboxField('Auto Theater Mode (default: off)', 'autoTheaterMode', USER_CONFIG.autoTheaterMode),
                 autoTheaterModeSpan,
                 createCheckboxField('Vertical Video', 'autoTheaterModeNotVerticalVideo', USER_CONFIG.autoTheaterModeNotVerticalVideo),
                 createCheckboxField('Large Window', 'autoTheaterModeNotLargeWindow', USER_CONFIG.autoTheaterModeNotLargeWindow),
                 createCheckboxField('Playlist Page', 'autoTheaterModeNotPL', USER_CONFIG.autoTheaterModeNotPL)
             );
-            form.appendChild(container);
+            form.appendChild(autoTheaterModeSpanContainer);
 
             // auto exit fullscreen on video end
             form.appendChild(createCheckboxField('Auto-Exit Fullscreen When Video Ends (default: off)', 'autoExitFullscreen', USER_CONFIG.autoExitFullscreen));
@@ -7491,6 +7511,21 @@
 
             // redirect shorts
             form.appendChild(createCheckboxField('Redirect Shorts to Standard Video Pages (default: off)', 'redirectShorts', USER_CONFIG.redirectShorts));
+
+            // hide music videos
+            const hideMusicVidSpanContainer = document.createElement('div');
+            hideMusicVidSpanContainer.className = 'CentAnni-container-theater-mode music-videos';
+            const hideMusicVidSpan = document.createElement('span');
+            hideMusicVidSpan.textContent = 'Hide Music Videos On';
+            hideMusicVidSpan.className = "CentAnni-checkbox-label";
+
+            hideMusicVidSpanContainer.append(
+                hideMusicVidSpan,
+                createCheckboxField('Home', 'hideMusicVidHome', USER_CONFIG.hideMusicVidHome),
+                createCheckboxField('Subscriptions', 'hideMusicVidSub', USER_CONFIG.hideMusicVidSub),
+                createCheckboxField('Search', 'hideMusicVidSearch', USER_CONFIG.hideMusicVidSearch)
+            );
+            form.appendChild(hideMusicVidSpanContainer);
 
             // modify or hide ui elements
             const uielements = document.createElement('div');
@@ -8393,6 +8428,9 @@
             USER_CONFIG.progressBar = subPanelCustomCSS.elements.progressBar.checked;
             USER_CONFIG.hideShorts = subPanelCustomCSS.elements.hideShorts.checked;
             USER_CONFIG.redirectShorts = subPanelCustomCSS.elements.redirectShorts.checked;
+            USER_CONFIG.hideMusicVidHome = subPanelCustomCSS.elements.hideMusicVidHome.checked;
+            USER_CONFIG.hideMusicVidSub = subPanelCustomCSS.elements.hideMusicVidSub.checked;
+            USER_CONFIG.hideMusicVidSearch = subPanelCustomCSS.elements.hideMusicVidSearch.checked;
             USER_CONFIG.hideAdSlots = subPanelCustomCSS.elements.hideAdSlots.checked;
             USER_CONFIG.hidePlayables = subPanelCustomCSS.elements.hidePlayables.checked;
             USER_CONFIG.hideProdTxt = subPanelCustomCSS.elements.hideProdTxt.checked;
@@ -8843,6 +8881,7 @@
     }
 
     // function to display a notification for settings change or reset
+    let notificationTimer = 800;
     function showNotification(message, reload = false) {
         const overlay = document.createElement('div');
         if (reload) { overlay.classList.add('reload'); notificationTimer = 5000; }
@@ -8853,10 +8892,11 @@
         modal.textContent = message;
 
         overlay.appendChild(modal);
-        docBody.appendChild(overlay);
+        docElement.appendChild(overlay);
 
         setTimeout(() => { overlay.classList.remove('active'); setTimeout(() => overlay.remove(), 200); }, notificationTimer);
     }
+    if (userSaveFailed) showNotification('Error loading user save!');
 
     // function to add the transcript exporter buttons
     function buttonLocation(buttons, callback) {
@@ -10154,8 +10194,9 @@
     };
 
     // playback speed functions
-    function initialSpeed() {
+    function initialSpeed(trigger) {
         const pn = window.location.pathname;
+        if (/^\/(?:@[^/]+|channel\/[^/]+)/.test(pn) && trigger?.target.closest?.('ytd-channel-video-player-renderer')) return;
         const posMiniPlayer = pn !== '/watch' && !pn.startsWith('/shorts/');
         if (!posMiniPlayer) document.removeEventListener('yt-player-updated', initialSpeed);
         if (USER_CONFIG.hideMiniPlayer && posMiniPlayer) document.querySelector('.ytp-miniplayer-close-button')?.click();
@@ -12905,6 +12946,7 @@
 
     // redirect channel home to default
     function channelRedirect() {
+        isWatchPage = false;
         const channelPage = USER_CONFIG.channelDefaultPages[channelHandleURL] || USER_CONFIG.defaultChannelPage;
         channelHandleURL ? navigateYouTube(`/@${channelHandleURL}/${channelPage}`) : navigateYouTube(window.location.href.replace(/\/$/, '') + `/${channelPage}`);
     }
@@ -13561,7 +13603,6 @@
     let speedNotificationElement = null;
     let speedKeysMapped = false;
     let hideNotificationTimeout;
-    let notificationTimer = 800;
     let toggleKey = '', increaseKey = '', decreaseKey = '';
     let defaultKeys = new Set();
     let specialKeys = Object.create(null);
