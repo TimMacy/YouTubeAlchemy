@@ -44,7 +44,7 @@ YouTube Alchemy operates completely client-side with no external dependencies. I
 </p>
 
 <a name="main-settings-panel"></a>
-<p align="center"><img width="70%" alt="Main Settings Panel" src="https://github.com/user-attachments/assets/9d031642-6a61-49b5-a599-0ee8b445a781" /></p>
+<p align="center"><img width="50%" alt="Main Settings Panel" src="https://github.com/user-attachments/assets/9d031642-6a61-49b5-a599-0ee8b445a781" /></p>
 
 <br>
 
