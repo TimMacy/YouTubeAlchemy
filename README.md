@@ -1,4 +1,4 @@
-# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-12.5-white.svg" alt="Version: 12.5"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
+# YouTube Alchemy <a href="#-changelog"><img align="right" src="https://img.shields.io/badge/Version-12.5.1-white.svg" alt="Version: 12.5.1"></a>&nbsp;<a href="https://github.com/TimMacy/YouTubeAlchemy/blob/main/LICENSE"><img align="right" src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="GNU Affero General Public License v3.0"></a><a href="#"><img align="right" src="https://img.shields.io/badge/Status-Maintained-brightgreen.svg" alt="YouTube Alchemy Status: Maintained"></a>
 
 <a href="#"><picture><source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/09f644c0-c3ee-4e13-bb73-c98c8a1cf2c0"/><img align="left" width="80px" alt="YouTube Alchemy Logo" src="https://github.com/user-attachments/assets/d87b609d-0424-41bf-80bf-8c070b1b88d2"/></picture></a>
 This Swiss Army knife for YouTube offers more than 250 native-feeling features to bring the focus back to what matters most on YouTube: watching videos. Designed to be resource-efficient, it leverages YouTube's built-in elements and uses Web APIs strategically, while the [main settings panel](#main-settings-panel) and three sub-panels offer an intuitive interface for customization. YouTube Alchemy is available as a [userscript](#-installation--minimum-browser-requirements) or browser extension, with the browser extension offering a translated interface in [supported languages](#-supported-languages).
@@ -583,6 +583,7 @@ _Support is a work in progress. Languages may have limited functionality. If a s
 <br>
 
 ## 📜 Changelog
+- **12.5.1**: bug fixes, improvements, and adjustments for YouTube DOM changes
 - **12.5**: bug fixes, improvements, and adjustments for YouTube DOM changes; added language support for Chinese 中文 (繁體), Chinese 中文 (香港), Russian, and Thai; browser extension only: language support for YouTube Alchemy's UI (uses YouTube's display language by default, can be changed via: YouTube Alchemy Translations)—see [supported languages](#-supported-languages) for more information
 - **12.3.3**: bug fixes; new feature: Hide Music Videos On Home, Subscriptions, Channels, and Search Pages
 - **12.3.2**: bug fixes; added information in case the "Watch History Toggle Button" fails (⚠️: Watch history request failed)
