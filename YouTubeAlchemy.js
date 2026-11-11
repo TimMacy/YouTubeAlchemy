@@ -3,7 +3,7 @@
 // @description  Swiss Army knife for YouTube with 250+ features to bring the focus back to what matters most on YouTube: watching videos. Options are accessible via settings panels. Features include playback speed control with per-channel settings and miniplayer support, default channel page, set video quality, transcript export, preferred audio and subtitle languages, hiding Shorts, square design, auto-theater mode, remaining time adjusted for playback speed, and persistent progress bar with chapter markers
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.5.2
+// @version      12.6
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 12.5.2 - YouTube Alchemy                  *
+*                    Version: 12.6 - YouTube Alchemy                    *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -401,6 +401,7 @@
         }
 
         .CentAnni-file-naming-container .label-audio-language ~ .CentAnni-dropdown-list,
+        .CentAnni-file-naming-container .label-subpage-filter ~ .CentAnni-dropdown-list,
         .CentAnni-file-naming-container .label-secondary-language ~ .CentAnni-dropdown-list,
         .CentAnni-file-naming-container .label-transcript-language ~ .CentAnni-dropdown-list {
             max-height: 325px;
@@ -1680,7 +1681,8 @@
             margin: 10px 0;
         }
 
-        #custom-css-form .CentAnni-file-naming-container {
+        #custom-css-form .CentAnni-file-naming-container,
+        #color-code-videos-form .CentAnni-file-naming-container {
             max-width: 90%;
             margin: 20px 0;
             display: flex;
@@ -1688,7 +1690,8 @@
             align-content: center;
         }
 
-        #custom-css-form .CentAnni-label-style-settings {
+        #custom-css-form .CentAnni-label-style-settings,
+        #color-code-videos-form .CentAnni-file-naming-container .CentAnni-label-style-settings {
             margin-bottom: 0;
             white-space: nowrap;
             align-content: center;
@@ -2085,6 +2088,8 @@
         }
 
         .CentAnni-btn-light-shape {
+            border-radius: inherit;
+
             &::before {
                 content: "";
                 position: absolute;
@@ -5369,6 +5374,72 @@
                     calc((100dvh - var(--ytd-toolbar-height)) * var(--ytd-watch-flexy-width-ratio)/var(--ytd-watch-flexy-height-ratio))) !important;
         }
 
+        .CentAnni-style-subpage-filter-btns {
+            #CentAnni-sub-sort-btns {
+                display: flex;
+                gap: 10px;
+                margin-right: 10px;
+            }
+
+            #CentAnni-sub-sort-btns > button {
+                flex: none;
+                outline: 1px solid transparent;
+                transition: outline-color .2s cubic-bezier(0, 0, .5, 0);
+            }
+
+            &.CentAnni-sub-only-live ytd-browse[page-subtype="subscriptions"] {
+                .CentAnni-sub-sort-live {
+                    outline-color: var(--liveVideo) !important;
+
+                }
+
+                ytd-rich-item-renderer.ytd-rich-grid-renderer:not(:has(.ytBadgeShapeThumbnailLive)) {
+                    display: none;
+                }
+            }
+
+            &.CentAnni-sub-only-upcoming ytd-browse[page-subtype="subscriptions"] {
+                .CentAnni-sub-sort-upcoming {
+                    outline-color: var(--upComingVideo) !important;
+                }
+
+                ytd-rich-item-renderer.ytd-rich-grid-renderer:not(:has(.ytLockupAttachmentsViewModelHost)) {
+                    display: none;
+                }
+            }
+
+            &.CentAnni-sub-only-videos {
+                ytd-browse[page-subtype="subscriptions"] {
+                    .CentAnni-sub-sort-videos {
+                        outline-color: var(--lastSeenVideoColor) !important;
+                    }
+
+                    ytd-rich-item-renderer.ytd-rich-grid-renderer:has(.ytBadgeShapeThumbnailLive, .ytLockupAttachmentsViewModelHost) {
+                        display: none;
+                    }
+                }
+
+                &.CentAnni-style-subpage-filter-past-live ytd-browse[page-subtype="subscriptions"] ytd-rich-item-renderer.ytd-rich-grid-renderer:has(sub-streamed) {
+                    display: none;
+                }
+            }
+
+            &:not(.CentAnni-style-subpage-filter-loading):is(.CentAnni-sub-only-live, .CentAnni-sub-only-upcoming) ytd-browse[page-subtype="subscriptions"] ytd-rich-grid-renderer ytd-continuation-item-renderer {
+                display: none !important;
+            }
+
+            &.CentAnni-style-compact-layout {
+                ytd-browse[page-subtype="subscriptions"][role="main"] ytd-rich-section-renderer:nth-child(-n + 2 of ytd-rich-section-renderer):has(.grid-subheader.ytd-shelf-renderer) {
+                    display: flex;
+                    margin: 10px 10px 10px 0;
+
+                    #contents.style-scope.ytd-shelf-renderer {
+                        display: none;
+                    }
+                }
+            }
+        }
+
         .CentAnni-style-no-zoom {
             .html5-main-video {
                 transform: revert-layer !important;
@@ -6486,6 +6557,9 @@
         lastSeenVideoScroll: false,
         lastSeenVideoColor: '#7F00FF',
         lastSeenVideoColorLight: '#9400D3',
+        subPageFilterAllowVidLoading: false,
+        subPageFilterPastLive: false,
+        subPageFilterDefault: '',
         playlistLinks: false,
         playlistTrashCan: false,
         playlistQueueBtn: true,
@@ -6720,6 +6794,12 @@
         if (USER_CONFIG.secondaryLanguage !== 'none') secondaryInLanguage = namesInUI.of(getLanguageCode(USER_CONFIG.secondaryLanguage)).toLowerCase();
     }; if (USER_CONFIG.defaultTranscriptLanguage !== 'auto' || USER_CONFIG.defaultAudioLanguage !== 'auto' || USER_CONFIG.defaultSubtitleLanguage !== 'auto') localizeConfiguredLanguages();
 
+    // replace streamed placeholder for the subscriptions page filter
+    if (USER_CONFIG.subPageFilterPastLive) {
+        const capitalize = ['el', 'ru', 'uk'].includes(uiLanguageKey);
+        styleSheet.textContent = styleSheet.textContent.replace('sub-streamed', getHomeCategoryKeywords(uiLanguageKey).streamed.map(keyword => `.ytContentMetadataViewModelMetadataTextLastPart[aria-label*="${capitalize ? keyword[0].toUpperCase() + keyword.slice(1) : keyword}" i]`).join(','));
+    }
+
     // language matrix to restore views
     if (uiLanguage !== 'en') {
         const viewLanguageMatrix = {
@@ -6867,7 +6947,10 @@
         lastSeenVideo: { class: 'CentAnni-style-last-seen-video', pages: () => isSubscriptionsPage },
         hideMostRelevant: { class: 'CentAnni-style-hide-most-relevant', pages: () => isSubscriptionsPage },
         hideMusicVidSub: { class: 'CentAnni-style-hide-music-vid-sub', pages: () => isSubscriptionsPage },
+        subPageFilterDefault: { class: 'CentAnni-style-subpage-filter-btns', pages: () => isSubscriptionsPage },
+        subPageFilterPastLive: { class: 'CentAnni-style-subpage-filter-past-live', pages: () => isSubscriptionsPage },
         videosPerRow: { class: 'CentAnni-style-video-row', pages: () => isHomePage || isSubscriptionsPage || isChannelPage },
+        subPageFilterAllowVidLoading: { class: 'CentAnni-style-subpage-filter-loading', pages: () => isSubscriptionsPage },
         // home page
         hideNewsHome: { class: 'CentAnni-style-hide-news-home', pages: () => isHomePage },
         hidePlayables: { class: 'CentAnni-style-hide-playables', pages: () => isHomePage },
@@ -8263,6 +8346,21 @@
             // scroll to last seen video
             form.appendChild(createCheckboxField('Auto-Scroll to Last Uploaded Video (default: off)', 'lastSeenVideoScroll', USER_CONFIG.lastSeenVideoScroll));
 
+            // pick default sub filter
+            form.appendChild(createSelectField('Default Subscriptions Page Filter:', 'label-subpage-filter', 'subPageFilterDefault', USER_CONFIG.subPageFilterDefault, {
+                '': 'No Filter Buttons (default)',
+                'all': 'All',
+                'live': 'Live',
+                'upcoming': 'Upcoming',
+                'videos': 'Videos'
+            }));
+
+            // also hide streamed videos under videos
+            form.appendChild(createCheckboxField('Hide Past Livestreams When Filtering by Videos (default: off)', 'subPageFilterPastLive', USER_CONFIG.subPageFilterPastLive));
+
+            // allow continuous loading of videos again
+            form.appendChild(createCheckboxField('Allow Infinite Scroll When Filtering by Live or Upcoming (default: off)', 'subPageFilterAllowVidLoading', USER_CONFIG.subPageFilterAllowVidLoading));
+
             // on watch later page
             const colorCodeVideosOnWatchLater = document.createElement('div');
             colorCodeVideosOnWatchLater.textContent = 'Watch Later Page';
@@ -8876,6 +8974,9 @@
             USER_CONFIG.lastSeenVideoScroll = subPanelColor.elements.lastSeenVideoScroll.checked;
             USER_CONFIG.lastSeenVideoColor = subPanelColor.elements.lastSeenVideoColor.value;
             USER_CONFIG.lastSeenVideoColorLight = subPanelColor.elements.lastSeenVideoColorLight.value;
+            USER_CONFIG.subPageFilterAllowVidLoading = subPanelColor.elements.subPageFilterAllowVidLoading.checked;
+            USER_CONFIG.subPageFilterPastLive = subPanelColor.elements.subPageFilterPastLive.checked;
+            USER_CONFIG.subPageFilterDefault = subPanelColor.elements.subPageFilterDefault.value;
             USER_CONFIG.watchLaterGold = subPanelColor.elements.watchLaterGold.value;
             USER_CONFIG.watchLaterSilver = subPanelColor.elements.watchLaterSilver.value;
             USER_CONFIG.watchLaterBronze = subPanelColor.elements.watchLaterBronze.value;
@@ -10058,31 +10159,14 @@
             'Transcript': 'tab-5'
         };
 
-        // create content sections tabs
-        const contentSections = [];
-        const contentSectionById = {};
-        tabs.forEach((tabText, index) => {
-            const tabId = tabIDs[tabText];
-            const contentDiv = document.createElement('div');
-            contentDiv.classList.add('CentAnni-tabView-content');
-            contentDiv.id = tabId;
-            if (index === 0) {
-                contentDiv.classList.add('active');
-                currentActiveTab = tabId;
-            }
-            contentSections.push(contentDiv);
-            contentSectionById[tabId] = contentDiv;
-        });
-
-        // populate the comments sections
-        const videoComments = watchFlexyElement.querySelector(cmtsSel);
-        const commentsSection = contentSectionById['tab-2'];
-        if (videoComments && commentsSection) commentsSection.appendChild(videoComments); else if (!initialRun && videoComments) document.getElementById('below')?.appendChild(videoComments);
-        if (USER_CONFIG.autoOpenComments && commentsSection) {
-            contentSectionById[currentActiveTab]?.classList.remove('active');
-            commentsSection.classList.add('active');
-            currentActiveTab = 'tab-2';
+        // create and populate the comments section
+        const commentsSection = isLive ? false : document.createElement('div');
+        if (commentsSection) {
+            commentsSection.id = 'tab-2';
+            commentsSection.classList.add('CentAnni-tabView-content');
         }
+        const videoComments = watchFlexyElement.querySelector(cmtsSel);
+        if (videoComments && commentsSection) commentsSection.appendChild(videoComments); else if (!initialRun && videoComments) document.getElementById('below')?.appendChild(videoComments);
 
         // update panel visibility based on active tab
         async function setTabPanelState(tabId, show) {
@@ -10099,13 +10183,6 @@
                 return;
             }
 
-            if (tabId === 'tab-5') {
-                if (show && !transcriptLoaded && isDefault) await runYTE(true);
-                if (!transcriptPanel?.isConnected) return;
-                if (show) openTranscript();
-                else closeTranscriptPanel();
-            }
-
             if (tabId === 'tab-6') {
                 if (!playlistPanel?.isConnected) return;
                 if (show) {
@@ -10117,6 +10194,18 @@
                     playlistPanel.classList.add('CentAnni-tabView-content-hidden');
                     playlistPanel.classList.remove('CentAnni-tabView-content-active');
                 }
+                return;
+            }
+
+            if (tabId === 'tab-5') {
+                if (show && !transcriptLoaded && isDefault) await runYTE(true);
+                if (!transcriptPanel?.isConnected) return;
+                if (show) openTranscript();
+                else closeTranscriptPanel();
+            }
+
+            if (tabId === 'tab-2') {
+                commentsSection?.classList.toggle('active', show);
                 return;
             }
 
@@ -10174,13 +10263,11 @@
                 // deactivate active button, hide content and panel
                 if (previousTabId && previousTabId !== tabId) {
                     tabElementById[previousTabId]?.classList.remove('active');
-                    contentSectionById[previousTabId]?.classList.remove('active');
                     setTabPanelState(previousTabId, false);
                 }
 
                 // activate button and show content and panel
                 tabLink.classList.add('active');
-                contentSectionById[tabId]?.classList.add('active');
                 if (!isTheaterMode) setTabPanelState(tabId, true);
             };
 
@@ -10192,7 +10279,7 @@
 
         headerDiv.appendChild(subheaderDiv);
         newDiv.appendChild(headerDiv);
-        contentSections.forEach(section => newDiv.appendChild(section));
+        if (commentsSection) newDiv.appendChild(commentsSection);
 
         // remove split-scroll
         removeWatchFlexyAttrs();
@@ -10211,7 +10298,6 @@
             document.removeEventListener('yt-set-theater-mode-enabled', updateTabView);
             document.removeEventListener('yt-autonav-pause-player-ended', exitFullscreen);
             const activeTabId = currentActiveTab || (isTheaterMode ? lastActiveTab : null);
-            contentSectionById[activeTabId]?.classList.remove('active');
             docElement.classList.remove('tabView-tab-3');
             watchFlexyAttrsObserver.disconnect();
             setTabPanelState(activeTabId, false);
@@ -11203,9 +11289,7 @@
         };
 
         const handleEnded = () => {
-            if (animationFrameId != null) {
-                video.cancelVideoFrameCallback(animationFrameId); animationFrameId = null;
-            }
+            if (animationFrameId != null) video.cancelVideoFrameCallback(animationFrameId); animationFrameId = null;
             progress.style.transform = 'scaleX(1)';
         };
 
@@ -12138,6 +12222,45 @@
         }
     }
 
+    // filter videos on the subscription page
+    const sortSubPage = () => {
+        const subscriptionPage = document.querySelector('ytd-browse[page-subtype="subscriptions"][role="main"]:not([hidden])');
+        const subBtn = subscriptionPage?.querySelector('#subscribe-button');
+        if (!subBtn || subscriptionPage.querySelector('#CentAnni-sub-sort-btns')) return;
+
+        const filters = ['all', 'live', 'upcoming', 'videos'];
+        const setFilter = (filter) => {
+            for (const name of filters) docElement.classList.remove(`CentAnni-sub-only-${name}`);
+            docElement.classList.add(`CentAnni-sub-only-${filter}`);
+        };
+
+        const container = document.createElement('div');
+        container.id = 'CentAnni-sub-sort-btns';
+
+        const btnClass = subBtn.querySelector('a')?.className ?? '';
+
+        for (const [label, filter] of [
+            ['All', 'all'],
+            ['Live', 'live'],
+            ['Upcoming', 'upcoming'],
+            ['Videos', 'videos'],
+        ]) {
+            const button = document.createElement('button');
+            button.className = `${btnClass} CentAnni-sub-sort-${filter} CentAnni-btn-feedback-shape`;
+            button.textContent = label;
+            button.onclick = () => setFilter(filter);
+
+            const lightShape = document.createElement('span');
+            lightShape.className = 'CentAnni-btn-light-shape';
+            button.appendChild(lightShape);
+
+            container.appendChild(button);
+        }
+
+        subBtn.before(container);
+        setFilter(USER_CONFIG.subPageFilterDefault);
+    };
+
     // add trashcan icon to playlists to easily remove videos
     function playlistRemovalButtons() {
         const playlistPage = document.querySelector('ytd-browse[page-subtype="playlist"][role="main"]:not([hidden])');
@@ -12341,7 +12464,7 @@
             docElement.classList.add('CentAnni-playlist-remove-btn-hide-menus');
             menuButton.click();
 
-            const selector = 'ytd-popup-container > tp-yt-iron-dropdown a:has(svg path[d^="M12 1C5"])';
+            const selector = 'ytd-popup-container > tp-yt-iron-dropdown a:has(svg path[d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1Zm0 2a9 9 0 110 18.001A9 9 0 0112 3Zm4 8H8a1 1 0 000 2h8a1 1 0 000-2Z"])';
             waitForElement(selector, (removeLink) => {
                 removeLink.click();
                 waitForElement('#confirm-button > yt-button-shape > button', (confirmButton) => {
@@ -12662,7 +12785,7 @@
                 validDataVideoBelow = result.isValid;
             }
 
-            const success = reverseDirection ? currentVideoIndex === 0 || validDataVideoAbove : validDataVideoBelow;
+            const success = reverseDirection ? currentVideoIndex === 0 || validDataVideoAbove : validDataVideoBelow || (currentVideoIndex === playlistItems.length - 1 && validDataVideoAbove);
             return success;
         }
 
@@ -12932,23 +13055,26 @@
         const savedShortsSetting = 'CentAnni_shortsPlayMode';
         const savedMode = await GM.getValue(savedShortsSetting, 'loop');
         const BTN_CLASS = document.querySelector('.ytSpecButtonShapeWithLabelHost button')?.className ?? '';
-        let animationID = null;
+        let loopObserver = null;
+        let controlsObserver = null;
         let endedListener = null;
 
         const cleanup = () => {
-            if (animationID) { cancelAnimationFrame(animationID); animationID = null; }
+            if (loopObserver) { loopObserver.disconnect(); loopObserver = null; }
             if (endedListener) { shortVideo.removeEventListener('ended', endedListener); endedListener = null; }
         };
 
         cleanupShortsPlaybackControl = () => {
             cleanup();
+            controlsObserver?.disconnect(); controlsObserver = null;
             document.getElementById('CentAnni-yt-shorts-controls')?.remove();
             cleanupShortsPlaybackControl = null;
         };
 
         const removeLoop = () => {
             shortVideo.removeAttribute('loop');
-            animationID = requestAnimationFrame(removeLoop);
+            loopObserver = new MutationObserver(() => { if (shortVideo.hasAttribute('loop')) shortVideo.removeAttribute('loop'); });
+            loopObserver.observe(shortVideo, { attributes: true, attributeFilter: ['loop'] });
         };
 
         const nextShort = () => {
@@ -13005,6 +13131,13 @@
 
             const existingContainer = document.getElementById('CentAnni-yt-shorts-controls');
             existingContainer ? existingContainer.replaceWith(container) : menuBtn.prepend(container);
+
+            // re-add the buttons when YouTube replaces the overlay after navigating to another Short
+            controlsObserver = new MutationObserver(() => {
+                if (container.isConnected) return;
+                document.querySelector('ytd-shorts .ytwReelActionBarViewModelHost')?.prepend(container);
+            });
+            controlsObserver.observe(shortVideo.closest('ytd-shorts'), { childList: true, subtree: true });
         };
 
         createButtons();
@@ -13687,19 +13820,19 @@
             case 'hi': return { live: ['देख रहे', 'लाइव'], upcoming: ['प्रतीक्षा', 'निर्धारित'], streamed: ['स्ट्रीम किया'] };
             case 'hu': return { live: ['néző', 'élő'], upcoming: ['várakozik', 'ütemezve'], streamed: ['streamelve'] };
             case 'id': return { live: ['orang menonton', 'langsung'], upcoming: ['menunggu', 'dijadwalkan pada'], streamed: ['streaming'] };
-            case 'it': return { live: ['guardando', 'in diretta', 'spettatori'], upcoming: ['in attesa', 'programmato per'], streamed: ['trasmesso', 'in streaming'] };
+            case 'it': return { live: ['guardando', 'in diretta', 'spettatori'], upcoming: ['in attesa', 'programmato per'], streamed: ['trasmesso'] };
             case 'ja': return { live: ['人が視聴中', 'ライブ'], upcoming: ['待機中', '予定'], streamed: ['配信済み'] };
-            case 'ko': return { live: ['명 시청 중', '라이브'], upcoming: ['명 대기 중', '예정됨'], streamed: ['스트리밍됨'] };
+            case 'ko': return { live: ['명 시청 중', '라이브'], upcoming: ['명 대기 중', '예정됨'], streamed: ['스트리밍 시간'] };
             case 'nl': return { live: ['kijkers', 'live'], upcoming: ['wachten', 'gepland voor'], streamed: ['gestreamd'] };
             case 'no': return { live: ['seere', 'direkte'], upcoming: ['venter', 'planlagt til'], streamed: ['strømmet'] };
-            case 'pl': return { live: ['oglądających', 'na żywo'], upcoming: ['oczekujących', 'zaplanowano na'], streamed: ['transmitowano'] };
+            case 'pl': return { live: ['oglądających', 'na żywo'], upcoming: ['oczekujących', 'zaplanowano na'], streamed: ['transmisja odbyła się'] };
             case 'pt': return { live: ['assistindo', 'ao vivo'], upcoming: ['aguardando', 'programado para'], streamed: ['transmitido'] };
             case 'ro': return { live: ['spectatori', 'în direct'], upcoming: ['așteaptă', 'programat pentru'], streamed: ['transmis'] };
             case 'ru': return { live: ['смотрят', 'прямой эфир'], upcoming: ['ожидают', 'запланировано на'], streamed: ['трансляция закончилась'] };
-            case 'sv': return { live: ['tittare', 'direkt'], upcoming: ['väntar', 'planerat till'], streamed: ['sändes'] };
-            case 'th': return { live: ['คนกำลังดู', 'สด'], upcoming: ['รอชม', 'กำหนดเวลา'], streamed: ['สตรีมแล้ว', 'สตรีมเมื่อ'] };
+            case 'sv': return { live: ['tittare', 'direkt'], upcoming: ['väntar', 'planerat till'], streamed: ['streamat'] };
+            case 'th': return { live: ['คนกำลังดู', 'สด'], upcoming: ['รอชม', 'กำหนดเวลา'], streamed: ['สตรีมแล้ว'] };
             case 'uk': return { live: ['глядачів', 'наживо'], upcoming: ['очікує', 'заплановано на'], streamed: ['трансляція'] };
-            case 'vi': return { live: ['đang xem', 'trực tiếp'], upcoming: ['đang chờ', 'đã lên lịch'], streamed: ['đã phát trực tiếp'] };
+            case 'vi': return { live: ['đang xem', 'trực tiếp'], upcoming: ['đang chờ', 'đã lên lịch'], streamed: ['phát trực tiếp'] };
             case 'zh-Hans': return { live: ['人正在观看', '直播'], upcoming: ['正在等待', '预定发布时间'], streamed: ['直播时间'] };
             case 'zh-Hant': return { live: ['人正在觀看', '直播'], upcoming: ['正在等待', '預定發布時間'], streamed: ['直播時間', '曾經串流'] };
             default: return { live: ['watching', 'live'], upcoming: ['waiting', 'scheduled for'], streamed: ['streamed'] };
@@ -13960,6 +14093,7 @@
         [USER_CONFIG.compactLayout, () => isWatchLater, moveWlChipBar],
         [USER_CONFIG.playlistLinks, () => isPlaylistPage, handlePlaylistLinks],
         [USER_CONFIG.lastSeenVideo, () => isSubscriptionsPage, markLastSeenVideo],
+        [USER_CONFIG.subPageFilterDefault, () => isSubscriptionsPage, sortSubPage],
         [USER_CONFIG.colorCodeVideosEnabled, () => isHomePage, homeColorCodeVideos],
         [!USER_CONFIG.redirectShorts && USER_CONFIG.playbackSpeed, () => isShortPage, createPlaybackSpeedController],
         [USER_CONFIG.defaultChannelPage !== 'home', () => isChannelPage, defaultChannelPageBtn],
@@ -14013,7 +14147,7 @@
             if (USER_CONFIG.preventBackgroundExecution) await awaitVisibility();
             if (updateLocation()) return;
 
-            // toggle CSS based on page -- continues in initializeAlchemy
+            // toggle CSS based on page -- continuous in initializeAlchemy
             if (USER_CONFIG.videosHideWatchedGlobalJS !== 0 && !USER_CONFIG.videosHideWatchedGlobal) markWatchedVideos();
             for (const [flag, entry] of pageClassEntries) if (entry.pages()) docElement.classList.add(entry.class);
             if (!isWatchPage) cleanupWatchPageCSS?.();
