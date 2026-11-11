@@ -532,6 +532,9 @@ Offers various options to customize the layout and functionality of YouTube.
     - Adds customizable borders to videos to visually indicate their age and status, and offers the option to disable the hover effect.
   - On Subscriptions Page
     - Adds a customizable border to the last uploaded video to highlight it on subsequent visits, with the option to auto-scroll to it.
+    - Default Subscriptions Page Filter (All | Live | Upcoming | Videos)
+    - Hide past Livestreams When Filtering by Videos
+    - Allow Infinite Scroll When Filtering by Live or Upcoming
   - On Watch Later Page
     - Highlight unwatched videos from selected channels, categorized in gold, silver, bronze, crimson, and lime.
 
@@ -583,9 +586,10 @@ _Support is a work in progress. Languages may have limited functionality. If a s
 <br>
 
 ## 📜 Changelog
+- **12.6**: bug fixes and improvements; new feature: Default Subscriptions Page Filter (All, Live, Upcoming, Videos) — can be found under "Color Code Videos"
 - **12.5.2**: bug fix
 - **12.5.1**: bug fixes, improvements, and adjustments for YouTube DOM changes
-- **12.5**: bug fixes, improvements, and adjustments for YouTube DOM changes; added language support for Chinese 中文 (繁體), Chinese 中文 (香港), Russian, and Thai; browser extension only: language support for YouTube Alchemy's UI (uses YouTube's display language by default, can be changed via: YouTube Alchemy Translations)—see [supported languages](#-supported-languages) for more information
+- **12.5**: bug fixes, improvements, and adjustments for YouTube DOM changes; added language support for Chinese 中文 (繁體), Chinese 中文 (香港), Russian, and Thai; browser extension only: language support for YouTube Alchemy's UI (uses YouTube's display language by default, can be changed via: YouTube Alchemy Translations) — see [supported languages](#-supported-languages) for more information
 - **12.3.3**: bug fixes; new feature: Hide Music Videos On Home, Subscriptions, Channels, and Search Pages
 - **12.3.2**: bug fixes; added information in case the "Watch History Toggle Button" fails (⚠️: Watch history request failed)
 - **12.3**: adjustments for YouTube DOM changes, bug fixes, and improvements; new feature: "Add Watch History Toggle Button to the Masthead"
@@ -608,7 +612,7 @@ _Support is a work in progress. Languages may have limited functionality. If a s
 - **11.1**: adjustments for YouTube DOM changes, bug fixes, and improvements; features changed: "Max Panel Height in Default View" now only works if "Tab View" is enabled, "Compact Layout" can now be enabled just on video pages via "Compact Video Page Layout"
 - **11.0.1**: adjustments for YouTube DOM changes
 - **11.0**: adjustments for YouTube DOM changes, bug fixes, and performance improvements; CSS is now toggled per page while for the Guide it only applies when opened; new features: "Hide 'You' Section" and "Hide 'Playables' Button" in the Guide; added a new retry button (⚠️) if the transcript fails to load; when both "Remaining Time" and "Persistent Progress Bar" are enabled, skipped SponsorBlock segments have reduced opacity; Automatically Enable Subtitles When Muted; Show Subtitles for 10 Seconds When Rewinding with "J"
-- **10.16**: adjustments for YouTube DOM changes, bug fixes, and improvements; prompt summary word count is now dynamic based on transcript length (to use it, replace a fixed number in a prompt with `summaryWordCount`, or click "Reset Prompt" in the settings panel—see [📝 Transcript Exporter](#-transcript-exporter) for details); feature changed: "Playback Speed" now restores speed to 1x once caught up for live videos; new features: "Disable Video Zoom" and the playback speed display is now clickable to set custom speeds per channel
+- **10.16**: adjustments for YouTube DOM changes, bug fixes, and improvements; prompt summary word count is now dynamic based on transcript length (to use it, replace a fixed number in a prompt with `summaryWordCount`, or click "Reset Prompt" in the settings panel — see [📝 Transcript Exporter](#-transcript-exporter) for details); feature changed: "Playback Speed" now restores speed to 1x once caught up for live videos; new features: "Disable Video Zoom" and the playback speed display is now clickable to set custom speeds per channel
 - **10.13**: adjustments for YouTube DOM changes, bug fixes, and improvements
 - **10.12**: adjustments for YouTube DOM changes, bug fixes, and improvements; exported transcripts now support collaborators under channel name; re-added feature: "Restore Homepage Filter Selection"; new feature: "Highlight unwatched videos from your favorite channels on the Watch Later Page, categorized in gold, silver, and bronze." it can be found under "Color Code Videos"
 - **10.11.7**: bug fixes for Brave browser
