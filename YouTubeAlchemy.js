@@ -3,7 +3,7 @@
 // @description  Swiss Army knife for YouTube with 250+ features to bring the focus back to what matters most on YouTube: watching videos. Options are accessible via settings panels. Features include playback speed control with per-channel settings and miniplayer support, default channel page, set video quality, transcript export, preferred audio and subtitle languages, hiding Shorts, square design, auto-theater mode, remaining time adjusted for playback speed, and persistent progress bar with chapter markers
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      12.6
+// @version      12.6.1
 // @namespace    TimMacy.YouTubeAlchemy
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://*.youtube.com/*
@@ -21,7 +21,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 12.6 - YouTube Alchemy                    *
+*                    Version: 12.6.1 - YouTube Alchemy                  *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -2165,7 +2165,6 @@
                 height: 24px;
                 width: 24px;
                 padding: 0 4px 0 0;
-                opacity: .9;
             }
 
             .CentAnni-playback-speed-display {
@@ -12147,7 +12146,6 @@
     async function markLastSeenVideo() {
         const subscriptionPage = document.querySelector('ytd-browse[page-subtype="subscriptions"][role="main"]:not([hidden])');
         if (!subscriptionPage) return;
-        if (USER_CONFIG.lastSeenVideoScroll) window.scrollTo(0, 0);
 
         // wait for content to load
         await new Promise(resolve => {
