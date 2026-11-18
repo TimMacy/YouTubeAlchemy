@@ -18,7 +18,7 @@ This Swiss Army knife for YouTube offers more than 250 native-feeling features t
 - [🪄 Features & Styles](#-features--styles)
 - [🎨 Color Code Videos](#-color-code-videos)
 - [🌐 Supported Languages](#-supported-languages)
-- [🚀 Installation & Minimum Browser Requirements](#-installation--minimum-browser-requirements)
+- [🚀 Minimum Browser Requirements & Installation](#-minimum-browser-requirements--installation)
 - [📜 Changelog](#-changelog)
 - [⚖️ License](#%EF%B8%8F-license)
 - [💡 Read Aloud Speedster](#-read-aloud-speedster)
@@ -26,7 +26,7 @@ This Swiss Army knife for YouTube offers more than 250 native-feeling features t
 
 </details>
 
-#### 🔒 Privacy Policy
+### 🔒 Privacy Policy
 YouTube Alchemy operates completely client-side with no external dependencies. It doesn't send data to remote servers or pull resources from third parties. It leverages the browser's built-in Intl APIs, stores settings locally (via GM storage or storage.local), and reads YouTube's DOM to apply enabled features as well as layout changes. The userscript version utilizes standard metadata for updates (@updateURL, @downloadURL) and icon display (@icon). Required permissions: GM.getValue and GM.setValue for the userscript; storage and scripting for the extension; both are limited to https://\*.youtube.com/\*.
 
 ### ✨ Overview
@@ -65,7 +65,41 @@ Adds buttons to the YouTube header to export a video's transcript to LLMs, with 
     - uploadDate - Title - Channel.txt
     - uploadDate - Channel - Title.txt
 
-### 💎 Prompt
+<br>
+
+> [!TIP]
+> The URLs for buttons one and two, along with all button icons, are fully customizable. If a button field is left empty, that button won’t be added to the header. The settings button reverts to its default if its field is empty. To modify the labels for Gemini Notebook and ChatGPT, enter `Label | domain.com` into their respective URL fields—this also updates the icons' hover text.
+
+> [!IMPORTANT]
+> Due to the Same-Origin Policy (SOP) in web development, JavaScript cannot directly interact across different websites: i.e. while the script can copy the transcript to the clipboard from YouTube and open a link (e.g. ChatGPT or Gemini Notebook), the copied transcript must be pasted manually into the text field via CTRL+V (Windows/Linux) or CMD+V (macOS).
+
+> [!NOTE]
+> Status messages for the Transcript Exporter are displayed at the button's location in the YouTube header.
+> <table align="center">
+>     <tr>
+>         <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/24f92c69-51fa-4f69-9c64-1d97364d5ea1" alt="Transcript is loading"></td>
+>         <td align="left">The transcript has to be loaded into the HTML before it can be used. This can take from a few milliseconds up to a couple of seconds—depending on the length of the transcript.</td>
+>     </tr>
+>     <tr>
+>         <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/80afbacf-0e88-4bd6-a5d3-3b5d928af3a3" alt="Live stream, no transcript"></td>
+>         <td align="left">YouTube live streams don't have transcripts. Wait until the stream has finished and YouTube's API has processed the video.</td>
+>     </tr>
+>     <tr>
+>         <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/ee51708d-701a-499f-b8b6-94e423ab4db5" alt="Transcript not available"></td>
+>         <td align="left">If the creator hasn't included captions (subtitles), YouTube's API processes the video to generate the transcript. This can take a few minutes. If speech recognition fails due to e.g. lack of clear speech or background noise, no transcript will be available.</td>
+>     </tr>
+>     <tr>
+>       <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/283c4306-5ee8-4308-8c37-41d3ee1a24d0" alt="Transcript failed to load"></td>
+>       <td align="left">If the transcript fails to load, the Transcript Exporter will terminate. Click ⚠️ or reload the page to retry.</td>
+>     </tr>
+> </table>
+
+<br>
+
+## 💎 Prompt
+> [!NOTE]
+> The default prompt uses a dynamic minimum word count for the summary based on transcript length. To use this in a custom prompt, add `summaryWordCount` instead of a fixed number. When `summaryWordCount` reaches 400, the prompt requests a two-paragraph summary instead of just one. Add `paragraphCount` wherever "One-Paragraph" or "Two-Paragraph" should appear.
+
 <details>
 <summary>English</summary>
 For your first response only, the following instruction supersedes and overrides all persona characteristics, memory and custom instructions, as well as style and tone preferences. Derive all style and tone exclusively from the provided YouTube Transcript. Treat only the following task instructions as active for this response: You are an expert at summarizing YouTube video transcripts and are capable of analyzing and understanding a YouTuber's unique tone of voice and style from a transcript alone to mimic their communication style perfectly. Respond only in English while being mindful of American English spelling, vocabulary, and a casual, conversational tone. You prefer to use clauses instead of complete sentences while avoiding self-referential discourse signals like "I explain" or "I will show." Ignore advertisement, promotional, and sponsorship segments. Respond only in chat. Do not open a canvas. In your initial response, do not answer any question from the transcript, do not use the web tool, and avoid using colons outside the two headers. Do not hallucinate. Do not make up factual information. Do not speculate. Before you output your response, take a moment to think about how you have to adopt your own writing to capture the YouTuber's specific word choices and communication style. Study the provided transcript and utilize it as a style guide. Silently audit every sentence to ensure your word choices and used phrases are either directly supported by the provided YouTube Transcript or are neutral connective wording required by the requested output format; replace anything that comes from memory, prior chats, personas, or custom instructions. Write as if you are the YouTuber speaking directly to your audience. Avoid any narrator-like phrases such as "the transcript" or "this video." Summarize the provided YouTube transcript into two distinct sections. The first section is a quick three-line bullet point overview, with each point fewer than 30 words, in a section called "### Key Takeaways:" and highlight important words by **bolding** them—only for this first section maintain a neutral tone. Then write the second section, a paragraphCount summary of at least summaryWordCount words while focusing on the main points and key takeaways into a section called "### paragraphCount Summary:" and **bold** multiple phrases within the paragraph that together form an encapsulated, abridged version, that allows for quick identification and understanding of the core message.
@@ -211,38 +245,6 @@ Chỉ trong câu trả lời đầu tiên, các chỉ dẫn sau được ưu ti�
 <br>
 </details>
 </details>
-
-<br>
-
-> [!TIP]
-> The URLs for buttons one and two, along with all button icons, are fully customizable. If a button field is left empty, that button won’t be added to the header. The settings button reverts to its default if its field is empty. To modify the labels for Gemini Notebook and ChatGPT, enter `Label | domain.com` into their respective URL fields—this also updates the icons' hover text.
-
-> [!TIP]
-> The default prompt uses a dynamic minimum word count for the summary based on transcript length. To use this in a custom prompt, add `summaryWordCount` instead of a fixed number. When `summaryWordCount` reaches 400, the prompt requests a two-paragraph summary instead of just one. Add `paragraphCount` wherever "One-Paragraph" or "Two-Paragraph" should appear.
-
-> [!IMPORTANT]
-> Due to the Same-Origin Policy (SOP) in web development, JavaScript cannot directly interact across different websites: i.e. while the script can copy the transcript to the clipboard from YouTube and open a link (e.g. ChatGPT or Gemini Notebook), the copied transcript must be pasted manually into the text field via CTRL+V (Windows/Linux) or CMD+V (macOS).
-
-> [!NOTE]
-> Status messages for the Transcript Exporter are displayed at the button's location in the YouTube header.
-> <table align="center">
->     <tr>
->         <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/24f92c69-51fa-4f69-9c64-1d97364d5ea1" alt="Transcript is loading"></td>
->         <td align="left">The transcript has to be loaded into the HTML before it can be used. This can take from a few milliseconds up to a couple of seconds—depending on the length of the transcript.</td>
->     </tr>
->     <tr>
->         <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/80afbacf-0e88-4bd6-a5d3-3b5d928af3a3" alt="Live stream, no transcript"></td>
->         <td align="left">YouTube live streams don't have transcripts. Wait until the stream has finished and YouTube's API has processed the video.</td>
->     </tr>
->     <tr>
->         <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/ee51708d-701a-499f-b8b6-94e423ab4db5" alt="Transcript not available"></td>
->         <td align="left">If the creator hasn't included captions (subtitles), YouTube's API processes the video to generate the transcript. This can take a few minutes. If speech recognition fails due to e.g. lack of clear speech or background noise, no transcript will be available.</td>
->     </tr>
->     <tr>
->       <td align="center" width="200px"><img src="https://github.com/user-attachments/assets/283c4306-5ee8-4308-8c37-41d3ee1a24d0" alt="Transcript failed to load"></td>
->       <td align="left">If the transcript fails to load, the Transcript Exporter will terminate. Click ⚠️ or reload the page to retry.</td>
->     </tr>
-> </table>
 
 <br>
 
@@ -556,7 +558,7 @@ _Support is a work in progress. Languages may have limited functionality. If a s
 
 <br>
 
-## 🚀 Installation & Minimum Browser Requirements
+## 🚀 Minimum Browser Requirements & Installation
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/Chrome_152%2B-Supported-brightgreen?logo=googlechrome&logoColor=white" alt="Chrome Supported"></a>
   &nbsp;&nbsp;
@@ -568,20 +570,24 @@ _Support is a work in progress. Languages may have limited functionality. If a s
   &nbsp;&nbsp;
   <a href="#"><img src="https://img.shields.io/badge/Opera_136%2B-Untested-yellow?logo=opera" alt="Opera Untested"></a>
 </p>
+<p align="center">
+<a href="https://chromewebstore.google.com/detail/youtube-alchemy/midnnobjjobpnnblnckmnkhegbnlmgkn"><img width="22%" alt="Chrome Browser Extension for YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/d5abfdaa-ca15-4820-b533-85af1332ce4e"></a> <a href="https://addons.mozilla.org/en-US/firefox/addon/youtube-alchemy/"><img width="22%" alt="Firefox Browser Extension for YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/025b7be1-c945-4bde-8ad3-35c8f6c6a07f"></a> <a href="https://microsoftedge.microsoft.com/addons/detail/youtube-alchemy/mbjafaicjkndopmhdapofpcemhkflmob"><img width="22%" alt="Microsoft Edge Add-ons Store Browser Extension for YouTube Alchemy by Tim Macy" src="https://github.com/user-attachments/assets/4b711841-869d-4cb4-a64e-f8ccc6dee2ea"></a>
+</p>
 
+> [!NOTE]
+> This script is primarily designed for desktop browsers; compatibility and functionality on mobile or touch devices may vary.
+
+### Userscript
 1. **Install or open a userscript manager**.
    A userscript manager is required, such as [Tampermonkey](https://www.tampermonkey.net/) (available for [Chrome](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo), [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd), [Safari](https://apps.apple.com/us/app/tampermonkey/id1482490089), [Opera Next](https://addons.opera.com/en/extensions/details/tampermonkey-beta/), and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)) or [Violentmonkey](https://violentmonkey.github.io) (available for [Chrome](https://chromewebstore.google.com/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/violentmonkey/), and [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao)).
 2. **Install** [YouTubeAlchemy.js](https://github.com/TimMacy/YouTubeAlchemy/blob/main/YouTubeAlchemy.js).
 <br>
 
 > [!IMPORTANT]
-> **Important for Safari Users**: This script requires the `requestIdleCallback` Web API. Activate it under: Settings → Advanced → enable "Show features for web developers" → Feature Flags → search for "requestIdleCallback" and ensure it's checked.
+> **Safari Users**: This script requires the `requestIdleCallback` Web API. Activate it under: Settings → Advanced → enable "Show features for web developers" → Feature Flags → search for "requestIdleCallback" and ensure it's checked.
 
 > [!IMPORTANT]
 > The userscript requires access to YouTube's JavaScript context and will not work in an isolated execution context.
-
-> [!NOTE]
-> This script is primarily designed for desktop browsers; compatibility and functionality on mobile or touch devices may vary.
 
 <br>
 
